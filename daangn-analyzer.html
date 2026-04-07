@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>당근 모임 분석기</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #fff8f0 0%, #fff3e8 100%);
+      min-height: 100vh;
+      padding: 30px 16px;
+      color: #222;
+    }
+    header { text-align: center; margin-bottom: 30px; }
+    header .logo { font-size: 2.4rem; margin-bottom: 6px; }
+    header h1 {
+      font-size: 1.9rem;
+      background: linear-gradient(90deg, #FF6F0F, #FF9744);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+    }
+    header p { color: #aaa; margin-top: 6px; font-size: 0.9rem; }
+
+    /* 탭 */
+    .tab-wrap {
+      display: flex;
+      gap: 8px;
+      max-width: 720px;
+      margin: 0 auto 20px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 6px;
+      box-shadow: 0 2px 12px rgba(255,111,15,0.08);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 11px 6px;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #bbb;
+      transition: all 0.2s;
+      font-family: inherit;
+      line-height: 1.4;
+    }
+    .tab-btn.active {
+      background: linear-gradient(90deg, #FF6F0F, #FF9744);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(255,111,15,0.3);
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 20px rgba(255,111,15,0.07);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: #333; display: flex; align-items: center; gap: 7px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+    @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.8rem; font-weight: 600; color: #777; }
+    input, textarea, select {
+      border: 1.5px solid #ebebeb;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.93rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fafafa;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #FF6F0F; background: #fff; }
+    textarea { resize: vertical; min-height: 80px; }
+    input.autofilled { border-color: #68d391 !important; background: #f0fff4 !important; }
+
+    /* ── 모드 1: 빠른 입력 ── */
+    .quick-badge {
+      display: inline-block;
+      background: #FF6F0F;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-left: 6px;
+    }
+
+    /* ── 모드 2: 스크린샷 ── */
+    .upload-zone {
+      border: 2.5px dashed #ffd0a8;
+      border-radius: 14px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      background: #fff9f5;
+      transition: all 0.2s;
+    }
+    .upload-zone:hover { border-color: #FF6F0F; background: #fff3e8; }
+    .upload-zone.dragover { border-color: #FF6F0F; background: #ffe8d0; }
+    .upload-zone .u-icon { font-size: 2rem; margin-bottom: 8px; }
+    .upload-zone h3 { font-size: 0.95rem; font-weight: 700; color: #666; margin-bottom: 4px; }
+    .upload-zone p { font-size: 0.82rem; color: #bbb; }
+    #screenshotInput { display: none; }
+
+    .screenshot-layout {
+      display: none;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .screenshot-layout.show { display: flex; flex-direction: column; }
+    .screenshot-preview {
+      width: 100%;
+      border-radius: 12px;
+      border: 1.5px solid #ebebeb;
+      max-height: 350px;
+      object-fit: contain;
+      background: #f9f9f9;
+    }
+    .screenshot-hint {
+      background: #fff9f5;
+      border-left: 3px solid #FF9744;
+      border-radius: 0 10px 10px 0;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: #7c4d00;
+      line-height: 1.7;
+    }
+    .remove-img-btn {
+      background: #fff0f0;
+      border: none;
+      color: #e53e3e;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      margin-top: 6px;
+      align-self: flex-start;
+    }
+
+    /* ── 모드 3: 텍스트 붙여넣기 ── */
+    .paste-area {
+      width: 100%;
+      border: 1.5px solid #ebebeb;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #fafafa;
+      min-height: 130px;
+      resize: vertical;
+      outline: none;
+      transition: border 0.2s;
+      line-height: 1.7;
+    }
+    .paste-area:focus { border-color: #FF6F0F; background: #fff; }
+    .parse-btn {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      background: #fff3e8;
+      color: #FF6F0F;
+      border: 1.5px solid #ffd0a8;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .parse-btn:hover { background: #ffe8d0; }
+
+    .parsed-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .parsed-tag {
+      background: #fff3e8;
+      border: 1.5px solid #ffd0a8;
+      color: #7c4d00;
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .parsed-tag.found { background: #f0fff4; border-color: #68d391; color: #276749; }
+    .parsed-tag.notfound { background: #fff5f5; border-color: #fc8181; color: #742a2a; }
+
+    .paste-example {
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: #999;
+      line-height: 1.8;
+      margin-top: 10px;
+      border: 1px dashed #e5e5e5;
+    }
+    .paste-example strong { color: #666; }
+
+    /* 분석 버튼 */
+    .btn-analyze {
+      display: block;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto 28px;
+      padding: 16px;
+      background: linear-gradient(90deg, #FF6F0F, #FF9744);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      font-family: inherit;
+      box-shadow: 0 4px 16px rgba(255,111,15,0.25);
+    }
+    .btn-analyze:hover { opacity: 0.92; transform: translateY(-1px); }
+
+    /* 결과 */
+    #result { display: none; }
+    .result-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 20px rgba(255,111,15,0.07);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .result-card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: #333; }
+
+    .score-box {
+      text-align: center;
+      padding: 22px;
+      background: linear-gradient(135deg, #fff3e8, #ffe0c8);
+      border-radius: 14px;
+      margin-bottom: 18px;
+    }
+    .score-number {
+      font-size: 3.6rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF6F0F, #FF9744);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .score-label { color: #aaa; font-size: 0.88rem; margin-top: 4px; }
+
+    .stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .stat-name-wrap { width: 140px; flex-shrink: 0; }
+    .stat-name { font-size: 0.83rem; color: #555; display: flex; align-items: center; gap: 4px; font-weight: 600; }
+    .stat-desc { font-size: 0.73rem; color: #ccc; margin-top: 2px; line-height: 1.4; }
+    .bar-wrap { flex: 1; background: #f0f0f0; border-radius: 99px; height: 10px; min-width: 80px; }
+    .bar-fill { height: 10px; border-radius: 99px; transition: width 0.7s ease; }
+    .bar-good { background: linear-gradient(90deg, #FF6F0F, #FF9744); }
+    .bar-mid  { background: linear-gradient(90deg, #f7971e, #ffd200); }
+    .bar-bad  { background: linear-gradient(90deg, #cb2d3e, #ef473a); }
+    .stat-val { width: 60px; text-align: right; font-size: 0.8rem; color: #bbb; }
+
+    .tooltip-wrap { position: relative; display: inline-flex; }
+    .tooltip-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: #ffe0cc; color: #FF6F0F; font-size: 0.65rem; font-weight: 700;
+      cursor: pointer;
+    }
+    .tooltip-box {
+      display: none;
+      position: absolute; left: 20px; top: -6px;
+      background: #2d3748; color: #fff;
+      font-size: 0.76rem; line-height: 1.6;
+      padding: 10px 13px; border-radius: 10px;
+      width: 200px; z-index: 99;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      white-space: pre-line;
+    }
+    .tooltip-box::before {
+      content: ''; position: absolute;
+      left: -6px; top: 10px;
+      border: 6px solid transparent;
+      border-right-color: #2d3748; border-left: none;
+    }
+    .tooltip-wrap:hover .tooltip-box,
+    .tooltip-wrap.active .tooltip-box { display: block; }
+
+    .reco-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 13px 15px; border-radius: 12px; margin-bottom: 9px;
+      font-size: 0.88rem; line-height: 1.6;
+    }
+    .reco-keep   { background: #fff8f0; color: #7c4d00; border-left: 3px solid #FF9744; }
+    .reco-fix    { background: #fffbeb; color: #744210; border-left: 3px solid #f6ad55; }
+    .reco-add    { background: #f0fff4; color: #276749; border-left: 3px solid #68d391; }
+    .reco-remove { background: #fff5f5; color: #742a2a; border-left: 3px solid #fc8181; }
+    .reco-icon   { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+    .tip-box {
+      background: linear-gradient(135deg, #fff3e8, #ffe8d0);
+      border-left: 4px solid #FF6F0F;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 18px;
+      font-size: 0.87rem; color: #555; line-height: 1.8;
+    }
+    .tip-box strong { color: #FF6F0F; }
+
+    footer { text-align: center; color: #ddd; font-size: 0.78rem; margin-top: 8px; padding-bottom: 24px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🥕</div>
+  <h1>당근 모임 분석기</h1>
+  <p>3가지 방법 중 편한 걸로 입력하고 성장 전략을 받아보세요</p>
+</header>
+
+<!-- 탭 -->
+<div class="tab-wrap">
+  <button class="tab-btn active" onclick="switchTab('quick')" id="tab-quick">⚡ 빠른<br/><span style="font-weight:400;font-size:0.7rem">핵심 4개</span></button>
+  <button class="tab-btn" onclick="switchTab('screenshot')" id="tab-screenshot">📸 스크린샷<br/><span style="font-weight:400;font-size:0.7rem">앱 화면 올리기</span></button>
+  <button class="tab-btn" onclick="switchTab('paste')" id="tab-paste">📋 붙여넣기<br/><span style="font-weight:400;font-size:0.7rem">자동 추출</span></button>
+  <button class="tab-btn" onclick="switchTab('manual')" id="tab-manual">✏️ 수동 입력<br/><span style="font-weight:400;font-size:0.7rem">직접 상세 입력</span></button>
+</div>
+
+<!-- ── 모드 1: 빠른 입력 ── -->
+<div id="section-quick">
+  <div class="card">
+    <h2>⚡ 핵심 정보만 입력하세요 <span class="quick-badge">4개</span></h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>멤버 수</label>
+        <input type="number" id="q-members" placeholder="예: 85"/>
+      </div>
+      <div class="form-group">
+        <label>주간 게시글 수</label>
+        <input type="number" id="q-weeklyPosts" placeholder="예: 5"/>
+      </div>
+      <div class="form-group">
+        <label>커버 이미지 있음?</label>
+        <select id="q-hasCover">
+          <option value="yes">있음</option>
+          <option value="no">없음</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>오프라인 모임 있음?</label>
+        <select id="q-hasOffline">
+          <option value="yes">있음</option>
+          <option value="no">없음</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>모임 소개글 (선택)</label>
+        <textarea id="q-intro" placeholder="소개글을 붙여넣으면 더 정밀하게 분석해요 (없어도 OK)"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 모드 2: 스크린샷 ── -->
+<div id="section-screenshot" style="display:none">
+  <div class="card">
+    <h2>📸 당근 모임 화면을 캡처해서 올려주세요</h2>
+
+    <div class="upload-zone" id="uploadZone"
+         onclick="document.getElementById('screenshotInput').click()"
+         ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+      <div class="u-icon">📱</div>
+      <h3>스크린샷을 여기에 드래그하거나 클릭해서 선택</h3>
+      <p>JPG, PNG, WEBP 지원</p>
+    </div>
+    <input type="file" id="screenshotInput" accept="image/*" onchange="handleScreenshot(event)"/>
+
+    <div class="screenshot-layout" id="screenshotLayout">
+      <button class="remove-img-btn" onclick="removeScreenshot()">✕ 다시 선택</button>
+      <img id="screenshotPreview" class="screenshot-preview" src="" alt="모임 스크린샷"/>
+      <div class="screenshot-hint">
+        📌 <strong>스크린샷을 보면서 아래 항목을 입력해 주세요.</strong><br/>
+        화면에 보이는 숫자를 그대로 입력하시면 돼요.
+      </div>
+    </div>
+
+    <!-- 스크린샷 보면서 입력하는 폼 -->
+    <div id="screenshotForm" style="margin-top:16px; display:none;">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>멤버 수</label>
+          <input type="number" id="s-members" placeholder="화면에서 확인"/>
+        </div>
+        <div class="form-group">
+          <label>주간 게시글 수</label>
+          <input type="number" id="s-weeklyPosts" placeholder="최근 게시글 수 ÷ 주"/>
+        </div>
+        <div class="form-group">
+          <label>평균 댓글 수</label>
+          <input type="number" id="s-avgComments" placeholder="게시글당 평균"/>
+        </div>
+        <div class="form-group">
+          <label>평균 반응 수</label>
+          <input type="number" id="s-avgReactions" placeholder="게시글당 평균"/>
+        </div>
+        <div class="form-group">
+          <label>커버 이미지 있음?</label>
+          <select id="s-hasCover">
+            <option value="yes">있음</option>
+            <option value="no">없음</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>오프라인 모임 있음?</label>
+          <select id="s-hasOffline">
+            <option value="yes">있음</option>
+            <option value="no">없음</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>소개글 (선택)</label>
+          <textarea id="s-intro" placeholder="화면에 보이는 소개글 붙여넣기"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 모드 3: 텍스트 붙여넣기 ── -->
+<div id="section-paste" style="display:none">
+  <div class="card">
+    <h2>📋 모임 정보 텍스트를 붙여넣어 주세요</h2>
+    <textarea class="paste-area" id="pasteText"
+      placeholder="당근 모임 화면에서 텍스트를 길게 눌러 복사하거나&#10;소개글, 멤버 수, 게시글 수 등을 자유롭게 붙여넣어 주세요.&#10;&#10;예) 멤버 85명 · 게시글 120개 · 이번 달 신규 12명..."></textarea>
+
+    <div class="paste-example">
+      <strong>💡 이런 형태면 자동으로 읽어요:</strong><br/>
+      멤버 85명 / 게시글 주 5개 / 신규 멤버 12명 이번달<br/>
+      "안녕하세요! 강남에서 매주 러닝하는 모임입니다. 멤버 120명..."<br/>
+      85 members · 댓글 평균 8개 · 반응 15개
+    </div>
+
+    <button class="parse-btn" onclick="parseText()">🔍 자동으로 숫자 읽기</button>
+
+    <div class="parsed-tags" id="parsedTags" style="display:none"></div>
+
+    <!-- 파싱 후 보정 폼 -->
+    <div id="parsedForm" style="margin-top:18px; display:none;">
+      <div style="font-size:0.82rem; color:#aaa; margin-bottom:12px;">📝 자동으로 읽은 값이에요. 틀린 게 있으면 수정해 주세요.</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>멤버 수</label>
+          <input type="number" id="p-members" placeholder="예: 85"/>
+        </div>
+        <div class="form-group">
+          <label>주간 게시글 수</label>
+          <input type="number" id="p-weeklyPosts" placeholder="예: 5"/>
+        </div>
+        <div class="form-group">
+          <label>평균 댓글 수</label>
+          <input type="number" id="p-avgComments" placeholder="예: 8"/>
+        </div>
+        <div class="form-group">
+          <label>평균 반응 수</label>
+          <input type="number" id="p-avgReactions" placeholder="예: 15"/>
+        </div>
+        <div class="form-group">
+          <label>신규 멤버 (이번 달)</label>
+          <input type="number" id="p-newMembers" placeholder="예: 12"/>
+        </div>
+        <div class="form-group">
+          <label>커버 이미지 있음?</label>
+          <select id="p-hasCover">
+            <option value="yes">있음</option>
+            <option value="no">없음</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>소개글</label>
+          <textarea id="p-intro" placeholder="소개글이 자동으로 채워져요"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 모드 4: 수동 입력 ── -->
+<div id="section-manual" style="display:none">
+  <div class="card">
+    <h2>📋 기본 정보</h2>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>모임 이름</label>
+        <input type="text" id="m-name" placeholder="예: 강남 주말 러닝 모임"/>
+      </div>
+      <div class="form-group">
+        <label>카테고리</label>
+        <select id="m-category">
+          <option value="운동">🏃 운동/스포츠</option>
+          <option value="독서">📚 독서/공부</option>
+          <option value="맛집">🍽️ 맛집/카페</option>
+          <option value="취미">🎨 취미/공예</option>
+          <option value="반려동물">🐶 반려동물</option>
+          <option value="육아">👶 육아/교육</option>
+          <option value="여행">✈️ 여행/나들이</option>
+          <option value="기타">📌 기타</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>가입 방식</label>
+        <select id="m-joinType">
+          <option value="open">자유 가입</option>
+          <option value="approval">승인 후 가입</option>
+          <option value="closed">비공개</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>멤버 수</label>
+        <input type="number" id="m-members" placeholder="예: 85"/>
+      </div>
+      <div class="form-group">
+        <label>운영 기간 (개월)</label>
+        <input type="number" id="m-months" placeholder="예: 6"/>
+      </div>
+      <div class="form-group">
+        <label>커버 이미지 있음?</label>
+        <select id="m-hasCover">
+          <option value="yes">있음</option>
+          <option value="no">없음</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>태그 설정 여부</label>
+        <select id="m-hasTags">
+          <option value="yes">설정함</option>
+          <option value="no">안 함</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>오프라인 모임 있음?</label>
+        <select id="m-hasOffline">
+          <option value="yes">있음</option>
+          <option value="no">없음</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>활동 지역 수</label>
+        <select id="m-regionCount">
+          <option value="1">1개 동네</option>
+          <option value="3">2~3개 동네</option>
+          <option value="5">4개 이상</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>모임 소개글</label>
+        <textarea id="m-intro" placeholder="현재 작성된 모임 소개글을 붙여넣어 주세요"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 활동 현황</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>주간 게시글 수</label>
+        <input type="number" id="m-weeklyPosts" placeholder="예: 5"/>
+      </div>
+      <div class="form-group">
+        <label>평균 댓글 수 (게시글당)</label>
+        <input type="number" id="m-avgComments" placeholder="예: 8"/>
+      </div>
+      <div class="form-group">
+        <label>평균 반응 수 (게시글당)</label>
+        <input type="number" id="m-avgReactions" placeholder="예: 15"/>
+      </div>
+      <div class="form-group">
+        <label>사진 포함 게시글 비율 (%)</label>
+        <input type="number" id="m-photoRatio" placeholder="예: 60" max="100"/>
+      </div>
+      <div class="form-group">
+        <label>최근 1개월 신규 멤버 수</label>
+        <input type="number" id="m-newMembers" placeholder="예: 12"/>
+      </div>
+      <div class="form-group">
+        <label>멤버 중 게시글 작성 비율 (%)</label>
+        <input type="number" id="m-activeRatio" placeholder="예: 30" max="100"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn-analyze" onclick="analyze()">🥕 분석하기</button>
+
+<!-- ── 결과 ── -->
+<div id="result">
+  <div class="result-card">
+    <h2>📈 모임 종합 점수</h2>
+    <div class="score-box">
+      <div class="score-number" id="totalScore">0</div>
+      <div class="score-label" id="scoreLabel"></div>
+    </div>
+    <div id="statBars"></div>
+  </div>
+  <div class="result-card"><h2>✅ 잘 하고 있는 것</h2><div id="recoKeep"></div></div>
+  <div class="result-card"><h2>✏️ 수정하면 좋을 것</h2><div id="recoFix"></div></div>
+  <div class="result-card"><h2>➕ 추가하면 좋을 것</h2><div id="recoAdd"></div></div>
+  <div class="result-card"><h2>❌ 줄이거나 없애면 좋을 것</h2><div id="recoRemove"></div></div>
+  <div class="result-card">
+    <h2>🥕 이번 달 집중 전략</h2>
+    <div class="tip-box" id="tipBox"></div>
+  </div>
+</div>
+
+<footer><p>🥕 당근 모임을 더 많은 이웃과 함께 키워나가세요</p></footer>
+
+<script>
+let currentTab = 'quick';
+
+// ── 탭 전환 ──
+function switchTab(tab) {
+  currentTab = tab;
+  ['quick','screenshot','paste','manual'].forEach(t => {
+    document.getElementById('section-' + t).style.display = t === tab ? 'block' : 'none';
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+  });
+}
+
+// ── 스크린샷 ──
+function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
+function handleDragLeave(e) { document.getElementById('uploadZone').classList.remove('dragover'); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadScreenshot(file);
+}
+function handleScreenshot(e) {
+  const file = e.target.files[0];
+  if (file) loadScreenshot(file);
+}
+function loadScreenshot(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('screenshotPreview').src = e.target.result;
+    document.getElementById('screenshotLayout').classList.add('show');
+    document.getElementById('screenshotForm').style.display = 'block';
+    document.getElementById('uploadZone').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+function removeScreenshot() {
+  document.getElementById('screenshotPreview').src = '';
+  document.getElementById('screenshotLayout').classList.remove('show');
+  document.getElementById('screenshotForm').style.display = 'none';
+  document.getElementById('uploadZone').style.display = 'block';
+  document.getElementById('screenshotInput').value = '';
+}
+
+// ── 텍스트 파싱 ──
+function parseText() {
+  const text = document.getElementById('pasteText').value;
+  if (!text.trim()) { alert('텍스트를 먼저 붙여넣어 주세요!'); return; }
+
+  const found = {};
+
+  // 멤버 수
+  const memberMatch = text.match(/멤버\s*[:·]?\s*(\d+)|(\d+)\s*명?\s*(의\s*)?멤버|(\d+)\s*members?/i);
+  if (memberMatch) found.members = parseInt(memberMatch[1] || memberMatch[2] || memberMatch[4]);
+
+  // 게시글 수 (주간)
+  const postMatch = text.match(/주\s*(\d+)\s*개?|(\d+)\s*개?\s*\/?\s*주|게시글\s*[:·]?\s*(\d+)/i);
+  if (postMatch) found.weeklyPosts = parseInt(postMatch[1] || postMatch[2] || postMatch[3]);
+
+  // 댓글
+  const commentMatch = text.match(/댓글\s*[:·]?\s*(\d+)|(\d+)\s*개?\s*댓글/i);
+  if (commentMatch) found.avgComments = parseInt(commentMatch[1] || commentMatch[2]);
+
+  // 반응/좋아요
+  const reactMatch = text.match(/반응\s*[:·]?\s*(\d+)|좋아요\s*[:·]?\s*(\d+)|(\d+)\s*개?\s*(반응|좋아요)/i);
+  if (reactMatch) found.avgReactions = parseInt(reactMatch[1] || reactMatch[2] || reactMatch[3]);
+
+  // 신규 멤버
+  const newMatch = text.match(/신규\s*[:·]?\s*(\d+)|(\d+)\s*명?\s*신규|이번\s*달\s*[:·]?\s*(\d+)/i);
+  if (newMatch) found.newMembers = parseInt(newMatch[1] || newMatch[2] || newMatch[3]);
+
+  // 소개글 추출 (긴 텍스트)
+  const lines = text.split('\n').filter(l => l.trim().length > 20);
+  if (lines.length > 0) found.intro = lines.join('\n');
+
+  // 결과 태그 표시
+  const tagDefs = [
+    { key: 'members',      label: '멤버 수' },
+    { key: 'weeklyPosts',  label: '주간 게시글' },
+    { key: 'avgComments',  label: '평균 댓글' },
+    { key: 'avgReactions', label: '평균 반응' },
+    { key: 'newMembers',   label: '신규 멤버' },
+    { key: 'intro',        label: '소개글' },
+  ];
+  const tagsEl = document.getElementById('parsedTags');
+  tagsEl.innerHTML = tagDefs.map(t => {
+    const v = found[t.key];
+    const ok = v !== undefined && v !== '';
+    return `<span class="parsed-tag ${ok ? 'found' : 'notfound'}">${ok ? '✅' : '❓'} ${t.label}${ok && t.key !== 'intro' ? ': ' + v : ''}</span>`;
+  }).join('');
+  tagsEl.style.display = 'flex';
+
+  // 폼에 자동 입력
+  if (found.members)      { const el = document.getElementById('p-members');      el.value = found.members;      el.classList.add('autofilled'); }
+  if (found.weeklyPosts)  { const el = document.getElementById('p-weeklyPosts');  el.value = found.weeklyPosts;  el.classList.add('autofilled'); }
+  if (found.avgComments)  { const el = document.getElementById('p-avgComments');  el.value = found.avgComments;  el.classList.add('autofilled'); }
+  if (found.avgReactions) { const el = document.getElementById('p-avgReactions'); el.value = found.avgReactions; el.classList.add('autofilled'); }
+  if (found.newMembers)   { const el = document.getElementById('p-newMembers');   el.value = found.newMembers;   el.classList.add('autofilled'); }
+  if (found.intro)        { const el = document.getElementById('p-intro');        el.value = found.intro;        el.classList.add('autofilled'); }
+
+  document.getElementById('parsedForm').style.display = 'block';
+
+  const foundCount = Object.keys(found).length;
+  if (foundCount === 0) alert('숫자를 찾지 못했어요. 아래 폼에 직접 입력해 주세요.');
+}
+
+// ── 값 읽기 헬퍼 ──
+function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
+function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+// ── 분석 ──
+function analyze() {
+  let members, weeklyPosts, avgComments, avgReactions, newMembers, intro, hasCover, hasOffline;
+  avgComments = 0; avgReactions = 0; newMembers = 0;
+
+  if (currentTab === 'quick') {
+    members     = getNum('q-members');
+    weeklyPosts = getNum('q-weeklyPosts');
+    hasCover    = getVal('q-hasCover');
+    hasOffline  = getVal('q-hasOffline');
+    intro       = getVal('q-intro').trim();
+  } else if (currentTab === 'screenshot') {
+    members      = getNum('s-members');
+    weeklyPosts  = getNum('s-weeklyPosts');
+    avgComments  = getNum('s-avgComments');
+    avgReactions = getNum('s-avgReactions');
+    hasCover     = getVal('s-hasCover');
+    hasOffline   = getVal('s-hasOffline');
+    intro        = getVal('s-intro').trim();
+  } else if (currentTab === 'paste') {
+    members      = getNum('p-members');
+    weeklyPosts  = getNum('p-weeklyPosts');
+    avgComments  = getNum('p-avgComments');
+    avgReactions = getNum('p-avgReactions');
+    newMembers   = getNum('p-newMembers');
+    hasCover     = getVal('p-hasCover');
+    intro        = getVal('p-intro').trim();
+    hasOffline   = 'no';
+  } else {
+    // 수동 입력
+    members      = getNum('m-members');
+    weeklyPosts  = getNum('m-weeklyPosts');
+    avgComments  = getNum('m-avgComments');
+    avgReactions = getNum('m-avgReactions');
+    newMembers   = getNum('m-newMembers');
+    hasCover     = getVal('m-hasCover');
+    hasOffline   = getVal('m-hasOffline');
+    intro        = getVal('m-intro').trim();
+  }
+
+  if (!members) { alert('멤버 수를 입력해 주세요!'); return; }
+
+  // ── 지표 ──
+  const engRate    = members > 0 ? ((avgReactions + avgComments) / members) * 100 : 0;
+  const growthRate = members > 0 ? (newMembers / members) * 100 : 0;
+
+  // ── 점수 ──
+  let score = 0;
+  const statData = [];
+
+  // 참여율 (빠른 모드엔 데이터 없으므로 게시글 빈도로 대체)
+  let erScore;
+  if (avgReactions + avgComments > 0) {
+    erScore = engRate >= 10 ? 20 : engRate >= 5 ? 15 : engRate >= 2 ? 9 : 4;
+    statData.push({ name: '멤버 참여율', val: engRate.toFixed(1) + '%', score: erScore, max: 20,
+      desc: '멤버 중 실제로 반응하는 비율. 5% 이상이면 활성 모임이에요.',
+      tip: '(반응+댓글) ÷ 멤버 × 100\n10% 이상: 우수\n5~10%: 양호\n2% 미만: 낮음' });
+  } else {
+    erScore = 10; // 데이터 없으면 중간값
+    statData.push({ name: '멤버 참여율', val: '데이터 없음', score: erScore, max: 20,
+      desc: '평균 댓글/반응 수를 입력하면 정확한 참여율을 계산해요.',
+      tip: '스크린샷 또는 텍스트 모드로\n더 정밀하게 분석할 수 있어요.' });
+  }
+  score += erScore;
+
+  // 게시글 빈도
+  let freqScore = weeklyPosts >= 5 ? 20 : weeklyPosts >= 3 ? 16 : weeklyPosts >= 1 ? 10 : 3;
+  score += freqScore;
+  statData.push({ name: '게시글 빈도', val: weeklyPosts + '개/주', score: freqScore, max: 20,
+    desc: '꾸준한 게시글이 모임을 살아있게 해요. 주 3개 이상 권장이에요.',
+    tip: '주 1개: 최소\n주 3~5개: 적정\n주 7개 이상: 활성화' });
+
+  // 성장률
+  let growScore = 10;
+  if (newMembers > 0) {
+    growScore = growthRate >= 15 ? 20 : growthRate >= 8 ? 15 : growthRate >= 3 ? 10 : 4;
+  }
+  score += growScore;
+  statData.push({ name: '월 성장률', val: newMembers > 0 ? growthRate.toFixed(1) + '%' : '데이터 없음', score: growScore, max: 20,
+    desc: '한 달간 신규 멤버 유입 비율이에요. 8% 이상이면 성장 중이에요.',
+    tip: '신규멤버 ÷ 전체멤버 × 100\n15% 이상: 빠른 성장\n8~15%: 안정 성장\n3% 미만: 정체' });
+
+  // 소개글
+  let introScore = intro.length >= 50 ? 20 : intro.length >= 20 ? 13 : intro.length > 0 ? 7 : 3;
+  score += introScore;
+  statData.push({ name: '소개글 완성도', val: intro.length > 0 ? intro.length + '자' : '없음', score: introScore, max: 20,
+    desc: '모임의 첫인상을 결정해요. 50자 이상 상세하게 쓸수록 가입률이 높아요.',
+    tip: '0자: 매우 낮음\n20~50자: 보통\n50자 이상: 좋음\n100자 이상: 우수' });
+
+  // 프로필 완성도
+  let profileScore = 0;
+  if (hasCover === 'yes') profileScore += 10;
+  if (hasOffline === 'yes') profileScore += 10;
+  score += profileScore;
+  statData.push({ name: '모임 완성도', val: profileScore + '/20', score: profileScore, max: 20,
+    desc: '커버 이미지와 오프라인 모임이 있을수록 신뢰도 높은 모임으로 보여요.',
+    tip: '커버 이미지(10점)\n+ 오프라인 모임(10점) = 20점' });
+
+  const totalScore = Math.round(score);
+  const label =
+    totalScore >= 85 ? '🏆 최우수 모임 — 이 방향 그대로 유지하세요!' :
+    totalScore >= 70 ? '🌟 활성 모임 — 조금만 다듬으면 폭발 성장 가능해요' :
+    totalScore >= 50 ? '📈 성장 중 — 몇 가지 개선으로 노출이 크게 늘어나요' :
+    totalScore >= 30 ? '🛠️ 개선 필요 — 아래 전략을 하나씩 적용해 보세요' :
+                       '⚠️ 기초부터 — 소개글과 활동 빈도부터 잡아요';
+
+  document.getElementById('totalScore').textContent = totalScore;
+  document.getElementById('scoreLabel').textContent = label;
+
+  // 막대 그래프
+  let barsHtml = '';
+  statData.forEach(s => {
+    const pct = Math.round((s.score / s.max) * 100);
+    const cls = pct >= 70 ? 'bar-good' : pct >= 40 ? 'bar-mid' : 'bar-bad';
+    barsHtml += `<div class="stat-row">
+      <div class="stat-name-wrap">
+        <div class="stat-name">${s.name}
+          <span class="tooltip-wrap" onclick="this.classList.toggle('active')">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">${s.tip.replace(/\n/g,'<br/>')}</div>
+          </span>
+        </div>
+        <div class="stat-desc">${s.desc}</div>
+      </div>
+      <div class="bar-wrap"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
+      <span class="stat-val">${s.val}</span>
+    </div>`;
+  });
+  document.getElementById('statBars').innerHTML = barsHtml;
+
+  // ── 추천 ──
+  const keep = [], fix = [], add = [], remove = [];
+
+  if (engRate >= 10) keep.push('참여율 ' + engRate.toFixed(1) + '%로 매우 활성화된 모임이에요. 이 분위기를 유지하세요.');
+  else if (engRate >= 5 && engRate > 0) fix.push('참여율 ' + engRate.toFixed(1) + '%. 게시글 끝에 "여러분은 어떠세요?" 질문을 추가해 보세요.');
+  else if (avgComments + avgReactions > 0) fix.push('참여율이 낮아요. "이번 주 한 줄 인사" 같은 쉬운 참여 유도 게시글로 시작해 보세요.');
+
+  if (weeklyPosts >= 5) keep.push('주 ' + weeklyPosts + '개의 활발한 게시글 덕에 모임이 살아있어 보여요. 계속 유지해 주세요.');
+  else if (weeklyPosts >= 3) keep.push('주 ' + weeklyPosts + '개로 꾸준하게 운영 중이에요.');
+  else if (weeklyPosts >= 1) fix.push('주 ' + weeklyPosts + '개는 조금 부족해요. 운영자가 먼저 주 3개 이상 올려서 분위기를 만들어 주세요.');
+  else add.push('게시글이 거의 없어요. 운영자가 먼저 자기소개나 일상 글을 올려서 멤버들이 따라올 물꼬를 터주세요.');
+
+  if (intro.length === 0) add.push('소개글이 없어요! 어떤 모임인지, 어떤 사람들이 모이는지 3~5줄로 작성하면 가입률이 크게 올라가요.');
+  else if (intro.length < 30) fix.push('소개글이 너무 짧아요. 모임의 활동 방식과 분위기를 좀 더 풍부하게 설명해 주세요.');
+  else keep.push('소개글이 잘 작성되어 있어요. 키워드가 잘 담겨 있는지 주기적으로 점검해 보세요.');
+
+  if (hasCover === 'no') add.push('커버 이미지가 없어요. 모임 목록에서 클릭률을 가장 빠르게 올릴 수 있는 방법이에요. 모임 분위기를 보여주는 사진으로 꼭 설정하세요.');
+  else keep.push('커버 이미지가 있어요. 모임 분위기를 잘 보여주는 사진인지 주기적으로 바꿔주면 더 좋아요.');
+
+  if (hasOffline === 'no') add.push('오프라인 정기 모임을 추가해 보세요. 3~5명이라도 만나면 후기 게시글이 생기고 신규 멤버 유입이 크게 늘어요.');
+  else keep.push('오프라인 모임이 있어 신뢰도가 높아요. 후기 사진을 꾸준히 올려서 이 신뢰를 보여주세요.');
+
+  if (growthRate > 0 && growthRate < 5) fix.push('성장률이 ' + growthRate.toFixed(1) + '%로 느린 편이에요. 오프라인 모임 후기나 멤버 자기소개 게시글을 올리면 자연스럽게 공유돼요.');
+  else if (growthRate >= 15) keep.push('이번 달 신규 멤버가 ' + newMembers + '명으로 빠르게 성장 중이에요!');
+
+  function renderItems(items, id, cls) {
+    const icons = { 'reco-keep': '✅', 'reco-fix': '✏️', 'reco-add': '➕', 'reco-remove': '❌' };
+    document.getElementById(id).innerHTML = items.length === 0
+      ? `<div class="reco-item ${cls}"><span class="reco-icon">—</span> 해당 사항 없음</div>`
+      : items.map(t => `<div class="reco-item ${cls}"><span class="reco-icon">${icons[cls]}</span><span>${t}</span></div>`).join('');
+  }
+  renderItems(keep,   'recoKeep',   'reco-keep');
+  renderItems(fix,    'recoFix',    'reco-fix');
+  renderItems(add,    'recoAdd',    'reco-add');
+  renderItems(remove, 'recoRemove', 'reco-remove');
+
+  const tips = [];
+  if (hasCover === 'no') tips.push('<strong>커버 이미지부터</strong> 설정하세요 — 클릭률을 가장 빠르게 올리는 방법이에요.');
+  if (weeklyPosts < 3) tips.push('<strong>주 3개 게시글</strong>을 목표로 하세요 — 운영자가 먼저 올리면 멤버들도 따라와요.');
+  if (engRate < 5 && engRate > 0) tips.push('<strong>질문형 게시글</strong>을 써보세요 — "이번 주 어디 다녀오셨어요?" 같은 쉬운 질문이 댓글을 3배 늘려요.');
+  if (hasOffline === 'no') tips.push('<strong>소규모 오프라인</strong>을 시작해 보세요 — 3명이라도 만나고 사진 올리면 신규 유입이 확 늘어요.');
+  if (intro.length < 30) tips.push('<strong>소개글을 정성껏</strong> 써보세요 — "어떤 사람들이 모이는지"를 구체적으로 쓰면 딱 맞는 멤버가 찾아와요.');
+  if (tips.length === 0) tips.push('방향이 아주 좋아요! <strong>꾸준함</strong>이 핵심이에요. 매주 비슷한 시간에 게시글을 올리는 루틴을 만들어 보세요.');
+
+  document.getElementById('tipBox').innerHTML = tips.map(t => `• ${t}`).join('<br/><br/>');
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
