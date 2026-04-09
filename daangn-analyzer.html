@@ -254,11 +254,10 @@
 <body>
 
 <header>
-  <p style="font-size:0.8rem; color:#ccc; margin-bottom:6px;">by longchiri</p>
+  <p style="font-size:1rem; margin-bottom:6px;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
   <div class="logo">🥕</div>
   <h1>당근 모임 분석기</h1>
   <p>알고리즘 기반으로 내 모임의 상위 노출 전략을 분석해요</p>
-  <div class="algo-badge">Two-Tower 추천 모델 기반 · Act 40% · Rel 30% · Rec 20% · Dist 10%</div>
 </header>
 
 <!-- 탭 -->
@@ -597,14 +596,11 @@
 
   <!-- 1. 종합 점수 -->
   <div class="result-card">
-    <h2>📊 Two-Tower 알고리즘 호환 점수</h2>
+    <h2>📊 종합 점수</h2>
     <div class="score-box">
       <div class="score-number" id="totalScore">0</div>
       <div class="score-label" id="scoreLabel"></div>
     </div>
-
-    <!-- 알고리즘 수식 -->
-    <div class="algo-formula" id="algoFormula"></div>
 
     <!-- 4요소 카드 -->
     <div class="component-grid" id="componentGrid"></div>
@@ -628,7 +624,7 @@
 
   <!-- 3. 키워드 최적화 -->
   <div class="result-card">
-    <h2>🔍 키워드 최적화 분석 <span style="font-size:0.78rem; color:#aaa; font-weight:400;">(Relevance Tower)</span></h2>
+    <h2>🔍 키워드 최적화 분석</h2>
     <div id="keywordAnalysis"></div>
   </div>
 
@@ -659,7 +655,7 @@
 
 <footer>
   <p>🥕 당근 모임을 더 많은 이웃과 함께 키워나가세요</p>
-  <p style="margin-top: 10px; font-size: 0.85rem; color: #ccc;">by longchiri</p>
+  <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
   <p style="margin-top: 4px; font-size: 0.75rem; color: #ddd;">Ver2.1</p>
 </footer>
 
@@ -891,15 +887,6 @@ function analyze() {
 
   document.getElementById('totalScore').textContent = totalScore;
   document.getElementById('scoreLabel').textContent = label;
-
-  // ── 알고리즘 수식 표시 ──
-  document.getElementById('algoFormula').innerHTML =
-    `<span class="f-label">Score</span> <span class="f-op">=</span> `+
-    `<span class="f-op">(0.4 ×</span> <span class="f-val">${actScore}</span><span class="f-op">)</span> <span class="f-op">+</span> `+
-    `<span class="f-op">(0.3 ×</span> <span class="f-val">${relScore}</span><span class="f-op">)</span> <span class="f-op">+</span> `+
-    `<span class="f-op">(0.2 ×</span> <span class="f-val">${recScore}</span><span class="f-op">)</span> <span class="f-op">−</span> `+
-    `<span class="f-op">(0.1 ×</span> <span class="f-val">${distPenalty}</span><span class="f-op">)</span> <span class="f-op">+</span> `+
-    `<span class="f-label">Boost</span> <span class="f-val">${boostScore}</span> <span class="f-op">= </span><span class="f-label">${totalScore}</span>`;
 
   // ── 4요소 카드 ──
   document.getElementById('componentGrid').innerHTML = `
