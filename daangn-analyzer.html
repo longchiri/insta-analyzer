@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <p style="font-size:0.8rem; color:#000000; margin-bottom:6px;">by lonchiri</p>
   <title>당근 모임 분석기</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,6 +23,16 @@
       font-weight: 900;
     }
     header p { color: #aaa; margin-top: 6px; font-size: 0.9rem; }
+    .algo-badge {
+      display: inline-block;
+      background: linear-gradient(90deg, #FF6F0F, #FF9744);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 99px;
+      margin-top: 8px;
+    }
 
     /* 탭 */
     .tab-wrap {
@@ -73,6 +82,7 @@
     .form-group { display: flex; flex-direction: column; gap: 5px; }
     .form-group.full { grid-column: 1 / -1; }
     label { font-size: 0.8rem; font-weight: 600; color: #777; }
+    label .hint { font-size: 0.72rem; color: #bbb; font-weight: 400; margin-left: 4px; }
     input, textarea, select {
       border: 1.5px solid #ebebeb;
       border-radius: 10px;
@@ -87,7 +97,6 @@
     textarea { resize: vertical; min-height: 80px; }
     input.autofilled { border-color: #68d391 !important; background: #f0fff4 !important; }
 
-    /* ── 모드 1: 빠른 입력 ── */
     .quick-badge {
       display: inline-block;
       background: #FF6F0F;
@@ -99,7 +108,7 @@
       margin-left: 6px;
     }
 
-    /* ── 모드 2: 스크린샷 ── */
+    /* 업로드 존 */
     .upload-zone {
       border: 2.5px dashed #ffd0a8;
       border-radius: 14px;
@@ -116,156 +125,61 @@
     .upload-zone p { font-size: 0.82rem; color: #bbb; }
     #screenshotInput { display: none; }
 
-    .screenshot-layout {
-      display: none;
-      gap: 16px;
-      margin-top: 16px;
-    }
+    .screenshot-layout { display: none; gap: 16px; margin-top: 16px; }
     .screenshot-layout.show { display: flex; flex-direction: column; }
-    .screenshot-preview {
-      width: 100%;
-      border-radius: 12px;
-      border: 1.5px solid #ebebeb;
-      max-height: 350px;
-      object-fit: contain;
-      background: #f9f9f9;
-    }
-    .screenshot-hint {
-      background: #fff9f5;
-      border-left: 3px solid #FF9744;
-      border-radius: 0 10px 10px 0;
-      padding: 12px 14px;
-      font-size: 0.82rem;
-      color: #7c4d00;
-      line-height: 1.7;
-    }
-    .remove-img-btn {
-      background: #fff0f0;
-      border: none;
-      color: #e53e3e;
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-      margin-top: 6px;
-      align-self: flex-start;
-    }
+    .screenshot-preview { width: 100%; border-radius: 12px; border: 1.5px solid #ebebeb; max-height: 350px; object-fit: contain; background: #f9f9f9; }
+    .screenshot-hint { background: #fff9f5; border-left: 3px solid #FF9744; border-radius: 0 10px 10px 0; padding: 12px 14px; font-size: 0.82rem; color: #7c4d00; line-height: 1.7; }
+    .remove-img-btn { background: #fff0f0; border: none; color: #e53e3e; border-radius: 8px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-family: inherit; font-weight: 600; margin-top: 6px; align-self: flex-start; }
 
-    /* ── 모드 3: 텍스트 붙여넣기 ── */
-    .paste-area {
-      width: 100%;
-      border: 1.5px solid #ebebeb;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 0.9rem;
-      font-family: inherit;
-      background: #fafafa;
-      min-height: 130px;
-      resize: vertical;
-      outline: none;
-      transition: border 0.2s;
-      line-height: 1.7;
-    }
+    /* 붙여넣기 */
+    .paste-area { width: 100%; border: 1.5px solid #ebebeb; border-radius: 12px; padding: 14px; font-size: 0.9rem; font-family: inherit; background: #fafafa; min-height: 130px; resize: vertical; outline: none; transition: border 0.2s; line-height: 1.7; }
     .paste-area:focus { border-color: #FF6F0F; background: #fff; }
-    .parse-btn {
-      display: block;
-      width: 100%;
-      margin-top: 12px;
-      padding: 12px;
-      background: #fff3e8;
-      color: #FF6F0F;
-      border: 1.5px solid #ffd0a8;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s;
-    }
+    .parse-btn { display: block; width: 100%; margin-top: 12px; padding: 12px; background: #fff3e8; color: #FF6F0F; border: 1.5px solid #ffd0a8; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
     .parse-btn:hover { background: #ffe8d0; }
-
-    .parsed-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-    .parsed-tag {
-      background: #fff3e8;
-      border: 1.5px solid #ffd0a8;
-      color: #7c4d00;
-      border-radius: 99px;
-      padding: 4px 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
+    .parsed-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .parsed-tag { background: #fff3e8; border: 1.5px solid #ffd0a8; color: #7c4d00; border-radius: 99px; padding: 4px 12px; font-size: 0.8rem; font-weight: 600; }
     .parsed-tag.found { background: #f0fff4; border-color: #68d391; color: #276749; }
     .parsed-tag.notfound { background: #fff5f5; border-color: #fc8181; color: #742a2a; }
-
-    .paste-example {
-      background: #f9f9f9;
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 0.8rem;
-      color: #999;
-      line-height: 1.8;
-      margin-top: 10px;
-      border: 1px dashed #e5e5e5;
-    }
-    .paste-example strong { color: #666; }
+    .paste-example { background: #f9f9f9; border-radius: 10px; padding: 12px 14px; font-size: 0.8rem; color: #999; line-height: 1.8; margin-top: 10px; border: 1px dashed #e5e5e5; }
 
     /* 분석 버튼 */
-    .btn-analyze {
-      display: block;
-      width: 100%;
-      max-width: 720px;
-      margin: 0 auto 28px;
-      padding: 16px;
-      background: linear-gradient(90deg, #FF6F0F, #FF9744);
-      color: #fff;
-      font-size: 1.05rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-      font-family: inherit;
-      box-shadow: 0 4px 16px rgba(255,111,15,0.25);
-    }
+    .btn-analyze { display: block; width: 100%; max-width: 720px; margin: 0 auto 28px; padding: 16px; background: linear-gradient(90deg, #FF6F0F, #FF9744); color: #fff; font-size: 1.05rem; font-weight: 700; border: none; border-radius: 14px; cursor: pointer; transition: opacity 0.2s, transform 0.1s; font-family: inherit; box-shadow: 0 4px 16px rgba(255,111,15,0.25); }
     .btn-analyze:hover { opacity: 0.92; transform: translateY(-1px); }
 
     /* 결과 */
     #result { display: none; }
-    .result-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 24px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 20px rgba(255,111,15,0.07);
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    .result-card { background: #fff; border-radius: 18px; padding: 24px; margin-bottom: 18px; box-shadow: 0 4px 20px rgba(255,111,15,0.07); max-width: 720px; margin-left: auto; margin-right: auto; }
     .result-card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: #333; }
 
-    .score-box {
-      text-align: center;
-      padding: 22px;
-      background: linear-gradient(135deg, #fff3e8, #ffe0c8);
-      border-radius: 14px;
-      margin-bottom: 18px;
-    }
-    .score-number {
-      font-size: 3.6rem;
-      font-weight: 900;
-      background: linear-gradient(90deg, #FF6F0F, #FF9744);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    /* 메인 점수 */
+    .score-box { text-align: center; padding: 22px; background: linear-gradient(135deg, #fff3e8, #ffe0c8); border-radius: 14px; margin-bottom: 18px; }
+    .score-number { font-size: 3.6rem; font-weight: 900; background: linear-gradient(90deg, #FF6F0F, #FF9744); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .score-label { color: #aaa; font-size: 0.88rem; margin-top: 4px; }
 
+    /* 알고리즘 성분 분해 */
+    .algo-formula { background: #1a1a2e; border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; font-family: 'Courier New', monospace; font-size: 0.82rem; color: #e0e0e0; line-height: 2; }
+    .algo-formula .f-label { color: #FF9744; font-weight: 700; }
+    .algo-formula .f-val { color: #68d391; font-weight: 700; }
+    .algo-formula .f-op { color: #aaa; }
+
+    .component-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+    @media (max-width: 500px) { .component-grid { grid-template-columns: 1fr; } }
+    .component-card { border-radius: 12px; padding: 14px 16px; }
+    .comp-act  { background: #fff3e8; border-left: 4px solid #FF6F0F; }
+    .comp-rel  { background: #f0f8ff; border-left: 4px solid #4299e1; }
+    .comp-rec  { background: #f0fff4; border-left: 4px solid #48bb78; }
+    .comp-dist { background: #faf5ff; border-left: 4px solid #9f7aea; }
+    .comp-boost { background: #fffbeb; border-left: 4px solid #f6ad55; }
+    .comp-title { font-size: 0.78rem; font-weight: 700; color: #555; margin-bottom: 4px; }
+    .comp-score { font-size: 1.6rem; font-weight: 900; }
+    .comp-act .comp-score  { color: #FF6F0F; }
+    .comp-rel .comp-score  { color: #4299e1; }
+    .comp-rec .comp-score  { color: #48bb78; }
+    .comp-dist .comp-score { color: #9f7aea; }
+    .comp-boost .comp-score { color: #ed8936; }
+    .comp-weight { font-size: 0.72rem; color: #aaa; margin-top: 2px; }
+
+    /* 바 그래프 */
     .stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
     .stat-name-wrap { width: 140px; flex-shrink: 0; }
     .stat-name { font-size: 0.83rem; color: #555; display: flex; align-items: center; gap: 4px; font-weight: 600; }
@@ -277,51 +191,62 @@
     .bar-bad  { background: linear-gradient(90deg, #cb2d3e, #ef473a); }
     .stat-val { width: 60px; text-align: right; font-size: 0.8rem; color: #bbb; }
 
+    /* 툴팁 */
     .tooltip-wrap { position: relative; display: inline-flex; }
-    .tooltip-icon {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 15px; height: 15px; border-radius: 50%;
-      background: #ffe0cc; color: #FF6F0F; font-size: 0.65rem; font-weight: 700;
-      cursor: pointer;
-    }
-    .tooltip-box {
-      display: none;
-      position: absolute; left: 20px; top: -6px;
-      background: #2d3748; color: #fff;
-      font-size: 0.76rem; line-height: 1.6;
-      padding: 10px 13px; border-radius: 10px;
-      width: 200px; z-index: 99;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-      white-space: pre-line;
-    }
-    .tooltip-box::before {
-      content: ''; position: absolute;
-      left: -6px; top: 10px;
-      border: 6px solid transparent;
-      border-right-color: #2d3748; border-left: none;
-    }
-    .tooltip-wrap:hover .tooltip-box,
-    .tooltip-wrap.active .tooltip-box { display: block; }
+    .tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: #ffe0cc; color: #FF6F0F; font-size: 0.65rem; font-weight: 700; cursor: pointer; }
+    .tooltip-box { display: none; position: absolute; left: 20px; top: -6px; background: #2d3748; color: #fff; font-size: 0.76rem; line-height: 1.6; padding: 10px 13px; border-radius: 10px; width: 200px; z-index: 99; box-shadow: 0 4px 16px rgba(0,0,0,0.18); white-space: pre-line; }
+    .tooltip-box::before { content: ''; position: absolute; left: -6px; top: 10px; border: 6px solid transparent; border-right-color: #2d3748; border-left: none; }
+    .tooltip-wrap:hover .tooltip-box, .tooltip-wrap.active .tooltip-box { display: block; }
 
-    .reco-item {
-      display: flex; align-items: flex-start; gap: 10px;
-      padding: 13px 15px; border-radius: 12px; margin-bottom: 9px;
-      font-size: 0.88rem; line-height: 1.6;
-    }
+    /* 추천 아이템 */
+    .reco-item { display: flex; align-items: flex-start; gap: 10px; padding: 13px 15px; border-radius: 12px; margin-bottom: 9px; font-size: 0.88rem; line-height: 1.6; }
     .reco-keep   { background: #fff8f0; color: #7c4d00; border-left: 3px solid #FF9744; }
     .reco-fix    { background: #fffbeb; color: #744210; border-left: 3px solid #f6ad55; }
     .reco-add    { background: #f0fff4; color: #276749; border-left: 3px solid #68d391; }
     .reco-remove { background: #fff5f5; color: #742a2a; border-left: 3px solid #fc8181; }
-    .reco-icon   { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    .reco-urgent { background: #fff5f5; color: #742a2a; border-left: 3px solid #fc4444; }
+    .reco-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
 
-    .tip-box {
-      background: linear-gradient(135deg, #fff3e8, #ffe8d0);
-      border-left: 4px solid #FF6F0F;
-      border-radius: 0 12px 12px 0;
-      padding: 16px 18px;
-      font-size: 0.87rem; color: #555; line-height: 1.8;
-    }
+    /* 운영 루틴 */
+    .routine-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 14px; }
+    .routine-day { text-align: center; }
+    .routine-day-label { font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600; }
+    .routine-dot { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; }
+    .dot-high { background: linear-gradient(135deg, #FF6F0F, #FF9744); color: #fff; }
+    .dot-mid  { background: #fff3e8; color: #FF6F0F; border: 2px solid #ffd0a8; }
+    .dot-low  { background: #f5f5f5; color: #ccc; border: 2px dashed #e5e5e5; }
+    .routine-task { font-size: 0.72rem; color: #888; margin-top: 4px; line-height: 1.4; }
+
+    .routine-legend { display: flex; gap: 12px; font-size: 0.75rem; color: #aaa; margin-bottom: 14px; flex-wrap: wrap; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+    /* 키워드 분석 */
+    .keyword-section { margin-bottom: 16px; }
+    .keyword-section-title { font-size: 0.82rem; font-weight: 700; color: #555; margin-bottom: 8px; }
+    .keyword-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .kw-tag { padding: 4px 10px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; }
+    .kw-good    { background: #f0fff4; border: 1.5px solid #68d391; color: #276749; }
+    .kw-suggest { background: #ebf8ff; border: 1.5px solid #90cdf4; color: #2a4365; }
+    .kw-miss    { background: #fff5f5; border: 1.5px dashed #fc8181; color: #742a2a; }
+    .kw-neutral { background: #f7fafc; border: 1.5px solid #e2e8f0; color: #718096; }
+
+    /* 채팅 전략 */
+    .strategy-item { background: #f9f9f9; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .strategy-title { font-size: 0.88rem; font-weight: 700; color: #333; margin-bottom: 6px; }
+    .strategy-desc  { font-size: 0.82rem; color: #666; line-height: 1.7; }
+    .strategy-example { margin-top: 8px; background: #fff; border-left: 3px solid #FF9744; border-radius: 0 8px 8px 0; padding: 8px 12px; font-size: 0.8rem; color: #7c4d00; line-height: 1.7; }
+
+    .tip-box { background: linear-gradient(135deg, #fff3e8, #ffe8d0); border-left: 4px solid #FF6F0F; border-radius: 0 12px 12px 0; padding: 16px 18px; font-size: 0.87rem; color: #555; line-height: 1.8; }
     .tip-box strong { color: #FF6F0F; }
+
+    /* 긴급도 배지 */
+    .urgency-badge { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 99px; margin-left: 6px; }
+    .urg-high { background: #fff5f5; color: #e53e3e; }
+    .urg-mid  { background: #fffbeb; color: #d69e2e; }
+    .urg-low  { background: #f0fff4; color: #276749; }
+
+    /* 섹션 구분선 */
+    .section-divider { border: none; border-top: 1px dashed #ebebeb; margin: 16px 0; }
 
     footer { text-align: center; color: #ddd; font-size: 0.78rem; margin-top: 8px; padding-bottom: 24px; }
   </style>
@@ -332,21 +257,22 @@
   <p style="font-size:0.8rem; color:#ccc; margin-bottom:6px;">by longchiri</p>
   <div class="logo">🥕</div>
   <h1>당근 모임 분석기</h1>
-  <p>3가지 방법 중 편한 걸로 입력하고 성장 전략을 받아보세요</p>
+  <p>알고리즘 기반으로 내 모임의 상위 노출 전략을 분석해요</p>
+  <div class="algo-badge">Two-Tower 추천 모델 기반 · Act 40% · Rel 30% · Rec 20% · Dist 10%</div>
 </header>
 
 <!-- 탭 -->
 <div class="tab-wrap">
-  <button class="tab-btn active" onclick="switchTab('quick')" id="tab-quick">⚡ 빠른<br/><span style="font-weight:400;font-size:0.7rem">핵심 4개</span></button>
+  <button class="tab-btn active" onclick="switchTab('quick')" id="tab-quick">⚡ 빠른<br/><span style="font-weight:400;font-size:0.7rem">핵심 입력</span></button>
   <button class="tab-btn" onclick="switchTab('screenshot')" id="tab-screenshot">📸 스크린샷<br/><span style="font-weight:400;font-size:0.7rem">앱 화면 올리기</span></button>
   <button class="tab-btn" onclick="switchTab('paste')" id="tab-paste">📋 붙여넣기<br/><span style="font-weight:400;font-size:0.7rem">자동 추출</span></button>
-  <button class="tab-btn" onclick="switchTab('manual')" id="tab-manual">✏️ 수동 입력<br/><span style="font-weight:400;font-size:0.7rem">직접 상세 입력</span></button>
+  <button class="tab-btn" onclick="switchTab('manual')" id="tab-manual">✏️ 수동 입력<br/><span style="font-weight:400;font-size:0.7rem">정밀 분석</span></button>
 </div>
 
 <!-- ── 모드 1: 빠른 입력 ── -->
 <div id="section-quick">
   <div class="card">
-    <h2>⚡ 핵심 정보만 입력하세요 <span class="quick-badge">4개</span></h2>
+    <h2>⚡ 핵심 정보 입력 <span class="quick-badge">알고리즘 4요소</span></h2>
     <div class="form-grid">
       <div class="form-group">
         <label>멤버 수</label>
@@ -355,6 +281,14 @@
       <div class="form-group">
         <label>주간 게시글 수</label>
         <input type="number" id="q-weeklyPosts" placeholder="예: 5"/>
+      </div>
+      <div class="form-group">
+        <label>72시간 내 채팅 수 <span class="hint">(Activity 핵심)</span></label>
+        <input type="number" id="q-chat72" placeholder="예: 30"/>
+      </div>
+      <div class="form-group">
+        <label>마지막 게시글 <span class="hint">(몇 시간 전)</span></label>
+        <input type="number" id="q-lastPost" placeholder="예: 12"/>
       </div>
       <div class="form-group">
         <label>커버 이미지 있음?</label>
@@ -371,8 +305,12 @@
         </select>
       </div>
       <div class="form-group full">
-        <label>모임 소개글 (선택)</label>
-        <textarea id="q-intro" placeholder="소개글을 붙여넣으면 더 정밀하게 분석해요 (없어도 OK)"></textarea>
+        <label>모임 소개글 <span class="hint">(키워드 분석에 사용)</span></label>
+        <textarea id="q-intro" placeholder="소개글을 붙여넣으면 키워드와 관련성을 자동으로 분석해요"></textarea>
+      </div>
+      <div class="form-group full">
+        <label>해시태그 <span class="hint">(쉼표 또는 # 구분)</span></label>
+        <input type="text" id="q-hashtags" placeholder="예: #독서모임, #대전, #주말모임"/>
       </div>
     </div>
   </div>
@@ -382,7 +320,6 @@
 <div id="section-screenshot" style="display:none">
   <div class="card">
     <h2>📸 당근 모임 화면을 캡처해서 올려주세요</h2>
-
     <div class="upload-zone" id="uploadZone"
          onclick="document.getElementById('screenshotInput').click()"
          ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
@@ -391,7 +328,6 @@
       <p>JPG, PNG, WEBP 지원</p>
     </div>
     <input type="file" id="screenshotInput" accept="image/*" onchange="handleScreenshot(event)"/>
-
     <div class="screenshot-layout" id="screenshotLayout">
       <button class="remove-img-btn" onclick="removeScreenshot()">✕ 다시 선택</button>
       <img id="screenshotPreview" class="screenshot-preview" src="" alt="모임 스크린샷"/>
@@ -400,8 +336,6 @@
         화면에 보이는 숫자를 그대로 입력하시면 돼요.
       </div>
     </div>
-
-    <!-- 스크린샷 보면서 입력하는 폼 -->
     <div id="screenshotForm" style="margin-top:16px; display:none;">
       <div class="form-grid">
         <div class="form-group">
@@ -421,6 +355,14 @@
           <input type="number" id="s-avgReactions" placeholder="게시글당 평균"/>
         </div>
         <div class="form-group">
+          <label>72시간 채팅 수 <span class="hint">(Activity 핵심)</span></label>
+          <input type="number" id="s-chat72" placeholder="예: 30"/>
+        </div>
+        <div class="form-group">
+          <label>마지막 게시글 <span class="hint">(몇 시간 전)</span></label>
+          <input type="number" id="s-lastPost" placeholder="예: 12"/>
+        </div>
+        <div class="form-group">
           <label>커버 이미지 있음?</label>
           <select id="s-hasCover">
             <option value="yes">있음</option>
@@ -435,8 +377,12 @@
           </select>
         </div>
         <div class="form-group full">
-          <label>소개글 (선택)</label>
+          <label>소개글 <span class="hint">(키워드 분석용)</span></label>
           <textarea id="s-intro" placeholder="화면에 보이는 소개글 붙여넣기"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>해시태그</label>
+          <input type="text" id="s-hashtags" placeholder="예: #독서모임, #대전"/>
         </div>
       </div>
     </div>
@@ -448,20 +394,15 @@
   <div class="card">
     <h2>📋 모임 정보 텍스트를 붙여넣어 주세요</h2>
     <textarea class="paste-area" id="pasteText"
-      placeholder="당근 모임 화면에서 텍스트를 길게 눌러 복사하거나&#10;소개글, 멤버 수, 게시글 수 등을 자유롭게 붙여넣어 주세요.&#10;&#10;예) 멤버 85명 · 게시글 120개 · 이번 달 신규 12명..."></textarea>
-
+      placeholder="당근 모임 화면에서 텍스트를 복사하거나&#10;소개글, 멤버 수, 게시글 수 등을 자유롭게 붙여넣어 주세요.&#10;&#10;예) 멤버 85명 · 게시글 120개 · 채팅 50개 · 이번 달 신규 12명..."></textarea>
     <div class="paste-example">
       <strong>💡 이런 형태면 자동으로 읽어요:</strong><br/>
-      멤버 85명 / 게시글 주 5개 / 신규 멤버 12명 이번달<br/>
+      멤버 85명 / 게시글 주 5개 / 신규 멤버 12명 이번달 / 채팅 30개<br/>
       "안녕하세요! 강남에서 매주 러닝하는 모임입니다. 멤버 120명..."<br/>
-      85 members · 댓글 평균 8개 · 반응 15개
+      85 members · 댓글 평균 8개 · 반응 15개 · 마지막 게시글 6시간 전
     </div>
-
     <button class="parse-btn" onclick="parseText()">🔍 자동으로 숫자 읽기</button>
-
     <div class="parsed-tags" id="parsedTags" style="display:none"></div>
-
-    <!-- 파싱 후 보정 폼 -->
     <div id="parsedForm" style="margin-top:18px; display:none;">
       <div style="font-size:0.82rem; color:#aaa; margin-bottom:12px;">📝 자동으로 읽은 값이에요. 틀린 게 있으면 수정해 주세요.</div>
       <div class="form-grid">
@@ -482,6 +423,14 @@
           <input type="number" id="p-avgReactions" placeholder="예: 15"/>
         </div>
         <div class="form-group">
+          <label>72시간 채팅 수</label>
+          <input type="number" id="p-chat72" placeholder="예: 30"/>
+        </div>
+        <div class="form-group">
+          <label>마지막 게시글 (몇 시간 전)</label>
+          <input type="number" id="p-lastPost" placeholder="예: 12"/>
+        </div>
+        <div class="form-group">
           <label>신규 멤버 (이번 달)</label>
           <input type="number" id="p-newMembers" placeholder="예: 12"/>
         </div>
@@ -496,6 +445,10 @@
           <label>소개글</label>
           <textarea id="p-intro" placeholder="소개글이 자동으로 채워져요"></textarea>
         </div>
+        <div class="form-group full">
+          <label>해시태그</label>
+          <input type="text" id="p-hashtags" placeholder="예: #독서모임, #대전"/>
+        </div>
       </div>
     </div>
   </div>
@@ -507,7 +460,7 @@
     <h2>📋 기본 정보</h2>
     <div class="form-grid">
       <div class="form-group full">
-        <label>모임 이름</label>
+        <label>모임 이름 <span class="hint">(키워드 분석에 사용)</span></label>
         <input type="text" id="m-name" placeholder="예: 강남 주말 러닝 모임"/>
       </div>
       <div class="form-group">
@@ -569,26 +522,57 @@
         </select>
       </div>
       <div class="form-group full">
-        <label>모임 소개글</label>
-        <textarea id="m-intro" placeholder="현재 작성된 모임 소개글을 붙여넣어 주세요"></textarea>
+        <label>모임 소개글 <span class="hint">(키워드 자동 분석)</span></label>
+        <textarea id="m-intro" placeholder="현재 작성된 모임 소개글을 붙여넣어 주세요. 길수록 더 정밀하게 분석해요."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>해시태그 <span class="hint">(쉼표 또는 # 구분)</span></label>
+        <input type="text" id="m-hashtags" placeholder="예: #독서모임, #대전, #주말, #책추천"/>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h2>📊 활동 현황</h2>
+    <h2>⚡ 활동성 (Activity) — 가중치 40%</h2>
     <div class="form-grid">
+      <div class="form-group">
+        <label>72시간 내 채팅 메시지 수 <span class="hint">★ 핵심 지표</span></label>
+        <input type="number" id="m-chat72" placeholder="예: 30"/>
+      </div>
+      <div class="form-group">
+        <label>마지막 채팅 (몇 시간 전)</label>
+        <input type="number" id="m-lastChat" placeholder="예: 3"/>
+      </div>
       <div class="form-group">
         <label>주간 게시글 수</label>
         <input type="number" id="m-weeklyPosts" placeholder="예: 5"/>
+      </div>
+      <div class="form-group">
+        <label>마지막 게시글 (몇 시간 전)</label>
+        <input type="number" id="m-lastPost" placeholder="예: 12"/>
       </div>
       <div class="form-group">
         <label>평균 댓글 수 (게시글당)</label>
         <input type="number" id="m-avgComments" placeholder="예: 8"/>
       </div>
       <div class="form-group">
-        <label>평균 반응 수 (게시글당)</label>
+        <label>평균 반응/공감 수 (게시글당)</label>
         <input type="number" id="m-avgReactions" placeholder="예: 15"/>
+      </div>
+      <div class="form-group">
+        <label>일정 생성 여부 (최근 한 달)</label>
+        <select id="m-hasSchedule">
+          <option value="yes">있음</option>
+          <option value="no">없음</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>최근 일정 참여자 수</label>
+        <input type="number" id="m-scheduleParticipants" placeholder="예: 8"/>
+      </div>
+      <div class="form-group">
+        <label>동네생활 공유 수 <span class="hint">(Boost 가산점)</span></label>
+        <input type="number" id="m-dongneShares" placeholder="예: 3"/>
       </div>
       <div class="form-group">
         <label>사진 포함 게시글 비율 (%)</label>
@@ -606,22 +590,67 @@
   </div>
 </div>
 
-<button class="btn-analyze" onclick="analyze()">🥕 분석하기</button>
+<button class="btn-analyze" onclick="analyze()">🥕 알고리즘 분석하기</button>
 
 <!-- ── 결과 ── -->
 <div id="result">
+
+  <!-- 1. 종합 점수 -->
   <div class="result-card">
-    <h2>📈 모임 종합 점수</h2>
+    <h2>📊 Two-Tower 알고리즘 호환 점수</h2>
     <div class="score-box">
       <div class="score-number" id="totalScore">0</div>
       <div class="score-label" id="scoreLabel"></div>
     </div>
+
+    <!-- 알고리즘 수식 -->
+    <div class="algo-formula" id="algoFormula"></div>
+
+    <!-- 4요소 카드 -->
+    <div class="component-grid" id="componentGrid"></div>
+
+    <!-- 바 그래프 -->
     <div id="statBars"></div>
   </div>
+
+  <!-- 2. 데이터 기반 운영 루틴 -->
+  <div class="result-card">
+    <h2>📅 데이터 기반 운영 루틴</h2>
+    <p style="font-size:0.82rem; color:#aaa; margin-bottom:14px;">알고리즘 점수를 방어하기 위한 최소 활동 가이드라인이에요.</p>
+    <div class="routine-legend">
+      <span><span class="legend-dot" style="background:#FF6F0F;"></span>필수 활동</span>
+      <span><span class="legend-dot" style="background:#ffd0a8; border:2px solid #FF9744;"></span>권장 활동</span>
+      <span><span class="legend-dot" style="background:#f5f5f5; border:2px dashed #e5e5e5;"></span>선택 활동</span>
+    </div>
+    <div class="routine-grid" id="routineGrid"></div>
+    <div id="routineTips"></div>
+  </div>
+
+  <!-- 3. 키워드 최적화 -->
+  <div class="result-card">
+    <h2>🔍 키워드 최적화 분석 <span style="font-size:0.78rem; color:#aaa; font-weight:400;">(Relevance Tower)</span></h2>
+    <div id="keywordAnalysis"></div>
+  </div>
+
+  <!-- 4. 채팅 활성화 전략 -->
+  <div class="result-card">
+    <h2>💬 채팅 활성화 전략 <span style="font-size:0.78rem; color:#aaa; font-weight:400;">(Activity 점수 올리기)</span></h2>
+    <div id="chatStrategy"></div>
+  </div>
+
+  <!-- 5. 체류 시간 극대화 -->
+  <div class="result-card">
+    <h2>⏱️ 체류 시간 극대화 전략 <span style="font-size:0.78rem; color:#aaa; font-weight:400;">(CTR → 가입 전환)</span></h2>
+    <div id="dwellStrategy"></div>
+  </div>
+
+  <!-- 6. 개선 사항 -->
   <div class="result-card"><h2>✅ 잘 하고 있는 것</h2><div id="recoKeep"></div></div>
+  <div class="result-card"><h2>🚨 지금 당장 수정할 것 <span class="urgency-badge urg-high">긴급</span></h2><div id="recoUrgent"></div></div>
   <div class="result-card"><h2>✏️ 수정하면 좋을 것</h2><div id="recoFix"></div></div>
   <div class="result-card"><h2>➕ 추가하면 좋을 것</h2><div id="recoAdd"></div></div>
-  <div class="result-card"><h2>❌ 줄이거나 없애면 좋을 것</h2><div id="recoRemove"></div></div>
+
+  <!-- 7. 이번 달 집중 전략 -->
   <div class="result-card">
     <h2>🥕 이번 달 집중 전략</h2>
     <div class="tip-box" id="tipBox"></div>
@@ -631,6 +660,7 @@
 <footer>
   <p>🥕 당근 모임을 더 많은 이웃과 함께 키워나가세요</p>
   <p style="margin-top: 10px; font-size: 0.85rem; color: #ccc;">by longchiri</p>
+  <p style="margin-top: 4px; font-size: 0.75rem; color: #ddd;">Ver2.1</p>
 </footer>
 
 <script>
@@ -654,10 +684,7 @@ function handleDrop(e) {
   const file = e.dataTransfer.files[0];
   if (file && file.type.startsWith('image/')) loadScreenshot(file);
 }
-function handleScreenshot(e) {
-  const file = e.target.files[0];
-  if (file) loadScreenshot(file);
-}
+function handleScreenshot(e) { const file = e.target.files[0]; if (file) loadScreenshot(file); }
 function loadScreenshot(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -680,178 +707,234 @@ function removeScreenshot() {
 function parseText() {
   const text = document.getElementById('pasteText').value;
   if (!text.trim()) { alert('텍스트를 먼저 붙여넣어 주세요!'); return; }
-
   const found = {};
-
-  // 멤버 수
   const memberMatch = text.match(/멤버\s*[:·]?\s*(\d+)|(\d+)\s*명?\s*(의\s*)?멤버|(\d+)\s*members?/i);
   if (memberMatch) found.members = parseInt(memberMatch[1] || memberMatch[2] || memberMatch[4]);
-
-  // 게시글 수 (주간)
   const postMatch = text.match(/주\s*(\d+)\s*개?|(\d+)\s*개?\s*\/?\s*주|게시글\s*[:·]?\s*(\d+)/i);
   if (postMatch) found.weeklyPosts = parseInt(postMatch[1] || postMatch[2] || postMatch[3]);
-
-  // 댓글
   const commentMatch = text.match(/댓글\s*[:·]?\s*(\d+)|(\d+)\s*개?\s*댓글/i);
   if (commentMatch) found.avgComments = parseInt(commentMatch[1] || commentMatch[2]);
-
-  // 반응/좋아요
   const reactMatch = text.match(/반응\s*[:·]?\s*(\d+)|좋아요\s*[:·]?\s*(\d+)|(\d+)\s*개?\s*(반응|좋아요)/i);
   if (reactMatch) found.avgReactions = parseInt(reactMatch[1] || reactMatch[2] || reactMatch[3]);
-
-  // 신규 멤버
   const newMatch = text.match(/신규\s*[:·]?\s*(\d+)|(\d+)\s*명?\s*신규|이번\s*달\s*[:·]?\s*(\d+)/i);
   if (newMatch) found.newMembers = parseInt(newMatch[1] || newMatch[2] || newMatch[3]);
-
-  // 소개글 추출 (긴 텍스트)
+  const chatMatch = text.match(/채팅\s*[:·]?\s*(\d+)|(\d+)\s*개?\s*채팅/i);
+  if (chatMatch) found.chat72 = parseInt(chatMatch[1] || chatMatch[2]);
+  const lastPostMatch = text.match(/마지막\s*게시글?\s*[:·]?\s*(\d+)\s*시간/i);
+  if (lastPostMatch) found.lastPost = parseInt(lastPostMatch[1]);
   const lines = text.split('\n').filter(l => l.trim().length > 20);
   if (lines.length > 0) found.intro = lines.join('\n');
-
-  // 결과 태그 표시
   const tagDefs = [
-    { key: 'members',      label: '멤버 수' },
-    { key: 'weeklyPosts',  label: '주간 게시글' },
-    { key: 'avgComments',  label: '평균 댓글' },
-    { key: 'avgReactions', label: '평균 반응' },
-    { key: 'newMembers',   label: '신규 멤버' },
-    { key: 'intro',        label: '소개글' },
+    { key: 'members', label: '멤버 수' }, { key: 'weeklyPosts', label: '주간 게시글' },
+    { key: 'avgComments', label: '평균 댓글' }, { key: 'avgReactions', label: '평균 반응' },
+    { key: 'newMembers', label: '신규 멤버' }, { key: 'chat72', label: '72h 채팅' },
+    { key: 'lastPost', label: '마지막 게시글' }, { key: 'intro', label: '소개글' },
   ];
   const tagsEl = document.getElementById('parsedTags');
   tagsEl.innerHTML = tagDefs.map(t => {
-    const v = found[t.key];
-    const ok = v !== undefined && v !== '';
+    const v = found[t.key]; const ok = v !== undefined && v !== '';
     return `<span class="parsed-tag ${ok ? 'found' : 'notfound'}">${ok ? '✅' : '❓'} ${t.label}${ok && t.key !== 'intro' ? ': ' + v : ''}</span>`;
   }).join('');
   tagsEl.style.display = 'flex';
-
-  // 폼에 자동 입력
-  if (found.members)      { const el = document.getElementById('p-members');      el.value = found.members;      el.classList.add('autofilled'); }
-  if (found.weeklyPosts)  { const el = document.getElementById('p-weeklyPosts');  el.value = found.weeklyPosts;  el.classList.add('autofilled'); }
-  if (found.avgComments)  { const el = document.getElementById('p-avgComments');  el.value = found.avgComments;  el.classList.add('autofilled'); }
-  if (found.avgReactions) { const el = document.getElementById('p-avgReactions'); el.value = found.avgReactions; el.classList.add('autofilled'); }
-  if (found.newMembers)   { const el = document.getElementById('p-newMembers');   el.value = found.newMembers;   el.classList.add('autofilled'); }
-  if (found.intro)        { const el = document.getElementById('p-intro');        el.value = found.intro;        el.classList.add('autofilled'); }
-
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) { el.value = val; el.classList.add('autofilled'); } };
+  setVal('p-members', found.members); setVal('p-weeklyPosts', found.weeklyPosts);
+  setVal('p-avgComments', found.avgComments); setVal('p-avgReactions', found.avgReactions);
+  setVal('p-newMembers', found.newMembers); setVal('p-chat72', found.chat72);
+  setVal('p-lastPost', found.lastPost); setVal('p-intro', found.intro);
   document.getElementById('parsedForm').style.display = 'block';
-
-  const foundCount = Object.keys(found).length;
-  if (foundCount === 0) alert('숫자를 찾지 못했어요. 아래 폼에 직접 입력해 주세요.');
+  if (Object.keys(found).length === 0) alert('숫자를 찾지 못했어요. 아래 폼에 직접 입력해 주세요.');
 }
 
-// ── 값 읽기 헬퍼 ──
+// ── 헬퍼 ──
 function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
 function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+// ── 키워드 분석 ──
+function analyzeKeywords(intro, name, hashtags, category) {
+  const text = (name + ' ' + intro).toLowerCase();
+  const hashList = hashtags.split(/[,#\s]+/).filter(h => h.trim().length > 1).map(h => h.trim().replace(/^#/, ''));
+
+  // 좋은 키워드 패턴 (지역명, 활동명, 시간대, 특징)
+  const goodPatterns = ['매주','정기','함께','모임','스터디','러닝','독서','요가','등산','맛집','카페',
+    '대전','서울','부산','인천','광주','대구','수원','성남','용인','고양','세종',
+    '월','화','수','목','금','토','일','오전','오후','주말','평일','아침','저녁',
+    '초보','전문가','누구나','무료','소규모','소수정예'];
+  const foundGood = goodPatterns.filter(p => text.includes(p));
+
+  // 카테고리 기반 추천 키워드
+  const categoryKeywords = {
+    '독서': ['책추천','북클럽','독후감','토론','문학','소설','에세이'],
+    '운동': ['러닝','요가','필라테스','헬스','등산','자전거','수영'],
+    '맛집': ['맛집탐방','카페투어','음식','브런치','와인','커피'],
+    '취미': ['공예','그림','사진','음악','드로잉','핸드메이드'],
+    '반려동물': ['강아지','고양이','펫','반려견','산책'],
+    '육아': ['아이','육아','엄마','아빠','키즈'],
+    '여행': ['여행','국내여행','트레킹','캠핑','드라이브'],
+  };
+  const suggestedKeywords = categoryKeywords[category] || [];
+  const foundSuggested = suggestedKeywords.filter(k => text.includes(k));
+  const missingSuggested = suggestedKeywords.filter(k => !text.includes(k)).slice(0, 5);
+
+  return { foundGood, foundSuggested, missingSuggested, hashList, introLength: intro.length };
+}
 
 // ── 분석 ──
 function analyze() {
   let members, weeklyPosts, avgComments, avgReactions, newMembers, intro, hasCover, hasOffline;
-  avgComments = 0; avgReactions = 0; newMembers = 0;
+  let chat72, lastPost, lastChat, hasSchedule, scheduleParticipants, dongneShares, hashtags, moName;
+  let regionCount, photoRatio, activeRatio, category;
+
+  avgComments = 0; avgReactions = 0; newMembers = 0; chat72 = 0; lastPost = 0;
+  lastChat = 0; scheduleParticipants = 0; dongneShares = 0; hashtags = '';
+  moName = ''; regionCount = 1; photoRatio = 0; activeRatio = 0; hasSchedule = 'no'; category = '기타';
 
   if (currentTab === 'quick') {
-    members     = getNum('q-members');
-    weeklyPosts = getNum('q-weeklyPosts');
-    hasCover    = getVal('q-hasCover');
-    hasOffline  = getVal('q-hasOffline');
-    intro       = getVal('q-intro').trim();
+    members = getNum('q-members'); weeklyPosts = getNum('q-weeklyPosts');
+    chat72 = getNum('q-chat72'); lastPost = getNum('q-lastPost');
+    hasCover = getVal('q-hasCover'); hasOffline = getVal('q-hasOffline');
+    intro = getVal('q-intro').trim(); hashtags = getVal('q-hashtags').trim();
   } else if (currentTab === 'screenshot') {
-    members      = getNum('s-members');
-    weeklyPosts  = getNum('s-weeklyPosts');
-    avgComments  = getNum('s-avgComments');
-    avgReactions = getNum('s-avgReactions');
-    hasCover     = getVal('s-hasCover');
-    hasOffline   = getVal('s-hasOffline');
-    intro        = getVal('s-intro').trim();
+    members = getNum('s-members'); weeklyPosts = getNum('s-weeklyPosts');
+    avgComments = getNum('s-avgComments'); avgReactions = getNum('s-avgReactions');
+    chat72 = getNum('s-chat72'); lastPost = getNum('s-lastPost');
+    hasCover = getVal('s-hasCover'); hasOffline = getVal('s-hasOffline');
+    intro = getVal('s-intro').trim(); hashtags = getVal('s-hashtags').trim();
   } else if (currentTab === 'paste') {
-    members      = getNum('p-members');
-    weeklyPosts  = getNum('p-weeklyPosts');
-    avgComments  = getNum('p-avgComments');
-    avgReactions = getNum('p-avgReactions');
-    newMembers   = getNum('p-newMembers');
-    hasCover     = getVal('p-hasCover');
-    intro        = getVal('p-intro').trim();
-    hasOffline   = 'no';
+    members = getNum('p-members'); weeklyPosts = getNum('p-weeklyPosts');
+    avgComments = getNum('p-avgComments'); avgReactions = getNum('p-avgReactions');
+    newMembers = getNum('p-newMembers'); chat72 = getNum('p-chat72');
+    lastPost = getNum('p-lastPost'); hasCover = getVal('p-hasCover');
+    intro = getVal('p-intro').trim(); hashtags = getVal('p-hashtags').trim();
+    hasOffline = 'no';
   } else {
-    // 수동 입력
-    members      = getNum('m-members');
-    weeklyPosts  = getNum('m-weeklyPosts');
-    avgComments  = getNum('m-avgComments');
-    avgReactions = getNum('m-avgReactions');
-    newMembers   = getNum('m-newMembers');
-    hasCover     = getVal('m-hasCover');
-    hasOffline   = getVal('m-hasOffline');
-    intro        = getVal('m-intro').trim();
+    members = getNum('m-members'); weeklyPosts = getNum('m-weeklyPosts');
+    avgComments = getNum('m-avgComments'); avgReactions = getNum('m-avgReactions');
+    newMembers = getNum('m-newMembers'); chat72 = getNum('m-chat72');
+    lastPost = getNum('m-lastPost'); lastChat = getNum('m-lastChat');
+    hasCover = getVal('m-hasCover'); hasOffline = getVal('m-hasOffline');
+    intro = getVal('m-intro').trim(); hashtags = getVal('m-hashtags').trim();
+    hasSchedule = getVal('m-hasSchedule'); scheduleParticipants = getNum('m-scheduleParticipants');
+    dongneShares = getNum('m-dongneShares'); regionCount = parseInt(getVal('m-regionCount')) || 1;
+    photoRatio = getNum('m-photoRatio'); activeRatio = getNum('m-activeRatio');
+    category = getVal('m-category'); moName = getVal('m-name').trim();
   }
 
   if (!members) { alert('멤버 수를 입력해 주세요!'); return; }
 
-  // ── 지표 ──
-  const engRate    = members > 0 ? ((avgReactions + avgComments) / members) * 100 : 0;
-  const growthRate = members > 0 ? (newMembers / members) * 100 : 0;
+  // ──────────────────────────────────────────────
+  // Two-Tower 알고리즘 점수 계산
+  // Score = (0.4 × Act) + (0.3 × Rel) + (0.2 × Rec) - (0.1 × Dist) + Boost
+  // ──────────────────────────────────────────────
 
-  // ── 점수 ──
-  let score = 0;
-  const statData = [];
+  // ① 활동성 (Activity) — 가중치 40%
+  // 72시간 채팅 (40점)
+  let chat72Score = chat72 >= 50 ? 40 : chat72 >= 30 ? 32 : chat72 >= 15 ? 22 : chat72 >= 5 ? 12 : chat72 > 0 ? 5 : 0;
+  // 일정 참여 전환 (30점)
+  let scheduleScore = 0;
+  if (hasSchedule === 'yes') scheduleScore = scheduleParticipants >= 8 ? 30 : scheduleParticipants >= 4 ? 20 : scheduleParticipants > 0 ? 12 : 10;
+  else if (currentTab !== 'manual') scheduleScore = 10; // 데이터 없으면 중간값
+  // 게시글 인게이지먼트 (30점)
+  const engRate = members > 0 && (avgReactions + avgComments) > 0 ? ((avgReactions + avgComments) / members) * 100 : 0;
+  let engScore = 0;
+  if (engRate > 0) engScore = engRate >= 15 ? 30 : engRate >= 8 ? 22 : engRate >= 3 ? 14 : 6;
+  else { // 게시글 빈도로 대체
+    engScore = weeklyPosts >= 7 ? 25 : weeklyPosts >= 5 ? 20 : weeklyPosts >= 3 ? 14 : weeklyPosts >= 1 ? 8 : 2;
+  }
+  let actScore = Math.min(100, chat72Score + scheduleScore + engScore);
 
-  // 참여율 (빠른 모드엔 데이터 없으므로 게시글 빈도로 대체)
-  let erScore;
-  if (avgReactions + avgComments > 0) {
-    erScore = engRate >= 10 ? 20 : engRate >= 5 ? 15 : engRate >= 2 ? 9 : 4;
-    statData.push({ name: '멤버 참여율', val: engRate.toFixed(1) + '%', score: erScore, max: 20,
-      desc: '멤버 중 실제로 반응하는 비율. 5% 이상이면 활성 모임이에요.',
-      tip: '(반응+댓글) ÷ 멤버 × 100\n10% 이상: 우수\n5~10%: 양호\n2% 미만: 낮음' });
+  // ② 관련성 (Relevance) — 가중치 30%
+  const kwResult = analyzeKeywords(intro, moName, hashtags, category);
+  // 소개글 품질 (40점)
+  let introScore = intro.length >= 150 ? 40 : intro.length >= 80 ? 32 : intro.length >= 40 ? 22 : intro.length >= 10 ? 12 : 0;
+  // 키워드 밀도 (20점)
+  let kwScore = kwResult.foundGood.length >= 6 ? 20 : kwResult.foundGood.length >= 4 ? 15 : kwResult.foundGood.length >= 2 ? 10 : 5;
+  // 해시태그 (20점)
+  let hashScore = kwResult.hashList.length >= 5 ? 20 : kwResult.hashList.length >= 3 ? 15 : kwResult.hashList.length >= 1 ? 8 : 0;
+  // 모임명 완성도 (20점)
+  let nameScore = moName.length >= 10 ? 20 : moName.length >= 5 ? 13 : moName.length > 0 ? 8 : 10;
+  let relScore = Math.min(100, introScore + kwScore + hashScore + nameScore);
+
+  // ③ 최신성 (Recency) — 가중치 20%
+  let postRecScore, chatRecScore;
+  if (lastPost > 0) {
+    postRecScore = lastPost <= 6 ? 50 : lastPost <= 12 ? 43 : lastPost <= 24 ? 34 : lastPost <= 48 ? 22 : lastPost <= 72 ? 12 : 4;
   } else {
-    erScore = 10; // 데이터 없으면 중간값
-    statData.push({ name: '멤버 참여율', val: '데이터 없음', score: erScore, max: 20,
-      desc: '평균 댓글/반응 수를 입력하면 정확한 참여율을 계산해요.',
-      tip: '스크린샷 또는 텍스트 모드로\n더 정밀하게 분석할 수 있어요.' });
+    // 주간 게시글로 추정
+    postRecScore = weeklyPosts >= 7 ? 40 : weeklyPosts >= 5 ? 32 : weeklyPosts >= 3 ? 22 : weeklyPosts >= 1 ? 14 : 4;
   }
-  score += erScore;
-
-  // 게시글 빈도
-  let freqScore = weeklyPosts >= 5 ? 20 : weeklyPosts >= 3 ? 16 : weeklyPosts >= 1 ? 10 : 3;
-  score += freqScore;
-  statData.push({ name: '게시글 빈도', val: weeklyPosts + '개/주', score: freqScore, max: 20,
-    desc: '꾸준한 게시글이 모임을 살아있게 해요. 주 3개 이상 권장이에요.',
-    tip: '주 1개: 최소\n주 3~5개: 적정\n주 7개 이상: 활성화' });
-
-  // 성장률
-  let growScore = 10;
-  if (newMembers > 0) {
-    growScore = growthRate >= 15 ? 20 : growthRate >= 8 ? 15 : growthRate >= 3 ? 10 : 4;
+  if (lastChat > 0) {
+    chatRecScore = lastChat <= 3 ? 50 : lastChat <= 12 ? 40 : lastChat <= 24 ? 30 : lastChat <= 48 ? 18 : lastChat <= 72 ? 10 : 3;
+  } else {
+    chatRecScore = chat72 >= 30 ? 40 : chat72 >= 15 ? 30 : chat72 >= 5 ? 20 : chat72 > 0 ? 12 : 10;
   }
-  score += growScore;
-  statData.push({ name: '월 성장률', val: newMembers > 0 ? growthRate.toFixed(1) + '%' : '데이터 없음', score: growScore, max: 20,
-    desc: '한 달간 신규 멤버 유입 비율이에요. 8% 이상이면 성장 중이에요.',
-    tip: '신규멤버 ÷ 전체멤버 × 100\n15% 이상: 빠른 성장\n8~15%: 안정 성장\n3% 미만: 정체' });
+  let recScore = Math.min(100, postRecScore + chatRecScore);
 
-  // 소개글
-  let introScore = intro.length >= 50 ? 20 : intro.length >= 20 ? 13 : intro.length > 0 ? 7 : 3;
-  score += introScore;
-  statData.push({ name: '소개글 완성도', val: intro.length > 0 ? intro.length + '자' : '없음', score: introScore, max: 20,
-    desc: '모임의 첫인상을 결정해요. 50자 이상 상세하게 쓸수록 가입률이 높아요.',
-    tip: '0자: 매우 낮음\n20~50자: 보통\n50자 이상: 좋음\n100자 이상: 우수' });
+  // ④ 거리 페널티 (Distance) — 가중치 10% (낮을수록 좋음)
+  let distPenalty = regionCount >= 5 ? 70 : regionCount >= 3 ? 45 : 20;
 
-  // 프로필 완성도
-  let profileScore = 0;
-  if (hasCover === 'yes') profileScore += 10;
-  if (hasOffline === 'yes') profileScore += 10;
-  score += profileScore;
-  statData.push({ name: '모임 완성도', val: profileScore + '/20', score: profileScore, max: 20,
-    desc: '커버 이미지와 오프라인 모임이 있을수록 신뢰도 높은 모임으로 보여요.',
-    tip: '커버 이미지(10점)\n+ 오프라인 모임(10점) = 20점' });
+  // ⑤ 노출 가산점 (Boost)
+  let boostScore = Math.min(8, dongneShares * 2);
+  if (hasCover === 'yes') boostScore += 2;
+  if (hasOffline === 'yes') boostScore += 2;
+  boostScore = Math.min(10, boostScore);
 
-  const totalScore = Math.round(score);
+  // ── 최종 점수 ──
+  let rawScore = (0.4 * actScore) + (0.3 * relScore) + (0.2 * recScore) - (0.1 * distPenalty) + boostScore;
+  let totalScore = Math.max(0, Math.min(100, Math.round(rawScore)));
+
   const label =
-    totalScore >= 85 ? '🏆 최우수 모임 — 이 방향 그대로 유지하세요!' :
-    totalScore >= 70 ? '🌟 활성 모임 — 조금만 다듬으면 폭발 성장 가능해요' :
-    totalScore >= 50 ? '📈 성장 중 — 몇 가지 개선으로 노출이 크게 늘어나요' :
-    totalScore >= 30 ? '🛠️ 개선 필요 — 아래 전략을 하나씩 적용해 보세요' :
-                       '⚠️ 기초부터 — 소개글과 활동 빈도부터 잡아요';
+    totalScore >= 85 ? '🏆 최상위 노출 — 알고리즘이 이 모임을 좋아해요!' :
+    totalScore >= 70 ? '🌟 상위 노출 중 — 조금만 다듬으면 톱 진입 가능해요' :
+    totalScore >= 55 ? '📈 중위권 — 활동성과 최신성을 올리면 급등해요' :
+    totalScore >= 35 ? '🛠️ 하위권 — 아래 전략을 지금 바로 실행하세요' :
+                       '⚠️ 노출 거의 없음 — 기초부터 세팅해야 해요';
 
   document.getElementById('totalScore').textContent = totalScore;
   document.getElementById('scoreLabel').textContent = label;
 
-  // 막대 그래프
+  // ── 알고리즘 수식 표시 ──
+  document.getElementById('algoFormula').innerHTML =
+    `<span class="f-label">Score</span> <span class="f-op">=</span> `+
+    `<span class="f-op">(0.4 ×</span> <span class="f-val">${actScore}</span><span class="f-op">)</span> <span class="f-op">+</span> `+
+    `<span class="f-op">(0.3 ×</span> <span class="f-val">${relScore}</span><span class="f-op">)</span> <span class="f-op">+</span> `+
+    `<span class="f-op">(0.2 ×</span> <span class="f-val">${recScore}</span><span class="f-op">)</span> <span class="f-op">−</span> `+
+    `<span class="f-op">(0.1 ×</span> <span class="f-val">${distPenalty}</span><span class="f-op">)</span> <span class="f-op">+</span> `+
+    `<span class="f-label">Boost</span> <span class="f-val">${boostScore}</span> <span class="f-op">= </span><span class="f-label">${totalScore}</span>`;
+
+  // ── 4요소 카드 ──
+  document.getElementById('componentGrid').innerHTML = `
+    <div class="component-card comp-act">
+      <div class="comp-title">⚡ Activity (활동성)</div>
+      <div class="comp-score">${actScore}</div>
+      <div class="comp-weight">가중치 40% · 채팅·일정·인게이지먼트</div>
+    </div>
+    <div class="component-card comp-rel">
+      <div class="comp-title">🎯 Relevance (관련성)</div>
+      <div class="comp-score">${relScore}</div>
+      <div class="comp-weight">가중치 30% · 키워드·소개글·해시태그</div>
+    </div>
+    <div class="component-card comp-rec">
+      <div class="comp-title">⏰ Recency (최신성)</div>
+      <div class="comp-score">${recScore}</div>
+      <div class="comp-weight">가중치 20% · 마지막 게시글·채팅 시각</div>
+    </div>
+    <div class="component-card comp-dist">
+      <div class="comp-title">📍 Distance (거리)</div>
+      <div class="comp-score">${distPenalty}</div>
+      <div class="comp-weight">페널티 10% · 낮을수록 로컬 적합도 ↑</div>
+    </div>
+  `;
+
+  // ── 바 그래프 ──
+  const statData = [
+    { name: '72h 채팅', val: chat72 > 0 ? chat72 + '개' : '미입력', score: chat72Score, max: 40, desc: '72시간 내 채팅 발생량. 실시간 활성 지표로 Activity 가중치가 가장 높아요.', tip: '5개 미만: 매우 낮음\n15개: 보통\n30개: 양호\n50개 이상: 우수' },
+    { name: '인게이지먼트', val: engRate > 0 ? engRate.toFixed(1) + '%' : weeklyPosts + '개/주', score: engScore, max: 30, desc: '(반응+댓글)÷멤버. 멤버 참여도를 측정해요.', tip: '3% 미만: 낮음\n8%: 양호\n15% 이상: 우수' },
+    { name: '일정 참여', val: hasSchedule === 'yes' ? scheduleParticipants + '명' : '없음', score: scheduleScore, max: 30, desc: '일정 생성 및 멤버 참여 전환율. 알고리즘이 중요하게 봐요.', tip: '일정 없음: -20점\n4명 참여: 보통\n8명 이상: 우수' },
+    { name: '소개글 품질', val: intro.length > 0 ? intro.length + '자' : '없음', score: introScore, max: 40, desc: '소개글 길이와 키워드 밀도. Relevance 점수에 직접 영향해요.', tip: '40자 미만: 낮음\n80자: 양호\n150자 이상: 우수' },
+    { name: '해시태그', val: kwResult.hashList.length + '개', score: hashScore, max: 20, desc: '유저 검색 벡터와 매칭되는 핵심 키워드예요.', tip: '0개: 0점\n1~2개: 보통\n3~5개: 좋음\n5개 이상: 우수' },
+    { name: '최신성', val: lastPost > 0 ? lastPost + '시간 전' : weeklyPosts + '개/주 추정', score: Math.round((postRecScore + chatRecScore) / 2), max: 50, desc: '마지막 게시글/채팅 시각. Time-decay 방식으로 계산해요.', tip: '6시간 이내: 최고\n24시간: 양호\n72시간 이상: 급락' },
+  ];
+
   let barsHtml = '';
   statData.forEach(s => {
     const pct = Math.round((s.score / s.max) * 100);
@@ -872,49 +955,213 @@ function analyze() {
   });
   document.getElementById('statBars').innerHTML = barsHtml;
 
-  // ── 추천 ──
-  const keep = [], fix = [], add = [], remove = [];
+  // ── 운영 루틴 ──
+  const days = ['월','화','수','목','금','토','일'];
+  const routineData = [
+    { day:'월', level: 'high', tasks: '채팅\n게시글' },
+    { day:'화', level: 'mid',  tasks: '반응\n댓글' },
+    { day:'수', level: 'high', tasks: '채팅\n게시글' },
+    { day:'목', level: 'mid',  tasks: '반응\n공감' },
+    { day:'금', level: 'high', tasks: '채팅\n게시글' },
+    { day:'토', level: weeklyPosts >= 5 ? 'high' : 'mid', tasks: '모임\n후기' },
+    { day:'일', level: 'mid',  tasks: '주간\n정리' },
+  ];
+  let routineHtml = '';
+  routineData.forEach(d => {
+    const cls = d.level === 'high' ? 'dot-high' : d.level === 'mid' ? 'dot-mid' : 'dot-low';
+    const icon = d.level === 'high' ? '🔥' : d.level === 'mid' ? '✓' : '○';
+    routineHtml += `<div class="routine-day">
+      <div class="routine-day-label">${d.day}</div>
+      <div class="routine-dot ${cls}">${icon}</div>
+      <div class="routine-task">${d.tasks.replace('\n','<br/>')}</div>
+    </div>`;
+  });
+  document.getElementById('routineGrid').innerHTML = routineHtml;
 
-  if (engRate >= 10) keep.push('참여율 ' + engRate.toFixed(1) + '%로 매우 활성화된 모임이에요. 이 분위기를 유지하세요.');
-  else if (engRate >= 5 && engRate > 0) fix.push('참여율 ' + engRate.toFixed(1) + '%. 게시글 끝에 "여러분은 어떠세요?" 질문을 추가해 보세요.');
-  else if (avgComments + avgReactions > 0) fix.push('참여율이 낮아요. "이번 주 한 줄 인사" 같은 쉬운 참여 유도 게시글로 시작해 보세요.');
+  let routineTips = '<div style="margin-top:14px;">';
+  routineTips += `<div class="strategy-item"><div class="strategy-title">📌 일간 최소 활동 (72h 채팅 점수 방어)</div>`;
+  routineTips += `<div class="strategy-desc">`;
+  if (chat72 < 15) routineTips += `• <strong>매일 채팅 3개 이상</strong>을 목표로 하세요. 현재 72h 채팅이 ${chat72}개로 낮아요.<br/>`;
+  else routineTips += `• 현재 72h 채팅 ${chat72}개 — 양호해요. 꾸준히 유지하세요.<br/>`;
+  routineTips += `• 매일 오전 게시글 또는 채팅 1개로 Time-decay를 방어하세요.<br/>`;
+  routineTips += `• 오후 8~10시 게시글이 반응률이 가장 높아요.</div></div>`;
 
-  if (weeklyPosts >= 5) keep.push('주 ' + weeklyPosts + '개의 활발한 게시글 덕에 모임이 살아있어 보여요. 계속 유지해 주세요.');
-  else if (weeklyPosts >= 3) keep.push('주 ' + weeklyPosts + '개로 꾸준하게 운영 중이에요.');
-  else if (weeklyPosts >= 1) fix.push('주 ' + weeklyPosts + '개는 조금 부족해요. 운영자가 먼저 주 3개 이상 올려서 분위기를 만들어 주세요.');
-  else add.push('게시글이 거의 없어요. 운영자가 먼저 자기소개나 일상 글을 올려서 멤버들이 따라올 물꼬를 터주세요.');
+  routineTips += `<div class="strategy-item"><div class="strategy-title">📅 주간 권장 루틴</div>`;
+  routineTips += `<div class="strategy-desc">`;
+  routineTips += `• <strong>월/수/금</strong>: 정보성 or 참여 유도 게시글 (🔥필수)<br/>`;
+  routineTips += `• <strong>화/목</strong>: 멤버 게시글에 댓글/공감 달기<br/>`;
+  routineTips += `• <strong>토요일</strong>: 오프라인 모임 or 주간 하이라이트 게시글<br/>`;
+  routineTips += `• <strong>일요일</strong>: 다음 주 일정 예고 + 한 주 정리 채팅</div></div>`;
+  routineTips += '</div>';
+  document.getElementById('routineTips').innerHTML = routineTips;
 
-  if (intro.length === 0) add.push('소개글이 없어요! 어떤 모임인지, 어떤 사람들이 모이는지 3~5줄로 작성하면 가입률이 크게 올라가요.');
-  else if (intro.length < 30) fix.push('소개글이 너무 짧아요. 모임의 활동 방식과 분위기를 좀 더 풍부하게 설명해 주세요.');
-  else keep.push('소개글이 잘 작성되어 있어요. 키워드가 잘 담겨 있는지 주기적으로 점검해 보세요.');
+  // ── 키워드 분석 ──
+  let kwHtml = '';
+  if (intro.length === 0 && moName.length === 0) {
+    kwHtml = '<div class="reco-item reco-remove"><span class="reco-icon">⚠️</span><span>소개글이 없어서 키워드 분석이 불가능해요. 소개글을 입력하면 정밀 분석이 가능해요.</span></div>';
+  } else {
+    kwHtml += `<div class="keyword-section">
+      <div class="keyword-section-title">✅ 현재 소개글에 있는 좋은 키워드 (${kwResult.foundGood.length}개)</div>
+      <div class="keyword-tags">`;
+    if (kwResult.foundGood.length > 0) kwResult.foundGood.forEach(k => { kwHtml += `<span class="kw-tag kw-good">${k}</span>`; });
+    else kwHtml += `<span class="kw-tag kw-neutral">키워드가 부족해요</span>`;
+    kwHtml += `</div></div>`;
 
-  if (hasCover === 'no') add.push('커버 이미지가 없어요. 모임 목록에서 클릭률을 가장 빠르게 올릴 수 있는 방법이에요. 모임 분위기를 보여주는 사진으로 꼭 설정하세요.');
-  else keep.push('커버 이미지가 있어요. 모임 분위기를 잘 보여주는 사진인지 주기적으로 바꿔주면 더 좋아요.');
+    if (kwResult.hashList.length > 0) {
+      kwHtml += `<div class="keyword-section">
+        <div class="keyword-section-title">🏷️ 설정된 해시태그 (${kwResult.hashList.length}개)</div>
+        <div class="keyword-tags">`;
+      kwResult.hashList.forEach(h => { kwHtml += `<span class="kw-tag kw-good">#${h}</span>`; });
+      kwHtml += `</div></div>`;
+    }
 
-  if (hasOffline === 'no') add.push('오프라인 정기 모임을 추가해 보세요. 3~5명이라도 만나면 후기 게시글이 생기고 신규 멤버 유입이 크게 늘어요.');
-  else keep.push('오프라인 모임이 있어 신뢰도가 높아요. 후기 사진을 꾸준히 올려서 이 신뢰를 보여주세요.');
+    if (kwResult.missingSuggested.length > 0) {
+      kwHtml += `<div class="keyword-section">
+        <div class="keyword-section-title">💡 추가하면 좋을 키워드 (${category} 카테고리 기반)</div>
+        <div class="keyword-tags">`;
+      kwResult.missingSuggested.forEach(k => { kwHtml += `<span class="kw-tag kw-suggest">+ ${k}</span>`; });
+      kwHtml += `</div></div>`;
+    }
 
-  if (growthRate > 0 && growthRate < 5) fix.push('성장률이 ' + growthRate.toFixed(1) + '%로 느린 편이에요. 오프라인 모임 후기나 멤버 자기소개 게시글을 올리면 자연스럽게 공유돼요.');
-  else if (growthRate >= 15) keep.push('이번 달 신규 멤버가 ' + newMembers + '명으로 빠르게 성장 중이에요!');
+    kwHtml += `<div class="strategy-item" style="margin-top:12px;">
+      <div class="strategy-title">🎯 키워드 배치 전략 (User Tower 매칭)</div>
+      <div class="strategy-desc">
+        • <strong>모임 제목</strong>: 지역명 + 활동명 + 특징 조합 (예: "대전 주말 독서 모임 — 초보 환영")<br/>
+        • <strong>소개글 첫 줄</strong>: 가장 중요한 키워드를 첫 1~2문장에 배치하세요<br/>
+        • <strong>해시태그</strong>: 지역 + 활동 + 요일/시간 + 특징 조합으로 5개 이상 설정<br/>
+        • <strong>게시글 제목</strong>: 매번 다른 키워드로 노출 다각화 효과
+      </div>
+      ${intro.length > 0 ? `<div class="strategy-example">💡 현재 소개글 길이: ${intro.length}자 ${intro.length < 80 ? '→ 80자 이상으로 늘려주세요!' : '→ 좋아요!'}</div>` : ''}
+    </div>`;
+  }
+  document.getElementById('keywordAnalysis').innerHTML = kwHtml;
+
+  // ── 채팅 활성화 전략 ──
+  let chatHtml = '';
+  chatHtml += `<div class="strategy-item">
+    <div class="strategy-title">1️⃣ 알고리즘이 선호하는 채팅 패턴</div>
+    <div class="strategy-desc">72시간 내 채팅 수가 Activity 점수의 핵심이에요. 단순 대화보다 <strong>반응을 유도하는 질문형 메시지</strong>가 효과적이에요.</div>
+    <div class="strategy-example">
+      ✅ 좋은 예: "이번 주 모임 참석 예정인 분 답글 달아주세요! 🙋"<br/>
+      ✅ 좋은 예: "오늘 날씨가 좋은데, 주말 모임 기대되시나요? 😊"<br/>
+      ❌ 나쁜 예: "네", "알겠습니다" 같은 단답 채팅 (알고리즘 가산점 없음)
+    </div>
+  </div>`;
+
+  chatHtml += `<div class="strategy-item">
+    <div class="strategy-title">2️⃣ 채팅 폭발을 만드는 질문 유형</div>
+    <div class="strategy-desc">댓글과 채팅이 동시에 늘어나는 질문 형식을 사용하세요.</div>
+    <div class="strategy-example">
+      • "A vs B 어떤 게 좋으세요?" (양자택일 질문)<br/>
+      • "이번 달 읽은 책 중 추천 한 권만 올려주세요!" (참여형 게시글)<br/>
+      • "다음 모임 날짜 투표해요 → 토요일 or 일요일?" (일정 투표)
+    </div>
+  </div>`;
+
+  if (chat72 < 15) {
+    chatHtml += `<div class="reco-item reco-urgent"><span class="reco-icon">🚨</span><span>현재 72h 채팅이 <strong>${chat72}개</strong>로 매우 낮아요. <strong>지금 바로</strong> 채팅방에 참여 유도 메시지를 보내세요. 72시간이 지나면 Activity 점수가 급락해요.</span></div>`;
+  }
+
+  chatHtml += `<div class="strategy-item">
+    <div class="strategy-title">3️⃣ 일정(이벤트) 활용 전략</div>
+    <div class="strategy-desc">일정 생성 + 멤버 '참여' 버튼 클릭 전환율이 Activity 점수에 큰 가중치를 가져요.</div>
+    <div class="strategy-example">
+      • 월요일에 주간 일정 미리 등록 → 멤버들이 '참여' 클릭<br/>
+      • 일정 제목에 구체적인 정보 포함: "4/13(토) 오후 2시 카페 독서 모임"<br/>
+      • 일정 후 반드시 <strong>후기 게시글</strong> 올리기 → Recency 점수 +
+    </div>
+  </div>`;
+  document.getElementById('chatStrategy').innerHTML = chatHtml;
+
+  // ── 체류 시간 극대화 ──
+  let dwellHtml = '';
+  dwellHtml += `<div class="strategy-item">
+    <div class="strategy-title">1️⃣ 커버 이미지 (CTR 최대 40% 차이)</div>
+    <div class="strategy-desc">모임 목록에서 클릭률을 결정하는 가장 중요한 요소예요.</div>
+    <div class="strategy-example">
+      ${hasCover === 'no' ? '🚨 커버 이미지가 없어요! 지금 바로 설정하세요.<br/>' : '✅ 커버 이미지 있음 — 분기마다 계절/활동에 맞게 교체하면 더 좋아요.<br/>'}
+      • 실제 모임 활동 사진이 일러스트보다 클릭률이 높아요<br/>
+      • 밝고 활기찬 이미지 + 텍스트 최소화
+    </div>
+  </div>`;
+
+  dwellHtml += `<div class="strategy-item">
+    <div class="strategy-title">2️⃣ 소개글 구조 (가입 전환율 극대화)</div>
+    <div class="strategy-desc">유저가 상세 페이지에서 이탈하지 않고 '가입' 버튼을 누르게 하려면 소개글 구조가 중요해요.</div>
+    <div class="strategy-example">
+      <strong>추천 소개글 구조:</strong><br/>
+      1줄: 모임의 핵심 정체성 (누구를 위한 모임인가?)<br/>
+      2~3줄: 실제 활동 방식 (언제, 어디서, 무엇을)<br/>
+      4줄: 이 모임만의 차별점<br/>
+      5줄: 가입 조건/환영하는 사람 (허들 낮추기)
+    </div>
+  </div>`;
+
+  dwellHtml += `<div class="strategy-item">
+    <div class="strategy-title">3️⃣ 동네생활 공유 전략 (Boost 가산점)</div>
+    <div class="strategy-desc">동네생활 탭 공유는 알고리즘 Boost 가산점에 직접 영향해요.</div>
+    <div class="strategy-example">
+      ${dongneShares > 0 ? `✅ 이번 달 동네생활 공유 ${dongneShares}회 — 계속 유지하세요!` : '⚠️ 동네생활 공유가 없어요. 월 2~3회 모임 소식을 동네생활에 공유해보세요.'}<br/>
+      • 모임 후기를 동네생활에 공유 → 반응이 많을수록 Boost 점수 상승<br/>
+      • "이런 모임 없을까?" 류의 게시글에 댓글로 모임 소개
+    </div>
+  </div>`;
+  document.getElementById('dwellStrategy').innerHTML = dwellHtml;
+
+  // ── 추천 사항 ──
+  const keep = [], urgent = [], fix = [], add = [];
+  const growthRate = members > 0 && newMembers > 0 ? (newMembers / members) * 100 : 0;
+
+  if (actScore >= 70) keep.push(`Activity 점수 ${actScore}점으로 높아요! 72시간 채팅 활성도가 잘 유지되고 있어요.`);
+  if (relScore >= 70) keep.push(`Relevance 점수 ${relScore}점 — 키워드 세팅이 잘 되어 있어요.`);
+  if (recScore >= 70) keep.push(`최신성 점수 ${recScore}점 — 꾸준한 업데이트로 Time-decay를 잘 방어하고 있어요.`);
+  if (hasCover === 'yes') keep.push('커버 이미지가 있어 클릭률이 높아요. 분기마다 새 사진으로 교체해 보세요.');
+  if (hasOffline === 'yes') keep.push('오프라인 모임이 있어 신뢰도와 알고리즘 점수 모두 높아요.');
+  if (kwResult.hashList.length >= 3) keep.push(`해시태그 ${kwResult.hashList.length}개로 검색 노출이 다각화되어 있어요.`);
+  if (growthRate >= 10) keep.push(`이번 달 신규 멤버가 ${newMembers}명(${growthRate.toFixed(1)}%)으로 빠르게 성장 중이에요!`);
+
+  if (chat72 < 5 && chat72 > 0) urgent.push(`72시간 채팅이 ${chat72}개로 위험 수준이에요. 오늘 안에 멤버 참여 유도 메시지를 보내세요!`);
+  else if (chat72 === 0 && currentTab === 'manual') urgent.push('72시간 채팅 데이터가 없어요. 지금 채팅방에 질문 하나를 올려서 반응을 만들어 보세요!');
+  if (intro.length === 0) urgent.push('소개글이 없어요! 소개글은 Relevance 점수의 핵심이에요. 지금 바로 작성하세요.');
+  if (hasCover === 'no') urgent.push('커버 이미지가 없어요! 목록 클릭률이 최대 40% 낮을 수 있어요. 지금 바로 설정하세요.');
+
+  if (actScore < 50) fix.push(`Activity 점수 ${actScore}점으로 낮아요. 72시간 채팅 수를 늘리고 일정을 등록해 보세요.`);
+  if (relScore < 50) fix.push(`Relevance 점수 ${relScore}점으로 낮아요. 소개글을 80자 이상으로 늘리고 해시태그를 추가해 보세요.`);
+  if (recScore < 50) fix.push(`최신성 점수 ${recScore}점으로 낮아요. 마지막 게시글/채팅 시간을 줄여야 해요. 매일 1개씩 올리세요.`);
+  if (intro.length > 0 && intro.length < 40) fix.push(`소개글이 ${intro.length}자로 짧아요. 80자 이상으로 늘리면 Relevance 점수가 10점 이상 올라가요.`);
+  if (weeklyPosts < 3 && weeklyPosts > 0) fix.push(`주 ${weeklyPosts}개 게시글은 부족해요. 주 3개 이상을 목표로 하세요.`);
+  if (engRate > 0 && engRate < 3) fix.push(`참여율 ${engRate.toFixed(1)}%로 낮아요. 질문형 게시글로 댓글과 반응을 유도해 보세요.`);
+
+  if (kwResult.hashList.length < 3) add.push(`해시태그가 ${kwResult.hashList.length}개예요. 5개 이상 설정하면 Relevance 점수가 크게 올라요. 추천: ${kwResult.missingSuggested.slice(0,3).map(k=>'#'+k).join(', ')}`);
+  if (hasOffline === 'no') add.push('오프라인 정기 모임을 추가해 보세요. 일정 참여 버튼 클릭이 Activity 점수를 올려요.');
+  if (dongneShares === 0) add.push('동네생활 탭에 모임 소식을 공유하면 Boost 가산점을 받을 수 있어요. 월 2~3회 추천!');
+  if (hasSchedule === 'no' && currentTab === 'manual') add.push('일정을 등록하면 Activity 점수가 크게 올라요. 다음 모임 일정을 지금 등록해 보세요.');
+  if (weeklyPosts === 0) add.push('게시글이 없어요! 운영자 자기소개나 모임 소식 게시글을 올려서 활동성을 만들어 주세요.');
 
   function renderItems(items, id, cls) {
-    const icons = { 'reco-keep': '✅', 'reco-fix': '✏️', 'reco-add': '➕', 'reco-remove': '❌' };
+    const icons = { 'reco-keep': '✅', 'reco-fix': '✏️', 'reco-add': '➕', 'reco-remove': '❌', 'reco-urgent': '🚨' };
     document.getElementById(id).innerHTML = items.length === 0
       ? `<div class="reco-item ${cls}"><span class="reco-icon">—</span> 해당 사항 없음</div>`
       : items.map(t => `<div class="reco-item ${cls}"><span class="reco-icon">${icons[cls]}</span><span>${t}</span></div>`).join('');
   }
   renderItems(keep,   'recoKeep',   'reco-keep');
+  renderItems(urgent, 'recoUrgent', 'reco-urgent');
   renderItems(fix,    'recoFix',    'reco-fix');
   renderItems(add,    'recoAdd',    'reco-add');
-  renderItems(remove, 'recoRemove', 'reco-remove');
 
+  // ── 이번 달 집중 전략 ──
   const tips = [];
-  if (hasCover === 'no') tips.push('<strong>커버 이미지부터</strong> 설정하세요 — 클릭률을 가장 빠르게 올리는 방법이에요.');
-  if (weeklyPosts < 3) tips.push('<strong>주 3개 게시글</strong>을 목표로 하세요 — 운영자가 먼저 올리면 멤버들도 따라와요.');
-  if (engRate < 5 && engRate > 0) tips.push('<strong>질문형 게시글</strong>을 써보세요 — "이번 주 어디 다녀오셨어요?" 같은 쉬운 질문이 댓글을 3배 늘려요.');
-  if (hasOffline === 'no') tips.push('<strong>소규모 오프라인</strong>을 시작해 보세요 — 3명이라도 만나고 사진 올리면 신규 유입이 확 늘어요.');
-  if (intro.length < 30) tips.push('<strong>소개글을 정성껏</strong> 써보세요 — "어떤 사람들이 모이는지"를 구체적으로 쓰면 딱 맞는 멤버가 찾아와요.');
-  if (tips.length === 0) tips.push('방향이 아주 좋아요! <strong>꾸준함</strong>이 핵심이에요. 매주 비슷한 시간에 게시글을 올리는 루틴을 만들어 보세요.');
+  const lowest = [
+    { name: 'Activity', score: actScore }, { name: 'Relevance', score: relScore }, { name: 'Recency', score: recScore }
+  ].sort((a,b) => a.score - b.score);
+
+  if (lowest[0].name === 'Activity') tips.push(`<strong>Activity 점수(${actScore}점)</strong>가 가장 낮아요. 이번 달은 <strong>72시간 채팅 활성화</strong>에 집중하세요. 매일 1개 이상 채팅·게시글을 유지하면 점수가 빠르게 올라요.`);
+  else if (lowest[0].name === 'Relevance') tips.push(`<strong>Relevance 점수(${relScore}점)</strong>가 가장 낮아요. 이번 달은 <strong>소개글 개선과 해시태그 추가</strong>에 집중하세요. 키워드를 잘 배치하면 신규 유입이 늘어요.`);
+  else if (lowest[0].name === 'Recency') tips.push(`<strong>Recency 점수(${recScore}점)</strong>가 가장 낮아요. 이번 달은 <strong>게시글 주기 단축</strong>에 집중하세요. 매일 1개씩만 올려도 점수가 크게 올라요.`);
+
+  if (hasCover === 'no') tips.push(`<strong>커버 이미지 설정</strong>이 가장 빠른 CTR 개선법이에요 — 지금 바로 설정하세요!`);
+  if (kwResult.hashList.length < 3) tips.push(`<strong>해시태그 5개 추가</strong>로 Relevance 점수를 10점 이상 올릴 수 있어요.`);
+  if (totalScore >= 70) tips.push(`전체적으로 잘 운영되고 있어요! <strong>꾸준함</strong>이 핵심이에요. 72시간 채팅을 매일 유지하면 상위 노출을 지킬 수 있어요.`);
 
   document.getElementById('tipBox').innerHTML = tips.map(t => `• ${t}`).join('<br/><br/>');
   document.getElementById('result').style.display = 'block';
