@@ -574,16 +574,16 @@
         <input type="number" id="m-dongneShares" placeholder="예: 3"/>
       </div>
       <div class="form-group">
-        <label>사진 포함 게시글 비율 (%)</label>
-        <input type="number" id="m-photoRatio" placeholder="예: 60" max="100"/>
+        <label>사진 포함 게시글 수 <span class="hint">(이번 주 기준)</span></label>
+        <input type="number" id="m-photoCount" placeholder="예: 3"/>
       </div>
       <div class="form-group">
         <label>최근 1개월 신규 멤버 수</label>
         <input type="number" id="m-newMembers" placeholder="예: 12"/>
       </div>
       <div class="form-group">
-        <label>멤버 중 게시글 작성 비율 (%)</label>
-        <input type="number" id="m-activeRatio" placeholder="예: 30" max="100"/>
+        <label>게시글 작성 멤버 수 <span class="hint">(이번 주 기준)</span></label>
+        <input type="number" id="m-activeMembers" placeholder="예: 8"/>
       </div>
     </div>
   </div>
@@ -656,7 +656,7 @@
 <footer>
   <p>🥕 당근 모임을 더 많은 이웃과 함께 키워나가세요</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
-  <p style="margin-top: 4px; font-size: 0.75rem; color: #ddd;">Ver2.1</p>
+  <p style="margin-top: 4px; font-size: 0.75rem; color: #ddd;">Ver2.2</p>
 </footer>
 
 <script>
@@ -670,6 +670,18 @@ function switchTab(tab) {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
   });
 }
+
+// ── 해시태그 추천 칩 ──
+const hashRecommends = {
+  '운동': ['#러닝모임','#요가클래스','#필라테스','#등산모임','#자전거라이딩','#헬스','#수영','#주말운동','#새벽러닝','#함께운동','#홈트','#걷기모임'],
+  '독서': ['#독서모임','#북클럽','#책추천','#독후감','#문학토론','#소설읽기','#에세이','#비문학','#인문학','#주말독서','#함께읽기','#책친구'],
+  '맛집': ['#맛집탐방','#카페투어','#브런치','#와인모임','#커피챗','#음식스터디','#맛집공유','#주말브런치','#디저트','#한식탐방','#이자카야','#파인다이닝'],
+  '취미': ['#공예모임','#그림모임','#사진모임','#음악모임','#드로잉','#핸드메이드','#뜨개질','#가죽공예','#도예','#캘리그라피','#원데이클래스','#취미공유'],
+  '반려동물': ['#강아지모임','#고양이모임','#반려견산책','#펫모임','#멍멍이','#냥냥이','#반려동물','#개스타그램','#펫팸','#애견인','#도그워크','#펫케어'],
+  '육아': ['#육아모임','#아이와함께','#엄마모임','#아빠모임','#키즈','#육아정보','#육아꿀팁','#어린이집','#공동육아','#놀이터','#육아일기','#아이랑'],
+  '여행': ['#여행모임','#국내여행','#트레킹','#캠핑','#드라이브','#여행메이트','#당일치기','#주말여행','#백패킹','#여행계획','#여행사진','#힐링여행'],
+  '기타': ['#정기모임','#소모임','#함께해요','#이웃만남','#주말모임','#평일모임','#소규모','#소수정예','#무료모임','#취미공유','#네트워킹','#친목모임'],
+};
 
 // ── 스크린샷 ──
 function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
@@ -783,6 +795,7 @@ function analyze() {
   avgComments = 0; avgReactions = 0; newMembers = 0; chat72 = 0; lastPost = 0;
   lastChat = 0; scheduleParticipants = 0; dongneShares = 0; hashtags = '';
   moName = ''; regionCount = 1; photoRatio = 0; activeRatio = 0; hasSchedule = 'no'; category = '기타';
+  let photoCount = 0, activeMembers = 0;
 
   if (currentTab === 'quick') {
     members = getNum('q-members'); weeklyPosts = getNum('q-weeklyPosts');
@@ -811,7 +824,9 @@ function analyze() {
     intro = getVal('m-intro').trim(); hashtags = getVal('m-hashtags').trim();
     hasSchedule = getVal('m-hasSchedule'); scheduleParticipants = getNum('m-scheduleParticipants');
     dongneShares = getNum('m-dongneShares'); regionCount = parseInt(getVal('m-regionCount')) || 1;
-    photoRatio = getNum('m-photoRatio'); activeRatio = getNum('m-activeRatio');
+    photoCount = getNum('m-photoCount'); activeMembers = getNum('m-activeMembers');
+    photoRatio = weeklyPosts > 0 ? Math.round((photoCount / weeklyPosts) * 100) : 0;
+    activeRatio = members > 0 ? Math.round((activeMembers / members) * 100) : 0;
     category = getVal('m-category'); moName = getVal('m-name').trim();
   }
 
@@ -1008,6 +1023,20 @@ function analyze() {
         <div class="keyword-tags">`;
       kwResult.missingSuggested.forEach(k => { kwHtml += `<span class="kw-tag kw-suggest">+ ${k}</span>`; });
       kwHtml += `</div></div>`;
+    }
+
+    // 추천 해시태그
+    const allReco = hashRecommends[category] || hashRecommends['기타'];
+    const currentHashes = kwResult.hashList.map(h => h.toLowerCase());
+    const recoTags = allReco.filter(t => !currentHashes.includes(t.replace(/^#/,'').toLowerCase()));
+    if (recoTags.length > 0) {
+      kwHtml += `<div class="keyword-section">
+        <div class="keyword-section-title">🏷️ 추천 해시태그 <span style="font-size:0.75rem;color:#aaa;font-weight:400;">(${category} 카테고리 · 미사용 태그)</span></div>
+        <div class="keyword-tags">`;
+      recoTags.forEach(t => {
+        kwHtml += `<span class="kw-tag" style="background:#fff8f0;border:1.5px dashed #FF9744;color:#FF6F0F;font-weight:500;">${t}</span>`;
+      });
+      kwHtml += `</div><div style="font-size:0.76rem;color:#aaa;margin-top:8px;">📌 위 태그 중 3~5개를 모임 해시태그에 추가하면 Relevance 점수가 올라가요.</div></div>`;
     }
 
     kwHtml += `<div class="strategy-item" style="margin-top:12px;">
