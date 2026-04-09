@@ -286,8 +286,8 @@
         <input type="number" id="q-chat72" placeholder="예: 30"/>
       </div>
       <div class="form-group">
-        <label>마지막 게시글 <span class="hint">(몇 시간 전)</span></label>
-        <input type="number" id="q-lastPost" placeholder="예: 12"/>
+        <label>마지막 게시글 <span class="hint">(몇 분 전)</span></label>
+        <input type="number" id="q-lastPost" placeholder="예: 120"/>
       </div>
       <div class="form-group">
         <label>커버 이미지 있음?</label>
@@ -358,8 +358,8 @@
           <input type="number" id="s-chat72" placeholder="예: 30"/>
         </div>
         <div class="form-group">
-          <label>마지막 게시글 <span class="hint">(몇 시간 전)</span></label>
-          <input type="number" id="s-lastPost" placeholder="예: 12"/>
+          <label>마지막 게시글 <span class="hint">(몇 분 전)</span></label>
+          <input type="number" id="s-lastPost" placeholder="예: 120"/>
         </div>
         <div class="form-group">
           <label>커버 이미지 있음?</label>
@@ -426,8 +426,8 @@
           <input type="number" id="p-chat72" placeholder="예: 30"/>
         </div>
         <div class="form-group">
-          <label>마지막 게시글 (몇 시간 전)</label>
-          <input type="number" id="p-lastPost" placeholder="예: 12"/>
+          <label>마지막 게시글 (몇 분 전)</label>
+          <input type="number" id="p-lastPost" placeholder="예: 120"/>
         </div>
         <div class="form-group">
           <label>신규 멤버 (이번 달)</label>
@@ -547,8 +547,8 @@
         <input type="number" id="m-weeklyPosts" placeholder="예: 5"/>
       </div>
       <div class="form-group">
-        <label>마지막 게시글 (몇 시간 전)</label>
-        <input type="number" id="m-lastPost" placeholder="예: 12"/>
+        <label>마지막 게시글 (몇 분 전)</label>
+        <input type="number" id="m-lastPost" placeholder="예: 120"/>
       </div>
       <div class="form-group">
         <label>평균 댓글 수 (게시글당)</label>
@@ -853,7 +853,7 @@ function analyze() {
   // ③ 최신성 (Recency) — 가중치 20%
   let postRecScore, chatRecScore;
   if (lastPost > 0) {
-    postRecScore = lastPost <= 6 ? 50 : lastPost <= 12 ? 43 : lastPost <= 24 ? 34 : lastPost <= 48 ? 22 : lastPost <= 72 ? 12 : 4;
+    postRecScore = lastPost <= 360 ? 50 : lastPost <= 720 ? 43 : lastPost <= 1440 ? 34 : lastPost <= 2880 ? 22 : lastPost <= 4320 ? 12 : 4;
   } else {
     // 주간 게시글로 추정
     postRecScore = weeklyPosts >= 7 ? 40 : weeklyPosts >= 5 ? 32 : weeklyPosts >= 3 ? 22 : weeklyPosts >= 1 ? 14 : 4;
@@ -919,7 +919,7 @@ function analyze() {
     { name: '일정 참여', val: hasSchedule === 'yes' ? scheduleParticipants + '명' : '없음', score: scheduleScore, max: 30, desc: '일정 생성 및 멤버 참여 전환율. 알고리즘이 중요하게 봐요.', tip: '일정 없음: -20점\n4명 참여: 보통\n8명 이상: 우수' },
     { name: '소개글 품질', val: intro.length > 0 ? intro.length + '자' : '없음', score: introScore, max: 40, desc: '소개글 길이와 키워드 밀도. Relevance 점수에 직접 영향해요.', tip: '40자 미만: 낮음\n80자: 양호\n150자 이상: 우수' },
     { name: '해시태그', val: kwResult.hashList.length + '개', score: hashScore, max: 20, desc: '유저 검색 벡터와 매칭되는 핵심 키워드예요.', tip: '0개: 0점\n1~2개: 보통\n3~5개: 좋음\n5개 이상: 우수' },
-    { name: '최신성', val: lastPost > 0 ? lastPost + '시간 전' : weeklyPosts + '개/주 추정', score: Math.round((postRecScore + chatRecScore) / 2), max: 50, desc: '마지막 게시글/채팅 시각. Time-decay 방식으로 계산해요.', tip: '6시간 이내: 최고\n24시간: 양호\n72시간 이상: 급락' },
+    { name: '최신성', val: lastPost > 0 ? lastPost + '분 전' : weeklyPosts + '개/주 추정', score: Math.round((postRecScore + chatRecScore) / 2), max: 50, desc: '마지막 게시글/채팅 시각. Time-decay 방식으로 계산해요.', tip: '360분(6h) 이내: 최고\n1440분(24h): 양호\n4320분(72h) 이상: 급락' },
   ];
 
   let barsHtml = '';
