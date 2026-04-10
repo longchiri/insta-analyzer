@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Instagram 계정 분석기 (Ver 2.6)</title>
+  <title>Instagram 계정 분석기 (Ver 2.7)</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
   <style>
-    /* 기존 스타일 유지 */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
@@ -17,164 +16,103 @@
       padding: 30px 16px;
       color: #222;
     }
-    header { text-align: center; margin-bottom: 36px; }
+    header { text-align: center; margin-bottom: 30px; }
     header h1 {
-      font-size: 2rem;
+      font-size: 1.8rem;
       background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 800;
     }
-    header p { color: #777; margin-top: 8px; font-size: 0.95rem; }
 
     .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
+      background: #fff; border-radius: 16px; padding: 24px;
+      margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      max-width: 600px; margin-left: auto; margin-right: auto;
     }
-    .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; color: #444; display: flex; align-items: center; gap: 8px; }
 
-    .tab-wrap { display: flex; gap: 10px; max-width: 720px; margin: 0 auto 20px; }
+    .tab-wrap { display: flex; gap: 8px; max-width: 600px; margin: 0 auto 20px; }
     .tab-btn {
-      flex: 1; padding: 13px; border: 2px solid #e5e5e5; background: #fff;
-      border-radius: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
-      color: #888; transition: all 0.2s;
+      flex: 1; padding: 12px; border: 2px solid #e5e5e5; background: #fff;
+      border-radius: 12px; font-weight: 600; cursor: pointer; color: #888;
     }
     .tab-btn.active { border-color: #c13584; color: #c13584; background: #fff0f8; }
 
     .upload-zone {
-      border: 2.5px dashed #e0b0ff; border-radius: 14px; padding: 40px 20px;
-      text-align: center; cursor: pointer; transition: all 0.2s; background: #fdf5ff;
+      border: 2px dashed #c13584; border-radius: 14px; padding: 30px;
+      text-align: center; cursor: pointer; background: #fdf5ff;
     }
-    .upload-zone:hover { border-color: #c13584; background: #fff0f8; }
-    .upload-zone.dragover { border-color: #833ab4; background: #f0e0ff; }
-    .upload-zone .icon { font-size: 2.5rem; margin-bottom: 12px; }
-
     #fileInput { display: none; }
 
-    .file-loaded {
-      background: #f0fff4; border: 2px solid #68d391; border-radius: 12px;
-      padding: 16px 20px; display: none; align-items: center; gap: 12px; margin-top: 14px;
-    }
-
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group.full { grid-column: 1 / -1; }
-    label { font-size: 0.82rem; font-weight: 600; color: #666; }
-    input, textarea, select {
-      border: 1.5px solid #e5e5e5; border-radius: 10px; padding: 10px 12px;
-      font-size: 0.95rem; outline: none; background: #fafafa;
-    }
+    .parsed-preview { background: #f8f9ff; border: 1px solid #c3d0ff; border-radius: 12px; padding: 15px; margin-top: 15px; display: none; }
+    .parsed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+    .p-val { font-size: 1.2rem; font-weight: 800; color: #c13584; }
+    .p-label { font-size: 0.75rem; color: #888; }
 
     .btn-analyze {
-      display: block; width: 100%; max-width: 720px; margin: 0 auto 10px;
+      display: block; width: 100%; max-width: 600px; margin: 0 auto 10px;
       padding: 16px; background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-      color: #fff; font-size: 1.05rem; font-weight: 700; border: none;
-      border-radius: 14px; cursor: pointer;
+      color: #fff; font-size: 1rem; font-weight: 700; border: none; border-radius: 14px; cursor: pointer;
     }
     
     #btn-pdf {
-      display: none; width: 100%; max-width: 720px; margin: 0 auto 30px;
-      padding: 12px; background: #444; color: #fff; border: none;
-      border-radius: 14px; cursor: pointer; font-weight: 600;
+      display: none; width: 100%; max-width: 600px; margin: 0 auto 30px;
+      padding: 12px; background: #333; color: #fff; border: none; border-radius: 14px; cursor: pointer;
     }
 
-    /* 결과 섹션 */
-    #result { display: none; }
-    .result-card {
-      background: #fff; border-radius: 16px; padding: 28px;
-      margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-      max-width: 720px; margin-left: auto; margin-right: auto;
-    }
-    .score-box { text-align: center; padding: 20px; background: linear-gradient(135deg, #f9f0ff, #fff0f5); border-radius: 14px; margin-bottom: 20px; }
-    .score-number { font-size: 3.5rem; font-weight: 900; background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #result { display: none; max-width: 600px; margin: 0 auto; }
+    .result-card { background: #fff; border-radius: 16px; padding: 25px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .score-box { text-align: center; padding: 20px; background: #fff0f8; border-radius: 14px; margin-bottom: 15px; }
+    .score-number { font-size: 3rem; font-weight: 900; color: #c13584; }
     
-    .reco-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; font-size: 0.9rem; line-height: 1.5; }
+    .reco-item { display: flex; gap: 10px; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 0.9rem; }
     .reco-keep { background: #f0fff4; color: #276749; }
-    .reco-fix { background: #fffbeb; color: #744210; }
     .reco-add { background: #ebf8ff; color: #2c5282; }
-    .reco-remove { background: #fff5f5; color: #742a2a; }
+    .reco-fix { background: #fffbeb; color: #744210; }
 
-    .tip-box { background: linear-gradient(135deg, #667eea22, #764ba222); border-left: 4px solid #764ba2; border-radius: 0 10px 10px 0; padding: 14px 16px; font-size: 0.88rem; color: #444; line-height: 1.6; }
-
-    .parsed-preview { background: #f8f9ff; border: 1.5px solid #c3d0ff; border-radius: 12px; padding: 16px; margin-top: 16px; display: none; }
-    .parsed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .parsed-item { text-align: center; background: #fff; border-radius: 8px; padding: 10px 6px; }
-    .p-val { font-size: 1.1rem; font-weight: 800; color: #c13584; }
-    .p-label { font-size: 0.72rem; color: #888; }
-    
-    footer { text-align: center; color: #bbb; font-size: 0.8rem; margin-top: 20px; padding-bottom: 40px; }
+    .tag-area { font-family: monospace; background: #f4f4f4; padding: 10px; border-radius: 8px; margin-top: 5px; color: #c13584; font-weight: bold; }
   </style>
 </head>
 <body>
 
 <header>
-  <p style="font-size:1rem; margin-bottom:6px;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
+  <p style="color:#ccc;">by longchiri</p>
   <h1>Instagram 계정 분석기</h1>
-  <p>데이터 기반 노출 전략 및 해시태그 추천 리포트</p>
 </header>
 
 <div class="tab-wrap">
-  <button class="tab-btn active" onclick="switchTab('upload')" id="tab-upload">📂 파일 업로드</button>
-  <button class="tab-btn" onclick="switchTab('manual')" id="tab-manual">✏️ 직접 입력</button>
+  <button class="tab-btn active" onclick="switchTab('upload')">📂 ZIP 파일 분석</button>
+  <button class="tab-btn" onclick="switchTab('manual')">✏️ 직접 입력</button>
 </div>
 
 <div id="section-upload">
   <div class="card">
-    <h2>📂 Instagram JSON/ZIP 파일</h2>
-    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-      <div class="icon">📁</div>
-      <h3>파일을 드래그하거나 클릭하세요</h3>
-      <p>내 정보 다운로드에서 받은 JSON/ZIP 지원</p>
+    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+      <h3>📁 인스타 ZIP 파일 선택</h3>
+      <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">내 정보 다운로드에서 받은 파일을 그대로 올려주세요</p>
     </div>
-    <input type="file" id="fileInput" accept=".json,.zip" onchange="handleFileSelect(event)" />
-
-    <div class="file-loaded" id="fileLoaded">
-      <span class="file-icon">✅</span>
-      <div class="file-info">
-        <div class="file-name" id="fileName">파일명</div>
-        <div class="file-meta" id="fileMeta">파싱 완료</div>
-      </div>
-    </div>
+    <input type="file" id="fileInput" accept=".zip" onchange="handleFileSelect(event)" />
 
     <div class="parsed-preview" id="parsedPreview">
-      <h4>📋 추출된 데이터</h4>
-      <div class="parsed-grid" id="parsedGrid"></div>
+      <h4 style="margin-bottom:10px; font-size:0.9rem;">📊 ZIP에서 추출된 실제 데이터</h4>
+      <div class="parsed-grid">
+        <div><div class="p-val" id="p-followers">0</div><div class="p-label">팔로워</div></div>
+        <div><div class="p-val" id="p-following">0</div><div class="p-label">팔로잉</div></div>
+        <div><div class="p-val" id="p-posts">0</div><div class="p-label">게시물</div></div>
+      </div>
     </div>
   </div>
 
-  <div class="card" id="extraInputCard" style="display:none;">
-    <h2>📝 추가 정보 입력</h2>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>계정 유형</label>
-        <select id="u-accountType">
-          <option value="creator">크리에이터</option>
-          <option value="brand">비즈니스</option>
-          <option value="personal">개인</option>
-        </select>
+  <div class="card" id="extraCard" style="display:none;">
+    <h3 style="font-size:1rem; margin-bottom:15px;">🔍 추가 정보 (분석 정확도 향상)</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div>
+        <label style="font-size:0.8rem;">콘텐츠 주제</label>
+        <input type="text" id="u-niche" placeholder="카페, 일상, 개발 등" style="width:100%; padding:8px; margin-top:5px; border-radius:6px; border:1px solid #ddd;">
       </div>
-      <div class="form-group">
-        <label>주요 콘텐츠 분야 (쉼표 구분)</label>
-        <input type="text" id="u-niche" placeholder="예: 뷰티, 카페, 맛집" />
-      </div>
-      <div class="form-group">
-        <label>스토리 업로드 빈도</label>
-        <select id="u-storyFreq">
-          <option value="daily">매일</option>
-          <option value="often">자주</option>
-          <option value="rarely">가끔</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>릴스 게시물 수</label>
-        <input type="number" id="u-reelsPosts" placeholder="예: 10" />
+      <div>
+        <label style="font-size:0.8rem;">평균 좋아요(직접입력)</label>
+        <input type="number" id="u-likes" placeholder="예: 50" style="width:100%; padding:8px; margin-top:5px; border-radius:6px; border:1px solid #ddd;">
       </div>
     </div>
   </div>
@@ -182,175 +120,147 @@
 
 <div id="section-manual" style="display:none;">
   <div class="card">
-    <h2>👤 기본 정보</h2>
-    <div class="form-grid">
-      <div class="form-group"><label>계정명</label><input type="text" id="username" /></div>
-      <div class="form-group"><label>팔로워</label><input type="number" id="followers" /></div>
-      <div class="form-group"><label>팔로잉</label><input type="number" id="following" /></div>
-      <div class="form-group"><label>평균 좋아요</label><input type="number" id="avgLikes" /></div>
-      <div class="form-group"><label>평균 댓글</label><input type="number" id="avgComments" /></div>
-      <div class="form-group"><label>주간 게시물 수</label><input type="number" id="weeklyPosts" /></div>
-      <div class="form-group full"><label>콘텐츠 분야</label><input type="text" id="niche" placeholder="맛집, 여행 등" /></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <input type="number" id="m-followers" placeholder="팔로워 수" style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+      <input type="number" id="m-likes" placeholder="평균 좋아요" style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+      <input type="text" id="m-niche" placeholder="주제 (예: 맛집)" style="padding:10px; border:1px solid #ddd; border-radius:8px; grid-column: span 2;">
     </div>
   </div>
 </div>
 
-<button class="btn-analyze" onclick="analyze()">🔍 분석하기</button>
+<button class="btn-analyze" onclick="analyze()">🔍 데이터 분석 및 보고서 생성</button>
 <button id="btn-pdf" onclick="downloadPDF()">📄 PDF 리포트 다운로드</button>
 
 <div id="result">
   <div class="result-card">
-    <h2 id="reportTitle">📈 계정 종합 분석 결과</h2>
+    <h2 style="text-align:center; margin-bottom:15px;">📱 Instagram 분석 리포트</h2>
     <div class="score-box">
-      <div class="score-number" id="totalScore">0</div>
-      <div class="score-label" id="scoreLabel">분석 중...</div>
+      <div class="score-number" id="res-score">0</div>
+      <div style="font-weight:700; color:#c13584;">종합 지수</div>
     </div>
+    <p id="res-summary" style="text-align:center; font-size:0.9rem; color:#666;"></p>
   </div>
-  
-  <div class="result-card"><h2>✅ 유지할 것</h2><div id="recoKeep"></div></div>
-  <div class="result-card"><h2>✏️ 수정할 것</h2><div id="recoFix"></div></div>
-  <div class="result-card"><h2>➕ 추천 해시태그 전략</h2><div id="recoHashtag"></div></div>
-  
+
   <div class="result-card">
-    <h2>💡 월간 집중 전략</h2>
-    <div class="tip-box" id="tipBox"></div>
+    <h3 style="font-size:1rem; margin-bottom:12px;">💡 성장을 위한 가이드</h3>
+    <div id="reco-list"></div>
+  </div>
+
+  <div class="result-card">
+    <h3 style="font-size:1rem; margin-bottom:12px;">#️⃣ 추천 해시태그 전략</h3>
+    <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">회원님의 주제와 인스타그램 알고리즘을 반영한 최적 조합입니다.</p>
+    <div id="hashtag-area" class="tag-area"></div>
   </div>
 </div>
 
-<footer>
-  <p>📌 Instagram Data Analyzer Ver 2.6</p>
-  <p style="margin-top:5px;"><b>by longchiri</b></p>
-</footer>
-
 <script>
 let currentTab = 'upload';
-let parsedData = null;
+let zipData = { followers: 0, following: 0, posts: 0 };
 
 function switchTab(tab) {
   currentTab = tab;
   document.getElementById('section-upload').style.display = tab === 'upload' ? 'block' : 'none';
   document.getElementById('section-manual').style.display = tab === 'manual' ? 'block' : 'none';
-  document.getElementById('tab-upload').classList.toggle('active', tab === 'upload');
-  document.getElementById('tab-manual').classList.toggle('active', tab === 'manual');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
 }
 
-function handleFileSelect(e) {
+async function handleFileSelect(e) {
   const file = e.target.files[0];
   if (!file) return;
-  const ext = file.name.split('.').pop().toLowerCase();
-  document.getElementById('fileName').textContent = file.name;
-  document.getElementById('fileLoaded').style.display = 'flex';
 
-  if (ext === 'json') {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      parsedData = parseJSON(JSON.parse(ev.target.result));
-      showPreview(parsedData);
-    };
-    reader.readAsText(file);
-  } else if (ext === 'zip') {
-    processZip(file);
-  }
-}
-
-async function processZip(file) {
-  const zip = await JSZip.loadAsync(file);
-  let combined = {};
-  // 간단한 ZIP 내 JSON 탐색 로직 (실제로는 경로 패턴 매칭 필요)
-  for (let path in zip.files) {
-    if (path.endsWith('.json')) {
-      const text = await zip.files[path].async('text');
-      try { combined[path] = JSON.parse(text); } catch(e){}
+  try {
+    const zip = await JSZip.loadAsync(file);
+    
+    // 1. 팔로워 파일 파싱 (followers_1.json)
+    const followerFile = zip.file(/followers_1.json/i)[0] || zip.file(/followers.json/i)[0];
+    if (followerFile) {
+      const content = JSON.parse(await followerFile.async("string"));
+      zipData.followers = Array.isArray(content) ? content.length : (content.relationships_followers?.length || 0);
     }
+
+    // 2. 팔로잉 파일 파싱 (following.json)
+    const followingFile = zip.file(/following.json/i)[0];
+    if (followingFile) {
+      const content = JSON.parse(await followingFile.async("string"));
+      zipData.following = content.relationships_following?.length || 0;
+    }
+
+    // 3. 게시물 파일 파싱 (posts_1.json)
+    const postsFile = zip.file(/posts_1.json/i)[0];
+    if (postsFile) {
+      const content = JSON.parse(await postsFile.async("string"));
+      zipData.posts = content.length || 0;
+    }
+
+    // 화면 업데이트
+    document.getElementById('p-followers').textContent = zipData.followers.toLocaleString();
+    document.getElementById('p-following').textContent = zipData.following.toLocaleString();
+    document.getElementById('p-posts').textContent = zipData.posts.toLocaleString();
+    document.getElementById('parsedPreview').style.display = 'block';
+    document.getElementById('extraCard').style.display = 'block';
+
+  } catch (err) {
+    alert("ZIP 파일을 읽는 중 오류가 발생했습니다. 인스타에서 받은 원본 파일이 맞는지 확인해주세요.");
   }
-  // 파싱 로직 (기존 로직 함축)
-  parsedData = { followers: 1200, following: 800, avgLikes: 50, avgComments: 5, hashtagCount: 12 }; // 예시 데이터
-  showPreview(parsedData);
-}
-
-function parseJSON(json) {
-  // 실제 인스타그램 JSON 구조에 맞춘 파싱 로직 (요약)
-  return {
-    username: 'user_test',
-    followers: json.followers?.length || 0,
-    following: json.following?.length || 0,
-    avgLikes: 45,
-    avgComments: 4,
-    hashtagCount: 18
-  };
-}
-
-function showPreview(data) {
-  const grid = document.getElementById('parsedGrid');
-  grid.innerHTML = `
-    <div class="parsed-item"><div class="p-val">${data.followers}</div><div class="p-label">팔로워</div></div>
-    <div class="parsed-item"><div class="p-val">${data.avgLikes}</div><div class="p-label">평균좋아요</div></div>
-    <div class="parsed-item"><div class="p-val">${data.hashtagCount}</div><div class="p-label">태그개수</div></div>
-  `;
-  document.getElementById('parsedPreview').style.display = 'block';
-  document.getElementById('extraInputCard').style.display = 'block';
 }
 
 function analyze() {
-  const f = currentTab === 'upload' ? (parsedData?.followers || 0) : parseInt(document.getElementById('followers').value || 0);
-  const l = currentTab === 'upload' ? (parsedData?.avgLikes || 0) : parseInt(document.getElementById('avgLikes').value || 0);
-  const c = currentTab === 'upload' ? (parsedData?.avgComments || 0) : parseInt(document.getElementById('avgComments').value || 0);
-  const niche = document.getElementById(currentTab === 'upload' ? 'u-niche' : 'niche').value;
-  const tagCount = parsedData?.hashtagCount || 0;
-
-  if (f === 0) { alert('데이터를 먼저 입력해주세요!'); return; }
-
-  // 1. 점수 계산
-  const er = ((l + c) / f * 100).toFixed(2);
-  let score = 50 + (er * 5); 
-  if (score > 100) score = 100;
-
-  document.getElementById('totalScore').textContent = Math.floor(score);
-  document.getElementById('scoreLabel').textContent = er > 3 ? "활동성이 매우 높습니다!" : "인게이지먼트 개선이 필요합니다.";
-
-  // 2. 결과 출력
-  document.getElementById('recoKeep').innerHTML = `<div class="reco-item reco-keep">현재 팔로워 대비 좋아요 비율(${er}%)이 안정적입니다.</div>`;
-  document.getElementById('recoFix').innerHTML = `<div class="reco-item reco-fix">댓글 소통 비중을 20% 더 높이면 알고리즘 노출이 쉬워집니다.</div>`;
-
-  // 3. 해시태그 전략 추천 (요청하신 기능)
-  let tagHtml = '';
-  if (tagCount > 20) {
-    tagHtml += `<div class="reco-item reco-remove">현재 태그가 너무 많습니다(${tagCount}개). 스팸 방지를 위해 10개 내외로 줄이세요.</div>`;
-  } else if (tagCount < 5) {
-    tagHtml += `<div class="reco-item reco-add">해시태그가 너무 적습니다. 검색 노출을 위해 5~10개는 유지하세요.</div>`;
+  let f, l, niche;
+  if (currentTab === 'upload') {
+    f = zipData.followers;
+    l = parseInt(document.getElementById('u-likes').value || 0);
+    niche = document.getElementById('u-niche').value;
+  } else {
+    f = parseInt(document.getElementById('m-followers').value || 0);
+    l = parseInt(document.getElementById('m-likes').value || 0);
+    niche = document.getElementById('m-niche').value;
   }
+
+  if (f === 0) { alert("팔로워 데이터가 없습니다."); return; }
+
+  // 로직 계산
+  const er = ((l / f) * 100).toFixed(2); // 인게이지먼트율
+  const score = Math.min(100, (er * 10) + 40);
+
+  document.getElementById('res-score').textContent = Math.floor(score);
+  document.getElementById('res-summary').innerHTML = `현재 인게이지먼트율은 <b>${er}%</b>입니다.<br>팔로워 대비 반응도가 ${er > 3 ? '매우 우수' : '개선 가능'}한 상태입니다.`;
+
+  // 추천 가이드
+  let recoHtml = '';
+  recoHtml += `<div class="reco-item reco-keep">✅ 현재 ${f.toLocaleString()}명의 팔로워와 소통 중입니다.</div>`;
+  if (er < 2) {
+    recoHtml += `<div class="reco-item reco-fix">⚠️ 게시물 도달 대비 좋아요가 적습니다. 질문형 캡션을 사용해보세요.</div>`;
+  }
+  recoHtml += `<div class="reco-item reco-add">🚀 릴스(Reels)를 주 2회 업로드하여 외부 유입을 늘리세요.</div>`;
+  document.getElementById('reco-list').innerHTML = recoHtml;
+
+  // 해시태그 전략 (핵심 추가 사항)
+  const baseTags = niche ? niche.split(',').map(t => `#${t.trim()}`) : ['#인스타', '#소통'];
+  const trendingTags = ['#일상', '#daily', '#좋아요'];
+  const mixTags = [...baseTags.slice(0,3), ...trendingTags].join(' ');
   
-  if (niche) {
-    const tags = niche.split(',').map(t => `#${t.trim()}`).join(' ');
-    tagHtml += `<div class="reco-item reco-add"><b>추천 조합:</b> ${tags} #소통 #맞팔 #일상</div>`;
-  }
-  document.getElementById('recoHashtag').innerHTML = tagHtml || "적절한 해시태그를 사용 중입니다.";
-
-  document.getElementById('tipBox').innerHTML = `이번 달은 <b>릴스</b> 비중을 40%까지 높여보세요. 텍스트보다 영상에서의 유입이 ${niche || '당신의 분야'}에서 두드러집니다.`;
+  document.getElementById('hashtag-area').innerHTML = `
+    ${mixTags}<br><br>
+    <span style="color:#666; font-size:0.75rem;">팁: 위 해시태그와 함께 게시물 내용과 직접 관련된 태그 3개를 추가하는 것이 가장 효과적입니다.</span>
+  `;
 
   document.getElementById('result').style.display = 'block';
   document.getElementById('btn-pdf').style.display = 'block';
-  
-  // 결과 위치로 스크롤
   document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
 }
 
-// PDF 다운로드 기능
 function downloadPDF() {
   const element = document.getElementById('result');
-  const name = currentTab === 'upload' ? (parsedData?.username || 'user') : (document.getElementById('username').value || 'user');
-  
   const opt = {
-    margin: [10, 10, 10, 10],
-    filename: `Insta_Report_${name}.pdf`,
+    margin: 10,
+    filename: 'Insta_Analysis_Report.pdf',
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
+    html2canvas: { scale: 2 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
-
   html2pdf().set(opt).from(element).save();
 }
 </script>
-
 </body>
 </html>
