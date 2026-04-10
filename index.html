@@ -272,46 +272,6 @@
 
     footer { text-align: center; color: #bbb; font-size: 0.8rem; margin-top: 10px; }
 
-    /* OAuth 로그인 카드 */
-    .oauth-card {
-      background: linear-gradient(135deg, #fff0f8 0%, #f5f0ff 100%);
-      border: 2px solid #e8d0f0;
-      border-radius: 18px;
-      padding: 28px;
-      max-width: 720px;
-      margin: 0 auto 24px;
-      box-shadow: 0 4px 20px rgba(131,58,180,0.08);
-    }
-    .oauth-inner { text-align: center; }
-    .oauth-inner .oauth-icon { font-size: 2.4rem; margin-bottom: 12px; }
-    .oauth-inner h3 { font-size: 1.1rem; font-weight: 700; color: #333; margin-bottom: 8px; }
-    .oauth-inner p { font-size: 0.88rem; color: #888; margin-bottom: 22px; line-height: 1.6; }
-    .btn-oauth {
-      background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 14px 36px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.3px;
-      transition: opacity 0.2s;
-      box-shadow: 0 4px 16px rgba(131,58,180,0.3);
-    }
-    .btn-oauth:hover { opacity: 0.88; }
-    .oauth-note { margin-top: 14px; font-size: 0.76rem; color: #bbb; }
-    .oauth-profile { display: flex; align-items: center; gap: 14px; }
-    .oauth-profile img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid #c13584; }
-    .oauth-profile-info .name { font-weight: 700; font-size: 1rem; color: #333; }
-    .oauth-profile-info .stats { font-size: 0.82rem; color: #888; margin-top: 4px; }
-    .btn-logout { margin-left: auto; font-size: 0.78rem; color: #aaa; background: none; border: 1px solid #ddd; border-radius: 8px; padding: 6px 14px; cursor: pointer; }
-    .btn-logout:hover { border-color: #c13584; color: #c13584; }
-    .oauth-status { margin-top: 14px; font-size: 0.83rem; color: #888; text-align: center; padding: 10px; background: #fff; border-radius: 10px; }
-    .oauth-status.success { color: #27ae60; background: #f0fff4; }
-    .oauth-status.error { color: #e74c3c; background: #fff5f5; }
-    .divider { text-align: center; color: #ccc; font-size: 0.82rem; margin: 0 auto 20px; max-width: 720px; position: relative; }
-    .divider::before, .divider::after { content: ''; display: inline-block; width: 38%; height: 1px; background: #e5e5e5; vertical-align: middle; margin: 0 10px; }
   </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -322,37 +282,6 @@
   <h1>Instagram 계정 분석기</h1>
   <p>데이터를 업로드하거나 직접 입력해서 노출 전략을 받아보세요</p>
 </header>
-
-<!-- ── Instagram OAuth 로그인 ── -->
-<div class="oauth-card" id="oauth-card">
-
-  <!-- 로그아웃 상태 -->
-  <div id="oauth-logged-out" class="oauth-inner">
-    <div class="oauth-icon">📷</div>
-    <h3>Instagram 계정으로 바로 분석하기</h3>
-    <p>Facebook으로 로그인하면 팔로워·게시글·인게이지먼트를<br/>자동으로 불러와 분석해줘요</p>
-    <button class="btn-oauth" onclick="startOAuth()">
-      📲 Instagram 계정 연결하기
-    </button>
-    <div class="oauth-note">⚠️ Business 또는 Creator 계정만 지원 · 앱 ID 기반 연동</div>
-  </div>
-
-  <!-- 로그인 상태 -->
-  <div id="oauth-logged-in" style="display:none;">
-    <div class="oauth-profile">
-      <img id="oauth-profile-pic" src="" alt="프로필" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%23c13584%22/></svg>'"/>
-      <div class="oauth-profile-info">
-        <div class="name" id="oauth-username">@계정명</div>
-        <div class="stats" id="oauth-stats">불러오는 중...</div>
-      </div>
-      <button class="btn-logout" onclick="logout()">로그아웃</button>
-    </div>
-    <div class="oauth-status" id="oauth-status">데이터를 불러오는 중이에요...</div>
-  </div>
-
-</div>
-
-<div class="divider">또는 직접 입력</div>
 
 <!-- 탭 선택 -->
 <div class="tab-wrap">
@@ -551,135 +480,12 @@
 </div>
 
 <footer>
-  <p>📌 Instagram Business/Creator 계정 OAuth 연동 지원 · Meta App ID 기반</p>
+  <p>📌 Instagram 데이터 내보내기(ZIP/JSON)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.4</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.5</p>
 </footer>
 
 <script>
-// ──────────────────────────────
-// Instagram OAuth 연동
-// ──────────────────────────────
-const APP_ID = '5260744140817269';
-let accessToken = null;
-
-function startOAuth() {
-  const base = window.location.href.split('#')[0].split('?')[0];
-  const redirectUri = encodeURIComponent(base);
-  const scope = 'instagram_basic,pages_show_list,pages_read_engagement';
-  const url = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${APP_ID}&redirect_uri=${redirectUri}&scope=${scope}&response_type=token`;
-  window.location.href = url;
-}
-
-function logout() {
-  accessToken = null;
-  history.replaceState(null, '', window.location.pathname);
-  document.getElementById('oauth-logged-out').style.display = 'block';
-  document.getElementById('oauth-logged-in').style.display = 'none';
-}
-
-function setStatus(msg, type) {
-  const el = document.getElementById('oauth-status');
-  el.textContent = msg;
-  el.className = 'oauth-status' + (type ? ' ' + type : '');
-}
-
-async function fetchInstagramData(token) {
-  setStatus('연결된 Facebook 페이지 확인 중...');
-
-  const pagesRes = await fetch(`https://graph.facebook.com/me/accounts?access_token=${token}`);
-  const pagesData = await pagesRes.json();
-
-  if (!pagesData.data || pagesData.data.length === 0) {
-    setStatus('⚠️ 연결된 Facebook 페이지가 없어요. Instagram Business/Creator 계정과 Facebook 페이지를 먼저 연결해 주세요.', 'error');
-    return;
-  }
-
-  let igProfile = null, igMedia = [], pageToken = null;
-
-  for (const page of pagesData.data) {
-    const igRes = await fetch(`https://graph.facebook.com/${page.id}?fields=instagram_business_account&access_token=${page.access_token}`);
-    const igData = await igRes.json();
-    if (igData.instagram_business_account) {
-      const igId = igData.instagram_business_account.id;
-      pageToken = page.access_token;
-      setStatus('Instagram 프로필 불러오는 중...');
-
-      const profRes = await fetch(`https://graph.facebook.com/${igId}?fields=username,followers_count,follows_count,media_count,biography,website,profile_picture_url&access_token=${pageToken}`);
-      igProfile = await profRes.json();
-
-      setStatus('최근 게시물 분석 중...');
-      const mediaRes = await fetch(`https://graph.facebook.com/${igId}/media?fields=id,media_type,timestamp,like_count,comments_count&limit=20&access_token=${pageToken}`);
-      const mediaData = await mediaRes.json();
-      igMedia = mediaData.data || [];
-      break;
-    }
-  }
-
-  if (!igProfile) {
-    setStatus('⚠️ 연결된 Instagram Business/Creator 계정을 찾지 못했어요.', 'error');
-    return;
-  }
-
-  // 프로필 표시
-  document.getElementById('oauth-username').textContent = '@' + igProfile.username;
-  document.getElementById('oauth-stats').textContent =
-    `팔로워 ${(igProfile.followers_count||0).toLocaleString()}명 · 게시글 ${igProfile.media_count||0}개`;
-  if (igProfile.profile_picture_url) {
-    document.getElementById('oauth-profile-pic').src = igProfile.profile_picture_url;
-  }
-
-  // 수동 입력 탭으로 전환 후 자동 입력
-  switchTab('manual');
-  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
-  set('followers', igProfile.followers_count);
-  set('following', igProfile.follows_count);
-  set('posts', igProfile.media_count);
-  set('bio', igProfile.biography || '');
-
-  if (igMedia.length > 0) {
-    const totalLikes    = igMedia.reduce((s, m) => s + (m.like_count || 0), 0);
-    const totalComments = igMedia.reduce((s, m) => s + (m.comments_count || 0), 0);
-    set('avgLikes',    Math.round(totalLikes / igMedia.length));
-    set('avgComments', Math.round(totalComments / igMedia.length));
-
-    const reels = igMedia.filter(m => m.media_type === 'VIDEO').length;
-    set('reelsPosts', reels);
-
-    const times = igMedia.map(m => new Date(m.timestamp)).sort((a,b) => b-a);
-    if (times.length >= 2) {
-      const days = (times[0] - times[times.length-1]) / 86400000;
-      const wk = Math.round((times.length / Math.max(days,1)) * 7 * 10) / 10;
-      set('weeklyPosts', wk);
-    }
-  }
-
-  setStatus('✅ 데이터 불러오기 완료! 아래 내용을 확인 후 [분석하기]를 눌러주세요.', 'success');
-}
-
-async function initOAuth() {
-  const hash = window.location.hash;
-  if (!hash || !hash.includes('access_token')) return;
-  const params = new URLSearchParams(hash.substring(1));
-  const token = params.get('access_token');
-  if (!token) return;
-
-  accessToken = token;
-  history.replaceState(null, '', window.location.pathname);
-
-  document.getElementById('oauth-logged-out').style.display = 'none';
-  document.getElementById('oauth-logged-in').style.display = 'block';
-
-  try {
-    await fetchInstagramData(token);
-  } catch (err) {
-    setStatus('⚠️ 데이터 로딩 중 오류가 발생했어요. 직접 입력을 이용해 주세요.', 'error');
-    console.error(err);
-  }
-}
-
-window.addEventListener('load', initOAuth);
-
 // ──────────────────────────────
 // 탭 전환
 // ──────────────────────────────
