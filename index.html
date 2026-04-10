@@ -3,263 +3,1006 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Instagram 계정 분석기 (Ver 2.7)</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  
+  <title>Instagram 계정 분석기</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #f5f0ff 0%, #fff0f5 100%);
       min-height: 100vh;
       padding: 30px 16px;
       color: #222;
     }
-    header { text-align: center; margin-bottom: 30px; }
+    header { text-align: center; margin-bottom: 36px; }
     header h1 {
-      font-size: 1.8rem;
+      font-size: 2rem;
       background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 800;
     }
+    header p { color: #777; margin-top: 8px; font-size: 0.95rem; }
 
     .card {
-      background: #fff; border-radius: 16px; padding: 24px;
-      margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-      max-width: 600px; margin-left: auto; margin-right: auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
     }
+    .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; color: #444; display: flex; align-items: center; gap: 8px; }
 
-    .tab-wrap { display: flex; gap: 8px; max-width: 600px; margin: 0 auto 20px; }
+    /* 탭 */
+    .tab-wrap {
+      display: flex;
+      gap: 10px;
+      max-width: 720px;
+      margin: 0 auto 20px;
+    }
     .tab-btn {
-      flex: 1; padding: 12px; border: 2px solid #e5e5e5; background: #fff;
-      border-radius: 12px; font-weight: 600; cursor: pointer; color: #888;
+      flex: 1;
+      padding: 13px;
+      border: 2px solid #e5e5e5;
+      background: #fff;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #888;
+      transition: all 0.2s;
     }
-    .tab-btn.active { border-color: #c13584; color: #c13584; background: #fff0f8; }
+    .tab-btn.active {
+      border-color: #c13584;
+      color: #c13584;
+      background: #fff0f8;
+    }
 
+    /* 업로드 존 */
     .upload-zone {
-      border: 2px dashed #c13584; border-radius: 14px; padding: 30px;
-      text-align: center; cursor: pointer; background: #fdf5ff;
+      border: 2.5px dashed #e0b0ff;
+      border-radius: 14px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #fdf5ff;
     }
+    .upload-zone:hover { border-color: #c13584; background: #fff0f8; }
+    .upload-zone.dragover { border-color: #833ab4; background: #f0e0ff; }
+    .upload-zone .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .upload-zone h3 { font-size: 1rem; font-weight: 700; color: #555; margin-bottom: 6px; }
+    .upload-zone p { font-size: 0.85rem; color: #999; line-height: 1.6; }
     #fileInput { display: none; }
 
-    .parsed-preview { background: #f8f9ff; border: 1px solid #c3d0ff; border-radius: 12px; padding: 15px; margin-top: 15px; display: none; }
-    .parsed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
-    .p-val { font-size: 1.2rem; font-weight: 800; color: #c13584; }
-    .p-label { font-size: 0.75rem; color: #888; }
+    .file-loaded {
+      background: #f0fff4;
+      border: 2px solid #68d391;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .file-loaded .file-icon { font-size: 1.5rem; }
+    .file-loaded .file-info { flex: 1; }
+    .file-loaded .file-name { font-weight: 700; font-size: 0.9rem; color: #276749; }
+    .file-loaded .file-meta { font-size: 0.8rem; color: #68d391; margin-top: 2px; }
+    .file-loaded .remove-btn { background: none; border: none; color: #e53e3e; cursor: pointer; font-size: 1.1rem; }
+
+    .how-to {
+      background: #fffbeb;
+      border-left: 4px solid #f6ad55;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #744210;
+      line-height: 1.7;
+    }
+    .how-to strong { color: #c05621; }
+
+    /* 폼 */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.82rem; font-weight: 600; color: #666; }
+    input, textarea, select {
+      border: 1.5px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fafafa;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #c13584; background: #fff; }
+    input.autofilled { border-color: #68d391; background: #f0fff4; }
+    textarea { resize: vertical; min-height: 70px; }
+
+    .auto-badge {
+      display: inline-block;
+      background: #68d391;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
 
     .btn-analyze {
-      display: block; width: 100%; max-width: 600px; margin: 0 auto 10px;
-      padding: 16px; background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-      color: #fff; font-size: 1rem; font-weight: 700; border: none; border-radius: 14px; cursor: pointer;
+      display: block;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto 30px;
+      padding: 16px;
+      background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
     }
-    
-    #btn-pdf {
-      display: none; width: 100%; max-width: 600px; margin: 0 auto 30px;
-      padding: 12px; background: #333; color: #fff; border: none; border-radius: 14px; cursor: pointer;
+    .btn-analyze:hover { opacity: 0.92; transform: translateY(-1px); }
+
+    /* 결과 */
+    #result { display: none; }
+    .result-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
     }
+    .result-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; color: #333; }
 
-    #result { display: none; max-width: 600px; margin: 0 auto; }
-    .result-card { background: #fff; border-radius: 16px; padding: 25px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    .score-box { text-align: center; padding: 20px; background: #fff0f8; border-radius: 14px; margin-bottom: 15px; }
-    .score-number { font-size: 3rem; font-weight: 900; color: #c13584; }
-    
-    .reco-item { display: flex; gap: 10px; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 0.9rem; }
-    .reco-keep { background: #f0fff4; color: #276749; }
-    .reco-add { background: #ebf8ff; color: #2c5282; }
-    .reco-fix { background: #fffbeb; color: #744210; }
+    .score-box {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #f9f0ff, #fff0f5);
+      border-radius: 14px;
+      margin-bottom: 20px;
+    }
+    .score-number {
+      font-size: 3.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .score-label { color: #888; font-size: 0.9rem; margin-top: 4px; }
 
-    .tag-area { font-family: monospace; background: #f4f4f4; padding: 10px; border-radius: 8px; margin-top: 5px; color: #c13584; font-weight: bold; }
+    .stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .stat-name-wrap { width: 140px; flex-shrink: 0; }
+    .stat-name { font-size: 0.85rem; color: #555; display: flex; align-items: center; gap: 4px; }
+    .stat-desc { font-size: 0.75rem; color: #aaa; margin-top: 2px; line-height: 1.4; }
+    .bar-wrap { flex: 1; background: #f0f0f0; border-radius: 99px; height: 10px; min-width: 80px; }
+    .bar-fill { height: 10px; border-radius: 99px; transition: width 0.6s ease; }
+    .bar-good { background: linear-gradient(90deg, #56ab2f, #a8e063); }
+    .bar-mid  { background: linear-gradient(90deg, #f7971e, #ffd200); }
+    .bar-bad  { background: linear-gradient(90deg, #cb2d3e, #ef473a); }
+    .stat-val { width: 60px; text-align: right; font-size: 0.82rem; color: #888; }
+
+    /* 툴팁 */
+    .tooltip-wrap { position: relative; display: inline-block; }
+    .tooltip-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: #e2e8f0; color: #888; font-size: 0.65rem; font-weight: 700;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .tooltip-box {
+      display: none;
+      position: absolute;
+      left: 20px; top: -6px;
+      background: #2d3748;
+      color: #fff;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      padding: 10px 13px;
+      border-radius: 10px;
+      width: 220px;
+      z-index: 99;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    }
+    .tooltip-box::before {
+      content: '';
+      position: absolute;
+      left: -6px; top: 10px;
+      border: 6px solid transparent;
+      border-right-color: #2d3748;
+      border-left: none;
+    }
+    .tooltip-wrap:hover .tooltip-box,
+    .tooltip-wrap.active .tooltip-box { display: block; }
+
+    .reco-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .reco-keep   { background: #f0fff4; color: #276749; }
+    .reco-fix    { background: #fffbeb; color: #744210; }
+    .reco-add    { background: #ebf8ff; color: #2c5282; }
+    .reco-remove { background: #fff5f5; color: #742a2a; }
+    .reco-icon   { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+    .tip-box {
+      background: linear-gradient(135deg, #667eea22, #764ba222);
+      border-left: 4px solid #764ba2;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      color: #444;
+      line-height: 1.6;
+    }
+    .tip-box strong { color: #764ba2; }
+
+    /* 파싱된 데이터 미리보기 */
+    .parsed-preview {
+      background: #f8f9ff;
+      border: 1.5px solid #c3d0ff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      display: none;
+    }
+    .parsed-preview h4 { font-size: 0.85rem; font-weight: 700; color: #4a5568; margin-bottom: 12px; }
+    .parsed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 500px) { .parsed-grid { grid-template-columns: repeat(2, 1fr); } }
+    .parsed-item { text-align: center; background: #fff; border-radius: 8px; padding: 10px 6px; }
+    .parsed-item .p-val { font-size: 1.1rem; font-weight: 800; color: #c13584; }
+    .parsed-item .p-label { font-size: 0.72rem; color: #888; margin-top: 2px; }
+
+    footer { text-align: center; color: #bbb; font-size: 0.8rem; margin-top: 10px; }
+
   </style>
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <body>
 
 <header>
-  <p style="color:#ccc;">by longchiri</p>
+  <p style="font-size:1rem; margin-bottom:6px;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
   <h1>Instagram 계정 분석기</h1>
+  <p>데이터를 업로드하거나 직접 입력해서 노출 전략을 받아보세요</p>
 </header>
 
+<!-- 탭 선택 -->
 <div class="tab-wrap">
-  <button class="tab-btn active" onclick="switchTab('upload')">📂 ZIP 파일 분석</button>
-  <button class="tab-btn" onclick="switchTab('manual')">✏️ 직접 입력</button>
+  <button class="tab-btn active" onclick="switchTab('upload')" id="tab-upload">📂 파일 업로드 (자동)</button>
+  <button class="tab-btn" onclick="switchTab('manual')" id="tab-manual">✏️ 직접 입력 (수동)</button>
 </div>
 
+<!-- 업로드 탭 -->
 <div id="section-upload">
   <div class="card">
-    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-      <h3>📁 인스타 ZIP 파일 선택</h3>
-      <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">내 정보 다운로드에서 받은 파일을 그대로 올려주세요</p>
+    <h2>📂 Instagram 데이터 파일 업로드</h2>
+
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()"
+         ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+      <div class="icon">📁</div>
+      <h3>파일을 여기에 드래그하거나 클릭해서 선택하세요</h3>
+      <p>JSON, ZIP 파일 지원<br/>Instagram에서 내보낸 데이터 파일을 올려주세요</p>
     </div>
-    <input type="file" id="fileInput" accept=".zip" onchange="handleFileSelect(event)" />
+    <input type="file" id="fileInput" accept=".json,.zip" onchange="handleFileSelect(event)" />
+
+    <div class="file-loaded" id="fileLoaded">
+      <span class="file-icon">✅</span>
+      <div class="file-info">
+        <div class="file-name" id="fileName">파일명</div>
+        <div class="file-meta" id="fileMeta">파싱 완료</div>
+      </div>
+      <button class="remove-btn" onclick="removeFile()">✕</button>
+    </div>
 
     <div class="parsed-preview" id="parsedPreview">
-      <h4 style="margin-bottom:10px; font-size:0.9rem;">📊 ZIP에서 추출된 실제 데이터</h4>
-      <div class="parsed-grid">
-        <div><div class="p-val" id="p-followers">0</div><div class="p-label">팔로워</div></div>
-        <div><div class="p-val" id="p-following">0</div><div class="p-label">팔로잉</div></div>
-        <div><div class="p-val" id="p-posts">0</div><div class="p-label">게시물</div></div>
-      </div>
+      <h4>📋 파싱된 데이터 미리보기</h4>
+      <div class="parsed-grid" id="parsedGrid"></div>
+    </div>
+
+    <div class="how-to">
+      <strong>📱 인스타그램 데이터 내보내는 방법:</strong><br/>
+      ① 인스타그램 앱 → 프로필 → 우측 상단 메뉴(≡)<br/>
+      ② 설정 및 개인 정보 → 계정 센터<br/>
+      ③ 내 정보 및 권한 → 정보 다운로드<br/>
+      ④ <strong>JSON 형식</strong> 선택 → 다운로드 요청<br/>
+      ⑤ 이메일로 오는 링크에서 ZIP 다운로드 후 여기 업로드
     </div>
   </div>
 
-  <div class="card" id="extraCard" style="display:none;">
-    <h3 style="font-size:1rem; margin-bottom:15px;">🔍 추가 정보 (분석 정확도 향상)</h3>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div>
-        <label style="font-size:0.8rem;">콘텐츠 주제</label>
-        <input type="text" id="u-niche" placeholder="카페, 일상, 개발 등" style="width:100%; padding:8px; margin-top:5px; border-radius:6px; border:1px solid #ddd;">
+  <!-- 업로드 후 추가 입력 -->
+  <div class="card" id="extraInputCard" style="display:none;">
+    <h2>📝 추가 정보 입력 <span style="font-size:0.8rem;color:#999;font-weight:400">(파일에 없는 데이터)</span></h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>계정 유형</label>
+        <select id="u-accountType">
+          <option value="personal">개인</option>
+          <option value="creator">크리에이터</option>
+          <option value="brand">브랜드/비즈니스</option>
+        </select>
       </div>
-      <div>
-        <label style="font-size:0.8rem;">평균 좋아요(직접입력)</label>
-        <input type="number" id="u-likes" placeholder="예: 50" style="width:100%; padding:8px; margin-top:5px; border-radius:6px; border:1px solid #ddd;">
+      <div class="form-group">
+        <label>총 게시글 수</label>
+        <input type="number" id="u-totalPosts" placeholder="예: 120" />
+      </div>
+      <div class="form-group">
+        <label>릴스 게시글 수</label>
+        <input type="number" id="u-reelsPosts" placeholder="예: 45" />
+      </div>
+      <div class="form-group">
+        <label>스토리 업로드 빈도</label>
+        <select id="u-storyFreq">
+          <option value="daily">매일</option>
+          <option value="often">자주 (주 3~5회)</option>
+          <option value="sometimes">가끔 (주 1~2회)</option>
+          <option value="rarely">거의 안 함</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>주요 콘텐츠 분야</label>
+        <input type="text" id="u-niche" placeholder="예: 뷰티, 일상, 맛집" />
       </div>
     </div>
   </div>
 </div>
 
+<!-- 수동 탭 -->
 <div id="section-manual" style="display:none;">
   <div class="card">
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <input type="number" id="m-followers" placeholder="팔로워 수" style="padding:10px; border:1px solid #ddd; border-radius:8px;">
-      <input type="number" id="m-likes" placeholder="평균 좋아요" style="padding:10px; border:1px solid #ddd; border-radius:8px;">
-      <input type="text" id="m-niche" placeholder="주제 (예: 맛집)" style="padding:10px; border:1px solid #ddd; border-radius:8px; grid-column: span 2;">
+    <h2>👤 기본 정보</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>계정명 (@ 제외)</label>
+        <input type="text" id="username" placeholder="예: my_account" />
+      </div>
+      <div class="form-group">
+        <label>계정 유형</label>
+        <select id="accountType">
+          <option value="personal">개인</option>
+          <option value="creator">크리에이터</option>
+          <option value="brand">브랜드/비즈니스</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>팔로워 수</label>
+        <input type="number" id="followers" placeholder="예: 1500" />
+      </div>
+      <div class="form-group">
+        <label>팔로잉 수</label>
+        <input type="number" id="following" placeholder="예: 800" />
+      </div>
+      <div class="form-group">
+        <label>총 게시물 수</label>
+        <input type="number" id="posts" placeholder="예: 120" />
+      </div>
+      <div class="form-group">
+        <label>계정 운영 기간 (개월)</label>
+        <input type="number" id="months" placeholder="예: 12" />
+      </div>
+      <div class="form-group full">
+        <label>바이오(소개글) 내용</label>
+        <textarea id="bio" placeholder="현재 작성된 바이오를 붙여넣어 주세요"></textarea>
+      </div>
+      <div class="form-group">
+        <label>프로필 링크 있음?</label>
+        <select id="hasLink">
+          <option value="yes">있음</option>
+          <option value="no">없음</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>하이라이트 있음?</label>
+        <select id="hasHighlight">
+          <option value="yes">있음</option>
+          <option value="no">없음</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📸 콘텐츠 정보</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>평균 좋아요 수 (게시물당)</label>
+        <input type="number" id="avgLikes" placeholder="예: 85" />
+      </div>
+      <div class="form-group">
+        <label>평균 댓글 수 (게시물당)</label>
+        <input type="number" id="avgComments" placeholder="예: 12" />
+      </div>
+      <div class="form-group">
+        <label>주 업로드 횟수 (주당)</label>
+        <input type="number" id="weeklyPosts" placeholder="예: 3" />
+      </div>
+      <div class="form-group">
+        <label>릴스 게시글 수</label>
+        <input type="number" id="reelsPosts" placeholder="예: 45" />
+      </div>
+      <div class="form-group">
+        <label>스토리 업로드 빈도</label>
+        <select id="storyFreq">
+          <option value="daily">매일</option>
+          <option value="often">자주 (주 3~5회)</option>
+          <option value="sometimes">가끔 (주 1~2회)</option>
+          <option value="rarely">거의 안 함</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>해시태그 사용 개수 (평균)</label>
+        <input type="number" id="hashtagCount" placeholder="예: 10" max="30" />
+      </div>
+      <div class="form-group full">
+        <label>주요 콘텐츠 분야 (쉼표로 구분)</label>
+        <input type="text" id="niche" placeholder="예: 뷰티, 일상, 맛집" />
+      </div>
     </div>
   </div>
 </div>
 
-<button class="btn-analyze" onclick="analyze()">🔍 데이터 분석 및 보고서 생성</button>
-<button id="btn-pdf" onclick="downloadPDF()">📄 PDF 리포트 다운로드</button>
+<button class="btn-analyze" onclick="analyze()">🔍 분석하기</button>
 
+<!-- 결과 -->
 <div id="result">
   <div class="result-card">
-    <h2 style="text-align:center; margin-bottom:15px;">📱 Instagram 분석 리포트</h2>
+    <h2>📈 계정 종합 점수</h2>
     <div class="score-box">
-      <div class="score-number" id="res-score">0</div>
-      <div style="font-weight:700; color:#c13584;">종합 지수</div>
+      <div class="score-number" id="totalScore">0</div>
+      <div class="score-label" id="scoreLabel">분석 중...</div>
     </div>
-    <p id="res-summary" style="text-align:center; font-size:0.9rem; color:#666;"></p>
+    <div id="statBars"></div>
   </div>
-
+  <div class="result-card"><h2>✅ 유지할 것</h2><div id="recoKeep"></div></div>
+  <div class="result-card"><h2>✏️ 수정할 것</h2><div id="recoFix"></div></div>
+  <div class="result-card"><h2>➕ 추가할 것</h2><div id="recoAdd"></div></div>
+  <div class="result-card"><h2>❌ 제거/줄일 것</h2><div id="recoRemove"></div></div>
   <div class="result-card">
-    <h3 style="font-size:1rem; margin-bottom:12px;">💡 성장을 위한 가이드</h3>
-    <div id="reco-list"></div>
-  </div>
-
-  <div class="result-card">
-    <h3 style="font-size:1rem; margin-bottom:12px;">#️⃣ 추천 해시태그 전략</h3>
-    <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">회원님의 주제와 인스타그램 알고리즘을 반영한 최적 조합입니다.</p>
-    <div id="hashtag-area" class="tag-area"></div>
+    <h2>💡 이번 달 집중 전략</h2>
+    <div class="tip-box" id="tipBox"></div>
   </div>
 </div>
 
+<footer>
+  <p>📌 Instagram 데이터 내보내기(ZIP/JSON)로 정밀 분석 · 직접 입력도 지원</p>
+  <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.5</p>
+</footer>
+
 <script>
+// ──────────────────────────────
+// 탭 전환
+// ──────────────────────────────
 let currentTab = 'upload';
-let zipData = { followers: 0, following: 0, posts: 0 };
+let parsedData = null;
 
 function switchTab(tab) {
   currentTab = tab;
   document.getElementById('section-upload').style.display = tab === 'upload' ? 'block' : 'none';
   document.getElementById('section-manual').style.display = tab === 'manual' ? 'block' : 'none';
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  document.getElementById('tab-upload').classList.toggle('active', tab === 'upload');
+  document.getElementById('tab-manual').classList.toggle('active', tab === 'manual');
 }
 
-async function handleFileSelect(e) {
+// ──────────────────────────────
+// 파일 업로드 처리
+// ──────────────────────────────
+function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
+function handleDragLeave(e) { document.getElementById('uploadZone').classList.remove('dragover'); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+function handleFileSelect(e) {
   const file = e.target.files[0];
-  if (!file) return;
+  if (file) processFile(file);
+}
+function removeFile() {
+  parsedData = null;
+  document.getElementById('fileLoaded').style.display = 'none';
+  document.getElementById('parsedPreview').style.display = 'none';
+  document.getElementById('extraInputCard').style.display = 'none';
+  document.getElementById('fileInput').value = '';
+}
+
+function processFile(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  document.getElementById('fileName').textContent = file.name;
+
+  if (ext === 'json') {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target.result);
+        parsedData = parseInstagramJSON(json);
+        showParsedResult(file.name, parsedData);
+      } catch(err) {
+        alert('JSON 파일을 읽는 데 실패했어요. 인스타그램에서 내보낸 파일인지 확인해 주세요.');
+      }
+    };
+    reader.readAsText(file);
+
+  } else if (ext === 'zip') {
+    document.getElementById('fileLoaded').style.display = 'flex';
+    document.getElementById('fileMeta').textContent = 'ZIP 파일 분석 중...';
+    processZip(file);
+
+  } else {
+    alert('JSON 또는 ZIP 파일을 올려주세요.');
+  }
+}
+
+// ──────────────────────────────
+// ZIP 자동 처리
+// ──────────────────────────────
+// Instagram ZIP 안에서 찾을 파일 우선순위 목록
+const IG_FILE_TARGETS = [
+  { key: 'personal',  patterns: ['personal_information/personal_information', 'personal_information.json'] },
+  { key: 'account',   patterns: ['personal_information/account_information', 'account_information.json'] },
+  { key: 'followers', patterns: ['followers_and_following/followers_1', 'followers_1.json', 'followers.json'] },
+  { key: 'following', patterns: ['followers_and_following/following',   'following.json'] },
+  { key: 'posts',     patterns: ['content/posts_1', 'posts_1.json', 'media.json'] },
+  { key: 'reels',     patterns: ['content/reels.json', 'reels_videos.json'] },
+  { key: 'stories',   patterns: ['content/stories.json'] },
+  { key: 'likes',     patterns: ['likes/liked_posts', 'liked_posts.json'] },
+  { key: 'comments',  patterns: ['comments/post_comments_1', 'post_comments_1.json'] },
+];
+
+async function processZip(file) {
+  const statusEl = document.getElementById('fileMeta');
+  try {
+    statusEl.textContent = 'ZIP 압축 해제 중...';
+    const zip = await JSZip.loadAsync(file);
+
+    // ZIP 안의 모든 파일 경로 수집
+    const allPaths = Object.keys(zip.files).filter(p => !zip.files[p].dir);
+
+    // 타겟 파일 매칭
+    const matched = {};
+    for (const target of IG_FILE_TARGETS) {
+      for (const pattern of target.patterns) {
+        const found = allPaths.find(p => p.toLowerCase().includes(pattern.toLowerCase().replace('.json','')));
+        if (found) { matched[target.key] = found; break; }
+      }
+    }
+
+    statusEl.textContent = `JSON 파일 ${Object.keys(matched).length}개 발견 — 파싱 중...`;
+
+    // 매칭된 파일들 읽기
+    const jsons = {};
+    for (const [key, path] of Object.entries(matched)) {
+      try {
+        const text = await zip.files[path].async('text');
+        jsons[key] = JSON.parse(text);
+      } catch(e) { /* 파싱 실패한 파일은 스킵 */ }
+    }
+
+    // posts_1이 없으면 content/ 아래 JSON 파일들 모두 시도
+    if (!jsons.posts) {
+      const contentFiles = allPaths.filter(p => p.includes('content/') && p.endsWith('.json'));
+      for (const p of contentFiles) {
+        try {
+          const text = await zip.files[p].async('text');
+          const j = JSON.parse(text);
+          if (Array.isArray(j) && j[0]?.media) { jsons.posts = j; break; }
+        } catch(e) {}
+      }
+    }
+
+    parsedData = parseInstagramZIP(jsons);
+    showParsedResult(file.name + ' (ZIP)', parsedData);
+    statusEl.textContent = `✅ ZIP 분석 완료 — ${Object.keys(matched).length}개 파일 처리됨`;
+
+  } catch(err) {
+    statusEl.textContent = '⚠️ ZIP 파일 처리 중 오류가 발생했어요';
+    console.error(err);
+  }
+}
+
+// ──────────────────────────────
+// ZIP 전용 통합 파서
+// ──────────────────────────────
+function parseInstagramZIP(jsons) {
+  const data = {
+    username: null, followers: null, following: null, posts: null,
+    bio: null, hasLink: null, avgLikes: null, avgComments: null, hashtagCount: null,
+    reelsPosts: null, weeklyPosts: null,
+  };
 
   try {
-    const zip = await JSZip.loadAsync(file);
-    
-    // 1. 팔로워 파일 파싱 (followers_1.json)
-    const followerFile = zip.file(/followers_1.json/i)[0] || zip.file(/followers.json/i)[0];
-    if (followerFile) {
-      const content = JSON.parse(await followerFile.async("string"));
-      zipData.followers = Array.isArray(content) ? content.length : (content.relationships_followers?.length || 0);
+    // 개인 정보
+    const pi = jsons.personal;
+    if (pi?.profile_user?.[0]?.string_map_data) {
+      const u = pi.profile_user[0].string_map_data;
+      data.username = u['Username']?.value || null;
+      data.bio      = u['Bio']?.value || null;
+      const web     = u['Website']?.value;
+      data.hasLink  = (web && web.trim()) ? 'yes' : 'no';
     }
 
-    // 2. 팔로잉 파일 파싱 (following.json)
-    const followingFile = zip.file(/following.json/i)[0];
-    if (followingFile) {
-      const content = JSON.parse(await followingFile.async("string"));
-      zipData.following = content.relationships_following?.length || 0;
+    // 계정 인사이트 (팔로워/팔로잉)
+    const ai = jsons.account;
+    if (ai?.profile_account_insights?.[0]?.string_map_data) {
+      const s = ai.profile_account_insights[0].string_map_data;
+      data.followers = parseInt(s['Followers Count']?.value) || null;
+      data.following = parseInt(s['Following Count']?.value) || null;
     }
 
-    // 3. 게시물 파일 파싱 (posts_1.json)
-    const postsFile = zip.file(/posts_1.json/i)[0];
-    if (postsFile) {
-      const content = JSON.parse(await postsFile.async("string"));
-      zipData.posts = content.length || 0;
+    // 팔로워 수 (followers_1.json — 배열)
+    if (data.followers === null) {
+      const fl = jsons.followers;
+      if (Array.isArray(fl)) data.followers = fl.length;
+      else if (fl?.relationships_followers) data.followers = fl.relationships_followers.length;
     }
 
-    // 화면 업데이트
-    document.getElementById('p-followers').textContent = zipData.followers.toLocaleString();
-    document.getElementById('p-following').textContent = zipData.following.toLocaleString();
-    document.getElementById('p-posts').textContent = zipData.posts.toLocaleString();
-    document.getElementById('parsedPreview').style.display = 'block';
-    document.getElementById('extraCard').style.display = 'block';
+    // 팔로잉 수 (following.json)
+    if (data.following === null) {
+      const fg = jsons.following;
+      if (Array.isArray(fg)) data.following = fg.length;
+      else if (fg?.relationships_following) data.following = fg.relationships_following.length;
+    }
 
-  } catch (err) {
-    alert("ZIP 파일을 읽는 중 오류가 발생했습니다. 인스타에서 받은 원본 파일이 맞는지 확인해주세요.");
+    // 게시물 분석 (posts_1.json)
+    const rawPosts = jsons.posts;
+    const postArr = Array.isArray(rawPosts) ? rawPosts : rawPosts?.ig_media_or_profile_photo;
+    if (Array.isArray(postArr) && postArr.length > 0) {
+      data.posts = postArr.length;
+      let totalLikes = 0, totalComments = 0, likeCount = 0;
+      let allHashtags = 0, hashtagPosts = 0;
+      const timestamps = [];
+
+      postArr.forEach(p => {
+        const media = p.media || [p];
+        media.forEach(m => {
+          if (m.like_count    !== undefined) { totalLikes    += m.like_count;    likeCount++; }
+          if (m.comment_count !== undefined)   totalComments += m.comment_count;
+          const cap  = m.title || m.caption || '';
+          const tags = (cap.match(/#\S+/g) || []).length;
+          if (tags > 0) { allHashtags += tags; hashtagPosts++; }
+          if (m.creation_timestamp) timestamps.push(m.creation_timestamp);
+        });
+        if (p.creation_timestamp) timestamps.push(p.creation_timestamp);
+      });
+
+      if (likeCount > 0) {
+        data.avgLikes    = Math.round(totalLikes / likeCount);
+        data.avgComments = Math.round(totalComments / likeCount);
+      }
+      if (hashtagPosts > 0) data.hashtagCount = Math.round(allHashtags / hashtagPosts);
+
+      // 주간 업로드 빈도
+      if (timestamps.length >= 2) {
+        const sorted = timestamps.slice().sort((a,b) => b - a);
+        const days = (sorted[0] - sorted[sorted.length-1]) / 86400;
+        data.weeklyPosts = Math.round((timestamps.length / Math.max(days, 1)) * 7 * 10) / 10;
+      }
+    }
+
+    // 릴스 수 (reels.json)
+    const reelsArr = jsons.reels;
+    if (Array.isArray(reelsArr)) data.reelsPosts = reelsArr.length;
+    else if (reelsArr?.ig_reels_media) data.reelsPosts = reelsArr.ig_reels_media.length;
+
+  } catch(e) {
+    console.warn('ZIP 파싱 오류:', e);
   }
+
+  return data;
 }
+
+// ──────────────────────────────
+// Instagram JSON 파싱
+// ──────────────────────────────
+function parseInstagramJSON(json) {
+  const data = {
+    username: null,
+    followers: null,
+    following: null,
+    posts: null,
+    bio: null,
+    hasLink: null,
+    avgLikes: null,
+    avgComments: null,
+    hashtagCount: null,
+  };
+
+  try {
+    // personal_information.json
+    if (json.profile_user) {
+      const u = json.profile_user[0]?.string_map_data;
+      if (u) {
+        data.username = u['Username']?.value || null;
+        data.bio = u['Bio']?.value || null;
+        const link = u['Website']?.value;
+        data.hasLink = link && link.trim() !== '' ? 'yes' : 'no';
+      }
+    }
+
+    // account_information.json
+    if (json.profile_account_insights) {
+      const insight = json.profile_account_insights[0]?.string_map_data;
+      if (insight) {
+        data.followers = parseInt(insight['Followers Count']?.value) || null;
+        data.following = parseInt(insight['Following Count']?.value) || null;
+      }
+    }
+
+    // followers_1.json
+    if (Array.isArray(json) && json[0]?.relationships_followers !== undefined) {
+      data.followers = json.length;
+    }
+    if (Array.isArray(json) && json.length > 0 && json[0]?.string_list_data) {
+      data.followers = json.length;
+    }
+
+    // followers.json 또는 following.json (배열 형태)
+    if (json.relationships_followers) {
+      data.followers = json.relationships_followers.length;
+    }
+    if (json.relationships_following) {
+      data.following = json.relationships_following.length;
+    }
+
+    // liked_posts.json → 인게이지먼트 추정
+    if (json.likes_media_likes) {
+      // 좋아요 누른 게시물 수로 활동성 파악
+    }
+
+    // posts_1.json → 게시물 수, 해시태그, 좋아요 분석
+    if (json.ig_media_or_profile_photo || Array.isArray(json)) {
+      const posts = Array.isArray(json) ? json : json.ig_media_or_profile_photo;
+      if (Array.isArray(posts) && posts.length > 0) {
+        data.posts = posts.length;
+
+        // 좋아요/댓글 평균
+        let totalLikes = 0, totalComments = 0, likeCount = 0;
+        let allHashtags = 0, hashtagPosts = 0;
+
+        posts.forEach(p => {
+          const media = p.media || [p];
+          media.forEach(m => {
+            if (m.like_count !== undefined) { totalLikes += m.like_count; likeCount++; }
+            if (m.comment_count !== undefined) totalComments += m.comment_count;
+            const cap = m.title || m.caption || '';
+            const tags = (cap.match(/#\S+/g) || []).length;
+            if (tags > 0) { allHashtags += tags; hashtagPosts++; }
+          });
+        });
+
+        if (likeCount > 0) {
+          data.avgLikes = Math.round(totalLikes / likeCount);
+          data.avgComments = Math.round(totalComments / likeCount);
+        }
+        if (hashtagPosts > 0) data.hashtagCount = Math.round(allHashtags / hashtagPosts);
+      }
+    }
+
+  } catch(e) {
+    console.warn('파싱 중 일부 오류:', e);
+  }
+
+  return data;
+}
+
+function showParsedResult(filename, data) {
+  document.getElementById('fileMeta').textContent = '파싱 완료 — 아래에서 확인하세요';
+  document.getElementById('fileLoaded').style.display = 'flex';
+
+  const items = [
+    { label: '팔로워',     val: data.followers    !== null ? data.followers.toLocaleString()    : '—' },
+    { label: '팔로잉',     val: data.following    !== null ? data.following.toLocaleString()    : '—' },
+    { label: '게시물 수',  val: data.posts        !== null ? data.posts.toLocaleString()        : '—' },
+    { label: '릴스 수',    val: data.reelsPosts   !== null ? data.reelsPosts                    : '—' },
+    { label: '주간 업로드', val: data.weeklyPosts  !== null ? data.weeklyPosts + '회'            : '—' },
+    { label: '평균 좋아요', val: data.avgLikes     !== null ? data.avgLikes                     : '—' },
+    { label: '평균 댓글',  val: data.avgComments  !== null ? data.avgComments                   : '—' },
+    { label: '해시태그',   val: data.hashtagCount !== null ? data.hashtagCount + '개'            : '—' },
+  ];
+
+  document.getElementById('parsedGrid').innerHTML = items.map(i => `
+    <div class="parsed-item">
+      <div class="p-val">${i.val}</div>
+      <div class="p-label">${i.label}</div>
+    </div>`).join('');
+
+  document.getElementById('parsedPreview').style.display = 'block';
+  document.getElementById('extraInputCard').style.display = 'block';
+}
+
+// ──────────────────────────────
+// 분석 메인 함수
+// ──────────────────────────────
+function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
 
 function analyze() {
-  let f, l, niche;
-  if (currentTab === 'upload') {
-    f = zipData.followers;
-    l = parseInt(document.getElementById('u-likes').value || 0);
-    niche = document.getElementById('u-niche').value;
+  let followers, following, posts, months, avgLikes, avgComments;
+  let weeklyPosts, reelsRatio, hashtagCount, bio, hasLink, hasHighlight, storyFreq, accountType, niche;
+
+  if (currentTab === 'upload' && parsedData) {
+    followers    = parsedData.followers || 0;
+    following    = parsedData.following || 0;
+    posts        = parseFloat(document.getElementById('u-totalPosts').value) || parsedData.posts || 0;
+    months       = 12; // 기본값
+    avgLikes     = parsedData.avgLikes || 0;
+    avgComments  = parsedData.avgComments || 0;
+    weeklyPosts  = posts > 0 ? Math.round((posts / 52)) : 0;
+    const reelsPosts_u = parseFloat(document.getElementById('u-reelsPosts').value) || 0;
+    reelsRatio   = posts > 0 ? Math.round((reelsPosts_u / posts) * 100) : 0;
+    hashtagCount = parsedData.hashtagCount || 0;
+    bio          = parsedData.bio || '';
+    hasLink      = parsedData.hasLink || 'no';
+    hasHighlight = 'no';
+    storyFreq    = document.getElementById('u-storyFreq').value;
+    accountType  = document.getElementById('u-accountType').value;
+    niche        = document.getElementById('u-niche').value.trim();
   } else {
-    f = parseInt(document.getElementById('m-followers').value || 0);
-    l = parseInt(document.getElementById('m-likes').value || 0);
-    niche = document.getElementById('m-niche').value;
+    followers    = getNum('followers');
+    following    = getNum('following');
+    posts        = getNum('posts');
+    months       = getNum('months');
+    avgLikes     = getNum('avgLikes');
+    avgComments  = getNum('avgComments');
+    weeklyPosts  = getNum('weeklyPosts');
+    const reelsPosts_m = getNum('reelsPosts');
+    reelsRatio   = posts > 0 ? Math.round((reelsPosts_m / posts) * 100) : 0;
+    hashtagCount = getNum('hashtagCount');
+    bio          = getVal('bio').trim();
+    hasLink      = getVal('hasLink');
+    hasHighlight = getVal('hasHighlight');
+    storyFreq    = getVal('storyFreq');
+    accountType  = getVal('accountType');
+    niche        = getVal('niche').trim();
   }
 
-  if (f === 0) { alert("팔로워 데이터가 없습니다."); return; }
+  if (!followers) { alert('팔로워 수 정보가 없어요. 파일을 다시 확인하거나 수동 입력 탭을 이용해 주세요.'); return; }
 
-  // 로직 계산
-  const er = ((l / f) * 100).toFixed(2); // 인게이지먼트율
-  const score = Math.min(100, (er * 10) + 40);
+  // 지표 계산
+  const engagementRate = followers > 0 ? ((avgLikes + avgComments) / followers) * 100 : 0;
+  const ffRatio = following > 0 ? followers / following : 0;
 
-  document.getElementById('res-score').textContent = Math.floor(score);
-  document.getElementById('res-summary').innerHTML = `현재 인게이지먼트율은 <b>${er}%</b>입니다.<br>팔로워 대비 반응도가 ${er > 3 ? '매우 우수' : '개선 가능'}한 상태입니다.`;
+  // 점수
+  let score = 0;
+  let statData = [];
 
-  // 추천 가이드
-  let recoHtml = '';
-  recoHtml += `<div class="reco-item reco-keep">✅ 현재 ${f.toLocaleString()}명의 팔로워와 소통 중입니다.</div>`;
-  if (er < 2) {
-    recoHtml += `<div class="reco-item reco-fix">⚠️ 게시물 도달 대비 좋아요가 적습니다. 질문형 캡션을 사용해보세요.</div>`;
+  let erScore = engagementRate >= 5 ? 20 : engagementRate >= 3 ? 15 : engagementRate >= 1 ? 9 : 4;
+  score += erScore;
+  statData.push({ name: '인게이지먼트율', val: engagementRate.toFixed(2) + '%', score: erScore, max: 20,
+    desc: '팔로워 중 실제로 반응(좋아요·댓글)한 비율이에요. 3% 이상이면 좋고, 1% 미만이면 낮은 편이에요.',
+    tip: '(좋아요 + 댓글) ÷ 팔로워 × 100\n→ 3% 이상 우수 / 1~3% 보통 / 1% 미만 개선 필요' });
+
+  let freqScore = weeklyPosts >= 3 && weeklyPosts <= 5 ? 20 : weeklyPosts >= 1 ? 12 : 5;
+  score += freqScore;
+  statData.push({ name: '업로드 빈도', val: weeklyPosts + '회/주', score: freqScore, max: 20,
+    desc: '알고리즘은 꾸준히 올리는 계정을 선호해요. 주 3~5회가 가장 이상적이에요.',
+    tip: '주 1~2회: 최소 / 주 3~5회: 최적 / 주 6회 이상: 품질 저하 위험' });
+
+  let reelsScore = reelsRatio >= 30 && reelsRatio <= 60 ? 20 : reelsRatio >= 15 ? 13 : reelsRatio > 60 ? 15 : 6;
+  score += reelsScore;
+  statData.push({ name: '릴스 비율', val: reelsRatio + '%', score: reelsScore, max: 20,
+    desc: '릴스(짧은 영상)는 현재 인스타 알고리즘에서 가장 높은 노출을 받아요. 전체 게시물의 30~60%를 권장해요.',
+    tip: '30% 미만: 노출 기회 손실\n30~60%: 최적 구간\n60% 초과: 피드 다양성 부족' });
+
+  let tagScore = hashtagCount >= 5 && hashtagCount <= 15 ? 20 : hashtagCount > 0 ? 12 : 4;
+  score += tagScore;
+  statData.push({ name: '해시태그 수', val: hashtagCount + '개', score: tagScore, max: 20,
+    desc: '해시태그는 새 팔로워에게 노출되는 통로예요. 너무 많으면 스팸으로 인식될 수 있어서 5~15개가 적당해요.',
+    tip: '0개: 노출 거의 없음\n5~15개: 최적\n20개 이상: 스팸 위험' });
+
+  let profileScore = 0;
+  if (bio.length >= 30) profileScore += 7; else if (bio.length > 0) profileScore += 4;
+  if (hasLink === 'yes') profileScore += 7;
+  if (hasHighlight === 'yes') profileScore += 6;
+  score += profileScore;
+  statData.push({ name: '프로필 완성도', val: profileScore + '/20', score: profileScore, max: 20,
+    desc: '바이오·링크·하이라이트가 갖춰진 프로필은 방문자가 팔로우로 이어질 확률이 높아요.',
+    tip: '바이오(최대 7점) + 링크(7점) + 하이라이트(6점) = 총 20점' });
+
+  const totalScore = Math.round(score);
+  let label = totalScore >= 85 ? '🏆 최상위 — 지금 방향 그대로!' :
+              totalScore >= 70 ? '🌟 우수 — 조금만 다듬으면 폭발적 성장 가능' :
+              totalScore >= 50 ? '📈 성장 중 — 몇 가지 개선으로 노출 크게 늘릴 수 있어요' :
+              totalScore >= 30 ? '🛠️ 개선 필요 — 아래 전략을 차근차근 적용해 보세요' :
+                                 '⚠️ 기초부터 — 프로필과 콘텐츠 구조부터 잡아요';
+
+  document.getElementById('totalScore').textContent = totalScore;
+  document.getElementById('scoreLabel').textContent = label;
+
+  let barsHtml = '';
+  statData.forEach((s, i) => {
+    const pct = Math.round((s.score / s.max) * 100);
+    const cls = pct >= 70 ? 'bar-good' : pct >= 40 ? 'bar-mid' : 'bar-bad';
+    barsHtml += `<div class="stat-row">
+      <div class="stat-name-wrap">
+        <div class="stat-name">
+          ${s.name}
+          <span class="tooltip-wrap" onclick="this.classList.toggle('active')">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">${s.tip ? s.tip.replace(/\n/g,'<br/>') : ''}</div>
+          </span>
+        </div>
+        <div class="stat-desc">${s.desc || ''}</div>
+      </div>
+      <div class="bar-wrap"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
+      <span class="stat-val">${s.val}</span>
+    </div>`;
+  });
+  document.getElementById('statBars').innerHTML = barsHtml;
+
+  const keep = [], fix = [], add = [], remove = [];
+
+  if (engagementRate >= 3) keep.push('인게이지먼트율 ' + engagementRate.toFixed(2) + '%로 양호해요. 현재 콘텐츠 톤앤매너를 유지하세요.');
+  else if (engagementRate >= 1) fix.push('인게이지먼트율(' + engagementRate.toFixed(2) + '%)이 보통 수준이에요. 캡션에 질문형 문장을 추가하고 댓글 소통을 늘려보세요.');
+  else if (followers > 0) fix.push('인게이지먼트율이 ' + engagementRate.toFixed(2) + '%로 낮아요. 저장 유도 콘텐츠(정보형, 체크리스트 등)를 늘려보세요.');
+
+  if (weeklyPosts >= 3 && weeklyPosts <= 5) keep.push('주 ' + weeklyPosts + '회 업로드는 알고리즘에 최적화된 빈도예요.');
+  else if (weeklyPosts < 3 && weeklyPosts > 0) fix.push('주 ' + weeklyPosts + '회 업로드는 조금 부족해요. 최소 주 3회를 목표로 해보세요.');
+  else if (weeklyPosts > 5) fix.push('너무 잦은 업로드(주 ' + weeklyPosts + '회)는 퀄리티 저하로 이어질 수 있어요. 주 3~5회로 줄이세요.');
+  else add.push('업로드 주기를 정해서 꾸준히 올리세요. 주 3회부터 시작해 보세요.');
+
+  if (reelsRatio < 20) add.push('릴스 비율(' + reelsRatio + '%)이 낮아요. 인스타 알고리즘에서 릴스가 가장 높은 노출을 받아요. 전체의 30~50%를 목표로 하세요.');
+  else if (reelsRatio > 70) fix.push('릴스가 ' + reelsRatio + '%로 너무 높아요. 카드뉴스나 피드 이미지도 섞어서 저장율을 높여보세요.');
+  else keep.push('릴스 비율(' + reelsRatio + '%)이 적절해요. 릴스 + 피드 이미지 조합을 유지하세요.');
+
+  if (hashtagCount === 0) add.push('해시태그가 없어요. 관련 해시태그 5~10개를 꼭 추가하세요. 10만 이하 중소형 태그가 노출에 더 효과적이에요.');
+  else if (hashtagCount > 20) remove.push('해시태그 ' + hashtagCount + '개는 스팸처럼 보일 수 있어요. 10~15개로 줄여보세요.');
+  else keep.push('해시태그 ' + hashtagCount + '개는 적절한 수준이에요. 매 게시물마다 조금씩 변경해서 다양한 태그를 테스트해 보세요.');
+
+  if (bio.length === 0) add.push('바이오가 비어 있어요! 내가 누구인지, 어떤 콘텐츠를 올리는지 2~3줄로 명확하게 작성하세요.');
+  else if (bio.length < 30) fix.push('바이오가 너무 짧아요. 계정의 핵심 가치와 팔로우해야 하는 이유를 담아보세요.');
+  else keep.push('바이오가 작성되어 있어요. 핵심 키워드가 포함되어 있는지 주기적으로 점검하세요.');
+
+  if (hasLink === 'no') add.push('프로필 링크가 없어요. Linktree나 개인 페이지 링크를 추가하면 전환율이 높아져요.');
+  if (hasHighlight === 'no') add.push('스토리 하이라이트가 없어요. 주요 카테고리별로 하이라이트를 만들어 방문자 이탈을 줄이세요.');
+
+  if (storyFreq === 'rarely') add.push('스토리를 거의 올리지 않고 있어요. 주 3회 이상 업로드를 목표로 하세요.');
+  else if (storyFreq === 'daily') keep.push('매일 스토리를 올리고 있어요. 설문, 퀴즈, 질문 스티커를 활용해 참여율을 더 높여보세요.');
+
+  if (ffRatio < 0.5 && followers > 0) fix.push('팔로잉(' + following + ')이 팔로워(' + followers + ')보다 훨씬 많아요. 관련 없는 계정 팔로잉을 정리해서 신뢰도를 높이세요.');
+  if (!niche) add.push('콘텐츠 분야를 명확히 정하세요. 주력 분야 1~2개에 집중하면 타겟 팔로워가 빠르게 모여요.');
+
+  function renderItems(items, containerId, cls) {
+    const icons = { 'reco-keep': '✅', 'reco-fix': '✏️', 'reco-add': '➕', 'reco-remove': '❌' };
+    const el = document.getElementById(containerId);
+    el.innerHTML = items.length === 0
+      ? `<div class="reco-item ${cls}"><span class="reco-icon">—</span> 해당 사항 없음</div>`
+      : items.map(t => `<div class="reco-item ${cls}"><span class="reco-icon">${icons[cls]}</span><span>${t}</span></div>`).join('');
   }
-  recoHtml += `<div class="reco-item reco-add">🚀 릴스(Reels)를 주 2회 업로드하여 외부 유입을 늘리세요.</div>`;
-  document.getElementById('reco-list').innerHTML = recoHtml;
 
-  // 해시태그 전략 (핵심 추가 사항)
-  const baseTags = niche ? niche.split(',').map(t => `#${t.trim()}`) : ['#인스타', '#소통'];
-  const trendingTags = ['#일상', '#daily', '#좋아요'];
-  const mixTags = [...baseTags.slice(0,3), ...trendingTags].join(' ');
-  
-  document.getElementById('hashtag-area').innerHTML = `
-    ${mixTags}<br><br>
-    <span style="color:#666; font-size:0.75rem;">팁: 위 해시태그와 함께 게시물 내용과 직접 관련된 태그 3개를 추가하는 것이 가장 효과적입니다.</span>
-  `;
+  renderItems(keep,   'recoKeep',   'reco-keep');
+  renderItems(fix,    'recoFix',    'reco-fix');
+  renderItems(add,    'recoAdd',    'reco-add');
+  renderItems(remove, 'recoRemove', 'reco-remove');
 
+  let tips = [];
+  if (reelsRatio < 30) tips.push('<strong>릴스에 집중</strong>하세요 — 짧고 임팩트 있는 15~30초 영상 3개를 이번 달 목표로 만들어 보세요.');
+  if (engagementRate < 3) tips.push('게시물 캡션 끝에 <strong>"여러분은 어떻게 생각하세요?"</strong>처럼 댓글을 유도하는 문장을 넣어보세요.');
+  if (hashtagCount < 5) tips.push('<strong>니치 해시태그</strong>를 발굴하세요 — 경쟁이 덜한 5만~50만 규모의 해시태그가 신규 노출에 효과적이에요.');
+  if (storyFreq === 'rarely' || storyFreq === 'sometimes') tips.push('<strong>스토리 빈도를 높이세요</strong> — 매일 스토리를 올리는 계정은 알고리즘이 더 많은 노출을 줘요.');
+  if (bio.length < 30) tips.push('<strong>바이오를 최적화</strong>하세요 — 내가 누구인지, 팔로우하면 뭘 얻는지를 딱 3줄로 정리해 보세요.');
+  if (tips.length === 0) tips.push('지금 방향이 좋아요! <strong>일관성 유지</strong>가 핵심입니다. 업로드 스케줄을 지키고 팔로워 댓글에 꾸준히 답장해 주세요.');
+
+  document.getElementById('tipBox').innerHTML = tips.map(t => `• ${t}`).join('<br/><br/>');
   document.getElementById('result').style.display = 'block';
-  document.getElementById('btn-pdf').style.display = 'block';
-  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-}
-
-function downloadPDF() {
-  const element = document.getElementById('result');
-  const opt = {
-    margin: 10,
-    filename: 'Insta_Analysis_Report.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-  html2pdf().set(opt).from(element).save();
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 </script>
 </body>
