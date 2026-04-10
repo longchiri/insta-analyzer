@@ -314,6 +314,7 @@
     .divider::before, .divider::after { content: ''; display: inline-block; width: 38%; height: 1px; background: #e5e5e5; vertical-align: middle; margin: 0 10px; }
   </style>
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <body>
 
 <header>
@@ -552,7 +553,7 @@
 <footer>
   <p>📌 Instagram Business/Creator 계정 OAuth 연동 지원 · Meta App ID 기반</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.3</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.4</p>
 </footer>
 
 <script>
@@ -732,14 +733,173 @@ function processFile(file) {
       }
     };
     reader.readAsText(file);
+
   } else if (ext === 'zip') {
-    // ZIP은 JSZip 없이 처리 불가 → 안내
-    document.getElementById('fileMeta').textContent = 'ZIP 파일은 압축 해제 후 JSON 파일을 업로드해 주세요';
     document.getElementById('fileLoaded').style.display = 'flex';
-    alert('ZIP 파일은 압축을 풀어서, 안에 있는 JSON 파일을 직접 올려주세요!\n주로 personal_information.json 또는 followers_1.json 파일을 올리시면 돼요.');
+    document.getElementById('fileMeta').textContent = 'ZIP 파일 분석 중...';
+    processZip(file);
+
   } else {
-    alert('JSON 파일만 지원합니다.');
+    alert('JSON 또는 ZIP 파일을 올려주세요.');
   }
+}
+
+// ──────────────────────────────
+// ZIP 자동 처리
+// ──────────────────────────────
+// Instagram ZIP 안에서 찾을 파일 우선순위 목록
+const IG_FILE_TARGETS = [
+  { key: 'personal',  patterns: ['personal_information/personal_information', 'personal_information.json'] },
+  { key: 'account',   patterns: ['personal_information/account_information', 'account_information.json'] },
+  { key: 'followers', patterns: ['followers_and_following/followers_1', 'followers_1.json', 'followers.json'] },
+  { key: 'following', patterns: ['followers_and_following/following',   'following.json'] },
+  { key: 'posts',     patterns: ['content/posts_1', 'posts_1.json', 'media.json'] },
+  { key: 'reels',     patterns: ['content/reels.json', 'reels_videos.json'] },
+  { key: 'stories',   patterns: ['content/stories.json'] },
+  { key: 'likes',     patterns: ['likes/liked_posts', 'liked_posts.json'] },
+  { key: 'comments',  patterns: ['comments/post_comments_1', 'post_comments_1.json'] },
+];
+
+async function processZip(file) {
+  const statusEl = document.getElementById('fileMeta');
+  try {
+    statusEl.textContent = 'ZIP 압축 해제 중...';
+    const zip = await JSZip.loadAsync(file);
+
+    // ZIP 안의 모든 파일 경로 수집
+    const allPaths = Object.keys(zip.files).filter(p => !zip.files[p].dir);
+
+    // 타겟 파일 매칭
+    const matched = {};
+    for (const target of IG_FILE_TARGETS) {
+      for (const pattern of target.patterns) {
+        const found = allPaths.find(p => p.toLowerCase().includes(pattern.toLowerCase().replace('.json','')));
+        if (found) { matched[target.key] = found; break; }
+      }
+    }
+
+    statusEl.textContent = `JSON 파일 ${Object.keys(matched).length}개 발견 — 파싱 중...`;
+
+    // 매칭된 파일들 읽기
+    const jsons = {};
+    for (const [key, path] of Object.entries(matched)) {
+      try {
+        const text = await zip.files[path].async('text');
+        jsons[key] = JSON.parse(text);
+      } catch(e) { /* 파싱 실패한 파일은 스킵 */ }
+    }
+
+    // posts_1이 없으면 content/ 아래 JSON 파일들 모두 시도
+    if (!jsons.posts) {
+      const contentFiles = allPaths.filter(p => p.includes('content/') && p.endsWith('.json'));
+      for (const p of contentFiles) {
+        try {
+          const text = await zip.files[p].async('text');
+          const j = JSON.parse(text);
+          if (Array.isArray(j) && j[0]?.media) { jsons.posts = j; break; }
+        } catch(e) {}
+      }
+    }
+
+    parsedData = parseInstagramZIP(jsons);
+    showParsedResult(file.name + ' (ZIP)', parsedData);
+    statusEl.textContent = `✅ ZIP 분석 완료 — ${Object.keys(matched).length}개 파일 처리됨`;
+
+  } catch(err) {
+    statusEl.textContent = '⚠️ ZIP 파일 처리 중 오류가 발생했어요';
+    console.error(err);
+  }
+}
+
+// ──────────────────────────────
+// ZIP 전용 통합 파서
+// ──────────────────────────────
+function parseInstagramZIP(jsons) {
+  const data = {
+    username: null, followers: null, following: null, posts: null,
+    bio: null, hasLink: null, avgLikes: null, avgComments: null, hashtagCount: null,
+    reelsPosts: null, weeklyPosts: null,
+  };
+
+  try {
+    // 개인 정보
+    const pi = jsons.personal;
+    if (pi?.profile_user?.[0]?.string_map_data) {
+      const u = pi.profile_user[0].string_map_data;
+      data.username = u['Username']?.value || null;
+      data.bio      = u['Bio']?.value || null;
+      const web     = u['Website']?.value;
+      data.hasLink  = (web && web.trim()) ? 'yes' : 'no';
+    }
+
+    // 계정 인사이트 (팔로워/팔로잉)
+    const ai = jsons.account;
+    if (ai?.profile_account_insights?.[0]?.string_map_data) {
+      const s = ai.profile_account_insights[0].string_map_data;
+      data.followers = parseInt(s['Followers Count']?.value) || null;
+      data.following = parseInt(s['Following Count']?.value) || null;
+    }
+
+    // 팔로워 수 (followers_1.json — 배열)
+    if (data.followers === null) {
+      const fl = jsons.followers;
+      if (Array.isArray(fl)) data.followers = fl.length;
+      else if (fl?.relationships_followers) data.followers = fl.relationships_followers.length;
+    }
+
+    // 팔로잉 수 (following.json)
+    if (data.following === null) {
+      const fg = jsons.following;
+      if (Array.isArray(fg)) data.following = fg.length;
+      else if (fg?.relationships_following) data.following = fg.relationships_following.length;
+    }
+
+    // 게시물 분석 (posts_1.json)
+    const rawPosts = jsons.posts;
+    const postArr = Array.isArray(rawPosts) ? rawPosts : rawPosts?.ig_media_or_profile_photo;
+    if (Array.isArray(postArr) && postArr.length > 0) {
+      data.posts = postArr.length;
+      let totalLikes = 0, totalComments = 0, likeCount = 0;
+      let allHashtags = 0, hashtagPosts = 0;
+      const timestamps = [];
+
+      postArr.forEach(p => {
+        const media = p.media || [p];
+        media.forEach(m => {
+          if (m.like_count    !== undefined) { totalLikes    += m.like_count;    likeCount++; }
+          if (m.comment_count !== undefined)   totalComments += m.comment_count;
+          const cap  = m.title || m.caption || '';
+          const tags = (cap.match(/#\S+/g) || []).length;
+          if (tags > 0) { allHashtags += tags; hashtagPosts++; }
+          if (m.creation_timestamp) timestamps.push(m.creation_timestamp);
+        });
+        if (p.creation_timestamp) timestamps.push(p.creation_timestamp);
+      });
+
+      if (likeCount > 0) {
+        data.avgLikes    = Math.round(totalLikes / likeCount);
+        data.avgComments = Math.round(totalComments / likeCount);
+      }
+      if (hashtagPosts > 0) data.hashtagCount = Math.round(allHashtags / hashtagPosts);
+
+      // 주간 업로드 빈도
+      if (timestamps.length >= 2) {
+        const sorted = timestamps.slice().sort((a,b) => b - a);
+        const days = (sorted[0] - sorted[sorted.length-1]) / 86400;
+        data.weeklyPosts = Math.round((timestamps.length / Math.max(days, 1)) * 7 * 10) / 10;
+      }
+    }
+
+    // 릴스 수 (reels.json)
+    const reelsArr = jsons.reels;
+    if (Array.isArray(reelsArr)) data.reelsPosts = reelsArr.length;
+    else if (reelsArr?.ig_reels_media) data.reelsPosts = reelsArr.ig_reels_media.length;
+
+  } catch(e) {
+    console.warn('ZIP 파싱 오류:', e);
+  }
+
+  return data;
 }
 
 // ──────────────────────────────
@@ -841,12 +1001,14 @@ function showParsedResult(filename, data) {
   document.getElementById('fileLoaded').style.display = 'flex';
 
   const items = [
-    { label: '팔로워', val: data.followers !== null ? data.followers.toLocaleString() : '—' },
-    { label: '팔로잉', val: data.following !== null ? data.following.toLocaleString() : '—' },
-    { label: '게시물 수', val: data.posts !== null ? data.posts.toLocaleString() : '—' },
-    { label: '평균 좋아요', val: data.avgLikes !== null ? data.avgLikes : '—' },
-    { label: '평균 댓글', val: data.avgComments !== null ? data.avgComments : '—' },
-    { label: '해시태그 수', val: data.hashtagCount !== null ? data.hashtagCount : '—' },
+    { label: '팔로워',     val: data.followers    !== null ? data.followers.toLocaleString()    : '—' },
+    { label: '팔로잉',     val: data.following    !== null ? data.following.toLocaleString()    : '—' },
+    { label: '게시물 수',  val: data.posts        !== null ? data.posts.toLocaleString()        : '—' },
+    { label: '릴스 수',    val: data.reelsPosts   !== null ? data.reelsPosts                    : '—' },
+    { label: '주간 업로드', val: data.weeklyPosts  !== null ? data.weeklyPosts + '회'            : '—' },
+    { label: '평균 좋아요', val: data.avgLikes     !== null ? data.avgLikes                     : '—' },
+    { label: '평균 댓글',  val: data.avgComments  !== null ? data.avgComments                   : '—' },
+    { label: '해시태그',   val: data.hashtagCount !== null ? data.hashtagCount + '개'            : '—' },
   ];
 
   document.getElementById('parsedGrid').innerHTML = items.map(i => `
