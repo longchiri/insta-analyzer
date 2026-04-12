@@ -266,6 +266,33 @@
     .reco-remove { background: #fff5f5; color: #742a2a; }
     .reco-icon   { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
 
+    /* 데이터 없음 안내 박스 */
+    .missing-box {
+      background: #fffbeb; border: 1.5px solid #f6ad55;
+      border-radius: 14px; padding: 16px 18px;
+      font-size: 0.88rem; color: #744210; line-height: 1.7;
+    }
+    .missing-box .missing-title {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 700; font-size: 0.95rem; color: #c05621; margin-bottom: 10px;
+    }
+    .missing-box .missing-steps {
+      background: #fff8e1; border-radius: 10px; padding: 12px 14px;
+      margin-top: 10px;
+    }
+    .missing-box .missing-steps p {
+      font-weight: 700; color: #c05621; margin-bottom: 6px; font-size: 0.85rem;
+    }
+    .missing-box .mstep {
+      display: flex; gap: 8px; margin-bottom: 4px; font-size: 0.83rem;
+    }
+    .missing-box .mstep .mn { font-weight: 800; color: #c05621; flex-shrink: 0; min-width: 20px; }
+    .missing-box .mstep .mt { flex: 1; color: #744210; }
+    .missing-box .missing-note {
+      margin-top: 10px; padding: 8px 12px; background: #fef3c7;
+      border-radius: 8px; font-size: 0.8rem; color: #92400e;
+    }
+
     .tip-box {
       background: linear-gradient(135deg, #667eea22, #764ba222);
       border-left: 4px solid #764ba2; border-radius: 0 10px 10px 0;
@@ -486,6 +513,36 @@
   </div>
 
   <div class="card">
+    <h2>🎬 릴스 성과 지표 <span style="font-size:0.78rem;color:#999;font-weight:400">(알고 있으면 입력)</span></h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>평균 완주율 (%)</label>
+        <input type="number" id="completionRate" placeholder="예: 65" max="100" step="0.1"/>
+      </div>
+      <div class="form-group">
+        <label>재시청율 (%)</label>
+        <input type="number" id="replayRate" placeholder="예: 12" step="0.1"/>
+      </div>
+      <div class="form-group">
+        <label>초반 이탈율 (%)</label>
+        <input type="number" id="earlyDropRate" placeholder="예: 25" step="0.1"/>
+      </div>
+      <div class="form-group">
+        <label>스토리 DM/답장 수 (주당)</label>
+        <input type="number" id="storyDM" placeholder="예: 20"/>
+      </div>
+      <div class="form-group">
+        <label>스토리 스티커 클릭 수 (주당)</label>
+        <input type="number" id="storyStickerClicks" placeholder="예: 35"/>
+      </div>
+      <div class="form-group">
+        <label>스토리 프로필 방문 수 (주당)</label>
+        <input type="number" id="storyProfileVisits" placeholder="예: 15"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
     <h2>📊 인사이트 정보 <span style="font-size:0.78rem;color:#999;font-weight:400">(알고 있으면 입력)</span></h2>
     <div class="form-grid">
       <div class="form-group">
@@ -566,12 +623,42 @@
     <h2>💡 이번 달 집중 전략</h2>
     <div class="tip-box" id="tipBox"></div>
   </div>
+
+  <!-- 릴스 떡상 지수 -->
+  <div class="result-card">
+    <h2>🎬 릴스 떡상 지수 (2026 공식)</h2>
+    <div id="reelsScoreSection"></div>
+  </div>
+
+  <!-- KPI 달성 현황 -->
+  <div class="result-card">
+    <h2>📊 KPI 달성 현황 (목표 대비)</h2>
+    <div id="kpiSection"></div>
+  </div>
+
+  <!-- 확산 단계 진단 -->
+  <div class="result-card">
+    <h2>📡 확산 단계 진단</h2>
+    <div id="diffusionStageSection"></div>
+  </div>
+
+  <!-- Hidden Score -->
+  <div class="result-card">
+    <h2>🔒 계정 신뢰도 (Hidden Score)</h2>
+    <div id="hiddenScoreSection"></div>
+  </div>
+
+  <!-- 30일 로드맵 -->
+  <div class="result-card">
+    <h2>🗓️ 30일 성장 로드맵</h2>
+    <div id="roadmap30Section"></div>
+  </div>
 </div>
 
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.7</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.9</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/Long_c_chill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -1074,6 +1161,12 @@ function analyze() {
     D.cities         = [];
     D.weekdayActivity= null;
     D.topPosts       = [];
+    D.completionRate    = getNum('completionRate');
+    D.replayRate        = getNum('replayRate');
+    D.earlyDropRate     = getNum('earlyDropRate');
+    D.storyDM           = getNum('storyDM');
+    D.storyStickerClicks= getNum('storyStickerClicks');
+    D.storyProfileVisits= getNum('storyProfileVisits');
 
     // 파생값
     if (D.followers > 0) {
@@ -1257,7 +1350,21 @@ function analyze() {
 
   if (!audHTML) {
     const maleRatio = Math.round((male || 50));
-    audHTML = `<div class="reco-item reco-fix" style="margin:0;"><span class="reco-icon">ℹ️</span>오디언스 인사이트 데이터가 없어요. ZIP 파일의 <b>audience_insights.json</b>이 포함된 경우 자동 추출됩니다. 수동 입력 탭에서 성별 비율 등을 직접 입력하면 분석이 가능해요.</div>`;
+    audHTML = `<div class="missing-box">
+      <div class="missing-title">ℹ️ 팔로워 오디언스 데이터가 없어요</div>
+      <div>ZIP 파일 안에 <b>audience_insights.json</b>이 있으면 자동으로 성별·나이·지역이 분석됩니다.<br>
+      수동 입력 탭에서 직접 비율을 입력해도 분석이 가능해요.</div>
+      <div class="missing-steps">
+        <p>📥 audience_insights.json 받는 방법</p>
+        <div class="mstep"><span class="mn">①</span><span class="mt">인스타그램 앱 → 우측 하단 프로필 탭 클릭</span></div>
+        <div class="mstep"><span class="mn">②</span><span class="mt">우측 상단 <b>≡ 메뉴</b> → <b>설정 및 활동</b></span></div>
+        <div class="mstep"><span class="mn">③</span><span class="mt"><b>계정 센터</b> → <b>내 정보 및 권한</b> → <b>내 정보 다운로드</b></span></div>
+        <div class="mstep"><span class="mn">④</span><span class="mt">형식: <b>JSON</b> 선택 → 날짜 범위: <b>지난 90일</b> 권장</span></div>
+        <div class="mstep"><span class="mn">⑤</span><span class="mt"><b>다운로드 요청</b> 클릭 → 이메일 수신 후 ZIP 다운로드</span></div>
+        <div class="mstep"><span class="mn">⑥</span><span class="mt">받은 ZIP을 위 업로드 영역에 그대로 드래그&드롭!</span></div>
+      </div>
+      <div class="missing-note">⏱ 데이터 준비에는 보통 수 분 ~ 최대 48시간이 걸릴 수 있어요.</div>
+    </div>`;
   }
   document.getElementById('audienceSection').innerHTML = audHTML;
 
@@ -1286,8 +1393,20 @@ function analyze() {
       👉 <b style="color:#c13584">${WD_LABELS[bestWd]}요일</b>이 팔로워 활동이 가장 많아요. 업로드 예약을 이 요일에 맞춰보세요.
     </div>`;
   } else {
-    wdHTML = `<div class="reco-item reco-fix" style="margin:0;"><span class="reco-icon">ℹ️</span>요일별 활동 데이터가 없어요. ZIP의 <b>audience_insights.json</b>이 포함되면 자동 분석됩니다.</div>
-    <div style="margin-top:12px;font-size:0.85rem;color:#666;">일반적으로 <b>화·목·토요일 오전 11시~오후 2시</b> 또는 <b>저녁 7~9시</b>가 인스타 참여도가 높아요.</div>`;
+    wdHTML = `<div class="missing-box">
+      <div class="missing-title">ℹ️ 요일별 활동 데이터가 없어요</div>
+      <div>ZIP 파일 안에 <b>audience_insights.json</b>이 포함되면 팔로워들이 가장 활발한 요일을 히트맵으로 자동 분석해드려요.</div>
+      <div class="missing-steps">
+        <p>📥 audience_insights.json 받는 방법</p>
+        <div class="mstep"><span class="mn">①</span><span class="mt">인스타그램 앱 → 우측 하단 프로필 탭 클릭</span></div>
+        <div class="mstep"><span class="mn">②</span><span class="mt">우측 상단 <b>≡ 메뉴</b> → <b>설정 및 활동</b></span></div>
+        <div class="mstep"><span class="mn">③</span><span class="mt"><b>계정 센터</b> → <b>내 정보 및 권한</b> → <b>내 정보 다운로드</b></span></div>
+        <div class="mstep"><span class="mn">④</span><span class="mt">형식: <b>JSON</b> 선택 → 날짜 범위: <b>지난 90일</b> 권장</span></div>
+        <div class="mstep"><span class="mn">⑤</span><span class="mt"><b>다운로드 요청</b> 클릭 → 이메일 수신 후 ZIP 다운로드</span></div>
+        <div class="mstep"><span class="mn">⑥</span><span class="mt">받은 ZIP을 위 업로드 영역에 그대로 드래그&드롭!</span></div>
+      </div>
+      <div class="missing-note">💡 지금은 일반적인 최적 시간대를 참고하세요 → 화·목·토요일 오전 11시~오후 2시 또는 저녁 7~9시</div>
+    </div>`;
   }
   document.getElementById('weekdaySection').innerHTML = wdHTML;
 
@@ -1360,6 +1479,180 @@ function analyze() {
     <b>Step 3 · ${niche} 키워드 강화</b><br/>
     &nbsp;&nbsp;${topTag} 등 핵심 해시태그 꾸준히 사용 + 캡션 첫 줄에 키워드 포함<br/>
     &nbsp;&nbsp;릴스 월 2개 목표 — 짧고 강렬하게 (7~15초)`;
+
+  // ── 릴스 떡상 지수 (2026 공식) ──
+  // Score = (완독×3) + (재시청×5) + (공유×10) + (저장×7) - (초반 이탈×2)
+  const cr  = D.completionRate     || 0;
+  const rr  = D.replayRate         || 0;
+  const edr = D.earlyDropRate      || 0;
+  const hasReelsData = cr > 0 || rr > 0;
+
+  if (hasReelsData) {
+    const reelsIdx = (cr * 3) + (rr * 5) + (shr * 10) + (sr * 7) - (edr * 2);
+    const reelsGrade = reelsIdx >= 500 ? { label:'🔥 탐색 탭 진입 가능', color:'#833ab4' }
+                     : reelsIdx >= 300 ? { label:'⭐ 알고리즘 상위권', color:'#fd1d1d' }
+                     : reelsIdx >= 150 ? { label:'📈 성장 중', color:'#fcb045' }
+                     : { label:'🌱 개선 필요', color:'#68d391' };
+
+    // 스토리 노출 지수
+    const storyIdx = (D.storyDM||0)*5 + (D.storyStickerClicks||0)*3 + (D.storyProfileVisits||0)*2;
+    // 피드 도달 지수
+    const feedIdx  = (sr*1.5) + (shr*2.0) + (er * 0.5);
+
+    document.getElementById('reelsScoreSection').innerHTML = `
+      <div style="background:linear-gradient(135deg,#f9f0ff,#fff0f5);border-radius:14px;padding:20px;text-align:center;margin-bottom:16px;">
+        <div style="font-size:2.8rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${Math.round(reelsIdx)}</div>
+        <div style="font-weight:700;color:${reelsGrade.color};margin-top:6px;font-size:1rem;">${reelsGrade.label}</div>
+        <div style="font-size:0.75rem;color:#aaa;margin-top:4px;">공식: (완주율×3) + (재시청×5) + (공유율×10) + (저장률×7) - (초반이탈×2)</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+        ${[
+          { label:'완주율', val:cr+'%', score:Math.round(cr*3), target:'60%↑', ok: cr>=60 },
+          { label:'재시청율', val:rr+'%', score:Math.round(rr*5), target:'10%↑', ok: rr>=10 },
+          { label:'초반 이탈', val:edr+'%', score:-Math.round(edr*2), target:'30%↓', ok: edr<=30 },
+        ].map(f => `
+          <div style="background:#fff;border-radius:10px;padding:12px 8px;text-align:center;border:1.5px solid ${f.ok?'#68d391':'#fbd38d'};">
+            <div style="font-size:0.72rem;color:#aaa;font-weight:600;">${f.label}</div>
+            <div style="font-size:1.2rem;font-weight:800;color:${f.score>=0?'#833ab4':'#e53e3e'};margin-top:4px;">${f.score>0?'+':''}${f.score}</div>
+            <div style="font-size:0.7rem;color:#aaa;">${f.val} (목표 ${f.target})</div>
+          </div>`).join('')}
+      </div>
+      ${D.storyDM || D.storyStickerClicks ? `
+      <div style="background:#f8f9ff;border-radius:12px;padding:14px 16px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#4a5568;margin-bottom:8px;">📖 스토리 노출 지수: <b style="color:#833ab4">${Math.round(storyIdx)}</b></div>
+        <div style="font-size:0.78rem;color:#888;">공식: (DM답장×5) + (스티커 클릭×3) + (프로필 방문×2)</div>
+        <div style="font-size:0.8rem;color:#555;margin-top:6px;line-height:1.6;">
+          💡 스토리 지수가 높을수록 팔로워와의 친밀도가 높아져 피드 우선 노출이 증가해요.
+        </div>
+      </div>` : ''}`;
+  } else {
+    document.getElementById('reelsScoreSection').innerHTML = `
+      <div style="padding:16px;background:#f8f9ff;border-radius:12px;font-size:0.85rem;color:#666;">
+        수동 입력 탭의 <b>릴스 성과 지표</b>에 완주율·재시청율·초반 이탈율을 입력하면 릴스 떡상 지수를 계산해 드려요.<br/>
+        <span style="color:#aaa;font-size:0.78rem;">공식: (완주율×3) + (재시청×5) + (공유율×10) + (저장률×7) - (초반이탈×2)</span>
+      </div>`;
+  }
+
+  // ── KPI 달성 현황 ──
+  const kpiItems = [
+    { label:'완주율', val: cr, unit:'%', target:60, desc:'60%↑ 목표', good: cr>=60, hasData: cr>0 },
+    { label:'저장률',  val: sr.toFixed(1), unit:'%', target:3,  desc:'3~10% 목표', good: sr>=3 && sr<=10, hasData: sr>0 },
+    { label:'공유율',  val: shr.toFixed(1), unit:'%', target:1,  desc:'1~5% 목표',  good: shr>=1 && shr<=5, hasData: shr>0 },
+    { label:'댓글률',  val: D.avgComments && D.avgReach ? ((D.avgComments/D.avgReach)*100).toFixed(2) : '—',
+      unit:'%', target:0.5, desc:'0.5~2% 목표',
+      good: D.avgComments && D.avgReach && (D.avgComments/D.avgReach*100)>=0.5,
+      hasData: !!(D.avgComments && D.avgReach) },
+    { label:'인게이지먼트율', val: er.toFixed(1), unit:'%', target:3, desc:'3%↑ 목표', good: er>=3, hasData: er>0 },
+  ];
+  document.getElementById('kpiSection').innerHTML = `
+    <p style="font-size:0.8rem;color:#aaa;margin-bottom:14px;">2026 인스타그램 알고리즘 기준 KPI 목표 대비 현황이에요.</p>
+    ${kpiItems.map(k => `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+      <div style="width:80px;font-size:0.82rem;color:#555;font-weight:600;">${k.label}</div>
+      <div style="flex:1;background:#f0f0f0;border-radius:99px;height:10px;">
+        ${k.hasData ? `<div style="height:10px;border-radius:99px;width:${Math.min(100, (parseFloat(k.val)/k.target)*100)||0}%;background:${k.good?'linear-gradient(90deg,#56ab2f,#a8e063)':'linear-gradient(90deg,#f7971e,#ffd200)'};transition:width 0.6s;"></div>` : ''}
+      </div>
+      <div style="width:80px;text-align:right;font-size:0.82rem;font-weight:700;color:${k.hasData?(k.good?'#56ab2f':'#f7971e'):'#ccc'};">
+        ${k.hasData ? k.val+k.unit : '—'} ${k.hasData?(k.good?'✅':'⚠️'):''}
+      </div>
+      <div style="width:70px;text-align:right;font-size:0.75rem;color:#aaa;">${k.desc}</div>
+    </div>`).join('')}
+    <div style="margin-top:12px;padding:10px 14px;background:#fffbeb;border-radius:8px;font-size:0.82rem;color:#744210;">
+      💡 <b>좋아요율은 낮게 측정</b>: 인스타 알고리즘은 저장·공유·재시청에 각각 7배·10배·5배의 가중치를 부여해요. 좋아요는 가중치 0.5로 가장 낮아요.
+    </div>`;
+
+  // ── 확산 단계 진단 ──
+  const avgReachVal = D.avgReach || 0;
+  let diffStage = 1;
+  if (avgReachVal >= 10000 || D.nonFollowerReach >= 90) diffStage = 5;
+  else if (avgReachVal >= 2000 || D.nonFollowerReach >= 70) diffStage = 4;
+  else if (avgReachVal >= 500  || D.nonFollowerReach >= 50) diffStage = 3;
+  else if (avgReachVal >= 100) diffStage = 2;
+
+  const diffStages = [
+    { n:1, range:'100~300 노출',      cond:'시청률 60%↑', next:'꾸준한 업로드 + 완주율 높은 콘텐츠', color:'#68d391' },
+    { n:2, range:'500~2,000 노출',    cond:'몰입도 70%↑ + 댓글', next:'댓글 유도 CTA 삽입', color:'#81e6d9' },
+    { n:3, range:'2,000~10,000 노출', cond:'저장/공유 발생', next:'저장 유도 카드뉴스, 정보성 릴스', color:'#fcb045' },
+    { n:4, range:'10,000~100,000 노출', cond:'재시청 증가', next:'루프 구조 릴스, 반전 콘텐츠', color:'#fd1d1d' },
+    { n:5, range:'100,000+ 노출',     cond:'전체 지표 안정', next:'콜라보, 트렌드 사운드 활용', color:'#833ab4' },
+  ];
+  document.getElementById('diffusionStageSection').innerHTML = `
+    <p style="font-size:0.82rem;color:#aaa;margin-bottom:14px;">현재 추정 단계: <b style="color:#833ab4">${diffStage}단계</b> (평균 노출 ${avgReachVal.toLocaleString()}회 기준)</p>
+    ${diffStages.map(s => `
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;padding:12px 14px;border-radius:10px;background:${s.n===diffStage?'#f9f0ff':'#fafafa'};border:${s.n===diffStage?'2px solid '+s.color:'1.5px solid #f0f0f0'};">
+      <div style="width:28px;height:28px;border-radius:50%;background:${s.n<=diffStage?s.color:'#e2e8f0'};display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;color:${s.n<=diffStage?'#fff':'#aaa'};flex-shrink:0;">${s.n}</div>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:0.85rem;color:${s.n===diffStage?s.color:'#888'};">${s.range} · 조건: ${s.cond}</div>
+        <div style="font-size:0.78rem;color:${s.n===diffStage?'#555':'#bbb'};margin-top:2px;">다음 전략: ${s.next}</div>
+      </div>
+      ${s.n===diffStage?`<div style="font-size:0.7rem;font-weight:700;background:${s.color};color:#fff;padding:3px 8px;border-radius:99px;white-space:nowrap;">현재</div>`:''}
+    </div>`).join('')}`;
+
+  // ── Hidden Score (계정 신뢰도) ──
+  const consistencyScore = wp >= 4 ? 25 : wp >= 2 ? 18 : wp >= 1 ? 10 : 3;
+  const engagementTrust  = er >= 5 ? 25 : er >= 3 ? 18 : er >= 1 ? 10 : 3;
+  const growthTrust      = (D.growthRate||0) >= 5 ? 25 : (D.growthRate||0) >= 2 ? 18 : (D.growthRate||0) > 0 ? 12 : (D.nonFollowerReach||0) >= 50 ? 15 : 5;
+  const activityTrust    = (D.dmCount||0) >= 100 ? 25 : (D.dmCount||0) >= 50 ? 18 : (D.dmCount||0) > 0 ? 10 : 8;
+  const hiddenTotal      = consistencyScore + engagementTrust + growthTrust + activityTrust;
+
+  document.getElementById('hiddenScoreSection').innerHTML = `
+    <p style="font-size:0.82rem;color:#aaa;margin-bottom:14px;">인스타가 공개하지 않는 계정 품질 점수예요. 높을수록 같은 콘텐츠도 더 넓게 배포돼요.</p>
+    <div style="background:linear-gradient(135deg,#f9f0ff,#fff0f5);border-radius:14px;padding:16px;text-align:center;margin-bottom:16px;">
+      <div style="font-size:2.5rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#fd1d1d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${hiddenTotal}<span style="font-size:1rem;">/100</span></div>
+      <div style="color:#888;font-size:0.85rem;margin-top:4px;">${hiddenTotal>=80?'🏆 최고 신뢰도 계정':hiddenTotal>=60?'⭐ 신뢰도 우수':hiddenTotal>=40?'📈 보통 수준':'🌱 신뢰도 낮음 — 관리 필요'}</div>
+    </div>
+    ${[
+      { label:'콘텐츠 일관성', score:consistencyScore, max:25, desc:`주 ${wp}회 업로드`, tip:'같은 주제 꾸준히 → 알고리즘이 카테고리 분류 완료' },
+      { label:'인게이지먼트 신뢰', score:engagementTrust, max:25, desc:`${er.toFixed(1)}% 인게이지먼트`, tip:'팔로워 반응이 꾸준하면 신뢰 계수가 올라가요' },
+      { label:'성장 신뢰도', score:growthTrust, max:25, desc:`비팔로워 도달 ${D.nonFollowerReach||'—'}%`, tip:'외부에서 유입될수록 계정 신뢰도 상승' },
+      { label:'활동성', score:activityTrust, max:25, desc:`DM ${D.dmCount||0}개`, tip:'댓글/DM 적극 답장이 활동성 점수에 반영돼요' },
+    ].map(h => {
+      const pct = Math.round((h.score/h.max)*100);
+      const cls = pct>=70?'bar-good':pct>=40?'bar-mid':'bar-bad';
+      return `<div class="stat-row">
+        <div class="stat-name-wrap">
+          <div class="stat-name">${h.label}
+            <span class="tooltip-wrap"><span class="tooltip-icon">?</span><span class="tooltip-box">${h.tip}</span></span>
+          </div>
+          <div class="stat-desc">${h.desc}</div>
+        </div>
+        <div class="bar-wrap"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
+        <div class="stat-val">${h.score}/${h.max}</div>
+      </div>`;
+    }).join('')}
+    <div style="margin-top:12px;padding:10px 14px;background:#fff5f5;border-radius:8px;font-size:0.82rem;color:#742a2a;">
+      🚫 <b>절대 금기</b>: TikTok 워터마크 영상 업로드 시 도달 즉시 중단 / 인위적 좋아요·팔로워 구매 시 계정 지수 회복 불가
+    </div>`;
+
+  // ── 30일 로드맵 ──
+  document.getElementById('roadmap30Section').innerHTML = `
+    <div style="display:grid;gap:10px;">
+      ${[
+        { days:'Day 1~5', title:'AI 학습 & 계정 테마 고정', color:'#68d391',
+          action:'프로필 SEO 최적화. 주제 일관성 유지하며 릴스 3개 업로드 (7~15초).',
+          why:'알고리즘이 내 계정을 특정 카테고리로 분류해야 정확한 타겟에게 배달해요.' },
+        { days:'Day 6~12', title:'유입량 확장 (숏폼 집중)', color:'#fcb045',
+          action:'7초 내외 정보성 릴스 매일 업로드. 인기 사운드 활용. 캡션 첫 줄에 핵심 키워드.',
+          why:'계정 지수가 낮을 때는 완주률 점수 따기 쉬운 짧은 영상이 노출에 유리해요.' },
+        { days:'Day 13~20', title:'저장 지표 & 팬덤 관리', color:'#fd1d1d',
+          action:'10장 꽉 채운 카드뉴스(저장 유도) + 스토리 설문/퀴즈 매일 수행.',
+          why:'들어온 사람을 저장하게 만들어 팬으로 묶고, 친밀도 점수를 쌓는 기간이에요.' },
+        { days:'Day 21~30', title:'공유 트리거 & 바이럴 확산', color:'#833ab4',
+          action:'공유를 부르는 공감형 릴스 및 "친구 태그 이벤트" 진행.',
+          why:'전파력이 가장 강한 공유 지수를 폭발시켜 탐색 탭 메인을 점령해요.' },
+      ].map(p => `
+        <div style="padding:14px 16px;border-radius:12px;border-left:4px solid ${p.color};background:#fafafa;">
+          <div style="font-weight:700;color:${p.color};font-size:0.88rem;margin-bottom:4px;">${p.days}: ${p.title}</div>
+          <div style="font-size:0.83rem;color:#444;margin-bottom:4px;"><b>액션:</b> ${p.action}</div>
+          <div style="font-size:0.78rem;color:#888;"><i>Why: ${p.why}</i></div>
+        </div>`).join('')}
+    </div>
+    <div style="margin-top:12px;padding:12px 16px;background:#fffbeb;border-radius:10px;font-size:0.82rem;color:#744210;line-height:1.7;">
+      <b>🔑 꿀팁:</b><br/>
+      • 업로드 직후 <b>15분간 다른 유저와 소통</b>하여 내 프로필 유입 유도<br/>
+      • 캡션 첫 줄에 반드시 핵심 키워드 (SEO 검색 노출)<br/>
+      • H-V-L-C 구조 릴스: Hook(0~2초) → Value(2~10초) → Loop(끝을 처음과 연결) → CTA(캡션에서 정보 제공)
+    </div>`;
 
   document.getElementById('result').style.display = 'block';
   document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
