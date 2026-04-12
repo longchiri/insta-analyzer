@@ -35,40 +35,22 @@
     }
     .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; color: #444; display: flex; align-items: center; gap: 8px; }
 
-    /* 탭 */
     .tab-wrap {
-      display: flex;
-      gap: 10px;
-      max-width: 720px;
-      margin: 0 auto 20px;
+      display: flex; gap: 10px;
+      max-width: 720px; margin: 0 auto 20px;
     }
     .tab-btn {
-      flex: 1;
-      padding: 13px;
-      border: 2px solid #e5e5e5;
-      background: #fff;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      color: #888;
-      transition: all 0.2s;
+      flex: 1; padding: 13px;
+      border: 2px solid #e5e5e5; background: #fff;
+      border-radius: 12px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; color: #888; transition: all 0.2s;
     }
-    .tab-btn.active {
-      border-color: #c13584;
-      color: #c13584;
-      background: #fff0f8;
-    }
+    .tab-btn.active { border-color: #c13584; color: #c13584; background: #fff0f8; }
 
-    /* 업로드 존 */
     .upload-zone {
-      border: 2.5px dashed #e0b0ff;
-      border-radius: 14px;
-      padding: 40px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: #fdf5ff;
+      border: 2.5px dashed #e0b0ff; border-radius: 14px;
+      padding: 40px 20px; text-align: center; cursor: pointer;
+      transition: all 0.2s; background: #fdf5ff;
     }
     .upload-zone:hover { border-color: #c13584; background: #fff0f8; }
     .upload-zone.dragover { border-color: #833ab4; background: #f0e0ff; }
@@ -78,14 +60,8 @@
     #fileInput { display: none; }
 
     .file-loaded {
-      background: #f0fff4;
-      border: 2px solid #68d391;
-      border-radius: 12px;
-      padding: 16px 20px;
-      display: none;
-      align-items: center;
-      gap: 12px;
-      margin-top: 14px;
+      background: #f0fff4; border: 2px solid #68d391; border-radius: 12px;
+      padding: 16px 20px; display: none; align-items: center; gap: 12px; margin-top: 14px;
     }
     .file-loaded .file-icon { font-size: 1.5rem; }
     .file-loaded .file-info { flex: 1; }
@@ -93,98 +69,122 @@
     .file-loaded .file-meta { font-size: 0.8rem; color: #68d391; margin-top: 2px; }
     .file-loaded .remove-btn { background: none; border: none; color: #e53e3e; cursor: pointer; font-size: 1.1rem; }
 
+    /* 가이드 탭 */
+    .guide-tab-wrap { display: flex; gap: 0; margin-top: 16px; border-radius: 10px 10px 0 0; overflow: hidden; border: 1.5px solid #f6ad55; border-bottom: none; }
+    .guide-tab-btn {
+      flex: 1; padding: 9px 6px; background: #fffbeb; border: none;
+      font-size: 0.82rem; font-weight: 700; color: #c05621; cursor: pointer;
+      border-right: 1px solid #f6ad55; transition: background 0.15s;
+    }
+    .guide-tab-btn:last-child { border-right: none; }
+    .guide-tab-btn.active { background: #f6ad55; color: #fff; }
+    .guide-panel { display: none; background: #fffbeb; border: 1.5px solid #f6ad55; border-top: none; border-radius: 0 0 10px 10px; padding: 14px 16px; font-size: 0.84rem; color: #744210; line-height: 1.85; }
+    .guide-panel.active { display: block; }
+    .guide-panel strong { color: #c05621; }
+    .guide-step { display: flex; gap: 8px; margin-bottom: 4px; }
+    .guide-step .step-num { font-weight: 800; color: #c05621; flex-shrink: 0; min-width: 18px; }
+    .guide-step .step-txt { flex: 1; }
+    .guide-note { margin-top: 10px; padding: 8px 12px; background: #fff3cd; border-radius: 8px; font-size: 0.8rem; color: #856404; }
+
     .how-to {
-      background: #fffbeb;
-      border-left: 4px solid #f6ad55;
-      border-radius: 0 10px 10px 0;
-      padding: 14px 16px;
-      margin-top: 16px;
-      font-size: 0.85rem;
-      color: #744210;
-      line-height: 1.7;
+      background: #fffbeb; border-left: 4px solid #f6ad55;
+      border-radius: 0 10px 10px 0; padding: 14px 16px; margin-top: 16px;
+      font-size: 0.85rem; color: #744210; line-height: 1.7;
     }
     .how-to strong { color: #c05621; }
 
-    /* 폼 */
+    /* 텔레그램 문의 */
+    .tg-contact {
+      display: inline-flex; align-items: center; gap: 7px;
+      margin-top: 10px; padding: 7px 18px;
+      background: #229ED9; border-radius: 99px; text-decoration: none;
+      color: #fff; font-size: 0.85rem; font-weight: 700;
+      transition: opacity 0.2s;
+    }
+    .tg-contact:hover { opacity: 0.85; }
+
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1 / -1; }
     label { font-size: 0.82rem; font-weight: 600; color: #666; }
     input, textarea, select {
-      border: 1.5px solid #e5e5e5;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s;
-      background: #fafafa;
+      border: 1.5px solid #e5e5e5; border-radius: 10px;
+      padding: 10px 12px; font-size: 0.95rem; outline: none;
+      transition: border 0.2s; background: #fafafa;
     }
     input:focus, textarea:focus, select:focus { border-color: #c13584; background: #fff; }
     input.autofilled { border-color: #68d391; background: #f0fff4; }
     textarea { resize: vertical; min-height: 70px; }
 
     .auto-badge {
-      display: inline-block;
-      background: #68d391;
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 99px;
-      margin-left: 6px;
-      vertical-align: middle;
+      display: inline-block; background: #68d391; color: #fff;
+      font-size: 0.7rem; font-weight: 700; padding: 2px 7px;
+      border-radius: 99px; margin-left: 6px; vertical-align: middle;
     }
 
     .btn-analyze {
-      display: block;
-      width: 100%;
-      max-width: 720px;
-      margin: 0 auto 30px;
-      padding: 16px;
-      background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-      color: #fff;
-      font-size: 1.05rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
+      display: block; width: 100%; max-width: 720px; margin: 0 auto 30px;
+      padding: 16px; background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+      color: #fff; font-size: 1.05rem; font-weight: 700; border: none;
+      border-radius: 14px; cursor: pointer; transition: opacity 0.2s, transform 0.1s;
     }
     .btn-analyze:hover { opacity: 0.92; transform: translateY(-1px); }
 
-    /* 결과 */
+    /* ── 파싱 미리보기 ── */
+    .parsed-preview {
+      background: #f8f9ff; border: 1.5px solid #c3d0ff;
+      border-radius: 12px; padding: 16px; margin-top: 16px; display: none;
+    }
+    .parsed-preview h4 { font-size: 0.85rem; font-weight: 700; color: #4a5568; margin-bottom: 12px; }
+    .parsed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    @media (max-width: 500px) { .parsed-grid { grid-template-columns: repeat(2, 1fr); } }
+    .parsed-item { text-align: center; background: #fff; border-radius: 8px; padding: 10px 6px; }
+    .parsed-item .p-val { font-size: 1.05rem; font-weight: 800; color: #c13584; }
+    .parsed-item .p-label { font-size: 0.72rem; color: #888; margin-top: 2px; }
+
+    /* ── 결과 ── */
     #result { display: none; }
     .result-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
+      background: #fff; border-radius: 16px; padding: 28px;
+      margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      max-width: 720px; margin-left: auto; margin-right: auto;
     }
-    .result-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; color: #333; }
+    .result-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; color: #333; display: flex; align-items: center; gap: 8px; }
 
-    .score-box {
-      text-align: center;
-      padding: 20px;
+    /* 종합 점수 */
+    .score-big-box {
+      text-align: center; padding: 24px 20px 20px;
       background: linear-gradient(135deg, #f9f0ff, #fff0f5);
-      border-radius: 14px;
-      margin-bottom: 20px;
+      border-radius: 14px; margin-bottom: 24px;
     }
     .score-number {
-      font-size: 3.5rem;
-      font-weight: 900;
+      font-size: 4rem; font-weight: 900;
       background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1;
     }
-    .score-label { color: #888; font-size: 0.9rem; margin-top: 4px; }
+    .score-grade { font-size: 1.2rem; font-weight: 800; margin-top: 6px; color: #555; }
+    .score-label { color: #888; font-size: 0.88rem; margin-top: 4px; }
 
+    /* 세부 점수 4칸 */
+    .sub-score-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
+    }
+    @media (max-width: 500px) { .sub-score-grid { grid-template-columns: repeat(2, 1fr); } }
+    .sub-score-item {
+      background: #fafafa; border-radius: 12px; padding: 14px 8px; text-align: center;
+      border: 1.5px solid #f0f0f0;
+    }
+    .sub-score-item .ss-val {
+      font-size: 1.4rem; font-weight: 800; color: #c13584;
+    }
+    .sub-score-item .ss-name { font-size: 0.72rem; color: #888; margin-top: 4px; font-weight: 600; }
+    .sub-score-item .ss-pct { font-size: 0.68rem; color: #bbb; margin-top: 2px; }
+
+    /* 진행 바 */
     .stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-    .stat-name-wrap { width: 140px; flex-shrink: 0; }
+    .stat-name-wrap { width: 130px; flex-shrink: 0; }
     .stat-name { font-size: 0.85rem; color: #555; display: flex; align-items: center; gap: 4px; }
     .stat-desc { font-size: 0.75rem; color: #aaa; margin-top: 2px; line-height: 1.4; }
     .bar-wrap { flex: 1; background: #f0f0f0; border-radius: 99px; height: 10px; min-width: 80px; }
@@ -192,7 +192,7 @@
     .bar-good { background: linear-gradient(90deg, #56ab2f, #a8e063); }
     .bar-mid  { background: linear-gradient(90deg, #f7971e, #ffd200); }
     .bar-bad  { background: linear-gradient(90deg, #cb2d3e, #ef473a); }
-    .stat-val { width: 60px; text-align: right; font-size: 0.82rem; color: #888; }
+    .stat-val { width: 60px; text-align: right; font-size: 0.82rem; color: #888; flex-shrink: 0; }
 
     /* 툴팁 */
     .tooltip-wrap { position: relative; display: inline-block; }
@@ -203,39 +203,62 @@
       cursor: pointer; flex-shrink: 0;
     }
     .tooltip-box {
-      display: none;
-      position: absolute;
-      left: 20px; top: -6px;
-      background: #2d3748;
-      color: #fff;
-      font-size: 0.78rem;
-      line-height: 1.6;
-      padding: 10px 13px;
-      border-radius: 10px;
-      width: 220px;
-      z-index: 99;
+      display: none; position: absolute; left: 20px; top: -6px;
+      background: #2d3748; color: #fff; font-size: 0.78rem; line-height: 1.6;
+      padding: 10px 13px; border-radius: 10px; width: 220px; z-index: 99;
       box-shadow: 0 4px 16px rgba(0,0,0,0.18);
     }
     .tooltip-box::before {
-      content: '';
-      position: absolute;
-      left: -6px; top: 10px;
-      border: 6px solid transparent;
-      border-right-color: #2d3748;
-      border-left: none;
+      content: ''; position: absolute; left: -6px; top: 10px;
+      border: 6px solid transparent; border-right-color: #2d3748; border-left: none;
     }
-    .tooltip-wrap:hover .tooltip-box,
-    .tooltip-wrap.active .tooltip-box { display: block; }
+    .tooltip-wrap:hover .tooltip-box, .tooltip-wrap.active .tooltip-box { display: block; }
 
+    /* 인사이트 메트릭 박스 */
+    .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+    @media (max-width: 500px) { .metric-grid { grid-template-columns: repeat(2, 1fr); } }
+    .metric-box { background: linear-gradient(135deg, #f9f0ff, #fff0f5); border-radius: 12px; padding: 14px 10px; text-align: center; }
+    .metric-box .m-val { font-size: 1.3rem; font-weight: 800; color: #833ab4; }
+    .metric-box .m-label { font-size: 0.72rem; color: #888; margin-top: 4px; }
+
+    /* 요일 히트맵 */
+    .weekday-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px;
+    }
+    .wd-cell { text-align: center; }
+    .wd-label { font-size: 0.72rem; color: #888; margin-bottom: 4px; font-weight: 600; }
+    .wd-bar { border-radius: 8px; transition: height 0.5s; margin: 0 auto; width: 30px; }
+    .wd-val { font-size: 0.72rem; color: #666; margin-top: 4px; font-weight: 700; }
+    .wd-best { border: 2px solid #c13584; border-radius: 8px; }
+
+    /* 성별/연령 바 */
+    .gender-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .gender-label { width: 70px; font-size: 0.82rem; color: #666; font-weight: 600; }
+    .gender-bar-wrap { flex: 1; background: #f0f0f0; border-radius: 99px; height: 12px; }
+    .gender-bar-fill { height: 12px; border-radius: 99px; }
+    .gender-val { width: 50px; text-align: right; font-size: 0.82rem; color: #888; }
+
+    .age-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .age-label { width: 55px; font-size: 0.78rem; color: #666; font-weight: 600; }
+    .age-bar-wrap { flex: 1; background: #f0f0f0; border-radius: 99px; height: 10px; }
+    .age-bar-fill { height: 10px; border-radius: 99px; background: linear-gradient(90deg, #833ab4, #c13584); }
+    .age-val { width: 45px; text-align: right; font-size: 0.78rem; color: #888; }
+
+    /* 해시태그 칩 */
+    .tag-section-title { font-size: 0.82rem; font-weight: 700; color: #666; margin: 14px 0 8px; }
+    .tag-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .kw-tag {
+      display: inline-block; padding: 5px 12px; border-radius: 99px;
+      font-size: 0.82rem; font-weight: 600;
+    }
+    .kw-tag-existing { background: #f5f0ff; border: 1.5px solid #c13584; color: #833ab4; }
+    .kw-tag-suggest  { background: #fff8f0; border: 1.5px dashed #FF9744; color: #FF6F0F; }
+
+    /* 추천 아이템 */
     .reco-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-radius: 10px; margin-bottom: 8px;
+      font-size: 0.9rem; line-height: 1.5;
     }
     .reco-keep   { background: #f0fff4; color: #276749; }
     .reco-fix    { background: #fffbeb; color: #744210; }
@@ -245,60 +268,60 @@
 
     .tip-box {
       background: linear-gradient(135deg, #667eea22, #764ba222);
-      border-left: 4px solid #764ba2;
-      border-radius: 0 10px 10px 0;
-      padding: 14px 16px;
-      font-size: 0.88rem;
-      color: #444;
-      line-height: 1.6;
+      border-left: 4px solid #764ba2; border-radius: 0 10px 10px 0;
+      padding: 14px 16px; font-size: 0.88rem; color: #444; line-height: 1.7;
     }
     .tip-box strong { color: #764ba2; }
 
-    /* 파싱된 데이터 미리보기 */
-    .parsed-preview {
-      background: #f8f9ff;
-      border: 1.5px solid #c3d0ff;
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 16px;
-      display: none;
+    /* 탑 게시물 */
+    .top-post-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px; background: #fafafa;
+      border: 1px solid #f0f0f0; margin-bottom: 8px;
     }
-    .parsed-preview h4 { font-size: 0.85rem; font-weight: 700; color: #4a5568; margin-bottom: 12px; }
-    .parsed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    @media (max-width: 500px) { .parsed-grid { grid-template-columns: repeat(2, 1fr); } }
-    .parsed-item { text-align: center; background: #fff; border-radius: 8px; padding: 10px 6px; }
-    .parsed-item .p-val { font-size: 1.1rem; font-weight: 800; color: #c13584; }
-    .parsed-item .p-label { font-size: 0.72rem; color: #888; margin-top: 2px; }
+    .top-post-rank { font-size: 1rem; font-weight: 800; color: #c13584; width: 24px; flex-shrink: 0; }
+    .top-post-info { flex: 1; }
+    .top-post-cap { font-size: 0.82rem; color: #444; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px; }
+    .top-post-stats { display: flex; gap: 10px; }
+    .top-post-stat { font-size: 0.75rem; color: #888; }
+
+    /* 도시 */
+    .city-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .city-name { width: 80px; font-size: 0.82rem; color: #555; }
+    .city-bar-wrap { flex: 1; background: #f0f0f0; border-radius: 99px; height: 8px; }
+    .city-bar-fill { height: 8px; border-radius: 99px; background: linear-gradient(90deg, #fd1d1d, #fcb045); }
+    .city-val { width: 45px; text-align: right; font-size: 0.78rem; color: #888; }
+
+    /* 섹션 구분선 */
+    .section-divider { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; }
 
     footer { text-align: center; color: #bbb; font-size: 0.8rem; margin-top: 10px; }
-
   </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <body>
 
 <header>
-  <p style="font-size:1rem; margin-bottom:6px;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.2rem;">longchiri</span></p>
   <h1>Instagram 계정 분석기</h1>
-  <p>데이터를 업로드하거나 직접 입력해서 노출 전략을 받아보세요</p>
+  <p>ZIP 데이터 파일을 업로드하거나 직접 입력해서 인스타 전략을 받아보세요</p>
 </header>
 
 <!-- 탭 선택 -->
 <div class="tab-wrap">
-  <button class="tab-btn active" onclick="switchTab('upload')" id="tab-upload">📂 파일 업로드 (자동)</button>
+  <button class="tab-btn active" onclick="switchTab('upload')" id="tab-upload">📂 ZIP 파일 업로드 (자동)</button>
   <button class="tab-btn" onclick="switchTab('manual')" id="tab-manual">✏️ 직접 입력 (수동)</button>
 </div>
 
-<!-- 업로드 탭 -->
+<!-- ══════════════ 업로드 탭 ══════════════ -->
 <div id="section-upload">
   <div class="card">
     <h2>📂 Instagram 데이터 파일 업로드</h2>
-
     <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()"
          ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
       <div class="icon">📁</div>
       <h3>파일을 여기에 드래그하거나 클릭해서 선택하세요</h3>
-      <p>JSON, ZIP 파일 지원<br/>Instagram에서 내보낸 데이터 파일을 올려주세요</p>
+      <p>ZIP 파일 지원 · Instagram 데이터 내보내기 ZIP을 올려주세요<br/>팔로워·인사이트·오디언스·게시물 등 자동 추출</p>
     </div>
     <input type="file" id="fileInput" accept=".json,.zip" onchange="handleFileSelect(event)" />
 
@@ -316,54 +339,75 @@
       <div class="parsed-grid" id="parsedGrid"></div>
     </div>
 
-    <div class="how-to">
-      <strong>📱 인스타그램 데이터 내보내는 방법:</strong><br/>
-      ① 인스타그램 앱 → 프로필 → 우측 상단 메뉴(≡)<br/>
-      ② 설정 및 개인 정보 → 계정 센터<br/>
-      ③ 내 정보 및 권한 → 정보 다운로드<br/>
-      ④ <strong>JSON 형식</strong> 선택 → 다운로드 요청<br/>
-      ⑤ 이메일로 오는 링크에서 ZIP 다운로드 후 여기 업로드
+    <!-- 가이드 탭 -->
+    <div style="margin-top:16px;">
+      <div style="font-size:0.85rem;font-weight:700;color:#744210;margin-bottom:8px;">📥 Instagram 데이터 내보내는 방법</div>
+      <div class="guide-tab-wrap">
+        <button class="guide-tab-btn active" onclick="switchGuide('pc')">🖥️ PC / 웹</button>
+        <button class="guide-tab-btn" onclick="switchGuide('android')">🤖 Android</button>
+        <button class="guide-tab-btn" onclick="switchGuide('ios')">🍎 iPhone</button>
+      </div>
+
+      <!-- PC -->
+      <div class="guide-panel active" id="guide-pc">
+        <div class="guide-step"><span class="step-num">①</span><span class="step-txt"><strong>instagram.com</strong> 접속 → 우측 상단 프로필 아이콘 클릭</span></div>
+        <div class="guide-step"><span class="step-num">②</span><span class="step-txt">좌측 메뉴 <strong>설정</strong>(톱니 아이콘) 클릭</span></div>
+        <div class="guide-step"><span class="step-num">③</span><span class="step-txt"><strong>개인정보 및 보안</strong> → <strong>데이터 다운로드</strong> 클릭</span></div>
+        <div class="guide-step"><span class="step-num">④</span><span class="step-txt"><strong>정보 요청</strong> 탭 → <strong>다운로드할 계정 선택</strong></span></div>
+        <div class="guide-step"><span class="step-num">⑤</span><span class="step-txt">형식: <strong>JSON</strong> 선택 → 날짜 범위 설정 → <strong>요청 제출</strong> 클릭</span></div>
+        <div class="guide-step"><span class="step-num">⑥</span><span class="step-txt">며칠 후 이메일로 링크 발송 → 링크 클릭 → <strong>ZIP 다운로드</strong></span></div>
+        <div class="guide-step"><span class="step-num">⑦</span><span class="step-txt">다운로드한 <strong>.zip 파일</strong>을 위 업로드 영역에 드래그 또는 클릭으로 업로드</span></div>
+        <div class="guide-note">💡 PC 웹은 계정 센터를 거치지 않고 바로 설정 → 데이터 다운로드 메뉴로 접근할 수 있어요.</div>
+      </div>
+
+      <!-- Android -->
+      <div class="guide-panel" id="guide-android">
+        <div class="guide-step"><span class="step-num">①</span><span class="step-txt">인스타그램 앱 실행 → 우측 하단 <strong>프로필</strong> 탭 이동</span></div>
+        <div class="guide-step"><span class="step-num">②</span><span class="step-txt">우측 상단 <strong>≡ 메뉴</strong> 탭 → <strong>설정 및 개인정보</strong></span></div>
+        <div class="guide-step"><span class="step-num">③</span><span class="step-txt"><strong>계정 센터</strong> 탭 → <strong>내 정보 및 권한</strong></span></div>
+        <div class="guide-step"><span class="step-num">④</span><span class="step-txt"><strong>정보 다운로드</strong> → <strong>일부 정보 다운로드</strong></span></div>
+        <div class="guide-step"><span class="step-num">⑤</span><span class="step-txt">다운로드할 계정 선택 → 정보 유형 선택(전체 또는 원하는 항목)</span></div>
+        <div class="guide-step"><span class="step-num">⑥</span><span class="step-txt">형식 <strong>JSON</strong>, 날짜 범위 설정 → <strong>파일 만들기</strong></span></div>
+        <div class="guide-step"><span class="step-num">⑦</span><span class="step-txt">며칠 후 이메일 도착 → 링크 클릭 → <strong>ZIP 다운로드</strong> → 여기에 업로드</span></div>
+        <div class="guide-note">💡 Android는 파일 앱에서 다운로드 폴더를 확인하거나, 이메일 앱에서 직접 링크를 열어 다운로드하세요.</div>
+      </div>
+
+      <!-- iOS -->
+      <div class="guide-panel" id="guide-ios">
+        <div class="guide-step"><span class="step-num">①</span><span class="step-txt">인스타그램 앱 실행 → 우측 하단 <strong>프로필</strong> 탭 이동</span></div>
+        <div class="guide-step"><span class="step-num">②</span><span class="step-txt">우측 상단 <strong>≡ 메뉴</strong> 탭 → <strong>설정 및 개인정보</strong></span></div>
+        <div class="guide-step"><span class="step-num">③</span><span class="step-txt"><strong>계정 센터</strong> → <strong>내 정보 및 권한</strong></span></div>
+        <div class="guide-step"><span class="step-num">④</span><span class="step-txt"><strong>정보 다운로드</strong> → <strong>일부 정보 다운로드</strong></span></div>
+        <div class="guide-step"><span class="step-num">⑤</span><span class="step-txt">계정 선택 → 다운로드 유형 선택 → 형식 <strong>JSON</strong> 선택</span></div>
+        <div class="guide-step"><span class="step-num">⑥</span><span class="step-txt">날짜 범위 설정 → <strong>파일 만들기</strong> 탭</span></div>
+        <div class="guide-step"><span class="step-num">⑦</span><span class="step-txt">며칠 후 이메일 도착 → 링크 클릭 → Safari로 열기 → <strong>ZIP 다운로드</strong></span></div>
+        <div class="guide-step"><span class="step-num">⑧</span><span class="step-txt"><strong>파일 앱</strong>에서 다운로드 폴더 확인 → 위 업로드 영역에 업로드</span></div>
+        <div class="guide-note">💡 iPhone은 Safari → 다운로드 → 파일 앱 순서로 이동해야 해요. ZIP 압축 해제 없이 그대로 업로드하면 돼요!</div>
+      </div>
     </div>
   </div>
 
   <!-- 업로드 후 추가 입력 -->
   <div class="card" id="extraInputCard" style="display:none;">
-    <h2>📝 추가 정보 입력 <span style="font-size:0.8rem;color:#999;font-weight:400">(파일에 없는 데이터)</span></h2>
+    <h2>📝 추가 정보 <span style="font-size:0.8rem;color:#999;font-weight:400">(파일에 없는 항목만)</span></h2>
     <div class="form-grid">
       <div class="form-group">
         <label>계정 유형</label>
         <select id="u-accountType">
-          <option value="personal">개인</option>
           <option value="creator">크리에이터</option>
+          <option value="personal">개인</option>
           <option value="brand">브랜드/비즈니스</option>
         </select>
       </div>
       <div class="form-group">
-        <label>총 게시글 수</label>
-        <input type="number" id="u-totalPosts" placeholder="예: 120" />
-      </div>
-      <div class="form-group">
-        <label>릴스 게시글 수</label>
-        <input type="number" id="u-reelsPosts" placeholder="예: 45" />
-      </div>
-      <div class="form-group">
-        <label>스토리 업로드 빈도</label>
-        <select id="u-storyFreq">
-          <option value="daily">매일</option>
-          <option value="often">자주 (주 3~5회)</option>
-          <option value="sometimes">가끔 (주 1~2회)</option>
-          <option value="rarely">거의 안 함</option>
-        </select>
-      </div>
-      <div class="form-group">
         <label>주요 콘텐츠 분야</label>
-        <input type="text" id="u-niche" placeholder="예: 뷰티, 일상, 맛집" />
+        <input type="text" id="u-niche" placeholder="예: 독서, 음악, 감성" />
       </div>
     </div>
   </div>
 </div>
 
-<!-- 수동 탭 -->
+<!-- ══════════════ 수동 탭 ══════════════ -->
 <div id="section-manual" style="display:none;">
   <div class="card">
     <h2>👤 기본 정보</h2>
@@ -375,44 +419,26 @@
       <div class="form-group">
         <label>계정 유형</label>
         <select id="accountType">
-          <option value="personal">개인</option>
           <option value="creator">크리에이터</option>
+          <option value="personal">개인</option>
           <option value="brand">브랜드/비즈니스</option>
         </select>
       </div>
       <div class="form-group">
         <label>팔로워 수</label>
-        <input type="number" id="followers" placeholder="예: 1500" />
+        <input type="number" id="followers" placeholder="예: 467" />
       </div>
       <div class="form-group">
         <label>팔로잉 수</label>
-        <input type="number" id="following" placeholder="예: 800" />
+        <input type="number" id="following" placeholder="예: 239" />
       </div>
       <div class="form-group">
         <label>총 게시물 수</label>
-        <input type="number" id="posts" placeholder="예: 120" />
+        <input type="number" id="posts" placeholder="예: 48" />
       </div>
       <div class="form-group">
-        <label>계정 운영 기간 (개월)</label>
-        <input type="number" id="months" placeholder="예: 12" />
-      </div>
-      <div class="form-group full">
-        <label>바이오(소개글) 내용</label>
-        <textarea id="bio" placeholder="현재 작성된 바이오를 붙여넣어 주세요"></textarea>
-      </div>
-      <div class="form-group">
-        <label>프로필 링크 있음?</label>
-        <select id="hasLink">
-          <option value="yes">있음</option>
-          <option value="no">없음</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>하이라이트 있음?</label>
-        <select id="hasHighlight">
-          <option value="yes">있음</option>
-          <option value="no">없음</option>
-        </select>
+        <label>계정 운영 기간 (일)</label>
+        <input type="number" id="opDays" placeholder="예: 87" />
       </div>
     </div>
   </div>
@@ -422,36 +448,67 @@
     <div class="form-grid">
       <div class="form-group">
         <label>평균 좋아요 수 (게시물당)</label>
-        <input type="number" id="avgLikes" placeholder="예: 85" />
+        <input type="number" id="avgLikes" placeholder="예: 34" />
       </div>
       <div class="form-group">
-        <label>평균 댓글 수 (게시물당)</label>
-        <input type="number" id="avgComments" placeholder="예: 12" />
+        <label>평균 저장 수 (게시물당)</label>
+        <input type="number" id="avgSaves" placeholder="예: 16" />
       </div>
       <div class="form-group">
-        <label>주 업로드 횟수 (주당)</label>
-        <input type="number" id="weeklyPosts" placeholder="예: 3" />
+        <label>평균 공유 수 (게시물당)</label>
+        <input type="number" id="avgShares" placeholder="예: 28" />
+      </div>
+      <div class="form-group">
+        <label>평균 노출(Reach) 수</label>
+        <input type="number" id="avgReach" placeholder="예: 402" />
+      </div>
+      <div class="form-group">
+        <label>주 업로드 횟수</label>
+        <input type="number" id="weeklyPosts" placeholder="예: 5" step="0.1" />
       </div>
       <div class="form-group">
         <label>릴스 게시글 수</label>
-        <input type="number" id="reelsPosts" placeholder="예: 45" />
+        <input type="number" id="reelsPosts" placeholder="예: 2" />
       </div>
       <div class="form-group">
-        <label>스토리 업로드 빈도</label>
-        <select id="storyFreq">
-          <option value="daily">매일</option>
-          <option value="often">자주 (주 3~5회)</option>
-          <option value="sometimes">가끔 (주 1~2회)</option>
-          <option value="rarely">거의 안 함</option>
-        </select>
+        <label>스토리 수 (전체)</label>
+        <input type="number" id="storyCount" placeholder="예: 23" />
       </div>
       <div class="form-group">
-        <label>해시태그 사용 개수 (평균)</label>
-        <input type="number" id="hashtagCount" placeholder="예: 10" max="30" />
+        <label>평균 해시태그 수</label>
+        <input type="number" id="hashtagCount" placeholder="예: 12" max="30" />
       </div>
       <div class="form-group full">
         <label>주요 콘텐츠 분야 (쉼표로 구분)</label>
-        <input type="text" id="niche" placeholder="예: 뷰티, 일상, 맛집" />
+        <input type="text" id="niche" placeholder="예: 독서, 음악, 감성, 플레이리스트" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 인사이트 정보 <span style="font-size:0.78rem;color:#999;font-weight:400">(알고 있으면 입력)</span></h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>팔로워 성장률 (%)</label>
+        <input type="number" id="growthRate" placeholder="예: 8.3" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label>비팔로워 도달 비율 (%)</label>
+        <input type="number" id="nonFollowerReach" placeholder="예: 97.7" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label>남성 팔로워 비율 (%)</label>
+        <input type="number" id="maleRatio" placeholder="예: 83" />
+      </div>
+      <div class="form-group">
+        <label>핵심 연령대</label>
+        <select id="coreAge">
+          <option value="18-24">18-24세</option>
+          <option value="25-34" selected>25-34세</option>
+          <option value="35-44">35-44세</option>
+          <option value="45-54">45-54세</option>
+          <option value="55+">55세 이상</option>
+        </select>
       </div>
     </div>
   </div>
@@ -459,20 +516,52 @@
 
 <button class="btn-analyze" onclick="analyze()">🔍 분석하기</button>
 
-<!-- 결과 -->
+<!-- ══════════════ 결과 ══════════════ -->
 <div id="result">
+
+  <!-- 종합 점수 -->
   <div class="result-card">
-    <h2>📈 계정 종합 점수</h2>
-    <div class="score-box">
+    <h2>📊 종합 점수</h2>
+    <div class="score-big-box">
       <div class="score-number" id="totalScore">0</div>
-      <div class="score-label" id="scoreLabel">분석 중...</div>
+      <div class="score-grade" id="scoreGrade"></div>
+      <div class="score-label" id="scoreLabel"></div>
     </div>
+    <div class="sub-score-grid" id="subScoreGrid"></div>
     <div id="statBars"></div>
   </div>
-  <div class="result-card"><h2>✅ 유지할 것</h2><div id="recoKeep"></div></div>
-  <div class="result-card"><h2>✏️ 수정할 것</h2><div id="recoFix"></div></div>
+
+  <!-- 콘텐츠 성과 -->
+  <div class="result-card">
+    <h2>📈 콘텐츠 성과 분석</h2>
+    <div class="metric-grid" id="contentMetrics"></div>
+    <div id="topPostsSection"></div>
+  </div>
+
+  <!-- 팔로워 오디언스 -->
+  <div class="result-card">
+    <h2>👥 팔로워 오디언스 분석</h2>
+    <div id="audienceSection"></div>
+  </div>
+
+  <!-- 최적 업로드 요일 -->
+  <div class="result-card">
+    <h2>📅 최적 업로드 요일</h2>
+    <div id="weekdaySection"></div>
+  </div>
+
+  <!-- 해시태그 전략 -->
+  <div class="result-card">
+    <h2>#️⃣ 해시태그 전략</h2>
+    <div id="hashtagSection"></div>
+  </div>
+
+  <!-- 유지·수정·추가 -->
+  <div class="result-card"><h2>✅ 잘 하고 있는 것</h2><div id="recoKeep"></div></div>
+  <div class="result-card"><h2>✏️ 개선할 것</h2><div id="recoFix"></div></div>
   <div class="result-card"><h2>➕ 추가할 것</h2><div id="recoAdd"></div></div>
-  <div class="result-card"><h2>❌ 제거/줄일 것</h2><div id="recoRemove"></div></div>
+
+  <!-- 이번 달 전략 -->
   <div class="result-card">
     <h2>💡 이번 달 집중 전략</h2>
     <div class="tip-box" id="tipBox"></div>
@@ -480,9 +569,17 @@
 </div>
 
 <footer>
-  <p>📌 Instagram 데이터 내보내기(ZIP/JSON)로 정밀 분석 · 직접 입력도 지원</p>
-  <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc;">by</b> <span style="color:#86efac; font-weight:600;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.5</p>
+  <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
+  <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver2.7</p>
+  <div style="margin-top: 12px;">
+    <a class="tg-contact" href="https://t.me/Long_c_chill" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+      </svg>
+      문의 : @Long_c_chill
+    </a>
+  </div>
 </footer>
 
 <script>
@@ -500,8 +597,17 @@ function switchTab(tab) {
   document.getElementById('tab-manual').classList.toggle('active', tab === 'manual');
 }
 
+function switchGuide(platform) {
+  ['pc','android','ios'].forEach(p => {
+    document.getElementById('guide-' + p).classList.toggle('active', p === platform);
+  });
+  document.querySelectorAll('.guide-tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['pc','android','ios'][i] === platform);
+  });
+}
+
 // ──────────────────────────────
-// 파일 업로드 처리
+// 파일 업로드
 // ──────────────────────────────
 function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
 function handleDragLeave(e) { document.getElementById('uploadZone').classList.remove('dragover'); }
@@ -526,44 +632,46 @@ function removeFile() {
 function processFile(file) {
   const ext = file.name.split('.').pop().toLowerCase();
   document.getElementById('fileName').textContent = file.name;
-
-  if (ext === 'json') {
+  if (ext === 'zip') {
+    document.getElementById('fileLoaded').style.display = 'flex';
+    document.getElementById('fileMeta').textContent = 'ZIP 파일 분석 중...';
+    processZip(file);
+  } else if (ext === 'json') {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
         const json = JSON.parse(e.target.result);
         parsedData = parseInstagramJSON(json);
         showParsedResult(file.name, parsedData);
-      } catch(err) {
-        alert('JSON 파일을 읽는 데 실패했어요. 인스타그램에서 내보낸 파일인지 확인해 주세요.');
-      }
+      } catch(err) { alert('JSON 파일을 읽는 데 실패했어요.'); }
     };
     reader.readAsText(file);
-
-  } else if (ext === 'zip') {
-    document.getElementById('fileLoaded').style.display = 'flex';
-    document.getElementById('fileMeta').textContent = 'ZIP 파일 분석 중...';
-    processZip(file);
-
   } else {
-    alert('JSON 또는 ZIP 파일을 올려주세요.');
+    alert('ZIP 또는 JSON 파일을 올려주세요.');
   }
 }
 
 // ──────────────────────────────
-// ZIP 자동 처리
+// ZIP 파일 처리 (실제 Instagram 경로 기준)
 // ──────────────────────────────
-// Instagram ZIP 안에서 찾을 파일 우선순위 목록
 const IG_FILE_TARGETS = [
-  { key: 'personal',  patterns: ['personal_information/personal_information', 'personal_information.json'] },
-  { key: 'account',   patterns: ['personal_information/account_information', 'account_information.json'] },
-  { key: 'followers', patterns: ['followers_and_following/followers_1', 'followers_1.json', 'followers.json'] },
-  { key: 'following', patterns: ['followers_and_following/following',   'following.json'] },
-  { key: 'posts',     patterns: ['content/posts_1', 'posts_1.json', 'media.json'] },
-  { key: 'reels',     patterns: ['content/reels.json', 'reels_videos.json'] },
-  { key: 'stories',   patterns: ['content/stories.json'] },
-  { key: 'likes',     patterns: ['likes/liked_posts', 'liked_posts.json'] },
-  { key: 'comments',  patterns: ['comments/post_comments_1', 'post_comments_1.json'] },
+  // 개인정보
+  { key: 'personal',       patterns: ['personal_information/personal_information/personal_information', 'personal_information.json'] },
+  { key: 'professional',   patterns: ['personal_information/personal_information/professional_information', 'professional_information.json'] },
+  // 팔로워/팔로잉
+  { key: 'followers',      patterns: ['connections/followers_and_following/followers_1', 'followers_and_following/followers_1', 'followers_1.json'] },
+  { key: 'following',      patterns: ['connections/followers_and_following/following',   'followers_and_following/following',   'following.json'] },
+  // 미디어
+  { key: 'posts',          patterns: ['your_instagram_activity/media/posts_1', 'content/posts_1', 'posts_1.json'] },
+  { key: 'reels',          patterns: ['your_instagram_activity/media/reels',   'content/reels',   'reels.json'] },
+  { key: 'stories',        patterns: ['your_instagram_activity/media/stories', 'content/stories', 'stories.json'] },
+  // 인사이트
+  { key: 'contentInsights',patterns: ['logged_information/past_instagram_insights/content_interactions', 'past_instagram_insights/content_interactions'] },
+  { key: 'audienceInsights',patterns: ['logged_information/past_instagram_insights/audience_insights',   'past_instagram_insights/audience_insights'] },
+  { key: 'postsInsights',  patterns: ['logged_information/past_instagram_insights/posts',                'past_instagram_insights/posts'] },
+  // 좋아요/저장
+  { key: 'likes',          patterns: ['your_instagram_activity/likes/liked_posts', 'likes/liked_posts'] },
+  { key: 'saved',          patterns: ['your_instagram_activity/saved/saved_posts', 'saved/saved_posts'] },
 ];
 
 async function processZip(file) {
@@ -571,250 +679,328 @@ async function processZip(file) {
   try {
     statusEl.textContent = 'ZIP 압축 해제 중...';
     const zip = await JSZip.loadAsync(file);
-
-    // ZIP 안의 모든 파일 경로 수집
     const allPaths = Object.keys(zip.files).filter(p => !zip.files[p].dir);
 
-    // 타겟 파일 매칭
     const matched = {};
     for (const target of IG_FILE_TARGETS) {
       for (const pattern of target.patterns) {
-        const found = allPaths.find(p => p.toLowerCase().includes(pattern.toLowerCase().replace('.json','')));
+        const pat = pattern.toLowerCase().replace('.json', '');
+        const found = allPaths.find(p => p.toLowerCase().replace('.json','').endsWith(pat) || p.toLowerCase().includes(pat));
         if (found) { matched[target.key] = found; break; }
       }
     }
 
     statusEl.textContent = `JSON 파일 ${Object.keys(matched).length}개 발견 — 파싱 중...`;
 
-    // 매칭된 파일들 읽기
     const jsons = {};
     for (const [key, path] of Object.entries(matched)) {
       try {
         const text = await zip.files[path].async('text');
         jsons[key] = JSON.parse(text);
-      } catch(e) { /* 파싱 실패한 파일은 스킵 */ }
+      } catch(e) {}
     }
 
-    // posts_1이 없으면 content/ 아래 JSON 파일들 모두 시도
-    if (!jsons.posts) {
-      const contentFiles = allPaths.filter(p => p.includes('content/') && p.endsWith('.json'));
-      for (const p of contentFiles) {
-        try {
-          const text = await zip.files[p].async('text');
-          const j = JSON.parse(text);
-          if (Array.isArray(j) && j[0]?.media) { jsons.posts = j; break; }
-        } catch(e) {}
-      }
-    }
+    // messages 폴더 — DM 개수
+    const msgFolders = allPaths.filter(p => p.includes('/messages/inbox/') && p.endsWith('message_1.json'));
+    jsons._dmCount = msgFolders.length;
 
-    parsedData = parseInstagramZIP(jsons);
+    parsedData = parseInstagramZIP(jsons, allPaths);
     showParsedResult(file.name + ' (ZIP)', parsedData);
     statusEl.textContent = `✅ ZIP 분석 완료 — ${Object.keys(matched).length}개 파일 처리됨`;
 
   } catch(err) {
-    statusEl.textContent = '⚠️ ZIP 파일 처리 중 오류가 발생했어요';
+    document.getElementById('fileMeta').textContent = '⚠️ ZIP 처리 오류 — 파일을 확인해 주세요';
     console.error(err);
   }
 }
 
 // ──────────────────────────────
-// ZIP 전용 통합 파서
+// ZIP 통합 파서
 // ──────────────────────────────
-function parseInstagramZIP(jsons) {
-  const data = {
-    username: null, followers: null, following: null, posts: null,
-    bio: null, hasLink: null, avgLikes: null, avgComments: null, hashtagCount: null,
-    reelsPosts: null, weeklyPosts: null,
+function fixStr(s) {
+  if (typeof s !== 'string') return s;
+  try { return decodeURIComponent(escape(s)); } catch(e) { return s; }
+}
+
+function parseInstagramZIP(jsons, allPaths) {
+  const d = {
+    username: null, bio: null, hasLink: null,
+    followers: null, following: null,
+    posts: null, reelsPosts: null, storyCount: null, dmCount: null,
+    weeklyPosts: null, opDays: null,
+    avgLikes: null, avgSaves: null, avgShares: null, avgReach: null, avgComments: null,
+    avgImpressions: null,
+    engagementRate: null, saveRate: null, shareRate: null,
+    growthRate: null, nonFollowerReach: null,
+    topHashtags: [], suggestHashtags: [],
+    gender: { male: null, female: null },
+    ageGroups: [],
+    cities: [],
+    weekdayActivity: null,   // {Mon:n, Tue:n, ...}
+    topPosts: [],
+    niche: null,
   };
 
+  // ── 개인정보
   try {
-    // 개인 정보
     const pi = jsons.personal;
     if (pi?.profile_user?.[0]?.string_map_data) {
       const u = pi.profile_user[0].string_map_data;
-      data.username = u['Username']?.value || null;
-      data.bio      = u['Bio']?.value || null;
-      const web     = u['Website']?.value;
-      data.hasLink  = (web && web.trim()) ? 'yes' : 'no';
+      d.username = fixStr(u['Username']?.value) || null;
+      d.bio      = fixStr(u['Bio']?.value)      || null;
+      const web  = fixStr(u['Website']?.value);
+      d.hasLink  = (web && web.trim()) ? 'yes' : 'no';
     }
+  } catch(e) {}
 
-    // 계정 인사이트 (팔로워/팔로잉)
-    const ai = jsons.account;
-    if (ai?.profile_account_insights?.[0]?.string_map_data) {
-      const s = ai.profile_account_insights[0].string_map_data;
-      data.followers = parseInt(s['Followers Count']?.value) || null;
-      data.following = parseInt(s['Following Count']?.value) || null;
-    }
+  // ── 팔로워 수
+  try {
+    const fl = jsons.followers;
+    if (Array.isArray(fl)) d.followers = fl.length;
+    else if (fl?.relationships_followers) d.followers = fl.relationships_followers.length;
+  } catch(e) {}
 
-    // 팔로워 수 (followers_1.json — 배열)
-    if (data.followers === null) {
-      const fl = jsons.followers;
-      if (Array.isArray(fl)) data.followers = fl.length;
-      else if (fl?.relationships_followers) data.followers = fl.relationships_followers.length;
-    }
+  // ── 팔로잉 수
+  try {
+    const fg = jsons.following;
+    if (fg?.relationships_following) d.following = fg.relationships_following.length;
+    else if (Array.isArray(fg)) d.following = fg.length;
+  } catch(e) {}
 
-    // 팔로잉 수 (following.json)
-    if (data.following === null) {
-      const fg = jsons.following;
-      if (Array.isArray(fg)) data.following = fg.length;
-      else if (fg?.relationships_following) data.following = fg.relationships_following.length;
-    }
+  // ── DM 수
+  d.dmCount = jsons._dmCount || 0;
 
-    // 게시물 분석 (posts_1.json)
+  // ── 게시물 파싱
+  try {
     const rawPosts = jsons.posts;
-    const postArr = Array.isArray(rawPosts) ? rawPosts : rawPosts?.ig_media_or_profile_photo;
+    const postArr  = Array.isArray(rawPosts) ? rawPosts : rawPosts?.ig_media_or_profile_photo;
     if (Array.isArray(postArr) && postArr.length > 0) {
-      data.posts = postArr.length;
-      let totalLikes = 0, totalComments = 0, likeCount = 0;
-      let allHashtags = 0, hashtagPosts = 0;
+      d.posts = postArr.length;
+      let totalLikes = 0, totalComments = 0, lcnt = 0;
+      let allTags = {}, tagPosts = 0;
       const timestamps = [];
 
       postArr.forEach(p => {
         const media = p.media || [p];
         media.forEach(m => {
-          if (m.like_count    !== undefined) { totalLikes    += m.like_count;    likeCount++; }
+          if (m.like_count    !== undefined) { totalLikes    += m.like_count;    lcnt++; }
           if (m.comment_count !== undefined)   totalComments += m.comment_count;
-          const cap  = m.title || m.caption || '';
-          const tags = (cap.match(/#\S+/g) || []).length;
-          if (tags > 0) { allHashtags += tags; hashtagPosts++; }
+          const cap  = fixStr(m.title || m.caption || '');
+          const tags = cap.match(/#[\S]+/g) || [];
+          if (tags.length) { tagPosts++; tags.forEach(t => { allTags[t] = (allTags[t]||0)+1; }); }
           if (m.creation_timestamp) timestamps.push(m.creation_timestamp);
         });
         if (p.creation_timestamp) timestamps.push(p.creation_timestamp);
       });
 
-      if (likeCount > 0) {
-        data.avgLikes    = Math.round(totalLikes / likeCount);
-        data.avgComments = Math.round(totalComments / likeCount);
+      if (lcnt > 0) {
+        d.avgLikes    = Math.round(totalLikes    / lcnt);
+        d.avgComments = Math.round(totalComments / lcnt);
       }
-      if (hashtagPosts > 0) data.hashtagCount = Math.round(allHashtags / hashtagPosts);
+      // 상위 해시태그 추출
+      d.topHashtags = Object.entries(allTags)
+        .sort((a,b) => b[1]-a[1]).slice(0,12)
+        .map(e => fixStr(e[0]));
 
-      // 주간 업로드 빈도
+      // 주간 업로드
       if (timestamps.length >= 2) {
-        const sorted = timestamps.slice().sort((a,b) => b - a);
-        const days = (sorted[0] - sorted[sorted.length-1]) / 86400;
-        data.weeklyPosts = Math.round((timestamps.length / Math.max(days, 1)) * 7 * 10) / 10;
+        const ts = timestamps.slice().sort((a,b) => b - a);
+        const span = (ts[0] - ts[ts.length-1]) / 86400;
+        d.opDays     = Math.round(span);
+        d.weeklyPosts = Math.round((timestamps.length / Math.max(span,1)) * 7 * 10) / 10;
       }
     }
+  } catch(e) {}
 
-    // 릴스 수 (reels.json)
-    const reelsArr = jsons.reels;
-    if (Array.isArray(reelsArr)) data.reelsPosts = reelsArr.length;
-    else if (reelsArr?.ig_reels_media) data.reelsPosts = reelsArr.ig_reels_media.length;
+  // ── 릴스 수
+  try {
+    const ra = jsons.reels;
+    if (Array.isArray(ra)) d.reelsPosts = ra.length;
+    else if (ra?.ig_reels_media) d.reelsPosts = ra.ig_reels_media.length;
+  } catch(e) {}
 
-  } catch(e) {
-    console.warn('ZIP 파싱 오류:', e);
+  // ── 스토리 수
+  try {
+    const sa = jsons.stories;
+    if (Array.isArray(sa)) d.storyCount = sa.length;
+    else if (sa?.ig_stories) d.storyCount = sa.ig_stories.length;
+  } catch(e) {}
+
+  // ── 콘텐츠 인사이트 (content_interactions.json)
+  try {
+    const ci = jsons.contentInsights;
+    const interactions = ci?.organic_insights_total_content_interactions
+                      || ci?.organic_insights_content_interactions
+                      || [];
+    let totalReach = 0, totalImpressions = 0, totalSaves = 0, totalShares = 0, cnt = 0;
+
+    interactions.forEach(item => {
+      const entries = item.entries || [];
+      const name = (item.name || '').toLowerCase();
+      entries.forEach(entry => {
+        const smd = entry.string_map_data || {};
+        const val = parseInt(smd['Value']?.value || smd['Reach']?.value || 0);
+        if (name.includes('reach'))      { totalReach       += val; cnt++; }
+        if (name.includes('impression')) { totalImpressions += val; }
+        if (name.includes('save'))       { totalSaves       += val; }
+        if (name.includes('share'))      { totalShares      += val; }
+      });
+    });
+    if (cnt > 0) d.avgReach       = Math.round(totalReach       / cnt);
+    if (cnt > 0) d.avgImpressions = Math.round(totalImpressions / cnt);
+    if (cnt > 0) d.avgSaves       = Math.round(totalSaves       / cnt);
+    if (cnt > 0) d.avgShares      = Math.round(totalShares      / cnt);
+  } catch(e) {}
+
+  // ── 개별 게시물 인사이트 (posts.json)
+  try {
+    const pi2 = jsons.postsInsights;
+    const mediaArr = pi2?.organic_insights_individual_media
+                  || (Array.isArray(pi2) ? pi2 : null);
+    if (Array.isArray(mediaArr) && mediaArr.length > 0) {
+      let sumReach = 0, sumLikes = 0, sumSaves = 0, sumShares = 0, sumImpr = 0, cnt = 0;
+      const posts = [];
+      mediaArr.forEach(item => {
+        const mmd = item.media_map_data || item.string_map_data || {};
+        const reach  = parseInt(mmd['Reach']?.value       || mmd['reach']?.value       || 0);
+        const likes  = parseInt(mmd['Likes']?.value       || mmd['likes']?.value       || 0);
+        const saves  = parseInt(mmd['Saves']?.value       || mmd['saves']?.value       || 0);
+        const shares = parseInt(mmd['Shares']?.value      || mmd['shares']?.value      || 0);
+        const impr   = parseInt(mmd['Impressions']?.value || mmd['impressions']?.value || 0);
+        const cap    = fixStr(mmd['Caption']?.value || mmd['caption']?.value || '');
+        if (reach > 0 || likes > 0) {
+          sumReach += reach; sumLikes += likes; sumSaves += saves; sumShares += shares; sumImpr += impr; cnt++;
+          posts.push({ caption: cap, reach, likes, saves, shares });
+        }
+      });
+      if (cnt > 0) {
+        if (!d.avgReach || d.avgReach === 0) d.avgReach       = Math.round(sumReach  / cnt);
+        if (!d.avgLikes || d.avgLikes === 0) d.avgLikes       = Math.round(sumLikes  / cnt);
+        if (!d.avgSaves || d.avgSaves === 0) d.avgSaves       = Math.round(sumSaves  / cnt);
+        if (!d.avgShares|| d.avgShares=== 0) d.avgShares      = Math.round(sumShares / cnt);
+        d.avgImpressions = Math.round(sumImpr / cnt);
+      }
+      // 상위 게시물 (좋아요+저장+공유 기준)
+      d.topPosts = posts.sort((a,b) => (b.likes+b.saves+b.shares)-(a.likes+a.saves+a.shares)).slice(0,3);
+    }
+  } catch(e) {}
+
+  // ── 오디언스 인사이트 (audience_insights.json)
+  try {
+    const au = jsons.audienceInsights;
+    const sections = au?.organic_insights_audience || [];
+    sections.forEach(section => {
+      const name = (section.name || section.title || '').toLowerCase();
+      const entries = section.entries || [];
+
+      // 성별
+      if (name.includes('gender') || name.includes('age')) {
+        let maleTotal = 0, femaleTotal = 0;
+        const ageMap = {};
+        entries.forEach(entry => {
+          const smd = entry.string_map_data || {};
+          const gender = fixStr(smd['Gender']?.value || '');
+          const age    = fixStr(smd['Age']?.value    || '');
+          const val    = parseInt(smd['Value']?.value || 0);
+          if (gender.toUpperCase() === 'M' || gender === '남성') maleTotal += val;
+          if (gender.toUpperCase() === 'F' || gender === '여성') femaleTotal += val;
+          if (age) ageMap[age] = (ageMap[age]||0) + val;
+        });
+        const total = maleTotal + femaleTotal;
+        if (total > 0) {
+          d.gender.male   = Math.round(maleTotal   / total * 1000) / 10;
+          d.gender.female = Math.round(femaleTotal / total * 1000) / 10;
+        }
+        d.ageGroups = Object.entries(ageMap)
+          .sort((a,b) => b[1]-a[1])
+          .map(([age, val]) => ({ age, val, pct: total > 0 ? Math.round(val/total*1000)/10 : 0 }));
+      }
+
+      // 도시
+      if (name.includes('city')) {
+        const cityTotal = entries.reduce((s,e) => s + parseInt(e.string_map_data?.['Value']?.value||0), 0);
+        d.cities = entries
+          .map(e => ({
+            city: fixStr(e.string_map_data?.['City']?.value || e.string_map_data?.['Value']?.value || ''),
+            val:  parseInt(e.string_map_data?.['Value']?.value || 0),
+          }))
+          .filter(c => c.city && c.val)
+          .sort((a,b) => b.val-a.val)
+          .slice(0,5)
+          .map(c => ({ ...c, pct: cityTotal > 0 ? Math.round(c.val/cityTotal*1000)/10 : 0 }));
+      }
+
+      // 요일 활동
+      if (name.includes('active') || name.includes('hour') || name.includes('weekday')) {
+        const wdMap = { Monday:0, Tuesday:0, Wednesday:0, Thursday:0, Friday:0, Saturday:0, Sunday:0 };
+        entries.forEach(entry => {
+          const smd = entry.string_map_data || {};
+          const wd  = fixStr(smd['Weekday']?.value || smd['Day']?.value || '');
+          const val = parseInt(smd['Value']?.value || 0);
+          const key = Object.keys(wdMap).find(k => k.toLowerCase().startsWith(wd.toLowerCase().slice(0,3)));
+          if (key) wdMap[key] += val;
+        });
+        d.weekdayActivity = wdMap;
+      }
+    });
+  } catch(e) { console.warn('오디언스 파싱 오류:', e); }
+
+  // ── 파생 지표 계산
+  if (d.avgLikes !== null && d.followers) {
+    const saves  = d.avgSaves   || 0;
+    const shares = d.avgShares  || 0;
+    const comments = d.avgComments || 0;
+    d.engagementRate  = d.followers > 0 ? ((d.avgLikes + comments) / d.followers * 100) : 0;
+    d.saveRate        = d.avgReach  > 0 ? (saves  / d.avgReach * 100) : 0;
+    d.shareRate       = d.avgReach  > 0 ? (shares / d.avgReach * 100) : 0;
+    d.nonFollowerReach= d.avgReach && d.followers ? Math.max(0, Math.round((1 - d.followers/d.avgReach)*100)) : null;
   }
 
-  return data;
+  return d;
 }
 
 // ──────────────────────────────
-// Instagram JSON 파싱
+// JSON 단일 파일 파서 (fallback)
 // ──────────────────────────────
 function parseInstagramJSON(json) {
-  const data = {
-    username: null,
-    followers: null,
-    following: null,
-    posts: null,
-    bio: null,
-    hasLink: null,
-    avgLikes: null,
-    avgComments: null,
-    hashtagCount: null,
-  };
-
+  const d = { username:null, followers:null, following:null, posts:null, bio:null, hasLink:null, avgLikes:null, avgComments:null, hashtagCount:null, topHashtags:[], gender:{male:null,female:null}, ageGroups:[], cities:[], weekdayActivity:null, topPosts:[], niche:null };
   try {
-    // personal_information.json
     if (json.profile_user) {
       const u = json.profile_user[0]?.string_map_data;
       if (u) {
-        data.username = u['Username']?.value || null;
-        data.bio = u['Bio']?.value || null;
-        const link = u['Website']?.value;
-        data.hasLink = link && link.trim() !== '' ? 'yes' : 'no';
+        d.username = fixStr(u['Username']?.value);
+        d.bio      = fixStr(u['Bio']?.value);
+        const lnk  = fixStr(u['Website']?.value);
+        d.hasLink  = lnk && lnk.trim() ? 'yes' : 'no';
       }
     }
-
-    // account_information.json
-    if (json.profile_account_insights) {
-      const insight = json.profile_account_insights[0]?.string_map_data;
-      if (insight) {
-        data.followers = parseInt(insight['Followers Count']?.value) || null;
-        data.following = parseInt(insight['Following Count']?.value) || null;
-      }
-    }
-
-    // followers_1.json
-    if (Array.isArray(json) && json[0]?.relationships_followers !== undefined) {
-      data.followers = json.length;
-    }
-    if (Array.isArray(json) && json.length > 0 && json[0]?.string_list_data) {
-      data.followers = json.length;
-    }
-
-    // followers.json 또는 following.json (배열 형태)
-    if (json.relationships_followers) {
-      data.followers = json.relationships_followers.length;
-    }
-    if (json.relationships_following) {
-      data.following = json.relationships_following.length;
-    }
-
-    // liked_posts.json → 인게이지먼트 추정
-    if (json.likes_media_likes) {
-      // 좋아요 누른 게시물 수로 활동성 파악
-    }
-
-    // posts_1.json → 게시물 수, 해시태그, 좋아요 분석
-    if (json.ig_media_or_profile_photo || Array.isArray(json)) {
-      const posts = Array.isArray(json) ? json : json.ig_media_or_profile_photo;
-      if (Array.isArray(posts) && posts.length > 0) {
-        data.posts = posts.length;
-
-        // 좋아요/댓글 평균
-        let totalLikes = 0, totalComments = 0, likeCount = 0;
-        let allHashtags = 0, hashtagPosts = 0;
-
-        posts.forEach(p => {
-          const media = p.media || [p];
-          media.forEach(m => {
-            if (m.like_count !== undefined) { totalLikes += m.like_count; likeCount++; }
-            if (m.comment_count !== undefined) totalComments += m.comment_count;
-            const cap = m.title || m.caption || '';
-            const tags = (cap.match(/#\S+/g) || []).length;
-            if (tags > 0) { allHashtags += tags; hashtagPosts++; }
-          });
-        });
-
-        if (likeCount > 0) {
-          data.avgLikes = Math.round(totalLikes / likeCount);
-          data.avgComments = Math.round(totalComments / likeCount);
-        }
-        if (hashtagPosts > 0) data.hashtagCount = Math.round(allHashtags / hashtagPosts);
-      }
-    }
-
-  } catch(e) {
-    console.warn('파싱 중 일부 오류:', e);
-  }
-
-  return data;
+    if (json.relationships_followers) d.followers = json.relationships_followers.length;
+    if (json.relationships_following) d.following = json.relationships_following.length;
+    if (Array.isArray(json) && json[0]?.string_list_data) d.followers = json.length;
+  } catch(e) {}
+  return d;
 }
 
+// ──────────────────────────────
+// 파싱 결과 미리보기
+// ──────────────────────────────
 function showParsedResult(filename, data) {
   document.getElementById('fileMeta').textContent = '파싱 완료 — 아래에서 확인하세요';
   document.getElementById('fileLoaded').style.display = 'flex';
 
   const items = [
-    { label: '팔로워',     val: data.followers    !== null ? data.followers.toLocaleString()    : '—' },
-    { label: '팔로잉',     val: data.following    !== null ? data.following.toLocaleString()    : '—' },
-    { label: '게시물 수',  val: data.posts        !== null ? data.posts.toLocaleString()        : '—' },
-    { label: '릴스 수',    val: data.reelsPosts   !== null ? data.reelsPosts                    : '—' },
-    { label: '주간 업로드', val: data.weeklyPosts  !== null ? data.weeklyPosts + '회'            : '—' },
-    { label: '평균 좋아요', val: data.avgLikes     !== null ? data.avgLikes                     : '—' },
-    { label: '평균 댓글',  val: data.avgComments  !== null ? data.avgComments                   : '—' },
-    { label: '해시태그',   val: data.hashtagCount !== null ? data.hashtagCount + '개'            : '—' },
+    { label:'팔로워',      val: data.followers    != null ? data.followers.toLocaleString()+'명' : '—' },
+    { label:'팔로잉',      val: data.following    != null ? data.following.toLocaleString()+'명' : '—' },
+    { label:'게시물',      val: data.posts        != null ? data.posts+'개'                       : '—' },
+    { label:'릴스',        val: data.reelsPosts   != null ? data.reelsPosts+'개'                  : '—' },
+    { label:'스토리',      val: data.storyCount   != null ? data.storyCount+'개'                  : '—' },
+    { label:'DM 대화',     val: data.dmCount      != null ? data.dmCount+'개'                     : '—' },
+    { label:'주간 업로드', val: data.weeklyPosts  != null ? data.weeklyPosts+'회'                 : '—' },
+    { label:'평균 좋아요', val: data.avgLikes     != null ? data.avgLikes                         : '—' },
+    { label:'평균 저장',   val: data.avgSaves     != null ? data.avgSaves                         : '—' },
+    { label:'평균 공유',   val: data.avgShares    != null ? data.avgShares                        : '—' },
+    { label:'평균 노출',   val: data.avgReach     != null ? data.avgReach                         : '—' },
+    { label:'운영 기간',   val: data.opDays       != null ? data.opDays+'일'                      : '—' },
   ];
 
   document.getElementById('parsedGrid').innerHTML = items.map(i => `
@@ -828,181 +1014,355 @@ function showParsedResult(filename, data) {
 }
 
 // ──────────────────────────────
-// 분석 메인 함수
+// 해시태그 추천 데이터
+// ──────────────────────────────
+const HASHTAG_DB = {
+  '독서': ['#독서스타그램', '#책추천', '#책읽는사람', '#북스타그램', '#독서일기', '#책과함께', '#독서모임', '#오늘의책', '#책그램', '#감성독서', '#readinglife', '#bookstagram'],
+  '음악': ['#음악추천', '#플레이리스트', '#음악감상', '#뮤직그램', '#음악일기', '#노래추천', '#감성음악', '#playlist', '#musiclover', '#음악취향', '#감성플리', '#nowplaying'],
+  '감성': ['#감성사진', '#감성일상', '#감성글귀', '#일상기록', '#감성취향', '#취향저격', '#일상감성', '#감성스타그램', '#aesthetic', '#moodboard', '#감성공간', '#감성귀여움'],
+  '카페': ['#카페스타그램', '#카페투어', '#카페그램', '#카페인테리어', '#브런치', '#카페라떼', '#커피스타그램', '#카페탐방', '#cafestagram', '#coffeetime', '#카페일상', '#감성카페'],
+  '여행': ['#여행스타그램', '#국내여행', '#여행일기', '#여행사진', '#여행그램', '#여행기록', '#감성여행', '#travelgram', '#travelphotography', '#여행계획', '#여행코스', '#소도시여행'],
+  '맛집': ['#맛집탐방', '#맛스타그램', '#먹스타그램', '#오늘뭐먹지', '#맛집추천', '#푸드스타그램', '#foodstagram', '#먹방', '#맛집일상', '#dinner', '#점심메뉴', '#맛집기록'],
+  '모임': ['#독서모임', '#취미모임', '#소모임', '#대전모임', '#동네모임', '#감성모임', '#취향공유', '#취미생활', '#독서클럽', '#reading_club', '#문화모임', '#소셜클럽'],
+  '기타': ['#일상', '#데일리', '#소통해요', '#맞팔', '#선팔환영', '#감성', '#취미', '#likeforlikes', '#followme', '#daily', '#인스타그램', '#좋아요'],
+};
+
+function guessNiche(topHashtags, nicheInput) {
+  const combined = [...topHashtags.map(t => t.toLowerCase()), (nicheInput||'').toLowerCase()].join(' ');
+  if (combined.includes('독서') || combined.includes('책') || combined.includes('book')) return '독서';
+  if (combined.includes('음악') || combined.includes('플레이리스트') || combined.includes('music')) return '음악';
+  if (combined.includes('카페') || combined.includes('coffee') || combined.includes('cafe')) return '카페';
+  if (combined.includes('여행') || combined.includes('travel')) return '여행';
+  if (combined.includes('맛집') || combined.includes('food')) return '맛집';
+  if (combined.includes('모임') || combined.includes('소모임')) return '모임';
+  if (combined.includes('감성') || combined.includes('aesthetic')) return '감성';
+  return '기타';
+}
+
+// ──────────────────────────────
+// 분석 메인
 // ──────────────────────────────
 function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
 
 function analyze() {
-  let followers, following, posts, months, avgLikes, avgComments;
-  let weeklyPosts, reelsRatio, hashtagCount, bio, hasLink, hasHighlight, storyFreq, accountType, niche;
+  let D = {};  // working data object
 
   if (currentTab === 'upload' && parsedData) {
-    followers    = parsedData.followers || 0;
-    following    = parsedData.following || 0;
-    posts        = parseFloat(document.getElementById('u-totalPosts').value) || parsedData.posts || 0;
-    months       = 12; // 기본값
-    avgLikes     = parsedData.avgLikes || 0;
-    avgComments  = parsedData.avgComments || 0;
-    weeklyPosts  = posts > 0 ? Math.round((posts / 52)) : 0;
-    const reelsPosts_u = parseFloat(document.getElementById('u-reelsPosts').value) || 0;
-    reelsRatio   = posts > 0 ? Math.round((reelsPosts_u / posts) * 100) : 0;
-    hashtagCount = parsedData.hashtagCount || 0;
-    bio          = parsedData.bio || '';
-    hasLink      = parsedData.hasLink || 'no';
-    hasHighlight = 'no';
-    storyFreq    = document.getElementById('u-storyFreq').value;
-    accountType  = document.getElementById('u-accountType').value;
-    niche        = document.getElementById('u-niche').value.trim();
+    D = { ...parsedData };
+    D.niche       = getVal('u-niche').trim();
+    D.accountType = getVal('u-accountType');
   } else {
-    followers    = getNum('followers');
-    following    = getNum('following');
-    posts        = getNum('posts');
-    months       = getNum('months');
-    avgLikes     = getNum('avgLikes');
-    avgComments  = getNum('avgComments');
-    weeklyPosts  = getNum('weeklyPosts');
-    const reelsPosts_m = getNum('reelsPosts');
-    reelsRatio   = posts > 0 ? Math.round((reelsPosts_m / posts) * 100) : 0;
-    hashtagCount = getNum('hashtagCount');
-    bio          = getVal('bio').trim();
-    hasLink      = getVal('hasLink');
-    hasHighlight = getVal('hasHighlight');
-    storyFreq    = getVal('storyFreq');
-    accountType  = getVal('accountType');
-    niche        = getVal('niche').trim();
+    D.followers      = getNum('followers');
+    D.following      = getNum('following');
+    D.posts          = getNum('posts');
+    D.opDays         = getNum('opDays');
+    D.avgLikes       = getNum('avgLikes');
+    D.avgSaves       = getNum('avgSaves');
+    D.avgShares      = getNum('avgShares');
+    D.avgReach       = getNum('avgReach');
+    D.weeklyPosts    = getNum('weeklyPosts');
+    D.reelsPosts     = getNum('reelsPosts');
+    D.storyCount     = getNum('storyCount');
+    D.hashtagCount   = getNum('hashtagCount');
+    D.growthRate     = getNum('growthRate');
+    D.nonFollowerReach = getNum('nonFollowerReach');
+    D.gender         = { male: getNum('maleRatio'), female: 100 - getNum('maleRatio') };
+    D.niche          = getVal('niche').trim();
+    D.accountType    = getVal('accountType');
+    D.topHashtags    = [];
+    D.cities         = [];
+    D.weekdayActivity= null;
+    D.topPosts       = [];
+
+    // 파생값
+    if (D.followers > 0) {
+      D.engagementRate = ((D.avgLikes) / D.followers * 100);
+      D.saveRate       = D.avgReach > 0 ? (D.avgSaves  / D.avgReach * 100) : 0;
+      D.shareRate      = D.avgReach > 0 ? (D.avgShares / D.avgReach * 100) : 0;
+    }
   }
 
-  if (!followers) { alert('팔로워 수 정보가 없어요. 파일을 다시 확인하거나 수동 입력 탭을 이용해 주세요.'); return; }
+  if (!D.followers) {
+    alert('팔로워 수 정보가 없어요. 파일을 확인하거나 수동 입력을 이용해 주세요.'); return;
+  }
 
-  // 지표 계산
-  const engagementRate = followers > 0 ? ((avgLikes + avgComments) / followers) * 100 : 0;
-  const ffRatio = following > 0 ? followers / following : 0;
+  const niche   = guessNiche(D.topHashtags || [], D.niche);
+  D.niche       = niche;
 
-  // 점수
-  let score = 0;
-  let statData = [];
+  // ────── 점수 계산 ──────
+  const er        = D.engagementRate || 0;
+  const sr        = D.saveRate       || 0;
+  const shr       = D.shareRate      || 0;
+  const wp        = D.weeklyPosts    || 0;
+  const ffRatio   = D.following > 0 ? D.followers / D.following : 1;
+  const gr        = D.growthRate     || 0;
+  const nfr       = D.nonFollowerReach || 0;
 
-  let erScore = engagementRate >= 5 ? 20 : engagementRate >= 3 ? 15 : engagementRate >= 1 ? 9 : 4;
-  score += erScore;
-  statData.push({ name: '인게이지먼트율', val: engagementRate.toFixed(2) + '%', score: erScore, max: 20,
-    desc: '팔로워 중 실제로 반응(좋아요·댓글)한 비율이에요. 3% 이상이면 좋고, 1% 미만이면 낮은 편이에요.',
-    tip: '(좋아요 + 댓글) ÷ 팔로워 × 100\n→ 3% 이상 우수 / 1~3% 보통 / 1% 미만 개선 필요' });
+  // ① Engagement (40점)
+  const erScore = er >= 8 ? 40 : er >= 5 ? 34 : er >= 3 ? 26 : er >= 1.5 ? 18 : er > 0 ? 10 : 5;
 
-  let freqScore = weeklyPosts >= 3 && weeklyPosts <= 5 ? 20 : weeklyPosts >= 1 ? 12 : 5;
-  score += freqScore;
-  statData.push({ name: '업로드 빈도', val: weeklyPosts + '회/주', score: freqScore, max: 20,
-    desc: '알고리즘은 꾸준히 올리는 계정을 선호해요. 주 3~5회가 가장 이상적이에요.',
-    tip: '주 1~2회: 최소 / 주 3~5회: 최적 / 주 6회 이상: 품질 저하 위험' });
+  // ② Save+Share (25점)
+  const ssScore_save  = sr  >= 5 ? 14 : sr  >= 3 ? 11 : sr  >= 1.5 ? 8  : sr  > 0 ? 5 : 2;
+  const ssScore_share = shr >= 8 ? 11 : shr >= 5 ? 9  : shr >= 3   ? 6  : shr > 0 ? 4 : 2;
+  const ssScore = Math.min(ssScore_save + ssScore_share, 25);
 
-  let reelsScore = reelsRatio >= 30 && reelsRatio <= 60 ? 20 : reelsRatio >= 15 ? 13 : reelsRatio > 60 ? 15 : 6;
-  score += reelsScore;
-  statData.push({ name: '릴스 비율', val: reelsRatio + '%', score: reelsScore, max: 20,
-    desc: '릴스(짧은 영상)는 현재 인스타 알고리즘에서 가장 높은 노출을 받아요. 전체 게시물의 30~60%를 권장해요.',
-    tip: '30% 미만: 노출 기회 손실\n30~60%: 최적 구간\n60% 초과: 피드 다양성 부족' });
+  // ③ Growth (20점)
+  const grScore_growth = gr  >= 10 ? 10 : gr  >= 5 ? 8 : gr  >= 2 ? 5  : gr  > 0 ? 3 : 2;
+  const grScore_reach  = nfr >= 80 ? 10 : nfr >= 50 ? 7 : nfr >= 20 ? 4 : nfr > 0 ? 2 : (ffRatio >= 1.5 ? 6 : 3);
+  const grScore = Math.min(grScore_growth + grScore_reach, 20);
 
-  let tagScore = hashtagCount >= 5 && hashtagCount <= 15 ? 20 : hashtagCount > 0 ? 12 : 4;
-  score += tagScore;
-  statData.push({ name: '해시태그 수', val: hashtagCount + '개', score: tagScore, max: 20,
-    desc: '해시태그는 새 팔로워에게 노출되는 통로예요. 너무 많으면 스팸으로 인식될 수 있어서 5~15개가 적당해요.',
-    tip: '0개: 노출 거의 없음\n5~15개: 최적\n20개 이상: 스팸 위험' });
+  // ④ Consistency (15점)
+  const conScore = wp >= 5 ? 15 : wp >= 3 ? 12 : wp >= 2 ? 8 : wp >= 1 ? 5 : 2;
 
-  let profileScore = 0;
-  if (bio.length >= 30) profileScore += 7; else if (bio.length > 0) profileScore += 4;
-  if (hasLink === 'yes') profileScore += 7;
-  if (hasHighlight === 'yes') profileScore += 6;
-  score += profileScore;
-  statData.push({ name: '프로필 완성도', val: profileScore + '/20', score: profileScore, max: 20,
-    desc: '바이오·링크·하이라이트가 갖춰진 프로필은 방문자가 팔로우로 이어질 확률이 높아요.',
-    tip: '바이오(최대 7점) + 링크(7점) + 하이라이트(6점) = 총 20점' });
+  const total = Math.min(erScore + ssScore + grScore + conScore, 100);
 
-  const totalScore = Math.round(score);
-  let label = totalScore >= 85 ? '🏆 최상위 — 지금 방향 그대로!' :
-              totalScore >= 70 ? '🌟 우수 — 조금만 다듬으면 폭발적 성장 가능' :
-              totalScore >= 50 ? '📈 성장 중 — 몇 가지 개선으로 노출 크게 늘릴 수 있어요' :
-              totalScore >= 30 ? '🛠️ 개선 필요 — 아래 전략을 차근차근 적용해 보세요' :
-                                 '⚠️ 기초부터 — 프로필과 콘텐츠 구조부터 잡아요';
+  let grade = '', gradeColor = '';
+  if (total >= 85) { grade = '🔥 인플루언서급'; gradeColor = '#833ab4'; }
+  else if (total >= 70) { grade = '⭐ 성장 계정';     gradeColor = '#fd1d1d'; }
+  else if (total >= 55) { grade = '📈 발전 중';       gradeColor = '#fcb045'; }
+  else if (total >= 40) { grade = '💡 잠재력 있음';   gradeColor = '#f6ad55'; }
+  else                  { grade = '🌱 초보 단계';     gradeColor = '#68d391'; }
 
-  document.getElementById('totalScore').textContent = totalScore;
-  document.getElementById('scoreLabel').textContent = label;
+  // ── 렌더링 ──
+  document.getElementById('totalScore').textContent = total;
+  document.getElementById('scoreGrade').textContent = grade;
+  document.getElementById('scoreGrade').style.color = gradeColor;
+  document.getElementById('scoreLabel').textContent = `인게이지먼트 ${erScore}/40 · 저장·공유 ${ssScore}/25 · 성장 ${grScore}/20 · 꾸준함 ${conScore}/15`;
 
-  let barsHtml = '';
-  statData.forEach((s, i) => {
-    const pct = Math.round((s.score / s.max) * 100);
-    const cls = pct >= 70 ? 'bar-good' : pct >= 40 ? 'bar-mid' : 'bar-bad';
-    barsHtml += `<div class="stat-row">
+  // 세부 점수 4칸
+  document.getElementById('subScoreGrid').innerHTML = [
+    { name:'인게이지먼트', val:erScore,  max:40, desc:'40점' },
+    { name:'저장·공유',    val:ssScore,  max:25, desc:'25점' },
+    { name:'성장·도달',    val:grScore,  max:20, desc:'20점' },
+    { name:'꾸준함',       val:conScore, max:15, desc:'15점' },
+  ].map(s => `
+    <div class="sub-score-item">
+      <div class="ss-val">${s.val}</div>
+      <div class="ss-name">${s.name}</div>
+      <div class="ss-pct">${s.desc} 만점</div>
+    </div>`).join('');
+
+  // 진행바
+  const bars = [
+    { name:'인게이지먼트율', val:er.toFixed(2)+'%', score:erScore, max:40,
+      desc:'팔로워 대비 좋아요+댓글 비율. 3% 이상이면 우수', tip:'(좋아요+댓글)÷팔로워×100. 5%이상=우수, 3-5%=보통, 3%미만=개선필요' },
+    { name:'저장율',         val:sr.toFixed(2)+'%', score:ssScore_save,  max:14,
+      desc:'노출 대비 저장 비율. 저장은 고품질 지표', tip:'저장÷노출×100. 3%이상=우수' },
+    { name:'공유율',         val:shr.toFixed(2)+'%',score:ssScore_share, max:11,
+      desc:'노출 대비 공유 비율. 공유는 바이럴 핵심 지표', tip:'공유÷노출×100. 5%이상=우수' },
+    { name:'비팔로워 도달',  val:(nfr||'—')+(nfr?'%':''), score:grScore_reach, max:10,
+      desc:'팔로워 아닌 사람에게 콘텐츠가 닿는 비율', tip:'높을수록 알고리즘이 콘텐츠를 확산시키는 중' },
+    { name:'업로드 꾸준함',  val:wp+'회/주',         score:conScore, max:15,
+      desc:'주간 평균 업로드 횟수. 주 3~5회가 최적', tip:'주 1~2회:보통, 주 3~5회:최적, 주 6회이상:품질저하 위험' },
+  ];
+  document.getElementById('statBars').innerHTML = bars.map(b => {
+    const pct    = Math.round((b.score / b.max) * 100);
+    const cls    = pct >= 70 ? 'bar-good' : pct >= 40 ? 'bar-mid' : 'bar-bad';
+    return `
+    <div class="stat-row">
       <div class="stat-name-wrap">
         <div class="stat-name">
-          ${s.name}
-          <span class="tooltip-wrap" onclick="this.classList.toggle('active')">
+          ${b.name}
+          <span class="tooltip-wrap">
             <span class="tooltip-icon">?</span>
-            <div class="tooltip-box">${s.tip ? s.tip.replace(/\n/g,'<br/>') : ''}</div>
+            <span class="tooltip-box">${b.tip}</span>
           </span>
         </div>
-        <div class="stat-desc">${s.desc || ''}</div>
+        <div class="stat-desc">${b.desc}</div>
       </div>
       <div class="bar-wrap"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
-      <span class="stat-val">${s.val}</span>
+      <div class="stat-val">${b.val}</div>
     </div>`;
-  });
-  document.getElementById('statBars').innerHTML = barsHtml;
+  }).join('');
 
-  const keep = [], fix = [], add = [], remove = [];
+  // ── 콘텐츠 성과 ──
+  const cMetrics = [
+    { label:'평균 노출',    val: D.avgReach    ? D.avgReach.toLocaleString()   : '—' },
+    { label:'평균 좋아요',  val: D.avgLikes    ? D.avgLikes                    : '—' },
+    { label:'평균 저장',    val: D.avgSaves    ? D.avgSaves                    : '—' },
+    { label:'평균 공유',    val: D.avgShares   ? D.avgShares                   : '—' },
+    { label:'팔로워',       val: D.followers   ? D.followers.toLocaleString()  : '—' },
+    { label:'팔로잉',       val: D.following   ? D.following.toLocaleString()  : '—' },
+    { label:'팔/팔 비율',   val: ffRatio ? ffRatio.toFixed(2)+'x'             : '—' },
+    { label:'DM 대화',      val: D.dmCount     ? D.dmCount+'개'                : '—' },
+  ];
+  document.getElementById('contentMetrics').innerHTML = cMetrics.map(m => `
+    <div class="metric-box"><div class="m-val">${m.val}</div><div class="m-label">${m.label}</div></div>`).join('');
 
-  if (engagementRate >= 3) keep.push('인게이지먼트율 ' + engagementRate.toFixed(2) + '%로 양호해요. 현재 콘텐츠 톤앤매너를 유지하세요.');
-  else if (engagementRate >= 1) fix.push('인게이지먼트율(' + engagementRate.toFixed(2) + '%)이 보통 수준이에요. 캡션에 질문형 문장을 추가하고 댓글 소통을 늘려보세요.');
-  else if (followers > 0) fix.push('인게이지먼트율이 ' + engagementRate.toFixed(2) + '%로 낮아요. 저장 유도 콘텐츠(정보형, 체크리스트 등)를 늘려보세요.');
+  // 탑 게시물
+  let topHTML = '';
+  if (D.topPosts && D.topPosts.length > 0) {
+    topHTML = '<hr class="section-divider"/><p style="font-size:0.82rem;font-weight:700;color:#666;margin-bottom:10px;">🏆 인기 게시물 TOP 3</p>' +
+      D.topPosts.map((p,i) => `
+      <div class="top-post-row">
+        <div class="top-post-rank">${['①','②','③'][i]}</div>
+        <div class="top-post-info">
+          <div class="top-post-cap">${p.caption || '(캡션 없음)'}</div>
+          <div class="top-post-stats">
+            <span class="top-post-stat">❤️ ${p.likes}</span>
+            <span class="top-post-stat">🔖 ${p.saves}</span>
+            <span class="top-post-stat">📤 ${p.shares}</span>
+            <span class="top-post-stat">👁 ${p.reach}</span>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('topPostsSection').innerHTML = topHTML;
 
-  if (weeklyPosts >= 3 && weeklyPosts <= 5) keep.push('주 ' + weeklyPosts + '회 업로드는 알고리즘에 최적화된 빈도예요.');
-  else if (weeklyPosts < 3 && weeklyPosts > 0) fix.push('주 ' + weeklyPosts + '회 업로드는 조금 부족해요. 최소 주 3회를 목표로 해보세요.');
-  else if (weeklyPosts > 5) fix.push('너무 잦은 업로드(주 ' + weeklyPosts + '회)는 퀄리티 저하로 이어질 수 있어요. 주 3~5회로 줄이세요.');
-  else add.push('업로드 주기를 정해서 꾸준히 올리세요. 주 3회부터 시작해 보세요.');
+  // ── 오디언스 ──
+  let audHTML = '';
 
-  if (reelsRatio < 20) add.push('릴스 비율(' + reelsRatio + '%)이 낮아요. 인스타 알고리즘에서 릴스가 가장 높은 노출을 받아요. 전체의 30~50%를 목표로 하세요.');
-  else if (reelsRatio > 70) fix.push('릴스가 ' + reelsRatio + '%로 너무 높아요. 카드뉴스나 피드 이미지도 섞어서 저장율을 높여보세요.');
-  else keep.push('릴스 비율(' + reelsRatio + '%)이 적절해요. 릴스 + 피드 이미지 조합을 유지하세요.');
-
-  if (hashtagCount === 0) add.push('해시태그가 없어요. 관련 해시태그 5~10개를 꼭 추가하세요. 10만 이하 중소형 태그가 노출에 더 효과적이에요.');
-  else if (hashtagCount > 20) remove.push('해시태그 ' + hashtagCount + '개는 스팸처럼 보일 수 있어요. 10~15개로 줄여보세요.');
-  else keep.push('해시태그 ' + hashtagCount + '개는 적절한 수준이에요. 매 게시물마다 조금씩 변경해서 다양한 태그를 테스트해 보세요.');
-
-  if (bio.length === 0) add.push('바이오가 비어 있어요! 내가 누구인지, 어떤 콘텐츠를 올리는지 2~3줄로 명확하게 작성하세요.');
-  else if (bio.length < 30) fix.push('바이오가 너무 짧아요. 계정의 핵심 가치와 팔로우해야 하는 이유를 담아보세요.');
-  else keep.push('바이오가 작성되어 있어요. 핵심 키워드가 포함되어 있는지 주기적으로 점검하세요.');
-
-  if (hasLink === 'no') add.push('프로필 링크가 없어요. Linktree나 개인 페이지 링크를 추가하면 전환율이 높아져요.');
-  if (hasHighlight === 'no') add.push('스토리 하이라이트가 없어요. 주요 카테고리별로 하이라이트를 만들어 방문자 이탈을 줄이세요.');
-
-  if (storyFreq === 'rarely') add.push('스토리를 거의 올리지 않고 있어요. 주 3회 이상 업로드를 목표로 하세요.');
-  else if (storyFreq === 'daily') keep.push('매일 스토리를 올리고 있어요. 설문, 퀴즈, 질문 스티커를 활용해 참여율을 더 높여보세요.');
-
-  if (ffRatio < 0.5 && followers > 0) fix.push('팔로잉(' + following + ')이 팔로워(' + followers + ')보다 훨씬 많아요. 관련 없는 계정 팔로잉을 정리해서 신뢰도를 높이세요.');
-  if (!niche) add.push('콘텐츠 분야를 명확히 정하세요. 주력 분야 1~2개에 집중하면 타겟 팔로워가 빠르게 모여요.');
-
-  function renderItems(items, containerId, cls) {
-    const icons = { 'reco-keep': '✅', 'reco-fix': '✏️', 'reco-add': '➕', 'reco-remove': '❌' };
-    const el = document.getElementById(containerId);
-    el.innerHTML = items.length === 0
-      ? `<div class="reco-item ${cls}"><span class="reco-icon">—</span> 해당 사항 없음</div>`
-      : items.map(t => `<div class="reco-item ${cls}"><span class="reco-icon">${icons[cls]}</span><span>${t}</span></div>`).join('');
+  // 성별
+  const male   = D.gender?.male   || 0;
+  const female = D.gender?.female || 0;
+  if (male > 0 || female > 0) {
+    audHTML += `
+    <p class="tag-section-title">성별 분포</p>
+    <div class="gender-row">
+      <div class="gender-label">남성</div>
+      <div class="gender-bar-wrap"><div class="gender-bar-fill" style="width:${male}%;background:linear-gradient(90deg,#4299e1,#63b3ed);height:12px;border-radius:99px;"></div></div>
+      <div class="gender-val">${male}%</div>
+    </div>
+    <div class="gender-row">
+      <div class="gender-label">여성</div>
+      <div class="gender-bar-wrap"><div class="gender-bar-fill" style="width:${female}%;background:linear-gradient(90deg,#ed64a6,#f687b3);height:12px;border-radius:99px;"></div></div>
+      <div class="gender-val">${female}%</div>
+    </div>`;
   }
 
-  renderItems(keep,   'recoKeep',   'reco-keep');
-  renderItems(fix,    'recoFix',    'reco-fix');
-  renderItems(add,    'recoAdd',    'reco-add');
-  renderItems(remove, 'recoRemove', 'reco-remove');
+  // 연령
+  if (D.ageGroups && D.ageGroups.length > 0) {
+    const maxAge = Math.max(...D.ageGroups.map(a => a.pct));
+    audHTML += `<hr class="section-divider"/><p class="tag-section-title">연령 분포</p>` +
+      D.ageGroups.slice(0,6).map(a => `
+      <div class="age-row">
+        <div class="age-label">${a.age}세</div>
+        <div class="age-bar-wrap"><div class="age-bar-fill" style="width:${Math.round(a.pct/maxAge*100)}%"></div></div>
+        <div class="age-val">${a.pct}%</div>
+      </div>`).join('');
+  }
 
-  let tips = [];
-  if (reelsRatio < 30) tips.push('<strong>릴스에 집중</strong>하세요 — 짧고 임팩트 있는 15~30초 영상 3개를 이번 달 목표로 만들어 보세요.');
-  if (engagementRate < 3) tips.push('게시물 캡션 끝에 <strong>"여러분은 어떻게 생각하세요?"</strong>처럼 댓글을 유도하는 문장을 넣어보세요.');
-  if (hashtagCount < 5) tips.push('<strong>니치 해시태그</strong>를 발굴하세요 — 경쟁이 덜한 5만~50만 규모의 해시태그가 신규 노출에 효과적이에요.');
-  if (storyFreq === 'rarely' || storyFreq === 'sometimes') tips.push('<strong>스토리 빈도를 높이세요</strong> — 매일 스토리를 올리는 계정은 알고리즘이 더 많은 노출을 줘요.');
-  if (bio.length < 30) tips.push('<strong>바이오를 최적화</strong>하세요 — 내가 누구인지, 팔로우하면 뭘 얻는지를 딱 3줄로 정리해 보세요.');
-  if (tips.length === 0) tips.push('지금 방향이 좋아요! <strong>일관성 유지</strong>가 핵심입니다. 업로드 스케줄을 지키고 팔로워 댓글에 꾸준히 답장해 주세요.');
+  // 도시
+  if (D.cities && D.cities.length > 0) {
+    const maxCity = Math.max(...D.cities.map(c => c.val));
+    audHTML += `<hr class="section-divider"/><p class="tag-section-title">주요 도시 Top ${D.cities.length}</p>` +
+      D.cities.map(c => `
+      <div class="city-row">
+        <div class="city-name">${c.city}</div>
+        <div class="city-bar-wrap"><div class="city-bar-fill" style="width:${Math.round(c.val/maxCity*100)}%"></div></div>
+        <div class="city-val">${c.pct}%</div>
+      </div>`).join('');
+  }
 
-  document.getElementById('tipBox').innerHTML = tips.map(t => `• ${t}`).join('<br/><br/>');
+  if (!audHTML) {
+    const maleRatio = Math.round((male || 50));
+    audHTML = `<div class="reco-item reco-fix" style="margin:0;"><span class="reco-icon">ℹ️</span>오디언스 인사이트 데이터가 없어요. ZIP 파일의 <b>audience_insights.json</b>이 포함된 경우 자동 추출됩니다. 수동 입력 탭에서 성별 비율 등을 직접 입력하면 분석이 가능해요.</div>`;
+  }
+  document.getElementById('audienceSection').innerHTML = audHTML;
+
+  // ── 요일 ──
+  let wdHTML = '';
+  const WD_LABELS = { Monday:'월', Tuesday:'화', Wednesday:'수', Thursday:'목', Friday:'금', Saturday:'토', Sunday:'일' };
+  if (D.weekdayActivity) {
+    const wdData = D.weekdayActivity;
+    const wdMax  = Math.max(...Object.values(wdData));
+    const bestWd = Object.entries(wdData).sort((a,b)=>b[1]-a[1])[0][0];
+    wdHTML += `<div class="weekday-grid">` +
+      Object.entries(wdData).map(([wd, val]) => {
+        const pct    = wdMax > 0 ? Math.round(val/wdMax*100) : 0;
+        const hpx    = Math.max(Math.round(pct * 0.7), 8);
+        const color  = wd === bestWd ? '#c13584' : '#e0b0ff';
+        const border = wd === bestWd ? 'border:2px solid #c13584;border-radius:8px;padding:4px;' : '';
+        return `<div class="wd-cell" style="${border}">
+          <div class="wd-label">${WD_LABELS[wd]||wd}</div>
+          <div style="height:70px;display:flex;align-items:flex-end;justify-content:center;">
+            <div class="wd-bar" style="height:${hpx}px;background:${color};width:28px;border-radius:6px 6px 0 0;"></div>
+          </div>
+          <div class="wd-val" style="${wd===bestWd?'color:#c13584;':''}">${val}</div>
+        </div>`;
+      }).join('') + `</div>`;
+    wdHTML += `<div style="margin-top:12px;font-size:0.85rem;color:#555;">
+      👉 <b style="color:#c13584">${WD_LABELS[bestWd]}요일</b>이 팔로워 활동이 가장 많아요. 업로드 예약을 이 요일에 맞춰보세요.
+    </div>`;
+  } else {
+    wdHTML = `<div class="reco-item reco-fix" style="margin:0;"><span class="reco-icon">ℹ️</span>요일별 활동 데이터가 없어요. ZIP의 <b>audience_insights.json</b>이 포함되면 자동 분석됩니다.</div>
+    <div style="margin-top:12px;font-size:0.85rem;color:#666;">일반적으로 <b>화·목·토요일 오전 11시~오후 2시</b> 또는 <b>저녁 7~9시</b>가 인스타 참여도가 높아요.</div>`;
+  }
+  document.getElementById('weekdaySection').innerHTML = wdHTML;
+
+  // ── 해시태그 ──
+  const suggestTags = HASHTAG_DB[niche] || HASHTAG_DB['기타'];
+  const existingTags = D.topHashtags || [];
+
+  let htHTML = '';
+  if (existingTags.length > 0) {
+    htHTML += `<p class="tag-section-title">🔎 내 게시물에서 발견된 해시태그</p><div class="tag-chips">` +
+      existingTags.map(t => `<span class="kw-tag kw-tag-existing">${t}</span>`).join('') + `</div>`;
+  }
+  htHTML += `<p class="tag-section-title" style="margin-top:16px;">✨ 분야별 추천 해시태그 <span style="font-size:0.75rem;color:#bbb;">(${niche} 기반)</span></p>
+    <div class="tag-chips">${suggestTags.map(t => `<span class="kw-tag kw-tag-suggest">${t}</span>`).join('')}</div>
+    <div style="margin-top:12px;font-size:0.82rem;color:#888;background:#fff8f0;border-radius:8px;padding:10px;">
+      💡 <b>해시태그 전략</b>: 대형 태그(10만+) 4개 · 중형 태그(1만~10만) 5개 · 소형 태그(1천~1만) 3개 혼합을 추천해요. 매 게시물마다 5~15개가 이상적이에요.
+    </div>`;
+  document.getElementById('hashtagSection').innerHTML = htHTML;
+
+  // ── 잘하고 있는 것 ──
+  const keeps = [];
+  if (er >= 5)   keeps.push({ icon:'🔥', txt:`인게이지먼트율 <b>${er.toFixed(2)}%</b> — 업계 평균(3~5%)을 상회해요. 콘텐츠 품질이 팔로워에게 잘 통하고 있어요.` });
+  if (sr >= 3)   keeps.push({ icon:'🔖', txt:`저장율 <b>${sr.toFixed(2)}%</b> — 참고할 만한 콘텐츠라는 뜻이에요. 저장은 알고리즘에 매우 긍정적 신호예요.` });
+  if (shr >= 5)  keeps.push({ icon:'📤', txt:`공유율 <b>${shr.toFixed(2)}%</b> — 팔로워가 타인에게 적극 공유하고 있어요. 바이럴 잠재력이 높아요.` });
+  if (wp >= 3)   keeps.push({ icon:'📅', txt:`주 <b>${wp}회</b> 꾸준한 업로드 — 알고리즘이 선호하는 업로드 리듬을 유지하고 있어요.` });
+  if (ffRatio >= 1.5) keeps.push({ icon:'👑', txt:`팔로워/팔로잉 비율 <b>${ffRatio.toFixed(1)}x</b> — 팔로워가 팔로잉보다 많아 신뢰도 높은 계정이에요.` });
+  if (nfr >= 50) keeps.push({ icon:'🌐', txt:`비팔로워 도달 <b>${nfr}%</b> — 팔로워가 아닌 사람들에게도 콘텐츠가 크게 확산되고 있어요.` });
+  if (existingTags.length >= 8) keeps.push({ icon:'#️⃣', txt:`해시태그 <b>${existingTags.length}개</b> 활발히 사용 — 검색 노출에 도움이 되고 있어요.` });
+
+  document.getElementById('recoKeep').innerHTML = keeps.length
+    ? keeps.map(k => `<div class="reco-item reco-keep"><span class="reco-icon">${k.icon}</span><span>${k.txt}</span></div>`).join('')
+    : `<div class="reco-item reco-keep"><span class="reco-icon">✅</span><span>데이터를 더 추가하면 구체적인 강점이 표시돼요.</span></div>`;
+
+  // ── 개선할 것 ──
+  const fixes = [];
+  if (er < 3)    fixes.push({ icon:'⚠️', txt:`인게이지먼트율 ${er.toFixed(2)}% — 팔로워와의 소통을 늘려보세요. 질문형 캡션, 투표 스티커(스토리) 활용을 권장해요.` });
+  if (sr < 1.5)  fixes.push({ icon:'🔖', txt:`저장율이 낮아요 — 인포그래픽, 정보성 게시물, 체크리스트 형식의 콘텐츠로 저장을 유도해보세요.` });
+  if (shr < 3)   fixes.push({ icon:'📤', txt:`공유율이 낮아요 — 공감할 수 있는 인용구, 유익한 정보, 감동적 스토리 등 공유하고 싶은 콘텐츠를 만들어보세요.` });
+  if (wp < 3)    fixes.push({ icon:'📅', txt:`업로드 빈도 ${wp}회/주 — 주 3회 이상 올리는 것을 목표로 해보세요. 미리 예약 업로드 설정을 활용하세요.` });
+  if (D.reelsPosts < 3) fixes.push({ icon:'🎬', txt:`릴스 게시물이 ${D.reelsPosts||0}개로 적어요 — 릴스는 인스타그램이 가장 적극적으로 노출시키는 형식이에요. 주 1~2개는 올려보세요.` });
+  if (D.hashtagCount < 8 && D.hashtagCount !== null) fixes.push({ icon:'#️⃣', txt:`해시태그 평균 ${D.hashtagCount}개 — 8~15개 사용을 권장해요. 대·중·소형 해시태그를 골고루 혼합하세요.` });
+
+  document.getElementById('recoFix').innerHTML = fixes.length
+    ? fixes.map(f => `<div class="reco-item reco-fix"><span class="reco-icon">${f.icon}</span><span>${f.txt}</span></div>`).join('')
+    : `<div class="reco-item reco-fix"><span class="reco-icon">✏️</span><span>개선 사항이 많지 않아요! 현재 방향을 유지하면서 콘텐츠 품질에 집중해보세요.</span></div>`;
+
+  // ── 추가할 것 ──
+  const adds = [];
+  if (!D.storyCount || D.storyCount < 10) adds.push({ icon:'📸', txt:`스토리를 더 자주 올려보세요 — 매일 1~3개 스토리는 팔로워 유지에 매우 효과적이에요. 투표/퀴즈 스티커로 참여도를 높여보세요.` });
+  adds.push({ icon:'🤝', txt:`콜라보 콘텐츠 — 비슷한 분야의 크리에이터와 콜라보해서 새 팔로워를 유입시켜 보세요.` });
+  adds.push({ icon:'📊', txt:`릴스 트렌드 활용 — 현재 유행하는 BGM이나 편집 스타일을 ${niche} 콘텐츠에 접목해보세요.` });
+  if (!D.dmCount || D.dmCount < 50) adds.push({ icon:'💬', txt:`DM 소통 강화 — 팔로워와 DM 소통을 늘리면 관계가 깊어지고 충성 팔로워가 늘어요.` });
+
+  document.getElementById('recoAdd').innerHTML = adds.map(a =>
+    `<div class="reco-item reco-add"><span class="reco-icon">${a.icon}</span><span>${a.txt}</span></div>`).join('');
+
+  // ── 이번 달 전략 ──
+  const bestWdName = D.weekdayActivity
+    ? Object.entries(D.weekdayActivity).sort((a,b)=>b[1]-a[1]).map(e => WD_LABELS[e[0]])[0]+'요일'
+    : '화·목요일';
+  const topTag = existingTags[0] || suggestTags[0] || `#${niche}`;
+
+  document.getElementById('tipBox').innerHTML = `
+    <strong>이번 달 인스타 성장 3단계 전략</strong><br/><br/>
+    <b>Step 1 · 업로드 리듬 고정</b><br/>
+    &nbsp;&nbsp;${bestWdName} 오전 11시 업로드 예약 → 팔로워 활동 피크 시간대 공략<br/><br/>
+    <b>Step 2 · 저장율/공유율 집중 공략</b><br/>
+    &nbsp;&nbsp;정보성 콘텐츠(Top 5 목록, 추천 리스트, How-to) 비중을 50%로 높이기<br/>
+    &nbsp;&nbsp;마지막 슬라이드에 "저장해두고 나중에 써보세요 🔖" 문구 추가<br/><br/>
+    <b>Step 3 · ${niche} 키워드 강화</b><br/>
+    &nbsp;&nbsp;${topTag} 등 핵심 해시태그 꾸준히 사용 + 캡션 첫 줄에 키워드 포함<br/>
+    &nbsp;&nbsp;릴스 월 2개 목표 — 짧고 강렬하게 (7~15초)`;
+
   document.getElementById('result').style.display = 'block';
-  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
 }
 </script>
 </body>
