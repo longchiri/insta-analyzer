@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>longchiri — 분석기 허브</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Apple SD Gothic Neo','Segoe UI',sans-serif;
+      background: #f8f8fa;
+      min-height: 100vh;
+      padding: 48px 16px 64px;
+      color: #1a1a2e;
+    }
+
+    /* ── 헤더 ── */
+    header { text-align:center; margin-bottom:48px; }
+    .logo {
+      display:inline-flex; align-items:center; gap:10px;
+      margin-bottom:8px;
+    }
+    .logo-icon {
+      width:44px; height:44px;
+      background:linear-gradient(135deg,#16A34A,#EA580C);
+      border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.4rem;
+    }
+    .logo-text {
+      font-size:1.7rem; font-weight:900;
+      background:linear-gradient(90deg,#16A34A,#EA580C);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      letter-spacing:-0.5px;
+    }
+    header .sub {
+      color:#aaa; font-size:0.85rem; margin-top:4px;
+    }
+
+    /* ── 카드 그리드 ── */
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:18px;
+      max-width:720px;
+      margin:0 auto;
+    }
+
+    .card {
+      background:#fff;
+      border-radius:18px;
+      padding:26px 22px;
+      text-decoration:none;
+      color:#1a1a2e;
+      display:flex; flex-direction:column; gap:14px;
+      border:1.5px solid #ebebeb;
+      transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      position:relative; overflow:hidden;
+    }
+    .card::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; height:3px;
+      border-radius:18px 18px 0 0;
+    }
+    .card:hover { transform:translateY(-4px); box-shadow:0 12px 36px rgba(0,0,0,0.09); }
+
+    .card-insta::before  { background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045); }
+    .card-insta:hover    { border-color:#fd1d1d33; }
+    .card-daangn::before { background:linear-gradient(90deg,#FF6F0F,#FFB347); }
+    .card-daangn:hover   { border-color:#FF6F0F33; }
+    .card-moim::before   { background:linear-gradient(90deg,#16A34A,#EA580C); }
+    .card-moim:hover     { border-color:#16A34A33; }
+    .card-kakao::before  { background:linear-gradient(90deg,#FEE500,#FFD700); }
+    .card-kakao:hover    { border-color:#FEE50055; }
+
+    .card-icon { font-size:2.2rem; line-height:1; }
+    .card-title { font-size:1.05rem; font-weight:800; color:#111; }
+
+    .tags { display:flex; flex-wrap:wrap; gap:5px; }
+    .tag {
+      font-size:0.67rem; padding:3px 8px; border-radius:99px;
+      background:#f3f3f6; color:#888;
+    }
+
+    .card-desc { font-size:0.8rem; color:#888; line-height:1.7; flex:1; }
+
+    .card-footer {
+      display:flex; align-items:center; justify-content:space-between; margin-top:2px;
+    }
+    .ver {
+      font-size:0.67rem; font-weight:700; padding:3px 10px;
+      border-radius:99px; background:#f3f3f6; color:#aaa;
+    }
+    .go-btn {
+      font-size:0.78rem; font-weight:800;
+      padding:8px 18px; border-radius:99px;
+      color:#fff;
+    }
+    .card-insta  .go-btn { background:linear-gradient(90deg,#833ab4,#fd1d1d); }
+    .card-daangn .go-btn { background:linear-gradient(90deg,#FF6F0F,#FFB347); }
+    .card-moim   .go-btn { background:linear-gradient(90deg,#16A34A,#EA580C); }
+    .card-kakao  .go-btn { background:linear-gradient(90deg,#c8a800,#FFD700); color:#3C1E1E; }
+
+    /* ── 업데이트 패널 2분할 ── */
+    .update-wrap {
+      max-width:960px; margin:44px auto 0;
+      display:grid; grid-template-columns:1fr 1fr; gap:18px;
+    }
+    @media(max-width:600px){ .update-wrap { grid-template-columns:1fr; } }
+    .log-panel {
+      background:#fff; border-radius:16px;
+      border:1.5px solid #ebebeb; padding:20px 24px;
+      display:flex; flex-direction:column;
+    }
+    .log-label {
+      font-size:0.72rem; font-weight:700; color:#bbb;
+      letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px;
+      text-align:center;
+    }
+    .log-row {
+      display:flex; gap:14px; align-items:flex-start;
+      font-size:0.78rem; padding:9px 0; border-top:1px solid #f3f3f6;
+    }
+    .log-date { color:#ccc; flex-shrink:0; width:42px; font-weight:600; padding-top:1px; }
+    .log-text { color:#888; line-height:1.5; }
+    .badge {
+      display:inline-block; font-size:0.62rem; font-weight:700;
+      padding:1px 7px; border-radius:99px; margin-right:5px; vertical-align:middle;
+    }
+    .b-insta  { background:#fd1d1d18; color:#e01d72; }
+    .b-daangn { background:#FF6F0F18; color:#d45a00; }
+    .b-moim   { background:#16A34A18; color:#16A34A; }
+    .b-kakao  { background:#FEE50018; color:#8a7200; }
+    .b-all    { background:#6366f118; color:#6366f1; }
+
+
+    /* ── 푸터 ── */
+    footer {
+      text-align:center; margin-top:44px;
+      color:#ccc; font-size:0.76rem;
+      display:flex; flex-direction:column; align-items:center;
+    }
+    .tg-btn {
+      display:inline-flex; align-items:center; gap:7px;
+      margin-top:12px; padding:9px 20px;
+      background:#229ED9; border-radius:99px;
+      text-decoration:none; color:#fff;
+      font-size:0.8rem; font-weight:700;
+      transition:opacity 0.2s;
+    }
+    .tg-btn:hover { opacity:0.85; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🧭</div>
+    <span class="logo-text">longchiri</span>
+  </div>
+  <p class="sub">SNS · 커뮤니티 알고리즘 분석 도구</p>
+</header>
+
+<div class="grid">
+
+  <!-- 인스타그램 -->
+  <a class="card card-insta" href="index.html">
+    <div class="card-icon">📸</div>
+    <div class="card-title">인스타그램 분석기</div>
+    <div class="tags">
+      <span class="tag">ZIP 자동 파싱</span>
+      <span class="tag">채널별 점수</span>
+      <span class="tag">릴스 최적화</span>
+      <span class="tag">바이오 SEO</span>
+    </div>
+    <div class="card-desc">ZIP 업로드 한 번으로 팔로워 분석, 릴스 완주율, 프로필 SEO, 콘텐츠 캘린더까지 자동 분석해요.</div>
+    <div class="card-footer">
+      <span class="ver">Ver 3.8</span>
+      <span class="go-btn">분석 시작 →</span>
+    </div>
+  </a>
+
+  <!-- 당근 -->
+  <a class="card card-daangn" href="daangn-analyzer.html">
+    <div class="card-icon">🥕</div>
+    <div class="card-title">당근 모임 분석기</div>
+    <div class="tags">
+      <span class="tag">매너온도 분석</span>
+      <span class="tag">끌올 타이밍</span>
+      <span class="tag">제목 SEO</span>
+      <span class="tag">전환 퍼널</span>
+    </div>
+    <div class="card-desc">당근 알고리즘 기반으로 모임 노출 점수를 진단하고, 끌올 타이밍·동네생활 전략을 제안해요.</div>
+    <div class="card-footer">
+      <span class="ver">Ver 3.2</span>
+      <span class="go-btn">분석 시작 →</span>
+    </div>
+  </a>
+
+  <!-- 소모임 × 문토 -->
+  <a class="card card-moim" href="moim-analyzer.html">
+    <div class="card-icon">🤝</div>
+    <div class="card-title">소모임 × 문토 분석기</div>
+    <div class="tags">
+      <span class="tag">CTR 자동계산</span>
+      <span class="tag">멤버 LTV</span>
+      <span class="tag">A/B 테스트</span>
+      <span class="tag">호스트 브랜딩</span>
+    </div>
+    <div class="card-desc">소모임 활동성·문토 매력도 동시 분석. LTV, 경쟁 포화도, 참여자 세그먼트까지 한번에 확인해요.</div>
+    <div class="card-footer">
+      <span class="ver">Ver 1.2</span>
+      <span class="go-btn">분석 시작 →</span>
+    </div>
+  </a>
+
+  <!-- 카카오톡 오픈채팅 -->
+  <a class="card card-kakao" href="kakao-analyzer.html">
+    <div class="card-icon">💬</div>
+    <div class="card-title">카카오톡 오픈채팅 분석기</div>
+    <div class="tags">
+      <span class="tag">SEO 점수</span>
+      <span class="tag">지금탭 지표</span>
+      <span class="tag">활성도 지표</span>
+      <span class="tag">노출 전략</span>
+    </div>
+    <div class="card-desc">오픈채팅방 검색 노출 점수, 활성도·신뢰도 지표를 진단하고 알고리즘 기반 운영 전략을 받아보세요.</div>
+    <div class="card-footer">
+      <span class="ver">Ver 2.0</span>
+      <span class="go-btn">분석 시작 →</span>
+    </div>
+  </a>
+
+</div>
+
+<!-- 업데이트 2분할 패널 -->
+<div class="update-wrap">
+
+  <!-- 업데이트 현황 -->
+  <div class="log-panel">
+    <div class="log-label">🕐 업데이트 현황</div>
+    <div class="log-row">
+      <span class="log-date">04.21</span>
+      <span class="log-text"><span class="badge b-insta">인스타 Ver 3.8</span>릴스 가중치 강화·공유/저장 중심 노출 구조 재반영, AI 추천 시스템 팁 강화</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.21</span>
+      <span class="log-text"><span class="badge b-all">전체</span>정기 알고리즘 점검 완료 — 카카오·당근·소모임×문토 이상 없음</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.20</span>
+      <span class="log-text"><span class="badge b-kakao">카카오 Ver 2.0</span>지금탭 대개편(2025.09) 반영 — 피드 노출·숏폼·뜨는탭 지표 추가, 100점 스코어링</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.20</span>
+      <span class="log-text"><span class="badge b-insta">인스타 Ver 3.7</span>채널별 점수 카드 추가(피드·릴스·스토리), ZIP+수동 혼합 입력 정상화</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.20</span>
+      <span class="log-text"><span class="badge b-insta">인스타 Ver 3.6</span>2026 알고리즘 — 알고리즘 초기화 기능·별도 AI 시스템 팁 업데이트, ZIP HTML 파싱 개선</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.14</span>
+      <span class="log-text"><span class="badge b-insta">인스타 Ver 3.5</span>2025 알고리즘 반영 — 완주율·오리지널 보너스·카루셀 ER 지표 추가</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.14</span>
+      <span class="log-text"><span class="badge b-daangn">당근 Ver 3.2</span>카페 연동 가산점·재참여율 지표 반영</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.14</span>
+      <span class="log-text"><span class="badge b-moim">소모임×문토 Ver 1.2</span>번개모임·매너온도·노쇼 리스크 지표 추가</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.13</span>
+      <span class="log-text"><span class="badge b-kakao">카카오 Ver 1.0</span>카카오톡 오픈채팅 분석기 출시</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.13</span>
+      <span class="log-text"><span class="badge b-insta">인스타 Ver 3.4</span>ZIP UI 개선, smartFind 정확도 향상, 파일없음 표기</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.13</span>
+      <span class="log-text"><span class="badge b-all">전체</span>PDF 저장·공유 기능 추가, 허브 업데이트창 2분할 개선</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">04.10</span>
+      <span class="log-text"><span class="badge b-moim">소모임×문토 Ver 1.0</span>출시</span>
+    </div>
+  </div>
+
+  <!-- 업데이트 예정 -->
+  <div class="log-panel">
+    <div class="log-label">📋 업데이트 예정</div>
+    <div class="log-row">
+      <span class="log-date">✅</span>
+      <span class="log-text"><span class="badge b-all">전체</span>04.21 정기 알고리즘 점검 완료</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">✅</span>
+      <span class="log-text"><span class="badge b-insta">인스타</span>릴스 가중치·공유/저장 중심 알고리즘 재반영 완료</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">미정</span>
+      <span class="log-text"><span class="badge b-daangn">당근</span>지역 커뮤니티 2025 업데이트 검토 중</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">미정</span>
+      <span class="log-text"><span class="badge b-moim">소모임×문토</span>원하는 기능은 아래문의 버튼 클릭</span>
+    </div>
+    <div class="log-row">
+      <span class="log-date">미정</span>
+      <span class="log-text"><span class="badge b-insta">인스타</span>원하는 기능은 아래문의 버튼 클릭</span>
+    </div>
+  </div>
+
+</div>
+
+
+<footer>
+  <p>by <b style="color:#16A34A;">longchiri</b></p>
+  <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+    </svg>
+    문의 @long_c_hill
+  </a>
+</footer>
+
+</body>
+</html>

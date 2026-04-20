@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- 서비스 이름 -->
+  <key>Label</key>
+  <string>com.longchiri.algochiri</string>
+
+  <!-- 실행 명령 — 경로는 아래 설치 스크립트가 자동으로 수정해줍니다 -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>ALGOCHIRI_PATH/app.py</string>
+  </array>
+
+  <!-- 작업 디렉토리 -->
+  <key>WorkingDirectory</key>
+  <string>ALGOCHIRI_PATH</string>
+
+  <!-- 로그인 시 자동 시작 -->
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- 크래시 시 자동 재시작 -->
+  <key>KeepAlive</key>
+  <true/>
+
+  <!-- 로그 저장 위치 -->
+  <key>StandardOutPath</key>
+  <string>ALGOCHIRI_PATH/algochiri.log</string>
+  <key>StandardErrorPath</key>
+  <string>ALGOCHIRI_PATH/algochiri-error.log</string>
+
+  <!-- 환경변수 (.env 파일 대신 직접 주입) -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>ANTHROPIC_API_KEY</key>
+    <string>ALGOCHIRI_API_KEY</string>
+    <key>PATH</key>
+    <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+</dict>
+</plist>

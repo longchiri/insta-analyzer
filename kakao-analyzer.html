@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>카카오톡 오픈채팅 분석기</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#FFFDE7 0%,#FFF9C4 100%);
+      min-height:100vh; padding:30px 16px; color:#1a1a1a;
+    }
+    header { text-align:center; margin-bottom:30px; }
+    header .logo { font-size:2.8rem; margin-bottom:6px; }
+    header h1 {
+      font-size:1.9rem; font-weight:900;
+      background:linear-gradient(90deg,#c8a800,#FFB700);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    header p { color:#aaa; margin-top:6px; font-size:0.9rem; }
+    .algo-badge {
+      display:inline-block; background:linear-gradient(90deg,#FEE500,#FFD700);
+      color:#3C1E1E; font-size:0.72rem; font-weight:800;
+      padding:3px 12px; border-radius:99px; margin-top:8px;
+    }
+
+    /* 카드 */
+    .card {
+      background:#fff; border-radius:18px; padding:24px;
+      margin-bottom:18px; box-shadow:0 4px 20px rgba(254,229,0,0.15);
+      max-width:720px; margin-left:auto; margin-right:auto;
+      border:1.5px solid #FFF3B0;
+    }
+    .card h2 {
+      font-size:1.05rem; font-weight:800; margin-bottom:18px;
+      color:#3C1E1E; display:flex; align-items:center; gap:8px;
+    }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:500px){ .form-grid { grid-template-columns:1fr; } }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group.full { grid-column:1/-1; }
+    label { font-size:0.82rem; font-weight:700; color:#666; }
+    label .tip { font-size:0.72rem; font-weight:400; color:#aaa; margin-left:6px; }
+    input, textarea, select {
+      border:1.5px solid #e5e5e5; border-radius:10px;
+      padding:10px 12px; font-size:0.93rem; outline:none;
+      transition:border 0.2s; background:#fafafa; font-family:inherit;
+    }
+    input:focus, textarea:focus, select:focus { border-color:#c8a800; background:#fffdf0; }
+    textarea { resize:vertical; min-height:70px; }
+
+    /* 슬라이더 */
+    input[type="range"] {
+      border:none; background:none; padding:0;
+      width:100%; cursor:pointer; accent-color:#FEE500;
+    }
+    .range-row { display:flex; align-items:center; gap:10px; }
+    .range-val { font-size:1rem; font-weight:800; color:#c8a800; min-width:50px; text-align:right; }
+
+    /* 분석 버튼 */
+    .btn-analyze {
+      display:block; width:100%; max-width:720px; margin:0 auto 24px;
+      padding:16px; background:linear-gradient(90deg,#FEE500,#FFD700);
+      color:#3C1E1E; font-size:1.05rem; font-weight:800;
+      border:none; border-radius:14px; cursor:pointer;
+      transition:opacity 0.2s, transform 0.1s;
+      box-shadow:0 4px 20px rgba(254,229,0,0.4);
+    }
+    .btn-analyze:hover { opacity:0.9; transform:translateY(-1px); }
+
+    /* ── 결과 ── */
+    #result { display:none; }
+    .result-card {
+      background:#fff; border-radius:18px; padding:24px;
+      margin-bottom:18px; box-shadow:0 4px 20px rgba(254,229,0,0.1);
+      max-width:720px; margin-left:auto; margin-right:auto;
+      border:1.5px solid #FFF3B0;
+    }
+    .result-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:16px; color:#3C1E1E; display:flex; align-items:center; gap:8px; }
+
+    /* 종합 점수 */
+    .score-big-box {
+      text-align:center; padding:24px 20px 20px;
+      background:linear-gradient(135deg,#FFFDE7,#FFF9C4);
+      border-radius:14px; margin-bottom:22px;
+      border:2px solid #FEE500;
+    }
+    .score-number {
+      font-size:4rem; font-weight:900;
+      background:linear-gradient(90deg,#c8a800,#FF8C00);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      line-height:1;
+    }
+    .score-grade { font-size:1.2rem; font-weight:800; margin-top:6px; color:#3C1E1E; }
+    .score-label { color:#888; font-size:0.85rem; margin-top:4px; }
+
+    /* 세부 점수 */
+    .sub-score-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+    @media(max-width:500px){ .sub-score-grid { grid-template-columns:repeat(3,1fr); } }
+    .sub-item {
+      background:#FFFDE7; border-radius:12px; padding:14px 8px; text-align:center;
+      border:1.5px solid #FFF3B0;
+    }
+    .sub-item .sv { font-size:1.4rem; font-weight:900; color:#c8a800; }
+    .sub-item .sn { font-size:0.72rem; color:#888; margin-top:4px; font-weight:700; }
+    .sub-item .sm { font-size:0.68rem; color:#bbb; margin-top:2px; }
+
+    /* 진행 바 */
+    .stat-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+    .stat-name-wrap { width:120px; flex-shrink:0; }
+    .stat-name { font-size:0.83rem; color:#555; font-weight:600; }
+    .stat-desc { font-size:0.72rem; color:#aaa; margin-top:2px; line-height:1.4; }
+    .bar-wrap { flex:1; background:#f0f0f0; border-radius:99px; height:10px; min-width:80px; }
+    .bar-fill { height:10px; border-radius:99px; transition:width 0.6s; }
+    .bar-good { background:linear-gradient(90deg,#22c55e,#86efac); }
+    .bar-mid  { background:linear-gradient(90deg,#FEE500,#FFD700); }
+    .bar-bad  { background:linear-gradient(90deg,#ef4444,#fca5a5); }
+    .stat-val { width:64px; text-align:right; font-size:0.82rem; color:#888; flex-shrink:0; }
+
+    /* 체크 아이템 */
+    .check-item {
+      display:flex; align-items:flex-start; gap:10px;
+      padding:11px 14px; border-radius:10px; margin-bottom:8px;
+    }
+    .check-ok   { background:#f0fff4; border-left:3px solid #22c55e; }
+    .check-warn { background:#fffbeb; border-left:3px solid #FEE500; }
+    .check-bad  { background:#fff5f5; border-left:3px solid #ef4444; }
+    .check-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+    .check-title { font-size:0.84rem; font-weight:700; }
+    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.5; }
+
+    /* 팁 박스 */
+    .tip-box {
+      background:linear-gradient(135deg,#FFFDE7,#FFF9C4);
+      border-left:4px solid #FEE500; border-radius:0 10px 10px 0;
+      padding:14px 16px; font-size:0.87rem; color:#5a4000; line-height:1.7;
+    }
+    .tip-box strong { color:#c8a800; }
+
+    /* 공식 박스 */
+    .formula-box {
+      background:#3C1E1E; border-radius:14px; padding:20px;
+      text-align:center; margin-bottom:18px; color:#FEE500;
+    }
+    .formula-text {
+      font-size:1rem; font-weight:700; letter-spacing:0.5px;
+      line-height:1.8;
+    }
+    .formula-sub { font-size:0.75rem; color:#FFD70099; margin-top:6px; }
+
+    /* 로드맵 */
+    .roadmap-item {
+      padding:14px 16px; border-radius:12px; margin-bottom:10px;
+      border-left:4px solid #FEE500; background:#fafafa;
+    }
+    .roadmap-title { font-weight:700; font-size:0.88rem; color:#c8a800; margin-bottom:4px; }
+    .roadmap-action { font-size:0.82rem; color:#444; margin-bottom:3px; }
+    .roadmap-why { font-size:0.77rem; color:#888; font-style:italic; }
+
+    /* 메트릭 그리드 */
+    .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+    @media(max-width:500px){ .metric-grid { grid-template-columns:repeat(2,1fr); } }
+    .metric-box { background:linear-gradient(135deg,#FFFDE7,#FFF9C4); border-radius:12px; padding:14px 10px; text-align:center; border:1px solid #FFF3B0; }
+    .metric-box .m-val { font-size:1.3rem; font-weight:800; color:#c8a800; }
+    .metric-box .m-label { font-size:0.72rem; color:#888; margin-top:4px; }
+
+    /* 섹션 구분 */
+    .divider { border:none; border-top:1px solid #FFF3B0; margin:16px 0; }
+
+    /* PDF 바 */
+    #pdf-bar { display:none; max-width:720px; margin:0 auto 18px; background:#fff; border-radius:14px; padding:14px 20px; box-shadow:0 4px 20px rgba(254,229,0,0.2); border:1.5px solid #FFF3B0; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+    footer { text-align:center; color:#bbb; font-size:0.8rem; margin-top:10px; }
+    .tg-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:9px 20px; background:#229ED9; border-radius:99px; text-decoration:none; color:#fff; font-size:0.8rem; font-weight:700; }
+    .back-btn { display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; max-width:720px; margin-left:auto; margin-right:auto; text-decoration:none; color:#999; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px; }
+    .back-wrap { max-width:720px; margin:0 auto 10px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#FEE500; font-weight:700; font-size:1.2rem; text-shadow:0 1px 2px rgba(0,0,0,0.15);">longchiri</span></p>
+  <div class="logo">💬</div>
+  <h1>카카오톡 오픈채팅 분석기</h1>
+  <p>오픈채팅방 알고리즘 점수를 진단하고 검색 노출 전략을 받아보세요</p>
+  <span class="algo-badge">⚡ 2026 오픈채팅 알고리즘 기반 (지금탭 대개편 반영)</span>
+</header>
+
+<div class="back-wrap">
+  <a class="back-btn" href="hub.html">← 허브로 돌아가기</a>
+</div>
+
+<!-- ══════════ 입력 ══════════ -->
+
+<!-- 1. 방 기본정보 -->
+<div class="card">
+  <h2>💬 방 기본 정보</h2>
+  <div class="form-grid">
+    <div class="form-group full">
+      <label>방 제목 <span class="tip">키워드가 가장 강력한 SEO 신호예요</span></label>
+      <input type="text" id="roomTitle" placeholder="예: 대전 러닝 크루 | 초보 환영 | 매주 토요일"/>
+    </div>
+    <div class="form-group full">
+      <label>방 소개글 <span class="tip">키워드와 일정·특징을 명확히 포함하세요</span></label>
+      <textarea id="roomIntro" placeholder="예: 매주 토요일 오전 8시 대전 갑천 러닝 모임입니다. 초보자 대환영!&#10;#러닝 #대전러닝 #건강 #운동모임 #사회인러닝"></textarea>
+    </div>
+    <div class="form-group full">
+      <label>현재 사용 중인 해시태그 <span class="tip">방 설정의 해시태그 전부 입력 (쉼표로 구분)</span></label>
+      <input type="text" id="hashtags" placeholder="예: #러닝, #대전러닝, #건강, #운동모임, #사회인러닝"/>
+    </div>
+    <div class="form-group">
+      <label>카테고리</label>
+      <select id="category">
+        <option value="운동">🏃 운동/스포츠</option>
+        <option value="독서">📚 독서/스터디</option>
+        <option value="맛집">🍽️ 맛집/음식</option>
+        <option value="게임">🎮 게임</option>
+        <option value="취미">🎨 취미/문화</option>
+        <option value="직장">💼 직장/커리어</option>
+        <option value="연애">💕 연애/소개팅</option>
+        <option value="부업">💰 부업/재테크</option>
+        <option value="기타">💬 기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>방 운영 기간</label>
+      <select id="roomAge">
+        <option value="7">1주일 미만</option>
+        <option value="30">1개월 미만</option>
+        <option value="90">3개월 미만</option>
+        <option value="180">6개월 미만</option>
+        <option value="365">1년 이상</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 2. 인원 현황 -->
+<div class="card">
+  <h2>👥 인원 현황</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>현재 인원 수</label>
+      <input type="number" id="currentMembers" placeholder="예: 234" min="1"/>
+    </div>
+    <div class="form-group">
+      <label>최대 정원</label>
+      <select id="maxMembers">
+        <option value="50">50명</option>
+        <option value="100">100명</option>
+        <option value="200" selected>200명</option>
+        <option value="500">500명</option>
+        <option value="1000">1,000명</option>
+        <option value="1500">1,500명</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>최근 7일 신규 유입 <span class="tip">새로 들어온 사람 수</span></label>
+      <input type="number" id="newMembers7d" placeholder="예: 23" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>이탈율 <span class="tip">% — 신규 입장 후 24시간 내 나간 비율</span></label>
+      <div class="range-row">
+        <input type="range" id="exitRateRange" min="0" max="100" value="30" oninput="syncRange('exitRate','exitRateRange')"/>
+        <input type="number" id="exitRate" min="0" max="100" value="30" style="width:64px;padding:6px 8px;font-size:0.9rem;" oninput="syncRange('exitRateRange','exitRate')"/>
+        <span style="font-size:0.82rem;color:#aaa;">%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 활성도 지표 -->
+<div class="card">
+  <h2>📊 활성도 지표</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>하루 평균 메시지 수</label>
+      <input type="number" id="dailyMsgs" placeholder="예: 48" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>하루 평균 참여 고유 인원</label>
+      <input type="number" id="dailyUniqueUsers" placeholder="예: 12" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>방 하트(좋아요) 수</label>
+      <input type="number" id="heartCount" placeholder="예: 47" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>외부 공유 링크 유입 <span class="tip">블로그·카페 등 외부에서 들어온 인원 추정</span></label>
+      <input type="number" id="externalTraffic" placeholder="예: 15" min="0"/>
+    </div>
+  </div>
+</div>
+
+<!-- 4-1. 지금탭 (2025 대개편 신규) -->
+<div class="card" style="border-color:#FEE50055;background:linear-gradient(135deg,#fff,#FFFDE7);">
+  <h2>⚡ 지금탭 활용 지표 <span style="font-size:0.72rem;font-weight:400;color:#c8a800;background:#FEE50022;padding:2px 10px;border-radius:99px;margin-left:6px;">2025 대개편 신규</span></h2>
+  <div style="font-size:0.78rem;color:#888;margin-bottom:14px;line-height:1.6;">2025년 9월 카카오톡 대개편으로 오픈채팅이 <b>숏폼과 통합된 "지금" 탭</b>으로 이동했어요. 피드 노출·숏폼 활용도가 새로운 핵심 지표예요.</div>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>오픈채팅 커뮤니티 피드 노출 <span class="tip">★ 지금탭 핵심 신호</span></label>
+      <select id="feedExposure">
+        <option value="no">미노출 (피드에 거의 안 보임)</option>
+        <option value="sometimes">가끔 노출</option>
+        <option value="active">자주 노출 (대화 활발 → 피드 상위)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>숏폼 콘텐츠 방 내 공유 <span class="tip">지금탭 숏폼과 연동</span></label>
+      <select id="shortformUsed">
+        <option value="no">거의 없음</option>
+        <option value="some">가끔 (주 1~2회)</option>
+        <option value="active">자주 (주 3회 이상)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>"지금 뜨는" 탭 진입 경험 <span class="tip">인기 채팅방 매일 자동 선정</span></label>
+      <select id="trendingTab">
+        <option value="never">없음</option>
+        <option value="once">1~2회</option>
+        <option value="often">3회 이상</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>AI 유해 콘텐츠 감지 경험 <span class="tip">머신러닝 자동 필터링 강화</span></label>
+      <select id="mlPenalty">
+        <option value="no">없음 (정상)</option>
+        <option value="once">1회 경고/제한</option>
+        <option value="multiple">2회 이상</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 방장 신뢰도 -->
+<div class="card">
+  <h2>🏆 방장 신뢰도</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>방장 활동 수준</label>
+      <select id="ownerActivity">
+        <option value="active">매일 활동 (열심히 관리)</option>
+        <option value="normal" selected>보통 (주 3~4회)</option>
+        <option value="low">가끔 (주 1~2회)</option>
+        <option value="inactive">잠수 중 (거의 없음)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>신고/제재 이력</label>
+      <select id="reportHistory">
+        <option value="none" selected>없음 (깨끗)</option>
+        <option value="minor">경미 (1~2건)</option>
+        <option value="major">심각 (3건 이상)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>스팸·도배 링크 여부</label>
+      <select id="hasSpam">
+        <option value="no" selected>없음</option>
+        <option value="some">가끔 있음</option>
+        <option value="frequent">자주 있음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>매크로·봇 의심 여부</label>
+      <select id="hasBot">
+        <option value="no" selected>없음</option>
+        <option value="suspected">의심됨</option>
+        <option value="confirmed">확인됨</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<button class="btn-analyze" onclick="analyze()">💬 오픈채팅 알고리즘 분석하기</button>
+
+<!-- ── PDF 저장 바 ── -->
+<div id="pdf-bar" style="display:none;max-width:720px;margin:0 auto 18px;background:#fff;border-radius:14px;padding:14px 20px;box-shadow:0 4px 20px rgba(254,229,0,0.2);border:1.5px solid #FFF3B0;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+  <div style="font-size:0.88rem;font-weight:700;color:#c8a800;">📄 분석 결과를 PDF로 저장하세요</div>
+  <button id="pdf-dl-btn" onclick="downloadPDF()" style="background:linear-gradient(90deg,#FEE500,#FFD700);color:#3C1E1E;border:none;border-radius:99px;padding:10px 22px;font-size:0.82rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(254,229,0,0.5);">
+    💾 PDF 저장
+  </button>
+</div>
+
+<!-- ══════════ 결과 ══════════ -->
+<div id="result">
+
+  <!-- 종합 점수 -->
+  <div class="result-card">
+    <h2>📊 종합 알고리즘 점수</h2>
+    <div class="score-big-box">
+      <div class="score-number" id="totalScore">0</div>
+      <div class="score-grade" id="scoreGrade"></div>
+      <div class="score-label" id="scoreLabel"></div>
+    </div>
+
+    <!-- 3요소 점수 -->
+    <div class="sub-score-grid" id="subScoreGrid"></div>
+
+    <!-- 바 그래프 -->
+    <div id="statBars"></div>
+  </div>
+
+  <!-- 검색 노출 공식 -->
+  <div class="result-card">
+    <h2>⚙️ 종합 점수 공식 (알고리즘 구조)</h2>
+    <div class="formula-box">
+      <div class="formula-text">
+        Score = <span style="color:#FFF;">SEO 가중치</span> + <span style="color:#86efac;">실시간 활성도</span> + <span style="color:#93c5fd;">소셜 지표</span> + <span style="color:#FEE500;">지금탭 보너스</span> − <span style="color:#fca5a5;">페널티</span>
+      </div>
+      <div class="formula-sub">카카오톡 오픈채팅 알고리즘 추정 공식 (2026 기준 · 2025 지금탭 대개편 반영)</div>
+    </div>
+    <div id="formulaBreakdown"></div>
+  </div>
+
+  <!-- SEO 분석 -->
+  <div class="result-card">
+    <h2>🔍 검색 노출 SEO 분석</h2>
+    <div id="seoSection"></div>
+  </div>
+
+  <!-- 활성도 분석 -->
+  <div class="result-card">
+    <h2>📈 동적 활성도 분석</h2>
+    <div id="activitySection"></div>
+  </div>
+
+  <!-- 소셜/신뢰도 -->
+  <div class="result-card">
+    <h2>🏆 소셜 신뢰도 분석</h2>
+    <div id="socialSection"></div>
+  </div>
+
+  <!-- 페널티 진단 -->
+  <div class="result-card" id="penaltyCard">
+    <h2>⚠️ 페널티 진단</h2>
+    <div id="penaltySection"></div>
+  </div>
+
+  <!-- 전략 추천 -->
+  <div class="result-card">
+    <h2>💡 알고리즘 상승 전략</h2>
+    <div id="strategySection"></div>
+  </div>
+
+  <!-- 30일 로드맵 -->
+  <div class="result-card">
+    <h2>🗓️ 30일 운영 로드맵</h2>
+    <div id="roadmapSection"></div>
+  </div>
+
+  <!-- 실전 운영 가이드 -->
+  <div class="result-card">
+    <h2>📌 실전 운영 가이드 (Tip)</h2>
+    <div class="tip-box" id="tipBox"></div>
+  </div>
+
+</div>
+
+<footer>
+  <p>by <b style="color:#c8a800;">longchiri</b></p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.0</p>
+  <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+    </svg>
+    문의 @long_c_hill
+  </a>
+</footer>
+
+<script>
+// ── 슬라이더 동기화 ──
+function syncRange(targetId, sourceId) {
+  const v = parseFloat(document.getElementById(sourceId).value) || 0;
+  const t = document.getElementById(targetId);
+  if (t) t.value = Math.min(100, Math.max(0, v));
+}
+
+function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
+
+// ── 주요 분석 ──
+function analyze() {
+  // 입력값 수집
+  const title         = getVal('roomTitle').trim();
+  const intro         = getVal('roomIntro').trim();
+  const hashtagsRaw   = getVal('hashtags').trim();
+  const category      = getVal('category');
+  const roomAge       = parseInt(getVal('roomAge')) || 30;
+
+  const currentMem    = getNum('currentMembers');
+  const maxMem        = parseInt(getVal('maxMembers')) || 200;
+  const newMem7d      = getNum('newMembers7d');
+  const exitRate      = getNum('exitRate');
+
+  const dailyMsgs     = getNum('dailyMsgs');
+  const dailyUniq     = getNum('dailyUniqueUsers');
+  const heartCount    = getNum('heartCount');
+  const extTraffic    = getNum('externalTraffic');
+
+  const ownerAct      = getVal('ownerActivity');
+  const reportHist    = getVal('reportHistory');
+  const hasSpam       = getVal('hasSpam');
+  const hasBot        = getVal('hasBot');
+
+  // ── 지금탭 (2025 대개편) ──
+  const feedExposure  = getVal('feedExposure')  || 'no';
+  const shortformUsed = getVal('shortformUsed') || 'no';
+  const trendingTab   = getVal('trendingTab')   || 'never';
+  const mlPenalty     = getVal('mlPenalty')     || 'no';
+
+  if (!title && !currentMem) {
+    alert('방 제목과 현재 인원 수는 꼭 입력해 주세요!'); return;
+  }
+
+  // ────────── 해시태그 파싱 ──────────
+  const tags = hashtagsRaw.split(/[,\s]+/).filter(t => t.startsWith('#') && t.length > 1);
+  const tagCount = tags.length;
+
+  // ────────── SEO 점수 계산 (30점) ──────────
+  // ① 제목 키워드 점수 (최대 12점)
+  const titleLen = title.length;
+  const titleHasKeyword = /러닝|독서|맛집|게임|취미|모임|크루|스터디|직장|재테크|부업|연애|소개팅|운동|건강|여행/.test(title);
+  const titleHasLocation = /서울|부산|대구|인천|광주|대전|울산|경기|인천|강남|홍대|신촌|건대|이태원|여의도/.test(title);
+  const titleHasTarget   = /초보|환영|누구나|자유|친목|모집/.test(title);
+  const titleHasSchedule = /매주|매일|정기|주 \d|토요일|일요일|평일|주말/.test(title);
+  let titleScore = 0;
+  if (titleLen >= 10 && titleLen <= 40) titleScore += 3;
+  if (titleHasKeyword)  titleScore += 3;
+  if (titleHasLocation) titleScore += 3;
+  if (titleHasTarget || titleHasSchedule) titleScore += 3;
+  titleScore = Math.min(12, titleScore);
+
+  // ② 해시태그 전략 점수 (최대 10점)
+  let hashScore = 0;
+  if (tagCount >= 3) hashScore += 4;
+  else if (tagCount >= 1) hashScore += 2;
+  if (tagCount >= 5) hashScore += 3;
+  // 대형+세부 태그 혼합 체크
+  const hasLargeTag = tags.some(t => /러닝|독서|맛집|게임|취미|모임|운동|건강|여행|카페/.test(t));
+  const hasSmallTag = tags.some(t => t.length > 6); // 세부 키워드는 길이가 길다
+  if (hasLargeTag && hasSmallTag) hashScore += 3;
+  hashScore = Math.min(10, hashScore);
+
+  // ③ 소개글 점수 (최대 8점)
+  let introScore = 0;
+  if (intro.length >= 50) introScore += 3;
+  if (/매주|정기|매일|주 \d|날짜|요일|시간|AM|PM|오전|오후/.test(intro)) introScore += 2;
+  if (/#/.test(intro)) introScore += 2; // 소개글에도 해시태그
+  if (intro.length >= 100) introScore += 1;
+  introScore = Math.min(8, introScore);
+
+  const seoScore = titleScore + hashScore + introScore;
+
+  // ────────── 활성도 점수 계산 (35점) ──────────
+  // ① 메시지 밀집도 (최대 15점)
+  const msgDensity = dailyMsgs;
+  let msgScore = msgDensity >= 200 ? 15 : msgDensity >= 100 ? 12 : msgDensity >= 50 ? 9
+               : msgDensity >= 20  ?  6 : msgDensity >= 5   ?  3 : 0;
+
+  // ② 참여 고유 인원 비율 (최대 12점)
+  const uniqRatio = currentMem > 0 ? (dailyUniq / currentMem * 100) : 0;
+  let uniqScore = uniqRatio >= 20 ? 12 : uniqRatio >= 10 ? 9 : uniqRatio >= 5 ? 6
+                : uniqRatio >= 2  ?  3 : uniqRatio > 0   ? 1 : 0;
+
+  // ③ 이탈율 / 리텐션 (최대 8점)
+  const retention = 100 - exitRate;
+  let retScore = retention >= 80 ? 8 : retention >= 60 ? 6 : retention >= 40 ? 4
+               : retention >= 20 ?  2 : 0;
+
+  const activityScore = Math.min(35, msgScore + uniqScore + retScore);
+
+  // ────────── 소셜/신뢰도 점수 (25점) ──────────
+  // ① 하트 수 (최대 10점)
+  let heartScore = heartCount >= 100 ? 10 : heartCount >= 50 ? 8 : heartCount >= 20 ? 6
+                 : heartCount >= 10  ?  4 : heartCount >= 3  ? 2 : 0;
+
+  // ② 방장 신뢰도 (최대 8점)
+  let ownerScore = ownerAct === 'active' ? 8 : ownerAct === 'normal' ? 6
+                 : ownerAct === 'low'    ? 3 : 0;
+
+  // ③ 외부 공유 트래픽 (최대 7점)
+  let trafficScore = extTraffic >= 50 ? 7 : extTraffic >= 20 ? 5 : extTraffic >= 5 ? 3
+                   : extTraffic >= 1  ? 1 : 0;
+
+  const socialScore = heartScore + ownerScore + trafficScore;
+
+  // ────────── 지금탭 가산점 (최대 10점) — 2025 대개편 신규 ──────────
+  let nowTabScore = 0;
+  if (feedExposure === 'active')        nowTabScore += 5;
+  else if (feedExposure === 'sometimes') nowTabScore += 2;
+  if (shortformUsed === 'active')       nowTabScore += 3;
+  else if (shortformUsed === 'some')    nowTabScore += 1;
+  if (trendingTab === 'often')          nowTabScore += 2;
+  else if (trendingTab === 'once')      nowTabScore += 1;
+  nowTabScore = Math.min(10, nowTabScore);
+
+  // ────────── 페널티 계산 ──────────
+  let penalty = 0;
+  let penaltyItems = [];
+
+  // 신고 이력
+  if (reportHist === 'major')  { penalty += 20; penaltyItems.push({ icon:'🚨', label:'심각한 신고 누적', pt:-20, desc:'3건 이상 신고 — 검색 노출 중단 위험 (유령 방 처리)' }); }
+  else if (reportHist === 'minor') { penalty += 8; penaltyItems.push({ icon:'⚠️', label:'경미한 신고', pt:-8, desc:'신고 이력이 있어요. 운영 정책 검토가 필요해요.' }); }
+
+  // 스팸/도배 — 2025 머신러닝 감지 강화로 페널티 상향
+  if (hasSpam === 'frequent') { penalty += 18; penaltyItems.push({ icon:'🚫', label:'스팸·도배 링크 자주 발생', pt:-18, desc:'2025 대개편 후 머신러닝 자동 감지 강화 — 반복 스팸은 검색 결과 즉시 제외' }); }
+  else if (hasSpam === 'some') { penalty += 6; penaltyItems.push({ icon:'⚠️', label:'스팸 링크 간헐적 발생', pt:-6, desc:'가끔 광고성 메시지가 올라와요. 방장 관리 필요' }); }
+
+  // 매크로/봇
+  if (hasBot === 'confirmed') { penalty += 25; penaltyItems.push({ icon:'🤖', label:'매크로·봇 확인됨', pt:-25, desc:'인위적 유입 감지 시 계정 제재 및 방 삭제 가능성' }); }
+  else if (hasBot === 'suspected') { penalty += 10; penaltyItems.push({ icon:'⚠️', label:'봇 의심 신호', pt:-10, desc:'비정상적 유입 패턴 감지 — 자연 유입으로 전환 권장' }); }
+
+  // 방장 잠수
+  if (ownerAct === 'inactive') { penalty += 8; penaltyItems.push({ icon:'💤', label:'방장 잠수', pt:-8, desc:'방장 활동이 없으면 신뢰도 점수가 하락해요.' }); }
+
+  // 이탈율 높음
+  if (exitRate >= 60) { penalty += 10; penaltyItems.push({ icon:'🚪', label:`이탈율 ${exitRate}% 과다`, pt:-10, desc:'신규 유입 후 60% 이상이 즉시 나가면 "저품질 방"으로 분류될 수 있어요.' }); }
+  else if (exitRate >= 40) { penalty += 5; penaltyItems.push({ icon:'⚠️', label:`이탈율 ${exitRate}% 주의`, pt:-5, desc:'이탈율 40% 이상 — 첫 인상 개선이 필요해요 (환영 메시지, 규칙 안내).' }); }
+
+  // AI 유해 콘텐츠 감지 페널티 — 2025 신규
+  if (mlPenalty === 'multiple') { penalty += 15; penaltyItems.push({ icon:'🤖', label:'AI 유해 콘텐츠 감지 2회+', pt:-15, desc:'2025 머신러닝 필터링 누적 경고 — 검색 결과 제외 위험' }); }
+  else if (mlPenalty === 'once') { penalty += 5; penaltyItems.push({ icon:'⚠️', label:'AI 유해 콘텐츠 감지 1회', pt:-5, desc:'콘텐츠 운영 방식을 점검해 주세요.' }); }
+
+  // ────────── 최종 점수 ──────────
+  const rawTotal = seoScore + activityScore + socialScore + nowTabScore;
+  const total = Math.max(0, Math.min(100, rawTotal - penalty));
+
+  // ────────── 등급 ──────────
+  let grade = '', gradeColor = '';
+  if (total >= 85)      { grade = '🔥 검색 상단 노출'; gradeColor = '#c8a800'; }
+  else if (total >= 70) { grade = '⭐ 노출 우수';      gradeColor = '#FF8C00'; }
+  else if (total >= 55) { grade = '📈 성장 중';         gradeColor = '#22c55e'; }
+  else if (total >= 40) { grade = '💡 개선 필요';       gradeColor = '#3b82f6'; }
+  else                  { grade = '🌱 초기 단계';       gradeColor = '#888'; }
+
+  // ────────── 인원 밀도 ──────────
+  const memberDensity = maxMem > 0 ? Math.round(currentMem / maxMem * 100) : 0;
+
+  // ── 렌더링 ──
+  document.getElementById('totalScore').textContent = total;
+  document.getElementById('scoreGrade').textContent = grade;
+  document.getElementById('scoreGrade').style.color = gradeColor;
+  document.getElementById('scoreLabel').textContent =
+    `SEO ${seoScore}/30 · 활성도 ${activityScore}/35 · 소셜 ${socialScore}/25 · 지금탭 +${nowTabScore} · 페널티 -${penalty}`;
+
+  // 세부 점수 4칸
+  document.getElementById('subScoreGrid').innerHTML = [
+    { name:'SEO 노출',  val:seoScore,      max:30, desc:'30점' },
+    { name:'활성도',    val:activityScore, max:35, desc:'35점' },
+    { name:'소셜신뢰',  val:socialScore,   max:25, desc:'25점' },
+    { name:'지금탭 ⚡', val:nowTabScore,   max:10, desc:'10점' },
+  ].map(s => `
+    <div class="sub-item">
+      <div class="sv">${s.val}</div>
+      <div class="sn">${s.name}</div>
+      <div class="sm">${s.desc} 만점</div>
+    </div>`).join('');
+
+  // 진행 바
+  const feedPt = feedExposure==='active'?5:feedExposure==='sometimes'?2:0;
+  const sfPt   = shortformUsed==='active'?3:shortformUsed==='some'?1:0;
+  const trendPt= trendingTab==='often'?2:trendingTab==='once'?1:0;
+  const bars = [
+    { name:'제목 키워드',    val:`${titleScore}/12`, score:titleScore,   max:12, desc:'제목에 핵심 키워드·지역·대상 포함', cls: titleScore>=9?'bar-good':titleScore>=5?'bar-mid':'bar-bad' },
+    { name:'해시태그 전략',  val:`${hashScore}/10`,  score:hashScore,    max:10, desc:'대형+세부 태그 혼합, 3개 이상', cls: hashScore>=7?'bar-good':hashScore>=4?'bar-mid':'bar-bad' },
+    { name:'소개글 품질',    val:`${introScore}/8`,  score:introScore,   max:8,  desc:'일정·특징·해시태그 포함 여부', cls: introScore>=6?'bar-good':introScore>=3?'bar-mid':'bar-bad' },
+    { name:'메시지 밀집도',  val:`${msgScore}/15`,   score:msgScore,     max:15, desc:`하루 평균 ${dailyMsgs}개 메시지`, cls: msgScore>=11?'bar-good':msgScore>=6?'bar-mid':'bar-bad' },
+    { name:'참여 다양성',    val:`${uniqScore}/12`,  score:uniqScore,    max:12, desc:`참여 비율 ${uniqRatio.toFixed(1)}%`, cls: uniqScore>=9?'bar-good':uniqScore>=5?'bar-mid':'bar-bad' },
+    { name:'리텐션(잔류)',   val:`${retScore}/8`,    score:retScore,     max:8,  desc:`잔류율 ${retention}%`, cls: retScore>=6?'bar-good':retScore>=3?'bar-mid':'bar-bad' },
+    { name:'하트 수',        val:`${heartScore}/10`, score:heartScore,   max:10, desc:`${heartCount}개 하트`, cls: heartScore>=7?'bar-good':heartScore>=4?'bar-mid':'bar-bad' },
+    { name:'방장 신뢰도',    val:`${ownerScore}/8`,  score:ownerScore,   max:8,  desc:ownerAct==='active'?'매일 활동':ownerAct==='normal'?'보통 (주 3~4회)':ownerAct==='low'?'가끔':'잠수 중', cls: ownerScore>=6?'bar-good':ownerScore>=3?'bar-mid':'bar-bad' },
+    { name:'외부 유입',      val:`${trafficScore}/7`,score:trafficScore, max:7,  desc:`외부 공유 ${extTraffic}명 추정`, cls: trafficScore>=5?'bar-good':trafficScore>=2?'bar-mid':'bar-bad' },
+    { name:'⚡ 피드 노출',   val:`${feedPt}/5`,      score:feedPt,       max:5,  desc:'지금탭 커뮤니티 피드 노출 빈도', cls: feedPt>=4?'bar-good':feedPt>=2?'bar-mid':'bar-bad' },
+    { name:'⚡ 숏폼 활용',   val:`${sfPt}/3`,        score:sfPt,         max:3,  desc:'지금탭 숏폼 공유 활발도', cls: sfPt>=2?'bar-good':sfPt>=1?'bar-mid':'bar-bad' },
+    { name:'⚡ 지금뜨는탭',  val:`${trendPt}/2`,     score:trendPt,      max:2,  desc:'"지금 뜨는" 탭 진입 횟수', cls: trendPt>=2?'bar-good':trendPt>=1?'bar-mid':'bar-bad' },
+  ];
+  document.getElementById('statBars').innerHTML = bars.map(b => {
+    const pct = Math.round((b.score / b.max) * 100);
+    return `
+    <div class="stat-row">
+      <div class="stat-name-wrap">
+        <div class="stat-name">${b.name}</div>
+        <div class="stat-desc">${b.desc}</div>
+      </div>
+      <div class="bar-wrap"><div class="bar-fill ${b.cls}" style="width:${pct}%"></div></div>
+      <div class="stat-val">${b.val}</div>
+    </div>`;
+  }).join('');
+
+  // ── 공식 분해 ──
+  document.getElementById('formulaBreakdown').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px;">
+      ${[
+        { label:'SEO 가중치', val:seoScore, max:30, color:'#FEE500', desc:'제목·해시태그·소개글' },
+        { label:'실시간 활성도', val:activityScore, max:35, color:'#22c55e', desc:'메시지·참여·리텐션' },
+        { label:'소셜 지표', val:socialScore, max:25, color:'#3b82f6', desc:'하트·방장·외부유입' },
+        { label:'지금탭 ⚡', val:nowTabScore, max:10, color:'#f97316', desc:'피드·숏폼·뜨는탭' },
+        { label:'페널티', val:-penalty, max:0, color:'#ef4444', desc:'신고·스팸·봇·이탈' },
+      ].map(f => `
+        <div style="background:${f.color}18;border-radius:12px;padding:12px 8px;text-align:center;border:1.5px solid ${f.color}33;">
+          <div style="font-size:1.3rem;font-weight:900;color:${f.color};">${f.val>0?'':''}${f.val}</div>
+          <div style="font-size:0.72rem;font-weight:700;color:#555;margin-top:3px;">${f.label}</div>
+          <div style="font-size:0.65rem;color:#aaa;margin-top:2px;">${f.desc}</div>
+        </div>`).join('')}
+    </div>
+    <div style="margin-top:14px;padding:12px 16px;background:#3C1E1E;border-radius:12px;text-align:center;">
+      <span style="color:#FEE500;font-size:1rem;font-weight:700;">${seoScore} + ${activityScore} + ${socialScore} + ${nowTabScore} - ${penalty} = </span>
+      <span style="color:#fff;font-size:1.4rem;font-weight:900;">${total}점</span>
+    </div>`;
+
+  // ── SEO 섹션 ──
+  const seoChecks = [
+    { ok: titleLen >= 10 && titleLen <= 40, label:`제목 길이 (${titleLen}자)`,  desc:'10~40자가 검색 노출 최적 — 너무 짧거나 길면 키워드 가중치가 낮아져요' },
+    { ok: titleHasKeyword,  label:'핵심 키워드 포함 (제목)',  desc:'카테고리 핵심어가 제목에 있어야 검색에 잡혀요. 가중치: 제목 > 해시태그 > 소개글' },
+    { ok: titleHasLocation, label:'지역명 포함',               desc:'지역 기반 검색에서 유리해요. (예: 강남, 대전, 홍대)' },
+    { ok: tagCount >= 3,    label:`해시태그 ${tagCount}개`,    desc:'3개 이상이 기본 — 5개 이상이면 다양한 검색어에 노출 가능' },
+    { ok: hasLargeTag && hasSmallTag, label:'대형·세부 태그 혼합', desc:'#러닝처럼 큰 카테고리 + #대전러닝처럼 세부 태그를 섞어야 상위 노출 확률 ↑' },
+    { ok: intro.length >= 50, label:'소개글 50자 이상',         desc:'소개글 키워드도 검색 가중치에 반영돼요. 짧으면 노출 기회를 잃어요' },
+    { ok: /매주|정기|매일|날짜|요일|시간/.test(intro), label:'소개글에 일정 명시', desc:'정기 일정이 있으면 리텐션이 높아지고 "양질의 방"으로 분류돼요' },
+  ];
+  document.getElementById('seoSection').innerHTML = `
+    <div style="display:grid;gap:8px;">
+      ${seoChecks.map(c => `
+        <div class="check-item ${c.ok?'check-ok':'check-warn'}">
+          <span class="check-icon">${c.ok?'✅':'⚠️'}</span>
+          <div>
+            <div class="check-title" style="color:${c.ok?'#166534':'#92400e'};">${c.label}</div>
+            <div class="check-desc">${c.desc}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+    <hr class="divider"/>
+    <div style="padding:12px 14px;background:#FFFDE7;border-radius:10px;font-size:0.83rem;color:#5a4000;line-height:1.8;">
+      🔑 <b>키워드 가중치 순서:</b><br/>
+      <span style="background:#FEE500;color:#3C1E1E;padding:2px 8px;border-radius:4px;font-weight:700;font-size:0.8rem;">제목 (3배)</span>
+      &gt;
+      <span style="background:#FFF3B0;color:#5a4000;padding:2px 8px;border-radius:4px;font-weight:700;font-size:0.8rem;">해시태그 (2배)</span>
+      &gt;
+      <span style="background:#fff;border:1px solid #FFF3B0;color:#5a4000;padding:2px 8px;border-radius:4px;font-weight:700;font-size:0.8rem;">소개글 (1배)</span>
+    </div>`;
+
+  // ── 활성도 섹션 ──
+  document.getElementById('activitySection').innerHTML = `
+    <div class="metric-grid">
+      ${[
+        { label:'일 평균 메시지', val:dailyMsgs+'개' },
+        { label:'참여 고유 인원', val:dailyUniq+'명' },
+        { label:'참여 비율', val:uniqRatio.toFixed(1)+'%' },
+        { label:'리텐션율', val:retention+'%' },
+        { label:'신규 유입 (7일)', val:newMem7d+'명' },
+        { label:'인원 밀도', val:memberDensity+'%' },
+      ].map(m => `<div class="metric-box"><div class="m-val">${m.val}</div><div class="m-label">${m.label}</div></div>`).join('')}
+    </div>
+    <hr class="divider"/>
+    <div style="display:grid;gap:8px;">
+      ${[
+        { ok: dailyMsgs >= 50,    label:`메시지 밀집도 ${dailyMsgs}개/일`, desc:'하루 50개 이상이 "활성 방" 기준 — 특정 시간 집중적 대화가 급상승 노출 확률 ↑' },
+        { ok: uniqRatio >= 10,    label:`참여 다양성 ${uniqRatio.toFixed(1)}%`, desc:'인원의 10% 이상이 매일 말해야 "여러 인원이 참여하는 방"으로 분류돼요' },
+        { ok: retention >= 60,    label:`리텐션 ${retention}%`, desc:'신규 입장 후 60% 이상이 머물러야 "양질의 방"으로 알고리즘이 확정해요' },
+        { ok: memberDensity >= 50, label:`인원 밀도 ${memberDensity}%`, desc:'정원의 50% 이상이 차있으면 "인기 있는 방"으로 판단해요' },
+      ].map(c => `
+        <div class="check-item ${c.ok?'check-ok':'check-warn'}">
+          <span class="check-icon">${c.ok?'✅':'⚠️'}</span>
+          <div>
+            <div class="check-title" style="color:${c.ok?'#166534':'#92400e'};">${c.label}</div>
+            <div class="check-desc">${c.desc}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+
+  // ── 소셜/신뢰도 섹션 ──
+  document.getElementById('socialSection').innerHTML = `
+    <div style="display:grid;gap:8px;">
+      ${[
+        { ok: heartCount >= 10, label:`하트 ${heartCount}개`, desc:'초기 노출의 핵심 신호 — 하트 10개 이상이 첫 검색 노출을 위한 최소 조건이에요' },
+        { ok: ownerAct === 'active' || ownerAct === 'normal', label:'방장 활동 수준', desc:'방장이 자주 활동할수록 "관리되는 방"으로 신뢰도 점수가 올라가요' },
+        { ok: extTraffic >= 5, label:`외부 공유 트래픽 ${extTraffic}명`, desc:'블로그·카페 등 외부에서 링크를 타고 들어올수록 알고리즘 가점이 붙어요' },
+        { ok: roomAge >= 90, label:`운영 기간 ${roomAge}일`, desc:'오래 유지된 방일수록 안정성 점수가 높아요. 90일 이상이 "성숙한 방" 기준' },
+      ].map(c => `
+        <div class="check-item ${c.ok?'check-ok':'check-warn'}">
+          <span class="check-icon">${c.ok?'✅':'⚠️'}</span>
+          <div>
+            <div class="check-title" style="color:${c.ok?'#166534':'#92400e'};">${c.label}</div>
+            <div class="check-desc">${c.desc}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+
+  // ── 페널티 섹션 ──
+  if (penaltyItems.length > 0) {
+    document.getElementById('penaltySection').innerHTML = `
+      <div style="background:#fff5f5;border:1.5px solid #fca5a5;border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+        <div style="font-weight:800;color:#ef4444;font-size:0.95rem;margin-bottom:4px;">총 페널티: -${penalty}점</div>
+        <div style="font-size:0.8rem;color:#991b1b;">아래 항목이 검색 노출 점수를 깎고 있어요. 즉시 조치가 필요해요.</div>
+      </div>
+      <div style="display:grid;gap:8px;">
+        ${penaltyItems.map(p => `
+          <div class="check-item check-bad">
+            <span class="check-icon">${p.icon}</span>
+            <div>
+              <div class="check-title" style="color:#991b1b;">${p.label} <span style="font-weight:400;color:#ef4444;">(${p.pt}점)</span></div>
+              <div class="check-desc">${p.desc}</div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  } else {
+    document.getElementById('penaltySection').innerHTML = `
+      <div class="check-item check-ok">
+        <span class="check-icon">🎉</span>
+        <div>
+          <div class="check-title" style="color:#166534;">페널티 없음! 클린한 방이에요</div>
+          <div class="check-desc">신고·스팸·봇 이슈가 없어요. 이 상태를 유지하는 것이 중요해요.</div>
+        </div>
+      </div>`;
+  }
+
+  // ── 전략 추천 ──
+  const strategies = [];
+
+  if (titleScore < 9) strategies.push({
+    icon:'📝', priority:'높음',
+    title:'방 제목 SEO 최적화',
+    desc:`현재 제목: "${title || '(미입력)'}" — 핵심 키워드 + 지역명 + 대상 타겟을 모두 포함시켜요.<br/>예: "[카테고리] [지역] | [특징] | [일정]" 형식 추천`,
+    color:'#ef4444'
+  });
+
+  if (tagCount < 5) strategies.push({
+    icon:'#️⃣', priority:'높음',
+    title:'해시태그 최적화 (5개 이상)',
+    desc:`현재 ${tagCount}개 → 대형 태그 2개 + 세부 태그 3개 혼합이 이상적이에요.<br/>예: #${category} #${category}모임 #초보환영 #정기모임 #소셜클럽`,
+    color:'#f97316'
+  });
+
+  if (heartCount < 10) strategies.push({
+    icon:'❤️', priority:'긴급',
+    title:`하트 10개 확보 (현재 ${heartCount}개)`,
+    desc:'하트 10개가 첫 검색 노출 최소 조건이에요. 지인에게 하트를 요청하거나, 방 소개 게시물에서 하트를 유도하세요.',
+    color:'#ef4444'
+  });
+
+  if (dailyMsgs < 50) strategies.push({
+    icon:'💬', priority:'높음',
+    title:'메시지 활성화 전략',
+    desc:'하루 50개 이상이 목표예요. 오후 7~10시 사이 퀴즈·투표·토론 주제를 던져서 대화를 집중시키세요.',
+    color:'#c8a800'
+  });
+
+  if (exitRate >= 40) strategies.push({
+    icon:'🚪', priority:'높음',
+    title:'이탈율 낮추기',
+    desc:'입장 즉시 자동 웰컴 메시지 + 방 규칙을 고정 메시지로 올려두세요. 첫 30분이 잔류율을 결정해요.',
+    color:'#c8a800'
+  });
+
+  if (intro.length < 50) strategies.push({
+    icon:'📋', priority:'보통',
+    title:'소개글 보강',
+    desc:'소개글에 활동 내용·정기 일정·참여 방법을 50자 이상 상세히 적어두세요. 키워드 추가로 검색 노출 기회 ↑',
+    color:'#3b82f6'
+  });
+
+  if (extTraffic < 5) strategies.push({
+    icon:'🔗', priority:'보통',
+    title:'외부 트래픽 확보',
+    desc:'네이버 카페·블로그·맘카페 등에 방 소개 게시글을 올리고 오픈채팅 링크를 공유하세요. 외부 유입이 알고리즘 가점의 핵심이에요.',
+    color:'#3b82f6'
+  });
+
+  if (feedExposure === 'no') strategies.push({
+    icon:'⚡', priority:'높음',
+    title:'지금탭 피드 노출 확보 (2025 대개편 핵심)',
+    desc:'2025년 9월 개편 후 "지금" 탭의 오픈채팅 커뮤니티 피드에 노출되려면 방 내 대화가 활발해야 해요. 피드 노출 = 추가 노출 채널 확보예요.',
+    color:'#f97316'
+  });
+
+  if (shortformUsed === 'no' || shortformUsed === 'some') strategies.push({
+    icon:'🎬', priority:'보통',
+    title:'숏폼 콘텐츠 방 내 공유 활성화',
+    desc:'"지금" 탭은 숏폼과 오픈채팅이 통합돼 있어요. 관련 숏폼을 방에서 공유하면 외부 노출로 이어지는 교차 유입 효과가 있어요.',
+    color:'#f97316'
+  });
+
+  if (trendingTab === 'never') strategies.push({
+    icon:'🔥', priority:'보통',
+    title:'"지금 뜨는" 탭 진입 전략',
+    desc:'"지금 뜨는" 탭은 매일 자동으로 인기 방을 선정해요. 하루 200메시지 이상 + 다양한 인원 참여 + 하트 증가세가 진입 조건이에요.',
+    color:'#f97316'
+  });
+
+  strategies.push({
+    icon:'⏰', priority:'유지',
+    title:'골든 타임 공략',
+    desc:'오후 7~10시, 주말 오전 10시~12시가 활성도 급등 시간대예요. 이 시간에 이벤트·퀴즈를 열어 대화량을 집중시키세요.',
+    color:'#22c55e'
+  });
+
+  const priorityColors = { '긴급':'#ef4444', '높음':'#f97316', '보통':'#3b82f6', '유지':'#22c55e' };
+  document.getElementById('strategySection').innerHTML = `
+    <div style="display:grid;gap:10px;">
+      ${strategies.map(s => `
+        <div style="border-radius:12px;border-left:4px solid ${s.color};background:#fafafa;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:1.1rem;">${s.icon}</span>
+            <span style="font-weight:700;font-size:0.88rem;color:#333;">${s.title}</span>
+            <span style="font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:99px;background:${s.color}18;color:${s.color};white-space:nowrap;">우선순위: ${s.priority}</span>
+          </div>
+          <div style="font-size:0.82rem;color:#666;line-height:1.6;">${s.desc}</div>
+        </div>`).join('')}
+    </div>`;
+
+  // ── 30일 로드맵 ──
+  const roadmapSteps = [
+    {
+      days:'Day 1~5', title:'SEO 기반 세팅',
+      color:'#FEE500', icon:'🌱',
+      action:`방 제목·해시태그·소개글 전면 개편. 하트 10개 확보 (지인 요청). 고정 메시지에 방 규칙 + 웰컴 안내 작성.`,
+      why:'알고리즘이 방을 처음 분류할 때 제목·해시태그 키워드를 가장 크게 반영해요. 초기 세팅이 이후 모든 것을 결정해요.'
+    },
+    {
+      days:'Day 6~14', title:'활성도 기반 구축',
+      color:'#c8a800', icon:'📈',
+      action:`매일 오후 7~10시 사이 대화 유도 (퀴즈·투표·토론). 방장이 먼저 가볍게 질문을 던져서 참여를 이끄세요.`,
+      why:'활성도 지표는 메시지 수보다 참여 인원의 다양성이 더 중요해요. 1~2명의 도배보다 10명의 가벼운 참여가 더 높은 점수예요.'
+    },
+    {
+      days:'Day 15~22', title:'리텐션·신뢰도 강화',
+      color:'#f97316', icon:'🔥',
+      action:`외부 블로그·카페에 방 소개 포스팅. 이탈한 멤버 패턴 분석해서 웰컴 메시지 개선. 방장 활동 루틴 고정.`,
+      why:'이 시기에 외부 유입이 늘어나야 알고리즘이 "검색할 가치 있는 방"으로 확정해요. 외부 트래픽은 가점 효과가 2~3배예요.'
+    },
+    {
+      days:'Day 23~30', title:'급상승 노출 도전',
+      color:'#ef4444', icon:'🏆',
+      action:`특정 시간대에 퀴즈 이벤트 진행 (상품 또는 인증샷). 대화량이 폭발적으로 증가하는 "골든 타임"을 만들어요.`,
+      why:'단시간 메시지 급증은 "급상승 방" 노출 트리거가 돼요. 하루 200개 이상 메시지가 몰리면 검색 상단에 임시 배치될 수 있어요.'
+    },
+  ];
+  document.getElementById('roadmapSection').innerHTML = `
+    <div style="display:grid;gap:10px;">
+      ${roadmapSteps.map(s => `
+        <div class="roadmap-item" style="border-left-color:${s.color};">
+          <div class="roadmap-title" style="color:${s.color};">${s.icon} ${s.days}: ${s.title}</div>
+          <div class="roadmap-action"><b>액션:</b> ${s.action}</div>
+          <div class="roadmap-why">Why: ${s.why}</div>
+        </div>`).join('')}
+    </div>`;
+
+  // ── 실전 팁 ──
+  document.getElementById('tipBox').innerHTML = `
+    <strong>📌 초기 세팅 체크리스트</strong><br/>
+    &nbsp;&nbsp;1. 핵심 키워드를 포함한 제목 (10~40자) 설정<br/>
+    &nbsp;&nbsp;2. 하트 10개 이상 확보 → 검색 노출 시작<br/>
+    &nbsp;&nbsp;3. 공지사항·웰컴 메시지로 신규 인원 이탈 방지<br/><br/>
+    <strong>💬 이탈 방지 전략</strong><br/>
+    &nbsp;&nbsp;• 입장 즉시 자동 인사 + 간단한 자기소개 유도<br/>
+    &nbsp;&nbsp;• 규칙·활동 안내를 고정 메시지로 고정<br/>
+    &nbsp;&nbsp;• 첫 대화를 쉽게 시작할 수 있는 가벼운 질문 던지기<br/><br/>
+    <strong>⏰ 골든 타임 활용</strong><br/>
+    &nbsp;&nbsp;• 인원이 모이는 오후 7~10시에 퀴즈·토론 이벤트 열기<br/>
+    &nbsp;&nbsp;• 주말 오전 10~12시: 참여율이 가장 높은 시간대<br/>
+    &nbsp;&nbsp;• 대화가 집중될수록 "급상승" 노출 확률 상승<br/><br/>
+    <strong>⚡ 2025 지금탭 활용 전략</strong><br/>
+    &nbsp;&nbsp;• 지금탭 "커뮤니티 피드"에 노출되려면 방 내 대화 활성화가 핵심<br/>
+    &nbsp;&nbsp;• 숏폼 콘텐츠 공유 → 지금탭 숏폼 섹션과 교차 노출 효과<br/>
+    &nbsp;&nbsp;• "지금 뜨는" 탭 진입 = 하루 200메시지 이상 + 다양한 참여 인원<br/>
+    &nbsp;&nbsp;• 체류 시간 기준: 개편 후 일평균 26분 → 활성 방일수록 더 오래 표시<br/><br/>
+    <strong>🚫 절대 피해야 할 것</strong><br/>
+    &nbsp;&nbsp;• 도배성 링크·광고 허용 → 머신러닝 자동 감지 + 신고 누적으로 유령 방<br/>
+    &nbsp;&nbsp;• 매크로·봇 유입 → AI 감지 시 계정 제재 (2025 강화)<br/>
+    &nbsp;&nbsp;• 방장 잠수 → 신뢰도 점수 급락`;
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('pdf-bar').style.display = 'flex';
+  document.getElementById('result').scrollIntoView({ behavior:'smooth' });
+}
+
+// ── PDF 내보내기 ──
+async function downloadPDF() {
+  const btn = document.getElementById('pdf-dl-btn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '⏳ 생성 중...'; btn.disabled = true;
+  try {
+    const cards = Array.from(document.querySelectorAll('#result .result-card'));
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'p', unit:'mm', format:'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const margin = 12;
+    const gap = 5;
+    const contentW = pageW - margin * 2;
+    const maxH = pageH - margin * 2;
+    let cursorY = margin;
+
+    for (const card of cards) {
+      if (card.offsetParent === null) continue;
+      const canvas = await html2canvas(card, {
+        scale:2, useCORS:true, backgroundColor:'#ffffff', logging:false, windowWidth:860
+      });
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      const imgH = (canvas.height * contentW) / canvas.width;
+
+      if (imgH > maxH) {
+        if (cursorY > margin) { pdf.addPage(); cursorY = margin; }
+        let offset = 0;
+        while (offset < imgH) {
+          if (offset > 0) pdf.addPage();
+          pdf.addImage(imgData, 'JPEG', margin, margin - offset, contentW, imgH);
+          offset += maxH;
+        }
+        cursorY = pageH;
+      } else {
+        const extraGap = cursorY > margin ? gap : 0;
+        if (cursorY + extraGap + imgH > pageH - margin) {
+          pdf.addPage(); cursorY = margin;
+        } else {
+          cursorY += extraGap;
+        }
+        pdf.addImage(imgData, 'JPEG', margin, cursorY, contentW, imgH);
+        cursorY += imgH;
+      }
+    }
+    const d = new Date();
+    const ds = d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2)+('0'+d.getDate()).slice(-2);
+    pdf.save('카카오오픈채팅_분석결과_'+ds+'.pdf');
+  } catch(e) { alert('PDF 생성 중 오류가 발생했어요.'); console.error(e); }
+  btn.innerHTML = orig; btn.disabled = false;
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>

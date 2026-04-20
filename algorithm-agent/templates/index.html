@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlgoChiri — 알고리즘 업데이트 에이전트</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Apple SD Gothic Neo','Segoe UI',sans-serif;
+      background: #0f0f13;
+      color: #e8e8ee;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    /* 헤더 */
+    header { text-align:center; margin-bottom:48px; }
+    .logo {
+      font-size:2.2rem; font-weight:900;
+      background: linear-gradient(90deg,#16A34A,#EA580C);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      margin-bottom:6px;
+    }
+    .logo span { font-size:1.1rem; opacity:0.7; -webkit-text-fill-color:#888; }
+    .sub { color:#555; font-size:0.85rem; margin-top:4px; }
+
+    /* 상태 카드들 */
+    .cards {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:14px; max-width:700px; margin:0 auto 36px;
+    }
+    @media(max-width:600px){ .cards { grid-template-columns:1fr; } }
+    .card {
+      background:#18181f; border:1.5px solid #2a2a35;
+      border-radius:16px; padding:20px;
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .card-icon { font-size:1.6rem; }
+    .card-label { font-size:0.72rem; color:#555; font-weight:600; letter-spacing:0.05em; }
+    .card-val { font-size:1rem; font-weight:800; color:#e8e8ee; }
+    .card-val.green { color:#22c55e; }
+    .card-val.orange { color:#f97316; }
+    .card-val.blue { color:#60a5fa; }
+
+    /* 실행 버튼 영역 */
+    .run-wrap {
+      text-align:center; margin-bottom:36px;
+    }
+    .toggle-wrap {
+      display:inline-flex; align-items:center; gap:8px;
+      margin-bottom:18px; font-size:0.82rem; color:#666;
+    }
+    .toggle {
+      width:40px; height:22px; background:#2a2a35; border-radius:99px;
+      position:relative; cursor:pointer; transition:background 0.2s;
+    }
+    .toggle.on { background:#16A34A; }
+    .toggle::after {
+      content:''; position:absolute; top:3px; left:3px;
+      width:16px; height:16px; background:#fff; border-radius:99px;
+      transition:left 0.2s;
+    }
+    .toggle.on::after { left:21px; }
+
+    .run-btn {
+      display:inline-flex; align-items:center; gap:10px;
+      background:linear-gradient(135deg,#16A34A,#EA580C);
+      color:#fff; border:none; border-radius:99px;
+      padding:16px 48px; font-size:1rem; font-weight:800;
+      cursor:pointer; transition:opacity 0.2s, transform 0.2s;
+      font-family:inherit; letter-spacing:-0.3px;
+    }
+    .run-btn:hover { opacity:0.9; transform:translateY(-2px); }
+    .run-btn:disabled {
+      background:#2a2a35; color:#555; cursor:not-allowed; transform:none;
+    }
+    .run-btn .btn-icon { font-size:1.3rem; }
+    .run-btn.running .btn-icon { animation:spin 1s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* 로그 패널 */
+    .log-wrap {
+      max-width:700px; margin:0 auto;
+      background:#13131a; border:1.5px solid #2a2a35;
+      border-radius:16px; overflow:hidden;
+    }
+    .log-header {
+      padding:14px 20px; border-bottom:1px solid #2a2a35;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .log-title { font-size:0.78rem; font-weight:700; color:#555; letter-spacing:0.08em; }
+    .log-clear { font-size:0.72rem; color:#444; cursor:pointer; }
+    .log-clear:hover { color:#888; }
+    .log-body {
+      padding:16px 20px; height:360px;
+      overflow-y:auto; font-size:0.78rem; font-family:monospace;
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .log-body::-webkit-scrollbar { width:4px; }
+    .log-body::-webkit-scrollbar-track { background:transparent; }
+    .log-body::-webkit-scrollbar-thumb { background:#2a2a35; border-radius:99px; }
+
+    .log-row { display:flex; gap:10px; align-items:flex-start; }
+    .log-time { color:#333; flex-shrink:0; width:54px; }
+    .log-msg { line-height:1.5; }
+    .log-msg.info    { color:#888; }
+    .log-msg.success { color:#22c55e; }
+    .log-msg.error   { color:#f87171; }
+    .log-msg.search  { color:#60a5fa; }
+    .log-msg.file    { color:#f97316; }
+
+    .log-empty { color:#333; text-align:center; margin:auto; }
+
+    /* 완료 배너 */
+    .done-banner {
+      display:none; text-align:center; margin-top:20px;
+      padding:16px; background:#16A34A18; border:1.5px solid #16A34A44;
+      border-radius:12px; max-width:700px; margin:20px auto 0;
+      font-size:0.88rem; color:#22c55e; font-weight:700;
+    }
+
+    footer { text-align:center; margin-top:48px; color:#333; font-size:0.75rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AlgoChiri <span>by longchiri</span></div>
+  <p class="sub">인스타 · 카카오 · 당근 · 소모임 · 문토 알고리즘 자동 업데이트 에이전트</p>
+</header>
+
+<!-- 상태 카드 -->
+<div class="cards">
+  <div class="card">
+    <div class="card-icon">📡</div>
+    <div class="card-label">STATUS</div>
+    <div class="card-val" id="statusVal">대기 중</div>
+  </div>
+  <div class="card">
+    <div class="card-icon">📝</div>
+    <div class="card-label">마지막 실행</div>
+    <div class="card-val blue" id="lastRunVal">—</div>
+  </div>
+  <div class="card">
+    <div class="card-icon">📤</div>
+    <div class="card-label">GitHub 푸시</div>
+    <div class="card-val" id="pushVal">—</div>
+  </div>
+</div>
+
+<!-- 실행 버튼 -->
+<div class="run-wrap">
+  <div class="toggle-wrap">
+    <div class="toggle on" id="autoPushToggle" onclick="togglePush()"></div>
+    <span id="toggleLabel">GitHub 자동 푸시 ON</span>
+  </div>
+  <br/>
+  <button class="run-btn" id="runBtn" onclick="runAgent()">
+    <span class="btn-icon" id="btnIcon">🤖</span>
+    AlgoChiri 실행
+  </button>
+</div>
+
+<!-- 로그 패널 -->
+<div class="log-wrap">
+  <div class="log-header">
+    <span class="log-title">⬛ LIVE LOG</span>
+    <span class="log-clear" onclick="clearLog()">지우기</span>
+  </div>
+  <div class="log-body" id="logBody">
+    <span class="log-empty">버튼을 눌러 AlgoChiri를 실행하세요 🚀</span>
+  </div>
+</div>
+
+<!-- 완료 배너 -->
+<div class="done-banner" id="doneBanner">
+  🎉 모든 작업 완료! 분석기 파일이 업데이트됐어요.
+</div>
+
+<footer>AlgoChiri v1.0 · longchiri</footer>
+
+<script>
+  let autoPush = true;
+  let eventSource = null;
+  let isRunning = false;
+
+  function togglePush() {
+    autoPush = !autoPush;
+    const t = document.getElementById('autoPushToggle');
+    const l = document.getElementById('toggleLabel');
+    t.classList.toggle('on', autoPush);
+    l.textContent = autoPush ? 'GitHub 자동 푸시 ON' : 'GitHub 자동 푸시 OFF';
+    document.getElementById('pushVal').textContent = autoPush ? '자동' : '수동';
+  }
+
+  function addLog(time, msg, type) {
+    const body = document.getElementById('logBody');
+    // 첫 로그 시 empty 메시지 제거
+    const empty = body.querySelector('.log-empty');
+    if (empty) empty.remove();
+
+    const row = document.createElement('div');
+    row.className = 'log-row';
+    row.innerHTML = `<span class="log-time">${time}</span><span class="log-msg ${type}">${msg}</span>`;
+    body.appendChild(row);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function clearLog() {
+    const body = document.getElementById('logBody');
+    body.innerHTML = '<span class="log-empty">버튼을 눌러 AlgoChiri를 실행하세요 🚀</span>';
+  }
+
+  function setRunning(running) {
+    isRunning = running;
+    const btn = document.getElementById('runBtn');
+    const icon = document.getElementById('btnIcon');
+    const statusVal = document.getElementById('statusVal');
+
+    btn.disabled = running;
+    icon.textContent = running ? '⚙️' : '🤖';
+    btn.classList.toggle('running', running);
+    statusVal.textContent = running ? '실행 중...' : '대기 중';
+    statusVal.style.color = running ? '#f97316' : '#e8e8ee';
+  }
+
+  async function runAgent() {
+    if (isRunning) return;
+
+    setRunning(true);
+    document.getElementById('doneBanner').style.display = 'none';
+    document.getElementById('lastRunVal').textContent = new Date().toLocaleTimeString('ko-KR');
+    document.getElementById('pushVal').textContent = autoPush ? '처리 중...' : '—';
+
+    // 실행 요청
+    const resp = await fetch('/run', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({auto_push: autoPush})
+    });
+    const data = await resp.json();
+    if (!data.ok) {
+      addLog(new Date().toLocaleTimeString(), data.msg, 'error');
+      setRunning(false);
+      return;
+    }
+
+    // SSE 로그 스트리밍
+    if (eventSource) eventSource.close();
+    eventSource = new EventSource('/logs');
+
+    eventSource.onmessage = (e) => {
+      const log = JSON.parse(e.data);
+      if (log.type === 'done') {
+        eventSource.close();
+        setRunning(false);
+        document.getElementById('doneBanner').style.display = 'block';
+        document.getElementById('pushVal').textContent = autoPush ? '✅ 완료' : '—';
+        document.getElementById('pushVal').style.color = '#22c55e';
+        return;
+      }
+      addLog(log.time, log.msg, log.type);
+    };
+
+    eventSource.onerror = () => {
+      eventSource.close();
+      setRunning(false);
+    };
+  }
+</script>
+
+</body>
+</html>
