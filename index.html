@@ -323,6 +323,39 @@
     .section-divider { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; }
 
     footer { text-align: center; color: #bbb; font-size: 0.8rem; margin-top: 10px; }
+
+    /* ── ⓘ 인포 버튼 + 툴팁 ── */
+    .info-wrap { position: relative; display: inline-block; vertical-align: middle; margin-left: 5px; }
+    .info-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; background: #ede0ff; color: #833ab4;
+      border-radius: 50%; font-size: 0.62rem; font-weight: 900;
+      cursor: pointer; border: none; font-family: serif;
+      transition: background 0.15s, color 0.15s; line-height: 1;
+    }
+    .info-btn:hover, .info-btn.active { background: #833ab4; color: #fff; }
+    .info-tooltip {
+      display: none; position: absolute; z-index: 200;
+      background: #fff; border: 1.5px solid #d8b4fe;
+      border-radius: 12px; padding: 10px 13px;
+      font-size: 0.76rem; color: #444; line-height: 1.65;
+      width: 230px; left: 50%; transform: translateX(-50%);
+      bottom: calc(100% + 8px);
+      box-shadow: 0 6px 20px rgba(131,58,180,0.18);
+      pointer-events: none; font-weight: 400;
+    }
+    .info-tooltip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent; border-top-color: #d8b4fe;
+    }
+    .info-wrap:hover .info-tooltip,
+    .info-btn.active + .info-tooltip { display: block; }
+    .tooltip-where {
+      margin-top: 6px; padding: 4px 8px;
+      background: #f5f0ff; border-radius: 6px;
+      font-size: 0.71rem; color: #7c3aed; font-weight: 600;
+    }
   </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -2739,6 +2772,106 @@ async function sharePDF() {
   } catch(e) { if(e.name!=='AbortError') { alert('공유 중 오류가 발생했어요.'); console.error(e); } }
   btn.innerHTML = orig; btn.disabled = false;
 }
+
+// ══════════════════════════════════════════
+// ⓘ 인포 버튼 자동 주입
+// ══════════════════════════════════════════
+const INFO_DATA = {
+  // ── ZIP 추가 입력 탭 (u-) ──
+  'u-growthRate':        { desc:'지난 30일 팔로워 순증가 수 ÷ 이전 팔로워 × 100', where:'인스타 앱 → 프로페셔널 대시보드 → 팔로워 → 성장' },
+  'u-maleRatio':         { desc:'전체 팔로워 중 남성 비율 (%)', where:'인스타 앱 → 프로페셔널 대시보드 → 오디언스 → 성별' },
+  'u-coreAge':           { desc:'팔로워 중 가장 많은 연령층', where:'인스타 앱 → 프로페셔널 대시보드 → 오디언스 → 연령' },
+  'u-weeklyPosts':       { desc:'최근 4주 평균 주당 피드+릴스 업로드 횟수', where:'본인 프로필 → 게시물 날짜 직접 계산' },
+  'u-avgLikes':          { desc:'최근 피드 게시물의 좋아요 평균값', where:'각 게시물 → ··· → 인사이트 → 좋아요 수' },
+  'u-avgSaves':          { desc:'최근 피드 게시물의 저장 평균값', where:'각 게시물 → ··· → 인사이트 → 저장 수' },
+  'u-avgShares':         { desc:'최근 피드 게시물의 공유(DM 전송) 평균값', where:'각 게시물 → ··· → 인사이트 → 공유 수' },
+  'u-avgReach':          { desc:'중복 제거한 순 노출 계정 수 평균 (Reach)', where:'각 게시물 → ··· → 인사이트 → 도달한 계정 수' },
+  'u-nonFollowerReach':  { desc:'도달 중 팔로워가 아닌 계정 비율. 높을수록 탐색탭 노출 많은 것', where:'각 게시물 인사이트 → "팔로우하지 않는 계정" 항목 (%)' },
+  'u-carouselRatio':     { desc:'전체 피드 게시물 중 카루셀(다중이미지) 비율. 단일 이미지보다 인게이지먼트율 2배 이상', where:'본인 프로필 → 게시물 유형 직접 계산' },
+  'u-reelsWatchRate':    { desc:'릴스를 평균 몇 %까지 시청했는지. 인스타 알고리즘 1순위 지표 (Mosseri 확인)', where:'각 릴스 → ··· → 인사이트 → 평균 시청률' },
+  'u-completionRate':    { desc:'릴스를 끝까지 본 시청자 비율 (%)', where:'각 릴스 → ··· → 인사이트 → 완주율' },
+  'u-replayRate':        { desc:'같은 릴스를 다시 재생한 비율 (%)', where:'각 릴스 → ··· → 인사이트 → 재생' },
+  'u-earlyDropRate':     { desc:'첫 3초 이내 이탈한 시청자 비율 (%). 낮을수록 훅이 강한 것', where:'각 릴스 → ··· → 인사이트 → 이탈율' },
+  'u-originalRatio':     { desc:'직접 제작 콘텐츠 비율 (%). 2025년 12월부터 리포스트 콘텐츠는 추천탭 제외', where:'본인 게시물 중 원본 vs 리포스트 직접 계산' },
+  'u-storyDM':           { desc:'스토리를 보고 DM이나 답장을 보낸 수 (주당 합산)', where:'각 스토리 → ··· → 인사이트 → DM/답장 수' },
+  'u-storyStickerClicks':{ desc:'스토리 스티커(링크·설문·퀴즈 등) 클릭 수 (주당 합산)', where:'각 스토리 → ··· → 인사이트 → 스티커 탭 수' },
+  'u-storyProfileVisits':{ desc:'스토리를 통해 내 프로필을 방문한 수 (주당 합산)', where:'각 스토리 → ··· → 인사이트 → 프로필 방문' },
+  'u-profileVisits':     { desc:'한 달간 내 프로필을 방문한 순 계정 수', where:'인스타 앱 → 프로페셔널 대시보드 → 도달 → 프로필 방문' },
+  'u-followClicks':      { desc:'프로필 방문 후 팔로우 버튼을 누른 수', where:'인스타 앱 → 프로페셔널 대시보드 → 팔로워 → 유입 경로' },
+  'u-hookType':          { desc:'릴스 첫 2초의 시선 잡기 방식. 질문·충격·스토리형이 이탈율을 낮춤', where:'본인 릴스 첫 장면 확인' },
+  'u-hasCTA':            { desc:'영상/게시물 내 행동 유도 문구 (저장해봐요 / DM 주세요 등). 있을수록 저장·DM 인게이지먼트 상승', where:'본인 게시물 캡션·영상 텍스트 확인' },
+  'u-niche':             { desc:'주요 콘텐츠 주제 (예: 독서, 운동, 음식, 패션)', where:'본인 계정 콘텐츠 주제 확인' },
+
+  // ── 수동 입력 탭 ──
+  'followers':           { desc:'현재 팔로워 총 수', where:'인스타그램 본인 프로필 → 팔로워 숫자' },
+  'following':           { desc:'현재 팔로잉 총 수', where:'인스타그램 본인 프로필 → 팔로잉 숫자' },
+  'posts':               { desc:'전체 게시물(피드) 수', where:'인스타그램 본인 프로필 → 게시물 숫자' },
+  'opDays':              { desc:'첫 게시물 날짜부터 오늘까지의 일수', where:'첫 게시물 날짜 확인 → 오늘 날짜와 차이 계산' },
+  'avgLikes':            { desc:'최근 게시물 좋아요 수의 평균값', where:'각 게시물 → ··· → 인사이트 → 좋아요 수 (평균)' },
+  'avgSaves':            { desc:'최근 게시물 저장 수의 평균값', where:'각 게시물 → ··· → 인사이트 → 저장 수 (평균)' },
+  'avgShares':           { desc:'최근 게시물 공유 수의 평균값', where:'각 게시물 → ··· → 인사이트 → 공유 수 (평균)' },
+  'avgReach':            { desc:'중복 제거한 순 도달 계정 수 평균', where:'각 게시물 → ··· → 인사이트 → 도달한 계정 수' },
+  'reelsPosts':          { desc:'전체 게시물 중 릴스 수', where:'본인 프로필 → 릴스 탭 → 게시물 수' },
+  'storyCount':          { desc:'최근 30일 스토리 게시 수', where:'인스타 → 프로페셔널 대시보드 → 스토리 활동' },
+  'reelsWatchRate':      { desc:'릴스 평균 시청 유지율 (%). 인스타 알고리즘 1순위 지표', where:'각 릴스 → ··· → 인사이트 → 평균 시청률' },
+  'storyDM':             { desc:'스토리 DM/답장 수 (주당)', where:'각 스토리 → ··· → 인사이트 → DM/답장' },
+  'storyStickerClicks':  { desc:'스토리 스티커 클릭 수 (주당)', where:'각 스토리 → ··· → 인사이트 → 스티커 탭' },
+  'storyProfileVisits':  { desc:'스토리를 통한 프로필 방문 수 (주당)', where:'각 스토리 → ··· → 인사이트 → 프로필 방문' },
+  'profileVisits':       { desc:'월 프로필 방문자 수', where:'프로페셔널 대시보드 → 도달 → 프로필 방문' },
+  'followClicks':        { desc:'프로필 방문 → 팔로우 전환 수', where:'프로페셔널 대시보드 → 팔로워 → 유입 경로' },
+  'nonFollowerReach':    { desc:'팔로워가 아닌 계정에 도달한 비율 (%)', where:'게시물 인사이트 → "팔로우하지 않는 계정" (%)' },
+  'growthRate':          { desc:'지난 30일 팔로워 성장률 (%)', where:'프로페셔널 대시보드 → 팔로워 → 성장' },
+  'maleRatio':           { desc:'전체 팔로워 중 남성 비율 (%)', where:'프로페셔널 대시보드 → 오디언스 → 성별' },
+  'carouselRatio':       { desc:'피드 중 카루셀(다중이미지) 비율 (%)', where:'본인 프로필 게시물 유형 직접 계산' },
+  'originalRatio':       { desc:'직접 제작 오리지널 콘텐츠 비율 (%)', where:'게시물 중 원본 vs 리포스트 직접 계산' },
+  'completionRate':      { desc:'릴스 완주율 — 끝까지 본 시청자 비율 (%)', where:'각 릴스 → ··· → 인사이트 → 완주율' },
+  'replayRate':          { desc:'릴스 재시청율 (%)', where:'각 릴스 → ··· → 인사이트 → 재생' },
+  'earlyDropRate':       { desc:'릴스 초반 이탈율 (%). 낮을수록 훅이 강한 것', where:'각 릴스 → ··· → 인사이트 → 이탈율' },
+  'weeklyPosts':         { desc:'주당 평균 업로드 횟수 (피드+릴스)', where:'본인 게시물 날짜 기준 직접 계산' },
+  'dmCount':             { desc:'총 DM 대화 수 (전체 기간)', where:'인스타그램 DM 탭 → 대화 수 확인' },
+};
+
+function injectInfoButtons() {
+  Object.entries(INFO_DATA).forEach(([id, info]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const label = el.closest('.form-group')?.querySelector('label');
+    if (!label) return;
+    // 중복 방지
+    if (label.querySelector('.info-wrap')) return;
+
+    const wrap = document.createElement('span');
+    wrap.className = 'info-wrap';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'info-btn';
+    btn.textContent = 'i';
+    btn.setAttribute('aria-label', '설명 보기');
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isActive = this.classList.contains('active');
+      document.querySelectorAll('.info-btn.active').forEach(b => b.classList.remove('active'));
+      if (!isActive) this.classList.add('active');
+    });
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'info-tooltip';
+    tooltip.innerHTML = `${info.desc}<div class="tooltip-where">📍 ${info.where}</div>`;
+
+    wrap.appendChild(btn);
+    wrap.appendChild(tooltip);
+    label.appendChild(wrap);
+  });
+
+  // 툴팁 외부 클릭 시 닫기
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.info-btn.active').forEach(b => b.classList.remove('active'));
+  });
+}
+
+// DOM 로드 후 실행
+document.addEventListener('DOMContentLoaded', injectInfoButtons);
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
