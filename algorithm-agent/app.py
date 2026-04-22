@@ -21,7 +21,7 @@ log_lock = threading.Lock()
 def add_log(msg, type="info"):
     with log_lock:
         agent_status["logs"].append({
-            "time": datetime.now().strftime("%H:%M:%S"),
+            "time": None,  # 브라우저에서 로컬 시간으로 표시
             "msg": msg,
             "type": type  # info / success / error / search / file
         })
@@ -119,8 +119,7 @@ def status():
 
 
 def git_push():
-    """GitHub에 자동 푸시 (로컬 파일 → GitHub 파일명 매핑 포함)"""
-    import shutil
+    """GitHub에 자동 푸시"""
     try:
         today = datetime.now().strftime("%Y.%m.%d %H:%M")
 
@@ -128,38 +127,48 @@ def git_push():
         agent_dir = os.path.dirname(os.path.abspath(__file__))
         base = os.path.dirname(agent_dir)  # 상위 폴더 (git 루트)
 
-        # ── 로컬 → GitHub 파일명 매핑 ──────────────────
-        # 인스타그램 분석기는 GitHub에서 index.html
-        file_map = {
-            os.path.join(base, "인스타 분석", "insta-analyzer.html"): os.path.join(base, "index.html"),
-            os.path.join(base, "카카오 분석", "kakao-analyzer.html"): os.path.join(base, "kakao-analyzer.html"),
-            os.path.join(base, "hub.html"): os.path.join(base, "hub.html"),
-        }
-
-        # 파일 복사 (로컬 원본 → GitHub용 위치)
-        copied = []
-        for src, dst in file_map.items():
-            if os.path.exists(src) and src != dst:
-                shutil.copy2(src, dst)
-                copied.append(os.path.basename(dst))
-
-        # git 명령 실행
-        cmds = [
-            ["git", "-C", base, "add",
-             "index.html", "kakao-analyzer.html", "hub.html"],
-            ["git", "-C", base, "commit", "-m",
-             f"AlgoChiri 자동 업데이트 — {today}"],
-            ["git", "-C", base, "push"],
+        # ── push 대상 파일 목록 (base 기준 상대경로) ──
+        target_files = [
+            "index.html",           # 인스타그램 분석기
+            "kakao-analyzer.html",  # 카카오 오픈채팅 분석기
+            "daangn-analyzer.html", # 당근 모임 분석기
+            "moim-analyzer.html",   # 소모임×문토 분석기
+            "hub.html",             # 허브 메인
         ]
 
-        for cmd in cmds:
-            result = subprocess.run(cmd, capture_output=True, text=True)
-            if result.returncode != 0:
-                if "nothing to commit" in result.stdout + result.stderr:
-                    return {"ok": True, "msg": "변경사항 없음 (커밋 건너뜀)"}
-                return {"ok": False, "msg": result.stderr.strip()}
+        # 존재하는 파일만 add
+        existing = [f for f in target_files if os.path.exists(os.path.join(base, f))]
+        if not existing:
+            return {"ok": False, "msg": "push할 파일이 없어요"}
 
-        return {"ok": True, "copied": copied}
+        # git add
+        add_result = subprocess.run(
+            ["git", "-C", base, "add"] + existing,
+            capture_output=True, text=True
+        )
+        if add_result.returncode != 0:
+            return {"ok": False, "msg": f"git add 실패: {add_result.stderr.strip()}"}
+
+        # git commit
+        commit_result = subprocess.run(
+            ["git", "-C", base, "commit", "-m", f"AlgoChiri 자동 업데이트 — {today}"],
+            capture_output=True, text=True
+        )
+        if commit_result.returncode != 0:
+            out = commit_result.stdout + commit_result.stderr
+            if "nothing to commit" in out:
+                return {"ok": True, "msg": "변경사항 없음 (커밋 건너뜀)"}
+            return {"ok": False, "msg": f"git commit 실패: {commit_result.stderr.strip()}"}
+
+        # git push
+        push_result = subprocess.run(
+            ["git", "-C", base, "push"],
+            capture_output=True, text=True
+        )
+        if push_result.returncode != 0:
+            return {"ok": False, "msg": f"git push 실패: {push_result.stderr.strip()}"}
+
+        return {"ok": True, "pushed": existing}
     except Exception as e:
         return {"ok": False, "msg": str(e)}
 
@@ -167,6 +176,6 @@ def git_push():
 if __name__ == "__main__":
     print("\n" + "="*45)
     print("  🤖 AlgoChiri Web App 시작!")
-    print("  브라우저에서 http://localhost:5000 열기")
+    print("  브라우저에서 http://localhost:5001 열기")
     print("="*45 + "\n")
-    app.run(debug=False, port=5000, threaded=True)
+    app.run(debug=False, port=5001, threaded=True)

@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>당근 모임 분석기</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#FFF5EC 0%,#FFEEDD 100%);
+      min-height:100vh; padding:30px 16px; color:#1a1a1a;
+    }
+    header { text-align:center; margin-bottom:30px; }
+    header .logo { font-size:2.8rem; margin-bottom:6px; }
+    header h1 {
+      font-size:1.9rem; font-weight:900;
+      background:linear-gradient(90deg,#FF6F0F,#FFB347);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    header p { color:#aaa; margin-top:6px; font-size:0.9rem; }
+    .algo-badge {
+      display:inline-block; background:linear-gradient(90deg,#FF6F0F,#FFB347);
+      color:#fff; font-size:0.72rem; font-weight:800;
+      padding:3px 12px; border-radius:99px; margin-top:8px;
+    }
+
+    /* ── 카드 ── */
+    .card {
+      background:#fff; border-radius:18px; padding:24px;
+      margin-bottom:18px; box-shadow:0 4px 20px rgba(255,111,15,0.1);
+      max-width:720px; margin-left:auto; margin-right:auto;
+      border:1.5px solid #FFE0C8;
+    }
+    .card h2 {
+      font-size:1.05rem; font-weight:800; margin-bottom:18px;
+      color:#7a2e00; display:flex; align-items:center; gap:8px;
+    }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:500px){ .form-grid { grid-template-columns:1fr; } }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group.full { grid-column:1/-1; }
+    label { font-size:0.82rem; font-weight:700; color:#666; display:flex; align-items:center; gap:4px; }
+    label .tip { font-size:0.72rem; font-weight:400; color:#aaa; margin-left:4px; }
+    input, textarea, select {
+      border:1.5px solid #e5e5e5; border-radius:10px;
+      padding:10px 12px; font-size:0.93rem; outline:none;
+      transition:border 0.2s; background:#fafafa; font-family:inherit;
+    }
+    input:focus, textarea:focus, select:focus { border-color:#FF6F0F; background:#fff8f3; }
+    textarea { resize:vertical; min-height:70px; }
+
+    /* 슬라이더 */
+    input[type="range"] {
+      border:none; background:none; padding:0;
+      width:100%; cursor:pointer; accent-color:#FF6F0F;
+    }
+    .range-row { display:flex; align-items:center; gap:10px; }
+    .range-val { font-size:1rem; font-weight:800; color:#FF6F0F; min-width:50px; text-align:right; }
+
+    /* 분석 버튼 */
+    .btn-analyze {
+      display:block; width:100%; max-width:720px; margin:0 auto 24px;
+      padding:16px; background:linear-gradient(90deg,#FF6F0F,#FFB347);
+      color:#fff; font-size:1.05rem; font-weight:800;
+      border:none; border-radius:14px; cursor:pointer;
+      transition:opacity 0.2s, transform 0.1s;
+      box-shadow:0 4px 20px rgba(255,111,15,0.4);
+    }
+    .btn-analyze:hover { opacity:0.9; transform:translateY(-1px); }
+
+    /* ── 결과 ── */
+    #result { display:none; }
+    .result-card {
+      background:#fff; border-radius:18px; padding:24px;
+      margin-bottom:18px; box-shadow:0 4px 20px rgba(255,111,15,0.1);
+      max-width:720px; margin-left:auto; margin-right:auto;
+      border:1.5px solid #FFE0C8;
+    }
+    .result-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:16px; color:#7a2e00; display:flex; align-items:center; gap:8px; }
+
+    /* 종합 점수 */
+    .score-big-box {
+      text-align:center; padding:24px 20px 20px;
+      background:linear-gradient(135deg,#FFF5EC,#FFEEDD);
+      border-radius:14px; margin-bottom:22px;
+      border:2px solid #FFB347;
+    }
+    .score-number {
+      font-size:4rem; font-weight:900;
+      background:linear-gradient(90deg,#FF6F0F,#e05000);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      line-height:1;
+    }
+    .score-grade { font-size:1.2rem; font-weight:800; margin-top:6px; color:#7a2e00; }
+    .score-label { color:#888; font-size:0.85rem; margin-top:4px; }
+
+    /* 세부 점수 */
+    .sub-score-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+    .sub-item {
+      background:#FFF5EC; border-radius:12px; padding:14px 8px; text-align:center;
+      border:1.5px solid #FFE0C8;
+    }
+    .sub-item .sv { font-size:1.4rem; font-weight:900; color:#FF6F0F; }
+    .sub-item .sn { font-size:0.72rem; color:#888; margin-top:4px; font-weight:700; }
+    .sub-item .sm { font-size:0.68rem; color:#bbb; margin-top:2px; }
+
+    /* 진행 바 */
+    .stat-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+    .stat-name-wrap { width:120px; flex-shrink:0; }
+    .stat-name { font-size:0.83rem; color:#555; font-weight:600; }
+    .stat-desc { font-size:0.72rem; color:#aaa; margin-top:2px; line-height:1.4; }
+    .bar-wrap { flex:1; background:#f0f0f0; border-radius:99px; height:10px; min-width:80px; }
+    .bar-fill { height:10px; border-radius:99px; transition:width 0.6s; }
+    .bar-good { background:linear-gradient(90deg,#22c55e,#86efac); }
+    .bar-mid  { background:linear-gradient(90deg,#FF6F0F,#FFB347); }
+    .bar-bad  { background:linear-gradient(90deg,#ef4444,#fca5a5); }
+    .stat-val { width:64px; text-align:right; font-size:0.82rem; color:#888; flex-shrink:0; }
+
+    /* 체크 아이템 */
+    .check-item {
+      display:flex; align-items:flex-start; gap:10px;
+      padding:11px 14px; border-radius:10px; margin-bottom:8px;
+    }
+    .check-ok   { background:#f0fff4; border-left:3px solid #22c55e; }
+    .check-warn { background:#fff8f3; border-left:3px solid #FF6F0F; }
+    .check-bad  { background:#fff5f5; border-left:3px solid #ef4444; }
+    .check-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+    .check-title { font-size:0.84rem; font-weight:700; }
+    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.5; }
+
+    /* 팁 박스 */
+    .tip-box {
+      background:linear-gradient(135deg,#FFF5EC,#FFEEDD);
+      border-left:4px solid #FF6F0F; border-radius:0 10px 10px 0;
+      padding:14px 16px; font-size:0.87rem; color:#7a2e00; line-height:1.7;
+    }
+    .tip-box strong { color:#FF6F0F; }
+
+    /* 공식 박스 */
+    .formula-box {
+      background:#7a2e00; border-radius:14px; padding:20px;
+      text-align:center; margin-bottom:18px; color:#FFB347;
+    }
+    .formula-text {
+      font-size:1rem; font-weight:700; letter-spacing:0.5px;
+      line-height:1.8;
+    }
+    .formula-sub { font-size:0.75rem; color:#FFB34799; margin-top:6px; }
+
+    /* 로드맵 */
+    .roadmap-item {
+      padding:14px 16px; border-radius:12px; margin-bottom:10px;
+      border-left:4px solid #FF6F0F; background:#fafafa;
+    }
+    .roadmap-title { font-weight:700; font-size:0.88rem; color:#FF6F0F; margin-bottom:4px; }
+    .roadmap-action { font-size:0.82rem; color:#444; margin-bottom:3px; }
+    .roadmap-why { font-size:0.77rem; color:#888; font-style:italic; }
+
+    /* 메트릭 그리드 */
+    .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+    @media(max-width:500px){ .metric-grid { grid-template-columns:repeat(2,1fr); } }
+    .metric-box { background:linear-gradient(135deg,#FFF5EC,#FFEEDD); border-radius:12px; padding:14px 10px; text-align:center; border:1px solid #FFE0C8; }
+    .metric-box .m-val { font-size:1.3rem; font-weight:800; color:#FF6F0F; }
+    .metric-box .m-label { font-size:0.72rem; color:#888; margin-top:4px; }
+
+    /* 섹션 구분 */
+    .divider { border:none; border-top:1px solid #FFE0C8; margin:16px 0; }
+
+    /* ⓘ 버튼 */
+    .info-wrap { position:relative; display:inline-block; vertical-align:middle; margin-left:5px; }
+    .info-btn {
+      width:16px; height:16px; background:#FFE0C8; color:#FF6F0F;
+      border-radius:50%; border:none; cursor:pointer; font-size:0.62rem;
+      font-weight:800; line-height:16px; text-align:center; padding:0;
+      display:inline-flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+    .info-btn:hover { background:#FF6F0F; color:#fff; }
+    .info-tooltip {
+      display:none; position:absolute; width:230px;
+      bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+      background:#fff; border:1.5px solid #FFE0C8; border-radius:12px;
+      padding:10px 12px; font-size:0.78rem; color:#444; z-index:999;
+      box-shadow:0 6px 24px rgba(255,111,15,0.15); line-height:1.6;
+      font-weight:400; text-align:left; pointer-events:none;
+    }
+    .info-tooltip.active { display:block; }
+    .tooltip-where { background:#FFF5EC; color:#FF6F0F; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
+
+    /* PDF 바 */
+    #pdf-bar { display:none; max-width:720px; margin:0 auto 18px; background:#fff; border-radius:14px; padding:14px 20px; box-shadow:0 4px 20px rgba(255,111,15,0.15); border:1.5px solid #FFE0C8; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+    footer { text-align:center; color:#bbb; font-size:0.8rem; margin-top:10px; }
+    .tg-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:9px 20px; background:#229ED9; border-radius:99px; text-decoration:none; color:#fff; font-size:0.8rem; font-weight:700; }
+    .back-btn { display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#999; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px; }
+    .back-wrap { max-width:720px; margin:0 auto 10px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#FF6F0F; font-weight:700; font-size:1.2rem;">longchiri</span></p>
+  <div class="logo">🥕</div>
+  <h1>당근 모임 분석기</h1>
+  <p>당근 알고리즘 기반으로 모임 노출 점수를 진단하고 성장 전략을 받아보세요</p>
+  <span class="algo-badge">⚡ 2026 당근 모임 알고리즘 기반</span>
+</header>
+
+<div class="back-wrap">
+  <a class="back-btn" href="hub.html">← 허브로 돌아가기</a>
+</div>
+
+<!-- ══════════ 입력 ══════════ -->
+
+<!-- 1. 모임 기본정보 -->
+<div class="card">
+  <h2>🥕 모임 기본 정보</h2>
+  <div class="form-grid">
+    <div class="form-group full">
+      <label>모임 제목
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임 이름이에요. 검색 키워드가 제목에 있을수록 상위 노출에 유리해요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 모임 정보 수정</span></span>
+        </span>
+        <span class="tip">키워드 포함 여부가 SEO 핵심 신호예요</span>
+      </label>
+      <input type="text" id="moimTitle" placeholder="예: 서울 독서 모임 | 매주 목요일 | 초보 환영"/>
+    </div>
+    <div class="form-group full">
+      <label>모임 소개글
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임을 설명하는 글이에요. 키워드·일정·특징을 명확하게 적을수록 알고리즘이 잘 파악해요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 모임 소개 편집</span></span>
+        </span>
+        <span class="tip">일정·장소·대상을 구체적으로 적으세요</span>
+      </label>
+      <textarea id="moimIntro" placeholder="예: 매주 목요일 저녁 7시 강남역 근처 카페에서 진행해요. 한 달에 책 한 권, 자유롭게 이야기 나눠요. 초보자 대환영!"></textarea>
+    </div>
+    <div class="form-group">
+      <label>모임 카테고리
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임의 주제 분류예요. 카테고리가 정확할수록 관심 있는 사람에게 더 잘 추천돼요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 카테고리 설정</span></span>
+        </span>
+      </label>
+      <select id="category">
+        <option value="독서">📚 독서/스터디</option>
+        <option value="운동">🏃 운동/스포츠</option>
+        <option value="맛집">🍽️ 맛집/음식</option>
+        <option value="게임">🎮 게임/보드게임</option>
+        <option value="아웃도어">🏕️ 아웃도어/자연</option>
+        <option value="음악">🎵 음악/악기</option>
+        <option value="공예">🎨 공예/취미</option>
+        <option value="언어">🌍 언어/외국어</option>
+        <option value="반려동물">🐾 반려동물</option>
+        <option value="기타">✨ 기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>활동 지역 설정
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">당근은 동네 기반 서비스예요. 활동 지역이 좁을수록 해당 동네에서 상위 노출 확률이 높아요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 활동 지역 설정</span></span>
+        </span>
+      </label>
+      <select id="areaRange">
+        <option value="narrow">우리 동네만 (1개 지역)</option>
+        <option value="medium" selected>인근 동네 포함 (2~3개 지역)</option>
+        <option value="wide">광역 (4개 이상 지역)</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 2. 모임 활동 지표 -->
+<div class="card">
+  <h2>📊 모임 활동 지표</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>현재 멤버 수
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">현재 모임에 가입된 멤버 수예요. 멤버가 많을수록 알고리즘 신뢰 점수가 올라가요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 멤버 탭</span></span>
+        </span>
+      </label>
+      <input type="number" id="memberCount" placeholder="예: 45" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>최근 30일 신규 멤버
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">최근 한 달간 새로 가입한 멤버 수예요. 성장률이 높을수록 알고리즘에 긍정적으로 반응해요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 멤버 탭 → 최근 가입 순 정렬</span></span>
+        </span>
+      </label>
+      <input type="number" id="newMembers30" placeholder="예: 8" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>월 평균 모임 횟수
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">한 달에 실제로 모임을 몇 번 진행하나요? 활동 빈도가 높을수록 활성 모임으로 평가돼요.<span class="tooltip-where">📍 당근앱 → 모임 → 일정 탭에서 확인</span></span>
+        </span>
+      </label>
+      <input type="number" id="meetingFreq" placeholder="예: 4" min="0" max="30"/>
+    </div>
+    <div class="form-group">
+      <label>평균 출석률 (%)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">일정을 만들었을 때 실제로 참여하는 멤버 비율이에요. 높을수록 건강한 모임으로 평가돼요.<span class="tooltip-where">📍 당근앱 → 모임 → 일정 탭 → 각 일정 상세</span></span>
+        </span>
+      </label>
+      <div class="range-row">
+        <input type="range" id="attendRate" min="0" max="100" value="60" oninput="document.getElementById('attendRateVal').textContent=this.value+'%'"/>
+        <span class="range-val" id="attendRateVal">60%</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>모임 게시글 수 (최근 30일)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">최근 한 달간 모임 내 게시글이 몇 개 올라왔나요? 콘텐츠 활동량이 노출에 직접 영향을 줘요.<span class="tooltip-where">📍 당근앱 → 모임 → 게시판 탭 (날짜순 정렬)</span></span>
+        </span>
+      </label>
+      <input type="number" id="postCount30" placeholder="예: 12" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>게시글 댓글 수 (월평균)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">게시글 당 평균 댓글 수예요. 댓글이 많을수록 커뮤니티 활성도가 높다고 판단돼요.<span class="tooltip-where">📍 당근앱 → 모임 → 게시판 → 각 게시글 확인</span></span>
+        </span>
+      </label>
+      <input type="number" id="commentAvg" placeholder="예: 5" min="0"/>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 호스트 신뢰도 -->
+<div class="card">
+  <h2>🌡️ 호스트 신뢰도</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>매너온도
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">호스트의 당근 매너온도예요. 36.5°C가 기본이고, 좋은 거래·활동으로 올라가요. 높을수록 모임 신뢰도에 유리해요.<span class="tooltip-where">📍 당근앱 → 프로필 → 매너온도 확인</span></span>
+        </span>
+      </label>
+      <div class="range-row">
+        <input type="range" id="mannerTemp" min="30" max="99" value="36.5" step="0.1" oninput="document.getElementById('mannerTempVal').textContent=parseFloat(this.value).toFixed(1)+'°C'"/>
+        <span class="range-val" id="mannerTempVal">36.5°C</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>당근 활동 기간
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">호스트가 당근을 사용한 기간이에요. 오래 활동한 사용자일수록 더 신뢰할 수 있는 호스트로 평가돼요.<span class="tooltip-where">📍 당근앱 → 프로필 → 가입일 확인</span></span>
+        </span>
+      </label>
+      <select id="hostAge">
+        <option value="1">1개월 미만</option>
+        <option value="3">1~6개월</option>
+        <option value="6" selected>6개월~1년</option>
+        <option value="12">1~2년</option>
+        <option value="24">2년 이상</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>호스트 후기 수
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">호스트가 받은 거래·모임 후기 수예요. 후기가 많을수록 플랫폼 신뢰도가 올라가요.<span class="tooltip-where">📍 당근앱 → 프로필 → 받은 후기 탭</span></span>
+        </span>
+      </label>
+      <input type="number" id="reviewCount" placeholder="예: 12" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>인증 배지 수
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">직업인증, 학교 인증, 관심사 인증 등 프로필에서 확인할 수 있는 인증 배지 수예요.<span class="tooltip-where">📍 당근앱 → 프로필 → 인증 정보 섹션</span></span>
+        </span>
+      </label>
+      <input type="number" id="badgeCount" placeholder="예: 2" min="0" max="10"/>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 노출 최적화 -->
+<div class="card">
+  <h2>📡 노출 최적화</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>끌올 횟수 (최근 30일)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임을 상단으로 올리는 끌올 기능이에요. 너무 자주 하면 효과가 줄어들 수 있어요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 끌올하기 버튼</span></span>
+        </span>
+      </label>
+      <input type="number" id="boostCount" placeholder="예: 8" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>끌올 주요 시간대
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">당근 사용자가 가장 많이 접속하는 시간대예요. 이 시간에 끌올하면 노출 효과가 극대화돼요.<span class="tooltip-where">📍 활동 시간대를 직접 파악하거나, 저녁 7~10시 추천</span></span>
+        </span>
+      </label>
+      <select id="boostTime">
+        <option value="peak">저녁 7~10시 (황금시간대)</option>
+        <option value="lunch">점심 12~1시</option>
+        <option value="morning">아침 7~9시</option>
+        <option value="random">랜덤 (불규칙)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>동네생활 게시글 연동
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">당근 동네생활에 모임 홍보글을 올리면 추가 노출 효과가 있어요.<span class="tooltip-where">📍 당근앱 → 동네생활 → 모임 홍보글 작성</span></span>
+        </span>
+      </label>
+      <select id="neighborPost">
+        <option value="regular">정기적으로 올림 (주 1회+)</option>
+        <option value="sometimes">가끔 올림 (월 1~3회)</option>
+        <option value="never">올리지 않음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>모임 대표 사진
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임 리스트에서 보이는 대표 이미지예요. 실제 활동 사진이 있으면 클릭율이 훨씬 올라가요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 대표 사진 변경</span></span>
+        </span>
+      </label>
+      <select id="photoQuality">
+        <option value="real">실제 활동 사진 (고퀄)</option>
+        <option value="basic">기본 사진 있음</option>
+        <option value="none">사진 없음 (기본 이미지)</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 전환 퍼널 -->
+<div class="card">
+  <h2>🔄 전환 퍼널</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>월 조회수 (추정)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">한 달간 모임 페이지가 조회된 횟수예요. 노출량과 직결돼요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 조회수 통계 (제공 시)</span></span>
+        </span>
+      </label>
+      <input type="number" id="monthlyViews" placeholder="예: 300" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>월 참여 신청 수
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">한 달간 모임에 참여 신청이 들어온 수예요. 조회수 대비 비율이 전환율이에요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 참여 신청 탭</span></span>
+        </span>
+      </label>
+      <input type="number" id="monthlyApply" placeholder="예: 15" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>카페/오픈채팅 연동 여부
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">당근 모임과 카카오 오픈채팅 또는 네이버 카페를 연결하면 멤버 이탈률이 줄어들어요.<span class="tooltip-where">📍 당근앱 → 모임 → 소개 → 외부 채널 링크 추가</span></span>
+        </span>
+      </label>
+      <select id="externalLink">
+        <option value="yes">연동 중 (카카오/카페 등)</option>
+        <option value="no">연동 없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>모임 공개 범위
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">공개 모임은 누구나 검색해서 볼 수 있어요. 노출 극대화를 원한다면 공개 설정을 추천해요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 공개 설정</span></span>
+        </span>
+      </label>
+      <select id="visibility">
+        <option value="public">공개</option>
+        <option value="private">비공개</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<button class="btn-analyze" onclick="analyze()">🥕 당근 모임 노출 점수 분석하기</button>
+
+<!-- ══════════ 결과 ══════════ -->
+<div id="result">
+
+  <!-- PDF 저장 바 -->
+  <div id="pdf-bar" style="display:flex;">
+    <span style="font-size:0.9rem; font-weight:700; color:#7a2e00;">📄 분석 결과 저장</span>
+    <div style="display:flex; gap:8px;">
+      <button onclick="window.print()" style="padding:8px 18px; border-radius:99px; border:1.5px solid #FF6F0F; background:#fff; color:#FF6F0F; font-size:0.82rem; font-weight:700; cursor:pointer;">🖨️ PDF 저장</button>
+      <button onclick="shareResult()" style="padding:8px 18px; border-radius:99px; border:none; background:linear-gradient(90deg,#FF6F0F,#FFB347); color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">🔗 링크 공유</button>
+    </div>
+  </div>
+
+  <!-- 종합 점수 -->
+  <div class="result-card">
+    <h2>🏆 당근 모임 노출 종합 점수</h2>
+    <div class="score-big-box">
+      <div class="score-number" id="totalScore">—</div>
+      <div class="score-grade" id="scoreGrade">—</div>
+      <div class="score-label" id="scoreLabel">—</div>
+    </div>
+
+    <!-- 세부 점수 -->
+    <div class="sub-score-grid">
+      <div class="sub-item">
+        <div class="sv" id="seoScore">—</div>
+        <div class="sn">SEO 점수</div>
+        <div class="sm">제목·소개 최적화</div>
+      </div>
+      <div class="sub-item">
+        <div class="sv" id="actScore">—</div>
+        <div class="sn">활성도 점수</div>
+        <div class="sm">활동·참여 지표</div>
+      </div>
+      <div class="sub-item">
+        <div class="sv" id="trustScore">—</div>
+        <div class="sn">신뢰도 점수</div>
+        <div class="sm">호스트 신뢰</div>
+      </div>
+      <div class="sub-item">
+        <div class="sv" id="expScore">—</div>
+        <div class="sn">노출 점수</div>
+        <div class="sm">끌올·사진·연동</div>
+      </div>
+      <div class="sub-item">
+        <div class="sv" id="cvrScore">—</div>
+        <div class="sn">전환율 점수</div>
+        <div class="sm">조회→신청 전환</div>
+      </div>
+      <div class="sub-item">
+        <div class="sv" id="growScore">—</div>
+        <div class="sn">성장 점수</div>
+        <div class="sm">멤버 증가율</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 노출 공식 -->
+  <div class="result-card">
+    <h2>📐 당근 모임 노출 공식</h2>
+    <div class="formula-box">
+      <div class="formula-text">
+        노출 점수 = SEO(25%) + 활성도(25%) + 신뢰도(20%) + 노출최적화(15%) + 전환율(10%) + 성장(5%)
+      </div>
+      <div class="formula-sub">알고리즘 가중치 — 활성 모임·신뢰 호스트 우선 노출</div>
+    </div>
+  </div>
+
+  <!-- 진행 바 -->
+  <div class="result-card">
+    <h2>📊 지표별 상세 분석</h2>
+    <div id="statRows"></div>
+  </div>
+
+  <!-- 체크리스트 -->
+  <div class="result-card">
+    <h2>✅ 강점 & 개선 포인트</h2>
+    <div id="checkList"></div>
+  </div>
+
+  <!-- 개선 로드맵 -->
+  <div class="result-card">
+    <h2>🗺️ 이번 주 실행 로드맵</h2>
+    <div id="roadmap"></div>
+  </div>
+
+  <!-- 끌올 타이밍 -->
+  <div class="result-card">
+    <h2>⏰ 최적 끌올 타이밍 전략</h2>
+    <div class="metric-grid">
+      <div class="metric-box">
+        <div class="m-val">19~22시</div>
+        <div class="m-label">황금 끌올 시간대</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-val" id="boostIdeal">—</div>
+        <div class="m-label">주간 권장 끌올 횟수</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-val">화·목·토</div>
+        <div class="m-label">최적 요일</div>
+      </div>
+    </div>
+    <div class="tip-box" id="boostTip"></div>
+  </div>
+
+  <!-- 알고리즘 팁 -->
+  <div class="result-card">
+    <h2>💡 2026 당근 알고리즘 핵심 팁</h2>
+    <div class="tip-box">
+      <strong>① 활성 모임 우선 노출</strong> — 당근은 최근 14일 이내 일정이 있는 모임을 상위 노출시켜요. 모임 일정을 자주 등록하세요.<br/><br/>
+      <strong>② 매너온도 40°C 이상 유지</strong> — 호스트 매너온도가 높을수록 모임 신뢰 배지가 붙어요. 거래·후기 활동으로 꾸준히 높이세요.<br/><br/>
+      <strong>③ 제목에 동네명 + 키워드 필수</strong> — "강남 독서 모임"처럼 동네 이름과 활동 키워드를 제목에 넣으면 검색 노출이 2배 올라요.<br/><br/>
+      <strong>④ 끌올은 저녁 황금시간대에</strong> — 저녁 7~10시 끌올이 낮 시간 대비 클릭율이 약 3배 높아요.<br/><br/>
+      <strong>⑤ 동네생활 연동으로 추가 노출</strong> — 동네생활에 모임 후기·사진을 올리면 모임 페이지로 유입이 생겨요.
+    </div>
+  </div>
+
+</div><!-- #result -->
+
+<footer>
+  <p>© 2026 longchiri — 당근 모임 분석기 Ver 3.2</p>
+  <a class="tg-btn" href="https://t.me/longchiri" target="_blank">📢 롱치리 텔레그램</a>
+</footer>
+
+<script>
+function toggleTip(btn) {
+  const tip = btn.nextElementSibling;
+  document.querySelectorAll('.info-tooltip').forEach(t => { if(t !== tip) t.classList.remove('active'); });
+  tip.classList.toggle('active');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.info-wrap')) {
+    document.querySelectorAll('.info-tooltip').forEach(t => t.classList.remove('active'));
+  }
+});
+
+function analyze() {
+  // ── 값 수집 ──
+  const title       = (document.getElementById('moimTitle').value || '').trim();
+  const intro       = (document.getElementById('moimIntro').value || '').trim();
+  const category    = document.getElementById('category').value;
+  const areaRange   = document.getElementById('areaRange').value;
+  const memberCount = parseInt(document.getElementById('memberCount').value) || 0;
+  const newMembers  = parseInt(document.getElementById('newMembers30').value) || 0;
+  const meetingFreq = parseInt(document.getElementById('meetingFreq').value) || 0;
+  const attendRate  = parseInt(document.getElementById('attendRate').value) || 0;
+  const postCount   = parseInt(document.getElementById('postCount30').value) || 0;
+  const commentAvg  = parseInt(document.getElementById('commentAvg').value) || 0;
+  const mannerTemp  = parseFloat(document.getElementById('mannerTemp').value) || 36.5;
+  const hostAge     = parseInt(document.getElementById('hostAge').value) || 6;
+  const reviewCount = parseInt(document.getElementById('reviewCount').value) || 0;
+  const badgeCount  = parseInt(document.getElementById('badgeCount').value) || 0;
+  const boostCount  = parseInt(document.getElementById('boostCount').value) || 0;
+  const boostTime   = document.getElementById('boostTime').value;
+  const neighborPost = document.getElementById('neighborPost').value;
+  const photoQuality = document.getElementById('photoQuality').value;
+  const monthlyViews = parseInt(document.getElementById('monthlyViews').value) || 0;
+  const monthlyApply = parseInt(document.getElementById('monthlyApply').value) || 0;
+  const externalLink = document.getElementById('externalLink').value;
+  const visibility   = document.getElementById('visibility').value;
+
+  // ── 점수 계산 (각 항목 0~100) ──
+
+  // 1. SEO 점수 (25%)
+  let seo = 0;
+  const titleLen = title.length;
+  if (titleLen >= 10) seo += 30; else if (titleLen >= 5) seo += 15;
+  // 제목에 키워드 포함 여부
+  const titleKeywords = ['모임','크루','동아리','클럽','스터디','독서','러닝','요가','여행','맛집','게임'];
+  const hasKeyword = titleKeywords.some(k => title.includes(k));
+  if (hasKeyword) seo += 25;
+  // 소개글 길이
+  if (intro.length >= 100) seo += 30; else if (intro.length >= 30) seo += 15;
+  // 좁은 지역 = SEO 점수 유리
+  if (areaRange === 'narrow') seo += 15; else if (areaRange === 'medium') seo += 8;
+  seo = Math.min(100, seo);
+
+  // 2. 활성도 점수 (25%)
+  let act = 0;
+  if (meetingFreq >= 4) act += 30; else if (meetingFreq >= 2) act += 18; else if (meetingFreq >= 1) act += 8;
+  if (attendRate >= 70) act += 25; else if (attendRate >= 50) act += 15; else if (attendRate >= 30) act += 8;
+  if (postCount >= 20) act += 25; else if (postCount >= 8) act += 15; else if (postCount >= 2) act += 8;
+  if (commentAvg >= 5) act += 20; else if (commentAvg >= 2) act += 10; else if (commentAvg >= 1) act += 5;
+  act = Math.min(100, act);
+
+  // 3. 신뢰도 점수 (20%)
+  let trust = 0;
+  if (mannerTemp >= 50) trust += 40; else if (mannerTemp >= 42) trust += 28; else if (mannerTemp >= 36.5) trust += 15;
+  if (hostAge >= 24) trust += 25; else if (hostAge >= 12) trust += 18; else if (hostAge >= 6) trust += 10; else trust += 4;
+  if (reviewCount >= 20) trust += 25; else if (reviewCount >= 10) trust += 15; else if (reviewCount >= 3) trust += 8;
+  if (badgeCount >= 3) trust += 10; else if (badgeCount >= 1) trust += 5;
+  trust = Math.min(100, trust);
+
+  // 4. 노출 점수 (15%)
+  let exp = 0;
+  // 끌올 최적 횟수는 주 2~3회 (월 8~12회)
+  if (boostCount >= 8 && boostCount <= 12) exp += 35; else if (boostCount >= 4) exp += 20; else if (boostCount >= 1) exp += 10;
+  if (boostTime === 'peak') exp += 30; else if (boostTime === 'lunch') exp += 18; else if (boostTime === 'morning') exp += 12; else exp += 5;
+  if (neighborPost === 'regular') exp += 25; else if (neighborPost === 'sometimes') exp += 12;
+  if (photoQuality === 'real') exp += 10; else if (photoQuality === 'basic') exp += 5;
+  exp = Math.min(100, exp);
+
+  // 5. 전환율 점수 (10%)
+  let cvr = 0;
+  const cvrRate = monthlyViews > 0 ? (monthlyApply / monthlyViews) * 100 : 0;
+  if (cvrRate >= 10) cvr += 60; else if (cvrRate >= 5) cvr += 40; else if (cvrRate >= 2) cvr += 20; else if (monthlyViews > 0) cvr += 5;
+  if (externalLink === 'yes') cvr += 25;
+  if (visibility === 'public') cvr += 15;
+  cvr = Math.min(100, cvr);
+
+  // 6. 성장 점수 (5%)
+  let grow = 0;
+  const growRate = memberCount > 0 ? (newMembers / memberCount) * 100 : 0;
+  if (growRate >= 20) grow = 100; else if (growRate >= 10) grow = 70; else if (growRate >= 5) grow = 45; else if (growRate > 0) grow = 20;
+  grow = Math.min(100, grow);
+
+  // 종합 점수
+  const total = Math.round(seo * 0.25 + act * 0.25 + trust * 0.20 + exp * 0.15 + cvr * 0.10 + grow * 0.05);
+
+  // ── 등급 ──
+  let grade, label;
+  if (total >= 85) { grade = '🏆 최상위 노출'; label = '당근 모임 상위 5% — 알고리즘이 적극 추천 중이에요'; }
+  else if (total >= 70) { grade = '🥈 상위 노출'; label = '상위 20% 수준 — 조금만 더 최적화하면 탑레벨이에요'; }
+  else if (total >= 55) { grade = '🥉 평균 이상'; label = '상위 40% 수준 — 활성도와 SEO를 높이면 도약할 수 있어요'; }
+  else if (total >= 40) { grade = '📌 평균'; label = '개선 포인트가 여러 곳 있어요 — 로드맵을 따라가세요'; }
+  else { grade = '⚠️ 노출 부족'; label = '알고리즘이 모임을 잘 추천하지 않는 상태예요 — 지금 바로 개선하세요'; }
+
+  // ── 결과 렌더 ──
+  document.getElementById('totalScore').textContent = total;
+  document.getElementById('scoreGrade').textContent = grade;
+  document.getElementById('scoreLabel').textContent = label;
+
+  const fmt = v => Math.round(v);
+  document.getElementById('seoScore').textContent   = fmt(seo);
+  document.getElementById('actScore').textContent   = fmt(act);
+  document.getElementById('trustScore').textContent = fmt(trust);
+  document.getElementById('expScore').textContent   = fmt(exp);
+  document.getElementById('cvrScore').textContent   = fmt(cvr);
+  document.getElementById('growScore').textContent  = fmt(grow);
+
+  // ── 진행 바 ──
+  const barClass = v => v >= 70 ? 'bar-good' : v >= 40 ? 'bar-mid' : 'bar-bad';
+  const statData = [
+    { name:'제목 SEO', desc:'키워드·지역명 포함 여부', val:seo },
+    { name:'소개글 품질', desc:'길이·정보 충실도', val: Math.min(100, intro.length >= 100 ? 90 : intro.length >= 50 ? 60 : intro.length >= 10 ? 30 : 0) },
+    { name:'모임 빈도', desc:'월 활동 횟수', val: Math.min(100, meetingFreq * 20) },
+    { name:'출석률', desc:'참여 멤버 비율', val: attendRate },
+    { name:'게시글 활동', desc:'월 콘텐츠 발행 수', val: Math.min(100, postCount * 5) },
+    { name:'매너온도', desc:'호스트 신뢰 지표', val: Math.min(100, (mannerTemp - 30) / 60 * 100) },
+    { name:'끌올 최적화', desc:'끌올 횟수·시간대', val: exp },
+    { name:'전환율', desc:'조회 대비 참여신청', val: Math.min(100, cvrRate * 6) },
+    { name:'멤버 성장', desc:'최근 30일 성장률', val: grow },
+  ];
+
+  let statHtml = '';
+  statData.forEach(s => {
+    const pct = Math.min(100, Math.max(0, s.val));
+    statHtml += `
+      <div class="stat-row">
+        <div class="stat-name-wrap">
+          <div class="stat-name">${s.name}</div>
+          <div class="stat-desc">${s.desc}</div>
+        </div>
+        <div class="bar-wrap"><div class="bar-fill ${barClass(pct)}" style="width:${pct}%"></div></div>
+        <div class="stat-val">${Math.round(pct)}점</div>
+      </div>`;
+  });
+  document.getElementById('statRows').innerHTML = statHtml;
+
+  // ── 체크리스트 ──
+  const checks = [];
+
+  // SEO
+  if (titleLen >= 10 && hasKeyword)
+    checks.push({ type:'ok', title:'제목 SEO 최적화', desc:`제목에 키워드가 포함되어 있어요. 검색 노출에 매우 유리해요.` });
+  else if (!hasKeyword)
+    checks.push({ type:'bad', title:'제목에 키워드 없음', desc:`"강남 독서 모임", "주말 러닝 크루"처럼 활동 키워드를 제목에 꼭 넣으세요.` });
+
+  if (intro.length >= 100)
+    checks.push({ type:'ok', title:'소개글 충실', desc:'소개글이 100자 이상이에요. 알고리즘이 모임 주제를 잘 파악해요.' });
+  else
+    checks.push({ type:'warn', title:'소개글 보강 필요', desc:'소개글을 100자 이상으로 늘리고 일정·장소·대상을 명확히 적으세요.' });
+
+  // 활성도
+  if (meetingFreq >= 4)
+    checks.push({ type:'ok', title:'높은 모임 빈도', desc:`월 ${meetingFreq}회 모임 — 활성 모임으로 평가받아 상위 노출돼요.` });
+  else if (meetingFreq === 0)
+    checks.push({ type:'bad', title:'모임 일정 없음', desc:'당근은 최근 14일 내 일정이 있는 모임을 우선 노출해요. 지금 바로 일정을 등록하세요.' });
+
+  if (attendRate >= 70)
+    checks.push({ type:'ok', title:'높은 출석률', desc:`출석률 ${attendRate}% — 멤버 만족도가 높은 건강한 모임이에요.` });
+  else if (attendRate < 40)
+    checks.push({ type:'warn', title:'출석률 개선 필요', desc:'출석률이 낮으면 알고리즘이 비활성 모임으로 판단해요. 소규모로 확실히 참여하는 일정을 만들어 보세요.' });
+
+  // 신뢰도
+  if (mannerTemp >= 50)
+    checks.push({ type:'ok', title:`매너온도 ${mannerTemp.toFixed(1)}°C`, desc:'매너온도가 높아 신뢰 배지가 활성화될 수 있어요.' });
+  else if (mannerTemp < 36.5)
+    checks.push({ type:'bad', title:'매너온도 낮음', desc:'거래 후기를 늘리고 좋은 활동을 쌓아 매너온도를 36.5°C 이상으로 유지하세요.' });
+
+  // 노출
+  if (boostTime === 'peak')
+    checks.push({ type:'ok', title:'황금시간대 끌올', desc:'저녁 7~10시 끌올 — 클릭율이 가장 높은 시간대예요.' });
+  else if (boostTime === 'random')
+    checks.push({ type:'warn', title:'끌올 시간 최적화 필요', desc:'저녁 7~10시에 끌올하면 클릭율이 최대 3배 올라가요.' });
+
+  if (photoQuality === 'real')
+    checks.push({ type:'ok', title:'실제 활동 사진 있음', desc:'실제 활동 사진은 클릭율을 크게 높여요. 계속 업데이트하세요.' });
+  else if (photoQuality === 'none')
+    checks.push({ type:'bad', title:'대표 사진 없음', desc:'사진이 없으면 클릭율이 50% 이상 떨어져요. 바로 활동 사진을 추가하세요.' });
+
+  if (neighborPost === 'regular')
+    checks.push({ type:'ok', title:'동네생활 정기 연동', desc:'동네생활 게시글로 추가 유입이 발생하고 있어요.' });
+  else if (neighborPost === 'never')
+    checks.push({ type:'warn', title:'동네생활 연동 없음', desc:'동네생활에 주 1회 모임 후기·홍보글을 올리면 무료 추가 노출 효과가 있어요.' });
+
+  // 전환
+  if (externalLink === 'yes')
+    checks.push({ type:'ok', title:'외부 채널 연동', desc:'오픈채팅/카페 연동으로 멤버 이탈률이 낮아져요.' });
+  else
+    checks.push({ type:'warn', title:'외부 채널 미연동', desc:'카카오 오픈채팅이나 네이버 카페를 연동하면 멤버 유지율이 높아져요.' });
+
+  if (visibility === 'private')
+    checks.push({ type:'bad', title:'비공개 모임', desc:'비공개 설정은 검색 노출이 안 돼요. 노출을 원한다면 공개로 변경하세요.' });
+
+  let checkHtml = '';
+  checks.forEach(c => {
+    checkHtml += `
+      <div class="check-item check-${c.type}">
+        <span class="check-icon">${c.type==='ok'?'✅':c.type==='warn'?'⚠️':'❌'}</span>
+        <div>
+          <div class="check-title">${c.title}</div>
+          <div class="check-desc">${c.desc}</div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('checkList').innerHTML = checkHtml;
+
+  // ── 로드맵 ──
+  const roadItems = [];
+  if (!hasKeyword || titleLen < 10)
+    roadItems.push({ title:'① 제목 리뉴얼', action:'동네명 + 활동 키워드로 제목을 재작성하세요 (예: "강남 목요 독서 모임 | 초보환영")', why:'검색 노출 즉시 개선 효과' });
+  if (intro.length < 100)
+    roadItems.push({ title:'② 소개글 보강', action:'모임 일정·장소·대상을 구체적으로 100자 이상 작성하세요', why:'알고리즘이 모임 주제를 정확히 파악해 관심 유저에게 추천' });
+  if (meetingFreq < 2)
+    roadItems.push({ title:'③ 일정 등록', action:'이번 주 안에 모임 일정을 최소 1개 등록하세요', why:'14일 내 일정 유무가 노출 여부를 결정' });
+  if (photoQuality !== 'real')
+    roadItems.push({ title:'④ 대표 사진 교체', action:'실제 모임 활동 사진으로 대표 이미지를 교체하세요', why:'클릭율 최대 2배 향상' });
+  if (boostTime !== 'peak')
+    roadItems.push({ title:'⑤ 끌올 시간 변경', action:'끌올을 저녁 7~10시로 옮기세요 (화·목·토 추천)', why:'황금시간대 클릭율 3배' });
+  if (neighborPost !== 'regular')
+    roadItems.push({ title:'⑥ 동네생활 홍보', action:'주 1회 동네생활에 모임 후기 또는 홍보글을 올리세요', why:'무료 추가 노출 채널 확보' });
+
+  if (roadItems.length === 0)
+    roadItems.push({ title:'✨ 최적화 완료!', action:'현재 모임이 잘 최적화되어 있어요. 꾸준히 유지하세요.', why:'현상 유지가 최선의 전략' });
+
+  let roadHtml = '';
+  roadItems.forEach(r => {
+    roadHtml += `
+      <div class="roadmap-item">
+        <div class="roadmap-title">${r.title}</div>
+        <div class="roadmap-action">👉 ${r.action}</div>
+        <div class="roadmap-why">💡 ${r.why}</div>
+      </div>`;
+  });
+  document.getElementById('roadmap').innerHTML = roadHtml;
+
+  // ── 끌올 전략 ──
+  const idealBoost = boostCount <= 4 ? '주 2~3회' : boostCount <= 12 ? '지금이 최적!' : '줄이세요 (주 2~3회)';
+  document.getElementById('boostIdeal').textContent = idealBoost;
+  document.getElementById('boostTip').innerHTML =
+    `<strong>현재 끌올 전략:</strong> 월 ${boostCount}회 / ${boostTime === 'peak' ? '황금시간대 ✅' : boostTime === 'lunch' ? '점심시간' : boostTime === 'morning' ? '아침시간' : '랜덤 ⚠️'}<br/><br/>
+    <strong>추천:</strong> 화요일·목요일·토요일 저녁 7시 30분에 끌올하세요. 이 시간대 당근 활성 사용자가 가장 많아요. 하루에 두 번 이상 끌올하면 효과가 줄어들 수 있으니 하루 1회를 지키세요.`;
+
+  // ── 결과 표시 ──
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('pdf-bar').style.display = 'flex';
+  document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function shareResult() {
+  if (navigator.share) {
+    navigator.share({ title:'당근 모임 분석 결과', url: location.href });
+  } else {
+    navigator.clipboard.writeText(location.href).then(() => alert('링크가 복사되었어요!'));
+  }
+}
+</script>
+
+</body>
+</html>

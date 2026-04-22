@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>소모임 × 문토 분석기</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#F0FDF4 0%,#DCFCE7 100%);
+      min-height:100vh; padding:30px 16px; color:#1a1a1a;
+    }
+    header { text-align:center; margin-bottom:30px; }
+    header .logo { font-size:2.8rem; margin-bottom:6px; }
+    header h1 {
+      font-size:1.9rem; font-weight:900;
+      background:linear-gradient(90deg,#16A34A,#EA580C);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    header p { color:#aaa; margin-top:6px; font-size:0.9rem; }
+    .algo-badge {
+      display:inline-block;
+      background:linear-gradient(90deg,#16A34A,#EA580C);
+      color:#fff; font-size:0.72rem; font-weight:800;
+      padding:3px 12px; border-radius:99px; margin-top:8px;
+    }
+
+    /* 플랫폼 탭 */
+    .tab-wrap {
+      display:flex; gap:10px; max-width:720px;
+      margin:0 auto 22px; justify-content:center;
+    }
+    .tab-btn {
+      flex:1; padding:11px 0; border-radius:12px; border:2px solid #e5e5e5;
+      background:#fff; font-size:0.9rem; font-weight:800; cursor:pointer;
+      transition:all 0.2s; color:#aaa;
+    }
+    .tab-btn.active-moim  { border-color:#16A34A; background:#f0fdf4; color:#16A34A; }
+    .tab-btn.active-munto { border-color:#EA580C; background:#fff7ed; color:#EA580C; }
+    .tab-btn:hover { opacity:0.8; }
+
+    /* ── 카드 ── */
+    .card {
+      background:#fff; border-radius:18px; padding:24px;
+      margin-bottom:18px; max-width:720px;
+      margin-left:auto; margin-right:auto;
+    }
+    .card.moim-card  { box-shadow:0 4px 20px rgba(22,163,74,0.1);  border:1.5px solid #BBF7D0; }
+    .card.munto-card { box-shadow:0 4px 20px rgba(234,88,12,0.1);  border:1.5px solid #FED7AA; }
+    .card h2 {
+      font-size:1.05rem; font-weight:800; margin-bottom:18px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .moim-card  h2 { color:#14532D; }
+    .munto-card h2 { color:#7C2D12; }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:500px){ .form-grid { grid-template-columns:1fr; } }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group.full { grid-column:1/-1; }
+    label { font-size:0.82rem; font-weight:700; color:#666; display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
+    label .tip { font-size:0.72rem; font-weight:400; color:#aaa; margin-left:4px; }
+    input, textarea, select {
+      border:1.5px solid #e5e5e5; border-radius:10px;
+      padding:10px 12px; font-size:0.93rem; outline:none;
+      transition:border 0.2s; background:#fafafa; font-family:inherit;
+    }
+    .moim-card  input:focus,
+    .moim-card  textarea:focus,
+    .moim-card  select:focus { border-color:#16A34A; background:#f0fdf4; }
+    .munto-card input:focus,
+    .munto-card textarea:focus,
+    .munto-card select:focus { border-color:#EA580C; background:#fff7ed; }
+    textarea { resize:vertical; min-height:70px; }
+
+    /* 슬라이더 */
+    input[type="range"] { border:none; background:none; padding:0; width:100%; cursor:pointer; }
+    .moim-section  input[type="range"] { accent-color:#16A34A; }
+    .munto-section input[type="range"] { accent-color:#EA580C; }
+    .range-row { display:flex; align-items:center; gap:10px; }
+    .range-val-moim  { font-size:1rem; font-weight:800; color:#16A34A; min-width:50px; text-align:right; }
+    .range-val-munto { font-size:1rem; font-weight:800; color:#EA580C; min-width:50px; text-align:right; }
+
+    /* 분석 버튼 */
+    .btn-moim {
+      display:block; width:100%; max-width:720px; margin:0 auto 24px;
+      padding:16px; background:linear-gradient(90deg,#16A34A,#22c55e);
+      color:#fff; font-size:1.05rem; font-weight:800;
+      border:none; border-radius:14px; cursor:pointer;
+      transition:opacity 0.2s, transform 0.1s;
+      box-shadow:0 4px 20px rgba(22,163,74,0.4);
+    }
+    .btn-munto {
+      display:block; width:100%; max-width:720px; margin:0 auto 24px;
+      padding:16px; background:linear-gradient(90deg,#EA580C,#f97316);
+      color:#fff; font-size:1.05rem; font-weight:800;
+      border:none; border-radius:14px; cursor:pointer;
+      transition:opacity 0.2s, transform 0.1s;
+      box-shadow:0 4px 20px rgba(234,88,12,0.4);
+    }
+    .btn-moim:hover, .btn-munto:hover { opacity:0.9; transform:translateY(-1px); }
+
+    /* ── 결과 ── */
+    .result-section { display:none; }
+    .result-card {
+      background:#fff; border-radius:18px; padding:24px;
+      margin-bottom:18px; max-width:720px;
+      margin-left:auto; margin-right:auto;
+    }
+    .result-card.moim-res  { box-shadow:0 4px 20px rgba(22,163,74,0.1);  border:1.5px solid #BBF7D0; }
+    .result-card.munto-res { box-shadow:0 4px 20px rgba(234,88,12,0.1);  border:1.5px solid #FED7AA; }
+    .result-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+    .result-card.moim-res  h2 { color:#14532D; }
+    .result-card.munto-res h2 { color:#7C2D12; }
+
+    /* 종합 점수 */
+    .score-big-box {
+      text-align:center; padding:24px 20px 20px;
+      border-radius:14px; margin-bottom:22px; border:2px solid;
+    }
+    .score-big-box.moim-sb  { background:linear-gradient(135deg,#F0FDF4,#DCFCE7); border-color:#86EFAC; }
+    .score-big-box.munto-sb { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); border-color:#FDBA74; }
+    .score-number {
+      font-size:4rem; font-weight:900; line-height:1;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .score-number.moim-num  { background:linear-gradient(90deg,#16A34A,#14532D); }
+    .score-number.munto-num { background:linear-gradient(90deg,#EA580C,#9A3412); }
+    .score-grade { font-size:1.2rem; font-weight:800; margin-top:6px; }
+    .moim-grade  { color:#14532D; }
+    .munto-grade { color:#7C2D12; }
+    .score-label { color:#888; font-size:0.85rem; margin-top:4px; }
+
+    /* 세부 점수 */
+    .sub-score-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+    .sub-item { border-radius:12px; padding:14px 8px; text-align:center; border:1.5px solid; }
+    .sub-item.moim-si  { background:#F0FDF4; border-color:#BBF7D0; }
+    .sub-item.munto-si { background:#FFF7ED; border-color:#FED7AA; }
+    .sub-item .sv { font-size:1.4rem; font-weight:900; }
+    .sub-item.moim-si  .sv { color:#16A34A; }
+    .sub-item.munto-si .sv { color:#EA580C; }
+    .sub-item .sn { font-size:0.72rem; color:#888; margin-top:4px; font-weight:700; }
+    .sub-item .sm { font-size:0.68rem; color:#bbb; margin-top:2px; }
+
+    /* 진행 바 */
+    .stat-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+    .stat-name-wrap { width:120px; flex-shrink:0; }
+    .stat-name { font-size:0.83rem; color:#555; font-weight:600; }
+    .stat-desc { font-size:0.72rem; color:#aaa; margin-top:2px; line-height:1.4; }
+    .bar-wrap { flex:1; background:#f0f0f0; border-radius:99px; height:10px; min-width:80px; }
+    .bar-fill { height:10px; border-radius:99px; transition:width 0.6s; }
+    .bar-good  { background:linear-gradient(90deg,#22c55e,#86efac); }
+    .bar-mid-m { background:linear-gradient(90deg,#16A34A,#4ade80); }
+    .bar-mid-t { background:linear-gradient(90deg,#EA580C,#fb923c); }
+    .bar-bad   { background:linear-gradient(90deg,#ef4444,#fca5a5); }
+    .stat-val { width:64px; text-align:right; font-size:0.82rem; color:#888; flex-shrink:0; }
+
+    /* 체크 아이템 */
+    .check-item {
+      display:flex; align-items:flex-start; gap:10px;
+      padding:11px 14px; border-radius:10px; margin-bottom:8px;
+    }
+    .check-ok   { background:#f0fff4; border-left:3px solid #22c55e; }
+    .check-warn { background:#fff7ed; border-left:3px solid #f97316; }
+    .check-bad  { background:#fff5f5; border-left:3px solid #ef4444; }
+    .check-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+    .check-title { font-size:0.84rem; font-weight:700; }
+    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.5; }
+
+    /* 팁 박스 */
+    .tip-box {
+      border-radius:0 10px 10px 0;
+      padding:14px 16px; font-size:0.87rem; line-height:1.7;
+    }
+    .tip-box.moim-tip  { background:linear-gradient(135deg,#F0FDF4,#DCFCE7); border-left:4px solid #16A34A; color:#14532D; }
+    .tip-box.munto-tip { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); border-left:4px solid #EA580C; color:#7C2D12; }
+    .tip-box.moim-tip  strong { color:#16A34A; }
+    .tip-box.munto-tip strong { color:#EA580C; }
+
+    /* 공식 박스 */
+    .formula-box { border-radius:14px; padding:20px; text-align:center; margin-bottom:18px; }
+    .formula-box.moim-fb  { background:#14532D; color:#86EFAC; }
+    .formula-box.munto-fb { background:#7C2D12; color:#FDBA74; }
+    .formula-text { font-size:0.95rem; font-weight:700; letter-spacing:0.5px; line-height:1.8; }
+    .formula-sub { font-size:0.75rem; opacity:0.6; margin-top:6px; }
+
+    /* 로드맵 */
+    .roadmap-item {
+      padding:14px 16px; border-radius:12px; margin-bottom:10px; background:#fafafa;
+    }
+    .roadmap-item.moim-road  { border-left:4px solid #16A34A; }
+    .roadmap-item.munto-road { border-left:4px solid #EA580C; }
+    .roadmap-title { font-weight:700; font-size:0.88rem; margin-bottom:4px; }
+    .moim-road  .roadmap-title { color:#16A34A; }
+    .munto-road .roadmap-title { color:#EA580C; }
+    .roadmap-action { font-size:0.82rem; color:#444; margin-bottom:3px; }
+    .roadmap-why { font-size:0.77rem; color:#888; font-style:italic; }
+
+    /* 메트릭 그리드 */
+    .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+    @media(max-width:500px){ .metric-grid { grid-column:repeat(2,1fr); } }
+    .metric-box { border-radius:12px; padding:14px 10px; text-align:center; border:1px solid; }
+    .metric-box.moim-mb  { background:linear-gradient(135deg,#F0FDF4,#DCFCE7); border-color:#BBF7D0; }
+    .metric-box.munto-mb { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); border-color:#FED7AA; }
+    .metric-box .m-val { font-size:1.3rem; font-weight:800; }
+    .metric-box.moim-mb  .m-val { color:#16A34A; }
+    .metric-box.munto-mb .m-val { color:#EA580C; }
+    .metric-box .m-label { font-size:0.72rem; color:#888; margin-top:4px; }
+
+    /* 섹션 구분 */
+    .divider { border:none; border-top:1px solid #e5e5e5; margin:16px 0; }
+
+    /* ⓘ 버튼 */
+    .info-wrap { position:relative; display:inline-block; vertical-align:middle; margin-left:5px; }
+    .info-btn {
+      width:16px; height:16px; border-radius:50%; border:none; cursor:pointer;
+      font-size:0.62rem; font-weight:800; line-height:16px; text-align:center; padding:0;
+      display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .info-btn.moim-ib  { background:#BBF7D0; color:#16A34A; }
+    .info-btn.munto-ib { background:#FED7AA; color:#EA580C; }
+    .info-btn.moim-ib:hover  { background:#16A34A; color:#fff; }
+    .info-btn.munto-ib:hover { background:#EA580C; color:#fff; }
+    .info-tooltip {
+      display:none; position:absolute; width:230px;
+      bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+      background:#fff; border-radius:12px; padding:10px 12px;
+      font-size:0.78rem; color:#444; z-index:999;
+      box-shadow:0 6px 24px rgba(0,0,0,0.12); line-height:1.6;
+      font-weight:400; text-align:left; pointer-events:none;
+    }
+    .info-tooltip.moim-tt  { border:1.5px solid #BBF7D0; }
+    .info-tooltip.munto-tt { border:1.5px solid #FED7AA; }
+    .info-tooltip.active { display:block; }
+    .tooltip-where-moim  { background:#F0FDF4; color:#16A34A; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
+    .tooltip-where-munto { background:#FFF7ED; color:#EA580C; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
+
+    /* PDF 바 */
+    #pdf-bar-moim, #pdf-bar-munto {
+      display:none; max-width:720px; margin:0 auto 18px;
+      background:#fff; border-radius:14px; padding:14px 20px;
+      align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    #pdf-bar-moim  { box-shadow:0 4px 20px rgba(22,163,74,0.15); border:1.5px solid #BBF7D0; }
+    #pdf-bar-munto { box-shadow:0 4px 20px rgba(234,88,12,0.15); border:1.5px solid #FED7AA; }
+
+    footer { text-align:center; color:#bbb; font-size:0.8rem; margin-top:10px; }
+    .tg-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:9px 20px; background:#229ED9; border-radius:99px; text-decoration:none; color:#fff; font-size:0.8rem; font-weight:700; }
+    .back-btn { display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#999; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px; }
+    .back-wrap { max-width:720px; margin:0 auto 10px; }
+
+    .hidden { display:none !important; }
+  </style>
+</head>
+<body>
+
+<header>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="font-weight:700; font-size:1.2rem; background:linear-gradient(90deg,#16A34A,#EA580C); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">longchiri</span></p>
+  <div class="logo">🤝</div>
+  <h1>소모임 × 문토 분석기</h1>
+  <p>플랫폼별 알고리즘 점수를 진단하고 성장 전략을 받아보세요</p>
+  <span class="algo-badge">⚡ 2026 소모임·문토 알고리즘 기반</span>
+</header>
+
+<div class="back-wrap">
+  <a class="back-btn" href="hub.html">← 허브로 돌아가기</a>
+</div>
+
+<!-- 플랫폼 탭 -->
+<div class="tab-wrap">
+  <button class="tab-btn active-moim" id="tab-moim" onclick="switchTab('moim')">🌿 소모임 분석</button>
+  <button class="tab-btn" id="tab-munto" onclick="switchTab('munto')">🔥 문토 분석</button>
+</div>
+
+<!-- ══════════ 소모임 입력 ══════════ -->
+<div id="moim-section" class="moim-section">
+
+  <!-- 1. 모임 기본정보 -->
+  <div class="card moim-card">
+    <h2>🌿 모임 기본 정보</h2>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>모임 제목
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">모임 이름이에요. 검색 키워드가 제목에 포함될수록 검색 노출에 유리해요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 모임 정보 수정</span></span>
+          </span>
+          <span class="tip">핵심 키워드를 앞에 배치하세요</span>
+        </label>
+        <input type="text" id="m-title" placeholder="예: 서울 직장인 독서 모임 | 매주 수요일 | 강남"/>
+      </div>
+      <div class="form-group full">
+        <label>모임 소개글
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">모임을 소개하는 글이에요. 일정·장소·대상을 구체적으로 작성할수록 CTR이 올라가요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 소개 편집</span></span>
+          </span>
+          <span class="tip">일정·장소·대상을 명확하게 작성하세요</span>
+        </label>
+        <textarea id="m-intro" placeholder="예: 매주 수요일 저녁 7시 강남역 근처에서 진행해요. 직장인 대상, 월 1권 독서 후 자유 토론."></textarea>
+      </div>
+      <div class="form-group">
+        <label>카테고리
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">모임 주제 분류예요. 정확한 카테고리일수록 관심 있는 사람에게 추천돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 카테고리 설정</span></span>
+          </span>
+        </label>
+        <select id="m-category">
+          <option value="독서">📚 독서/스터디</option>
+          <option value="운동">🏃 운동/스포츠</option>
+          <option value="맛집">🍽️ 맛집/음식</option>
+          <option value="아웃도어">🏕️ 아웃도어</option>
+          <option value="음악">🎵 음악/악기</option>
+          <option value="공예">🎨 공예/취미</option>
+          <option value="언어">🌍 언어/외국어</option>
+          <option value="사교">🤝 사교/네트워킹</option>
+          <option value="기타">✨ 기타</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>지역 설정
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">활동 지역이에요. 특정 지역을 명시할수록 해당 지역 검색에서 상위 노출돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 활동 지역</span></span>
+          </span>
+        </label>
+        <select id="m-area">
+          <option value="specific">특정 지역 명시 (강남, 홍대 등)</option>
+          <option value="city" selected>시/도 단위 (서울, 경기 등)</option>
+          <option value="online">온라인</option>
+          <option value="none">미설정</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>모임 사진 퀄리티
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">리스트에 보이는 대표 이미지예요. 실제 활동 사진이 있으면 클릭율이 2배 이상 높아요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 대표 사진 변경</span></span>
+          </span>
+        </label>
+        <select id="m-photo">
+          <option value="real">실제 활동 사진 (고퀄)</option>
+          <option value="basic">기본 사진 있음</option>
+          <option value="none">사진 없음</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>모임 공개 범위
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">공개 모임은 검색에 노출되고 추천피드에 올라가요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 공개 설정</span></span>
+          </span>
+        </label>
+        <select id="m-visibility">
+          <option value="public">공개</option>
+          <option value="private">비공개 (초대만)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 활동 지표 -->
+  <div class="card moim-card">
+    <h2>📊 활동 지표</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>현재 멤버 수
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">현재 모임 멤버 수예요. 멤버가 많을수록 인기 모임으로 노출돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 멤버 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-members" placeholder="예: 38" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>최근 30일 신규 멤버
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">최근 한 달간 새로 가입한 멤버 수예요. 성장률이 높을수록 알고리즘 추천이 늘어요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 멤버 탭 → 최근 가입 순</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-newmembers" placeholder="예: 7" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>월 정기 모임 횟수
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">한 달에 실제로 모임을 몇 번 진행하나요? 정기 활동 빈도가 높을수록 활성 모임으로 평가돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 일정 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-freq" placeholder="예: 4" min="0" max="30"/>
+      </div>
+      <div class="form-group">
+        <label>평균 출석률 (%)
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">일정 등록 후 실제 참여 비율이에요. 70% 이상이면 건강한 모임으로 분류돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 일정 상세 → 참여 확인</span></span>
+          </span>
+        </label>
+        <div class="range-row">
+          <input type="range" id="m-attend" min="0" max="100" value="65" oninput="document.getElementById('m-attendVal').textContent=this.value+'%'"/>
+          <span class="range-val-moim" id="m-attendVal">65%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>월 게시글 수
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">모임 내 게시글 수예요. 꾸준한 콘텐츠 활동이 알고리즘 활성도 점수를 높여요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 게시판</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-posts" placeholder="예: 10" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>번개모임 횟수 (월)
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">정기 일정 외 번개모임 수예요. 번개가 자주 열리면 활발한 모임으로 인식돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 번개 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-flash" placeholder="예: 2" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>후기 수 (누적)
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">참여자들이 남긴 모임 후기 수예요. 후기가 많을수록 검색 노출 가중치가 올라가요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 후기 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-reviews" placeholder="예: 23" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>평균 후기 별점
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">후기의 평균 별점이에요. 4.5점 이상이면 추천 피드에 우선 노출돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 후기 탭 → 평점 확인</span></span>
+          </span>
+        </label>
+        <div class="range-row">
+          <input type="range" id="m-rating" min="1" max="5" value="4.3" step="0.1" oninput="document.getElementById('m-ratingVal').textContent=parseFloat(this.value).toFixed(1)+'★'"/>
+          <span class="range-val-moim" id="m-ratingVal">4.3★</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 전환·LTV -->
+  <div class="card moim-card">
+    <h2>🔄 전환 & 멤버 LTV</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>월 조회수 (추정)
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">한 달간 모임 페이지 조회 수예요. 노출량과 직결돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 통계 탭 (제공 시)</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-views" placeholder="예: 250" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>월 가입 신청 수
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">한 달간 가입 신청 수예요. 조회수 대비 가입율이 CTR 점수에 반영돼요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 가입 신청 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-joins" placeholder="예: 12" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>평균 멤버 활동 기간 (개월)
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">멤버들이 평균적으로 모임에 얼마나 오래 머무는지예요. LTV(멤버 생애가치)의 핵심 지표예요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 멤버 탭 → 가입일 기준 계산</span></span>
+          </span>
+        </label>
+        <input type="number" id="m-ltv" placeholder="예: 5" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>노쇼(No-show) 비율 (%)
+          <span class="info-wrap">
+            <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">일정에 참여 확정 후 나타나지 않는 비율이에요. 낮을수록 신뢰 점수가 올라가요.<span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 지난 일정 참여 현황</span></span>
+          </span>
+        </label>
+        <div class="range-row">
+          <input type="range" id="m-noshow" min="0" max="50" value="10" oninput="document.getElementById('m-noshowVal').textContent=this.value+'%'"/>
+          <span class="range-val-moim" id="m-noshowVal">10%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-moim" onclick="analyzeMoim()">🌿 소모임 노출 점수 분석하기</button>
+
+  <!-- 소모임 결과 -->
+  <div id="moim-result" class="result-section">
+    <div id="pdf-bar-moim" style="display:flex;">
+      <span style="font-size:0.9rem; font-weight:700; color:#14532D;">📄 분석 결과 저장</span>
+      <div style="display:flex; gap:8px;">
+        <button onclick="window.print()" style="padding:8px 18px; border-radius:99px; border:1.5px solid #16A34A; background:#fff; color:#16A34A; font-size:0.82rem; font-weight:700; cursor:pointer;">🖨️ PDF 저장</button>
+        <button onclick="shareResult()" style="padding:8px 18px; border-radius:99px; border:none; background:linear-gradient(90deg,#16A34A,#22c55e); color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">🔗 링크 공유</button>
+      </div>
+    </div>
+
+    <div class="result-card moim-res">
+      <h2>🏆 소모임 노출 종합 점수</h2>
+      <div class="score-big-box moim-sb">
+        <div class="score-number moim-num" id="m-totalScore">—</div>
+        <div class="score-grade moim-grade" id="m-scoreGrade">—</div>
+        <div class="score-label" id="m-scoreLabel">—</div>
+      </div>
+      <div class="sub-score-grid">
+        <div class="sub-item moim-si"><div class="sv" id="m-s1">—</div><div class="sn">SEO 점수</div><div class="sm">제목·소개·지역</div></div>
+        <div class="sub-item moim-si"><div class="sv" id="m-s2">—</div><div class="sn">활성도 점수</div><div class="sm">모임·게시글 활동</div></div>
+        <div class="sub-item moim-si"><div class="sv" id="m-s3">—</div><div class="sn">신뢰 점수</div><div class="sm">후기·별점</div></div>
+        <div class="sub-item moim-si"><div class="sv" id="m-s4">—</div><div class="sn">전환율 점수</div><div class="sm">조회→가입</div></div>
+        <div class="sub-item moim-si"><div class="sv" id="m-s5">—</div><div class="sn">LTV 점수</div><div class="sm">멤버 유지율</div></div>
+        <div class="sub-item moim-si"><div class="sv" id="m-s6">—</div><div class="sn">성장 점수</div><div class="sm">신규 멤버 증가</div></div>
+      </div>
+    </div>
+
+    <div class="result-card moim-res">
+      <h2>📐 소모임 노출 공식</h2>
+      <div class="formula-box moim-fb">
+        <div class="formula-text">노출 점수 = SEO(25%) + 활성도(25%) + 신뢰도(20%) + 전환율(15%) + LTV(10%) + 성장(5%)</div>
+        <div class="formula-sub">고후기·고별점·정기활동 모임 우선 추천</div>
+      </div>
+    </div>
+
+    <div class="result-card moim-res">
+      <h2>📊 지표별 상세 분석</h2>
+      <div id="m-statRows"></div>
+    </div>
+
+    <div class="result-card moim-res">
+      <h2>✅ 강점 & 개선 포인트</h2>
+      <div id="m-checkList"></div>
+    </div>
+
+    <div class="result-card moim-res">
+      <h2>🗺️ 이번 주 실행 로드맵</h2>
+      <div id="m-roadmap"></div>
+    </div>
+
+    <div class="result-card moim-res">
+      <h2>💡 2026 소모임 알고리즘 핵심 팁</h2>
+      <div class="tip-box moim-tip">
+        <strong>① 후기가 가장 강력한 신호</strong> — 소모임은 후기 수와 별점이 알고리즘 가중치에서 가장 높은 비중을 차지해요. 매 모임 후 참여자에게 후기 작성을 유도하세요.<br/><br/>
+        <strong>② 제목에 지역명 + 키워드</strong> — "강남 직장인 독서 모임"처럼 지역+주제+대상 구조가 SEO에 가장 효과적이에요.<br/><br/>
+        <strong>③ 정기 일정 > 불규칙 일정</strong> — 매주 같은 요일·시간 고정 일정이 알고리즘에 안정적 활성 신호로 인식돼요.<br/><br/>
+        <strong>④ 번개모임으로 활성도 부스트</strong> — 정기 모임 사이에 번개모임을 1~2회 열면 활성도 점수가 급격히 올라가요.<br/><br/>
+        <strong>⑤ 노쇼 관리가 핵심</strong> — 노쇼 비율이 높으면 신뢰 점수가 하락해요. 전날 리마인드 메시지를 보내거나 보증금 제도를 도입해보세요.
+      </div>
+    </div>
+  </div>
+
+</div><!-- #moim-section -->
+
+<!-- ══════════ 문토 입력 ══════════ -->
+<div id="munto-section" class="munto-section hidden">
+
+  <!-- 1. 클럽 기본정보 -->
+  <div class="card munto-card">
+    <h2>🔥 클럽 기본 정보</h2>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>클럽 제목
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">문토 클럽 이름이에요. 감성적인 키워드가 포함되면 문토 추천 알고리즘에 유리해요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 클럽 정보 수정</span></span>
+          </span>
+          <span class="tip">감성·커리어·라이프스타일 키워드 포함 시 유리</span>
+        </label>
+        <input type="text" id="t-title" placeholder="예: 성장하는 직장인들의 독서 클럽 | 매주 목요일"/>
+      </div>
+      <div class="form-group full">
+        <label>클럽 소개글
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">클럽을 소개하는 글이에요. 문토는 스토리텔링 요소가 강한 소개글을 선호해요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 소개 편집</span></span>
+          </span>
+          <span class="tip">스토리·가치관을 담아 작성하세요</span>
+        </label>
+        <textarea id="t-intro" placeholder="예: 바쁜 직장 생활 속에서도 매주 한 권의 책으로 성장하고 싶은 분들을 위한 공간이에요. 책과 사람, 그리고 영감이 만나는 목요일 저녁을 함께해요."></textarea>
+      </div>
+      <div class="form-group">
+        <label>카테고리
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">문토의 테마 분류예요. 커리어/자기계발 카테고리가 활성 유저가 가장 많아요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 카테고리</span></span>
+          </span>
+        </label>
+        <select id="t-category">
+          <option value="커리어">💼 커리어/자기계발</option>
+          <option value="독서">📚 독서/인문</option>
+          <option value="운동">🏃 운동/헬스</option>
+          <option value="아트">🎨 아트/창작</option>
+          <option value="음악">🎵 음악/공연</option>
+          <option value="여행">✈️ 여행/아웃도어</option>
+          <option value="음식">🍽️ 음식/요리</option>
+          <option value="언어">🌍 언어/외국어</option>
+          <option value="기타">✨ 기타</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>클럽 대표 사진
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">문토는 비주얼이 매우 중요해요. 감성적인 활동 사진이 클릭율을 3배 이상 높여요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 대표 이미지 변경</span></span>
+          </span>
+        </label>
+        <select id="t-photo">
+          <option value="great">감성 고퀄 활동 사진</option>
+          <option value="real">일반 활동 사진</option>
+          <option value="basic">기본 사진 있음</option>
+          <option value="none">사진 없음</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>모집 방식
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">클럽 가입 방식이에요. 심사 모집은 신뢰도가 높고, 선착순은 노출 접근성이 높아요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 모집 방식 설정</span></span>
+          </span>
+        </label>
+        <select id="t-recruit">
+          <option value="screening">심사 후 선발 (큐레이션)</option>
+          <option value="first">선착순</option>
+          <option value="open">자유 가입</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 클럽 활동 지표 -->
+  <div class="card munto-card">
+    <h2>📊 클럽 활동 지표</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>현재 멤버 수
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">클럽 멤버 수예요. 문토는 30~50명 규모 클럽을 알고리즘이 가장 선호해요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 멤버 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-members" placeholder="예: 28" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>최근 30일 신규 멤버
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">최근 한 달 신규 가입 수예요. 성장 모멘텀이 있는 클럽이 추천 피드에 우선 올라가요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 멤버 탭 → 최근 가입 순</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-newmembers" placeholder="예: 6" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>월 액티비티(모임) 수
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip moim-tt">문토에서는 모임을 '액티비티'라고 불러요. 월 2회 이상이 활성 기준이에요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 액티비티 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-activity" placeholder="예: 3" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>액티비티 평균 참여율 (%)
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">액티비티 신청 대비 실제 참여 비율이에요. 높을수록 클럽 품질 지표가 올라가요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 지난 액티비티 → 참여 현황</span></span>
+          </span>
+        </label>
+        <div class="range-row">
+          <input type="range" id="t-attend" min="0" max="100" value="70" oninput="document.getElementById('t-attendVal').textContent=this.value+'%'"/>
+          <span class="range-val-munto" id="t-attendVal">70%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>호스트 콘텐츠 발행 수 (월)
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">호스트가 클럽 내 올리는 게시글·사진·공지 수예요. 콘텐츠가 많을수록 멤버 잔존율이 높아져요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 피드 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-content" placeholder="예: 8" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>멤버 댓글·반응 수 (월평균)
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">멤버들의 게시글 댓글·좋아요 수예요. 커뮤니티 참여도를 나타내는 핵심 지표예요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 피드 → 각 게시글 반응 수</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-reaction" placeholder="예: 15" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>클럽 후기 수 (누적)
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">클럽 페이지에 쌓인 후기 수예요. 후기가 많을수록 신규 멤버 전환율이 올라가요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 후기 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-reviews" placeholder="예: 18" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>평균 별점
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">후기 평균 별점이에요. 4.7점 이상이면 문토 추천 클럽 배지가 부여될 수 있어요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 후기 탭 → 평점</span></span>
+          </span>
+        </label>
+        <div class="range-row">
+          <input type="range" id="t-rating" min="1" max="5" value="4.5" step="0.1" oninput="document.getElementById('t-ratingVal').textContent=parseFloat(this.value).toFixed(1)+'★'"/>
+          <span class="range-val-munto" id="t-ratingVal">4.5★</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 매력도 & 전환 -->
+  <div class="card munto-card">
+    <h2>✨ 매력도 & 전환</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>월 클럽 페이지 조회수
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">클럽 페이지가 조회된 횟수예요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 통계</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-views" placeholder="예: 180" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>월 가입 신청 수
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">한 달간 클럽 가입 신청 수예요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 멤버 신청 탭</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-joins" placeholder="예: 9" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>호스트 SNS 팔로워 수
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">문토는 호스트 브랜딩을 매우 중요시해요. 인스타·링크드인 팔로워가 많으면 클럽 신뢰도에 가산점이 생겨요.<span class="tooltip-where-munto">📍 인스타그램·링크드인 프로필 → 팔로워 수 확인</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-sns" placeholder="예: 1200" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>A/B 테스트 실시 여부
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">제목·소개글·대표사진을 주기적으로 바꿔보면서 성과를 비교하는 활동이에요.<span class="tooltip-where-munto">📍 직접 실험 — 2주마다 제목 또는 사진 변경 후 조회수 비교</span></span>
+          </span>
+        </label>
+        <select id="t-abtest">
+          <option value="regular">정기적으로 테스트 (월 1회+)</option>
+          <option value="sometimes">가끔 테스트 (분기 1회)</option>
+          <option value="never">테스트 안 함</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>외부 채널 연동
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">카카오 오픈채팅, 인스타 등 외부 채널과 클럽을 연동하면 멤버 잔존율이 높아져요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 소개 → 외부 링크 추가</span></span>
+          </span>
+        </label>
+        <select id="t-external">
+          <option value="yes">연동 중</option>
+          <option value="no">연동 없음</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>멤버 평균 잔존 기간 (개월)
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt">멤버가 평균 얼마나 오래 클럽에 남아 있는지예요. 잔존율이 높으면 LTV 점수가 크게 올라가요.<span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 멤버 가입일 기준으로 직접 계산</span></span>
+          </span>
+        </label>
+        <input type="number" id="t-retention" placeholder="예: 4" min="0"/>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-munto" onclick="analyzeMunto()">🔥 문토 노출 점수 분석하기</button>
+
+  <!-- 문토 결과 -->
+  <div id="munto-result" class="result-section">
+    <div id="pdf-bar-munto" style="display:flex;">
+      <span style="font-size:0.9rem; font-weight:700; color:#7C2D12;">📄 분석 결과 저장</span>
+      <div style="display:flex; gap:8px;">
+        <button onclick="window.print()" style="padding:8px 18px; border-radius:99px; border:1.5px solid #EA580C; background:#fff; color:#EA580C; font-size:0.82rem; font-weight:700; cursor:pointer;">🖨️ PDF 저장</button>
+        <button onclick="shareResult()" style="padding:8px 18px; border-radius:99px; border:none; background:linear-gradient(90deg,#EA580C,#f97316); color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">🔗 링크 공유</button>
+      </div>
+    </div>
+
+    <div class="result-card munto-res">
+      <h2>🏆 문토 클럽 종합 점수</h2>
+      <div class="score-big-box munto-sb">
+        <div class="score-number munto-num" id="t-totalScore">—</div>
+        <div class="score-grade munto-grade" id="t-scoreGrade">—</div>
+        <div class="score-label" id="t-scoreLabel">—</div>
+      </div>
+      <div class="sub-score-grid">
+        <div class="sub-item munto-si"><div class="sv" id="t-s1">—</div><div class="sn">SEO 점수</div><div class="sm">제목·소개·사진</div></div>
+        <div class="sub-item munto-si"><div class="sv" id="t-s2">—</div><div class="sn">활성도 점수</div><div class="sm">액티비티·콘텐츠</div></div>
+        <div class="sub-item munto-si"><div class="sv" id="t-s3">—</div><div class="sn">신뢰 점수</div><div class="sm">후기·별점</div></div>
+        <div class="sub-item munto-si"><div class="sv" id="t-s4">—</div><div class="sn">전환율 점수</div><div class="sm">조회→가입</div></div>
+        <div class="sub-item munto-si"><div class="sv" id="t-s5">—</div><div class="sn">매력도 점수</div><div class="sm">사진·호스트 브랜딩</div></div>
+        <div class="sub-item munto-si"><div class="sv" id="t-s6">—</div><div class="sn">LTV 점수</div><div class="sm">멤버 잔존율</div></div>
+      </div>
+    </div>
+
+    <div class="result-card munto-res">
+      <h2>📐 문토 노출 공식</h2>
+      <div class="formula-box munto-fb">
+        <div class="formula-text">노출 점수 = SEO(20%) + 활성도(20%) + 신뢰도(20%) + 전환율(15%) + 매력도(15%) + LTV(10%)</div>
+        <div class="formula-sub">고후기·감성비주얼·호스트브랜딩 클럽 우선 추천</div>
+      </div>
+    </div>
+
+    <div class="result-card munto-res">
+      <h2>📊 지표별 상세 분석</h2>
+      <div id="t-statRows"></div>
+    </div>
+
+    <div class="result-card munto-res">
+      <h2>✅ 강점 & 개선 포인트</h2>
+      <div id="t-checkList"></div>
+    </div>
+
+    <div class="result-card munto-res">
+      <h2>🗺️ 이번 주 실행 로드맵</h2>
+      <div id="t-roadmap"></div>
+    </div>
+
+    <div class="result-card munto-res">
+      <h2>💡 2026 문토 알고리즘 핵심 팁</h2>
+      <div class="tip-box munto-tip">
+        <strong>① 비주얼이 첫 번째</strong> — 문토는 피드 기반 탐색이 중심이에요. 감성적인 대표 사진 하나가 CTR을 3배 이상 올릴 수 있어요.<br/><br/>
+        <strong>② 별점 4.7 이상 유지</strong> — 문토 추천 클럽 배지는 4.7점 이상, 후기 20개 이상이 기준이에요. 후기 독려 문화를 만드세요.<br/><br/>
+        <strong>③ 호스트 브랜딩이 경쟁력</strong> — 호스트의 인스타·링크드인이 활성화되어 있으면 클럽 신뢰도가 크게 올라가요.<br/><br/>
+        <strong>④ 심사 모집 = 고품질 신호</strong> — 선착순보다 심사 모집 클럽이 알고리즘 품질 점수에서 유리해요. 커뮤니티 밀도가 높아지기 때문이에요.<br/><br/>
+        <strong>⑤ A/B 테스트를 습관화</strong> — 2주마다 제목 또는 대표 사진을 바꿔보고 조회수 변화를 체크하세요. 데이터 기반 최적화가 핵심이에요.
+      </div>
+    </div>
+  </div>
+
+</div><!-- #munto-section -->
+
+<footer>
+  <p>© 2026 longchiri — 소모임×문토 분석기 Ver 1.2</p>
+  <a class="tg-btn" href="https://t.me/longchiri" target="_blank">📢 롱치리 텔레그램</a>
+</footer>
+
+<script>
+// ── 탭 전환 ──
+function switchTab(tab) {
+  document.getElementById('moim-section').classList.toggle('hidden', tab !== 'moim');
+  document.getElementById('munto-section').classList.toggle('hidden', tab !== 'munto');
+  document.getElementById('tab-moim').className = 'tab-btn' + (tab === 'moim' ? ' active-moim' : '');
+  document.getElementById('tab-munto').className = 'tab-btn' + (tab === 'munto' ? ' active-munto' : '');
+}
+
+// ── 툴팁 ──
+function toggleTip(btn) {
+  const tip = btn.nextElementSibling;
+  document.querySelectorAll('.info-tooltip').forEach(t => { if (t !== tip) t.classList.remove('active'); });
+  tip.classList.toggle('active');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.info-wrap')) {
+    document.querySelectorAll('.info-tooltip').forEach(t => t.classList.remove('active'));
+  }
+});
+
+// ── 진행 바 색상 ──
+function barClass(v, platform) {
+  if (v >= 70) return 'bar-good';
+  if (v >= 40) return platform === 'munto' ? 'bar-mid-t' : 'bar-mid-m';
+  return 'bar-bad';
+}
+
+// ── 체크 HTML ──
+function checkHtml(checks) {
+  return checks.map(c => `
+    <div class="check-item check-${c.type}">
+      <span class="check-icon">${c.type==='ok'?'✅':c.type==='warn'?'⚠️':'❌'}</span>
+      <div>
+        <div class="check-title">${c.title}</div>
+        <div class="check-desc">${c.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── 로드맵 HTML ──
+function roadmapHtml(items, platform) {
+  if (!items.length) items = [{ title:'✨ 최적화 완료!', action:'현재 잘 최적화되어 있어요. 꾸준히 유지하세요.', why:'현상 유지가 최선의 전략' }];
+  return items.map(r => `
+    <div class="roadmap-item ${platform}-road">
+      <div class="roadmap-title">${r.title}</div>
+      <div class="roadmap-action">👉 ${r.action}</div>
+      <div class="roadmap-why">💡 ${r.why}</div>
+    </div>`).join('');
+}
+
+// ── 등급 ──
+function grade(total, platform) {
+  const grades = platform === 'moim'
+    ? ['🏆 추천 TOP 모임','🥈 상위 노출','🥉 평균 이상','📌 평균','⚠️ 노출 부족']
+    : ['🏆 추천 클럽 배지','🥈 상위 노출','🥉 평균 이상','📌 평균','⚠️ 노출 부족'];
+  const labels = ['상위 5% — 알고리즘이 적극 추천 중이에요','상위 20% — 조금만 더 최적화하면 탑레벨이에요','상위 40% — 활성도와 SEO를 높이면 도약해요','개선 포인트가 여러 곳 있어요 — 로드맵을 따라가세요','알고리즘이 잘 추천하지 않는 상태예요 — 지금 바로 개선하세요'];
+  const i = total >= 85 ? 0 : total >= 70 ? 1 : total >= 55 ? 2 : total >= 40 ? 3 : 4;
+  return { g: grades[i], l: labels[i] };
+}
+
+// ── 통계 행 HTML ──
+function statRowHtml(data, platform) {
+  return data.map(s => {
+    const pct = Math.min(100, Math.max(0, s.val));
+    return `
+      <div class="stat-row">
+        <div class="stat-name-wrap">
+          <div class="stat-name">${s.name}</div>
+          <div class="stat-desc">${s.desc}</div>
+        </div>
+        <div class="bar-wrap"><div class="bar-fill ${barClass(pct, platform)}" style="width:${pct}%"></div></div>
+        <div class="stat-val">${Math.round(pct)}점</div>
+      </div>`;
+  }).join('');
+}
+
+// ════════════ 소모임 분석 ════════════
+function analyzeMoim() {
+  const title   = (document.getElementById('m-title').value || '').trim();
+  const intro   = (document.getElementById('m-intro').value || '').trim();
+  const area    = document.getElementById('m-area').value;
+  const photo   = document.getElementById('m-photo').value;
+  const vis     = document.getElementById('m-visibility').value;
+  const members = parseInt(document.getElementById('m-members').value) || 0;
+  const newMem  = parseInt(document.getElementById('m-newmembers').value) || 0;
+  const freq    = parseInt(document.getElementById('m-freq').value) || 0;
+  const attend  = parseInt(document.getElementById('m-attend').value) || 0;
+  const posts   = parseInt(document.getElementById('m-posts').value) || 0;
+  const flash   = parseInt(document.getElementById('m-flash').value) || 0;
+  const reviews = parseInt(document.getElementById('m-reviews').value) || 0;
+  const rating  = parseFloat(document.getElementById('m-rating').value) || 0;
+  const views   = parseInt(document.getElementById('m-views').value) || 0;
+  const joins   = parseInt(document.getElementById('m-joins').value) || 0;
+  const ltv     = parseInt(document.getElementById('m-ltv').value) || 0;
+  const noshow  = parseInt(document.getElementById('m-noshow').value) || 0;
+
+  // 점수 계산
+  const keywords = ['모임','독서','러닝','요가','여행','스터디','크루','클럽','동아리','맛집'];
+  const hasKw = keywords.some(k => title.includes(k));
+
+  let seo = 0;
+  if (title.length >= 10) seo += 25; else if (title.length >= 5) seo += 12;
+  if (hasKw) seo += 25;
+  if (intro.length >= 100) seo += 30; else if (intro.length >= 30) seo += 15;
+  if (area === 'specific') seo += 20; else if (area === 'city') seo += 10;
+  seo = Math.min(100, seo);
+
+  let act = 0;
+  if (freq >= 4) act += 30; else if (freq >= 2) act += 18; else if (freq >= 1) act += 8;
+  if (attend >= 70) act += 25; else if (attend >= 50) act += 15; else if (attend >= 30) act += 8;
+  if (posts >= 15) act += 25; else if (posts >= 5) act += 14; else if (posts >= 1) act += 6;
+  if (flash >= 2) act += 20; else if (flash >= 1) act += 10;
+  act = Math.min(100, act);
+
+  let trust = 0;
+  if (reviews >= 30) trust += 45; else if (reviews >= 15) trust += 30; else if (reviews >= 5) trust += 15;
+  if (rating >= 4.7) trust += 35; else if (rating >= 4.3) trust += 22; else if (rating >= 3.5) trust += 10;
+  if (noshow <= 5) trust += 20; else if (noshow <= 15) trust += 10;
+  trust = Math.min(100, trust);
+
+  const cvrRate = views > 0 ? (joins / views) * 100 : 0;
+  let cvr = 0;
+  if (cvrRate >= 10) cvr += 60; else if (cvrRate >= 5) cvr += 40; else if (cvrRate >= 2) cvr += 20; else if (views > 0) cvr += 5;
+  if (photo === 'real') cvr += 25; else if (photo === 'basic') cvr += 10;
+  if (vis === 'public') cvr += 15;
+  cvr = Math.min(100, cvr);
+
+  let ltvScore = 0;
+  if (ltv >= 8) ltvScore = 100; else if (ltv >= 5) ltvScore = 70; else if (ltv >= 3) ltvScore = 45; else if (ltv >= 1) ltvScore = 20;
+  ltvScore = Math.min(100, ltvScore);
+
+  const growRate = members > 0 ? (newMem / members) * 100 : 0;
+  let grow = growRate >= 20 ? 100 : growRate >= 10 ? 70 : growRate >= 5 ? 45 : growRate > 0 ? 20 : 0;
+
+  const total = Math.round(seo*0.25 + act*0.25 + trust*0.20 + cvr*0.15 + ltvScore*0.10 + grow*0.05);
+  const { g, l } = grade(total, 'moim');
+
+  document.getElementById('m-totalScore').textContent = total;
+  document.getElementById('m-scoreGrade').textContent = g;
+  document.getElementById('m-scoreLabel').textContent = l;
+  ['m-s1','m-s2','m-s3','m-s4','m-s5','m-s6'].forEach((id, i) => {
+    document.getElementById(id).textContent = [seo,act,trust,cvr,ltvScore,grow].map(Math.round)[i];
+  });
+
+  document.getElementById('m-statRows').innerHTML = statRowHtml([
+    { name:'제목 SEO', desc:'키워드·지역 포함 여부', val:seo },
+    { name:'모임 빈도', desc:'월 정기 활동 횟수', val:Math.min(100,freq*20) },
+    { name:'출석률', desc:'실제 참여 비율', val:attend },
+    { name:'게시글 활동', desc:'월 콘텐츠 수', val:Math.min(100,posts*5) },
+    { name:'후기 신뢰도', desc:'후기 수 + 별점', val:trust },
+    { name:'전환율', desc:'조회 대비 가입', val:Math.min(100,cvrRate*8) },
+    { name:'멤버 LTV', desc:'평균 활동 기간', val:ltvScore },
+    { name:'노쇼 관리', desc:'낮을수록 좋음', val:Math.max(0,100-noshow*3) },
+  ], 'moim');
+
+  const checks = [];
+  if (hasKw && title.length >= 10) checks.push({ type:'ok', title:'제목 SEO 최적화', desc:'키워드가 포함된 제목으로 검색 노출에 유리해요.' });
+  else checks.push({ type:'bad', title:'제목 키워드 없음', desc:'"지역 + 주제 + 대상" 구조로 제목을 작성하세요.' });
+  if (intro.length >= 100) checks.push({ type:'ok', title:'소개글 충실', desc:'소개글이 100자 이상으로 알고리즘이 주제를 정확히 파악해요.' });
+  else checks.push({ type:'warn', title:'소개글 보강 필요', desc:'100자 이상으로 일정·장소·대상을 구체적으로 작성하세요.' });
+  if (freq >= 4) checks.push({ type:'ok', title:'높은 모임 빈도', desc:`월 ${freq}회 — 활성 모임으로 상위 노출돼요.` });
+  else if (freq === 0) checks.push({ type:'bad', title:'모임 일정 없음', desc:'지금 바로 일정을 등록하세요. 일정 유무가 노출 여부를 결정해요.' });
+  if (rating >= 4.5) checks.push({ type:'ok', title:`별점 ${rating.toFixed(1)}★`, desc:'높은 별점으로 추천 피드에 우선 노출돼요.' });
+  else if (rating < 4.0) checks.push({ type:'warn', title:'별점 개선 필요', desc:'매 모임 후 후기 작성을 적극 유도하고 모임 품질을 높이세요.' });
+  if (noshow <= 10) checks.push({ type:'ok', title:'낮은 노쇼율', desc:`노쇼 ${noshow}% — 신뢰도 높은 모임으로 평가돼요.` });
+  else checks.push({ type:'warn', title:'노쇼 관리 필요', desc:'전날 리마인드 메시지 발송 또는 보증금 제도를 도입해보세요.' });
+  if (flash >= 1) checks.push({ type:'ok', title:'번개모임 운영 중', desc:'번개모임이 활성도 점수를 부스트해요.' });
+  else checks.push({ type:'warn', title:'번개모임 없음', desc:'정기 모임 사이 번개를 1~2회 열면 활성도 급상승해요.' });
+
+  document.getElementById('m-checkList').innerHTML = checkHtml(checks);
+
+  const roads = [];
+  if (!hasKw || title.length < 10) roads.push({ title:'① 제목 리뉴얼', action:'"지역 + 주제 + 대상" 구조로 제목을 재작성하세요', why:'검색 노출 즉시 개선' });
+  if (intro.length < 100) roads.push({ title:'② 소개글 보강', action:'100자 이상 일정·장소·대상을 구체적으로 작성하세요', why:'CTR + 알고리즘 이해도 향상' });
+  if (freq < 2) roads.push({ title:'③ 정기 일정 등록', action:'매주 고정 요일·시간으로 정기 일정을 등록하세요', why:'활성 모임 신호 강화' });
+  if (flash === 0) roads.push({ title:'④ 번개모임 개설', action:'이번 주 안에 번개모임을 한 번 열어보세요', why:'활성도 점수 즉시 부스트' });
+  if (reviews < 10) roads.push({ title:'⑤ 후기 독려', action:'모임 후 참여자에게 후기 작성 링크를 직접 보내세요', why:'후기가 소모임 알고리즘에서 가장 강력한 신호' });
+  document.getElementById('m-roadmap').innerHTML = roadmapHtml(roads, 'moim');
+
+  document.getElementById('moim-result').style.display = 'block';
+  document.getElementById('pdf-bar-moim').style.display = 'flex';
+  document.getElementById('moim-result').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ════════════ 문토 분석 ════════════
+function analyzeMunto() {
+  const title    = (document.getElementById('t-title').value || '').trim();
+  const intro    = (document.getElementById('t-intro').value || '').trim();
+  const photo    = document.getElementById('t-photo').value;
+  const recruit  = document.getElementById('t-recruit').value;
+  const members  = parseInt(document.getElementById('t-members').value) || 0;
+  const newMem   = parseInt(document.getElementById('t-newmembers').value) || 0;
+  const activity = parseInt(document.getElementById('t-activity').value) || 0;
+  const attend   = parseInt(document.getElementById('t-attend').value) || 0;
+  const content  = parseInt(document.getElementById('t-content').value) || 0;
+  const reaction = parseInt(document.getElementById('t-reaction').value) || 0;
+  const reviews  = parseInt(document.getElementById('t-reviews').value) || 0;
+  const rating   = parseFloat(document.getElementById('t-rating').value) || 0;
+  const views    = parseInt(document.getElementById('t-views').value) || 0;
+  const joins    = parseInt(document.getElementById('t-joins').value) || 0;
+  const sns      = parseInt(document.getElementById('t-sns').value) || 0;
+  const abtest   = document.getElementById('t-abtest').value;
+  const external = document.getElementById('t-external').value;
+  const retention= parseInt(document.getElementById('t-retention').value) || 0;
+
+  // 점수 계산
+  const keywords = ['클럽','모임','성장','커리어','독서','아트','운동','여행','직장인','감성'];
+  const hasKw = keywords.some(k => title.includes(k));
+
+  let seo = 0;
+  if (title.length >= 10) seo += 20; else if (title.length >= 5) seo += 10;
+  if (hasKw) seo += 20;
+  if (intro.length >= 120) seo += 30; else if (intro.length >= 50) seo += 15;
+  if (photo === 'great') seo += 30; else if (photo === 'real') seo += 18; else if (photo === 'basic') seo += 8;
+  seo = Math.min(100, seo);
+
+  let act = 0;
+  if (activity >= 3) act += 35; else if (activity >= 2) act += 22; else if (activity >= 1) act += 10;
+  if (attend >= 75) act += 25; else if (attend >= 55) act += 15; else if (attend >= 35) act += 8;
+  if (content >= 10) act += 25; else if (content >= 4) act += 14; else if (content >= 1) act += 6;
+  if (reaction >= 20) act += 15; else if (reaction >= 8) act += 8;
+  act = Math.min(100, act);
+
+  let trust = 0;
+  if (reviews >= 20) trust += 40; else if (reviews >= 10) trust += 25; else if (reviews >= 3) trust += 12;
+  if (rating >= 4.7) trust += 40; else if (rating >= 4.3) trust += 25; else if (rating >= 3.5) trust += 12;
+  if (recruit === 'screening') trust += 20; else if (recruit === 'first') trust += 8;
+  trust = Math.min(100, trust);
+
+  const cvrRate = views > 0 ? (joins / views) * 100 : 0;
+  let cvr = 0;
+  if (cvrRate >= 10) cvr += 60; else if (cvrRate >= 5) cvr += 40; else if (cvrRate >= 2) cvr += 20; else if (views > 0) cvr += 5;
+  if (external === 'yes') cvr += 25;
+  if (abtest === 'regular') cvr += 15; else if (abtest === 'sometimes') cvr += 7;
+  cvr = Math.min(100, cvr);
+
+  let charm = 0;
+  if (photo === 'great') charm += 40; else if (photo === 'real') charm += 22; else if (photo === 'basic') charm += 10;
+  if (sns >= 5000) charm += 35; else if (sns >= 1000) charm += 22; else if (sns >= 300) charm += 12;
+  if (abtest === 'regular') charm += 25; else if (abtest === 'sometimes') charm += 10;
+  charm = Math.min(100, charm);
+
+  let ltvScore = 0;
+  if (retention >= 8) ltvScore = 100; else if (retention >= 5) ltvScore = 70; else if (retention >= 3) ltvScore = 45; else if (retention >= 1) ltvScore = 20;
+  ltvScore = Math.min(100, ltvScore);
+
+  const total = Math.round(seo*0.20 + act*0.20 + trust*0.20 + cvr*0.15 + charm*0.15 + ltvScore*0.10);
+  const { g, l } = grade(total, 'munto');
+
+  document.getElementById('t-totalScore').textContent = total;
+  document.getElementById('t-scoreGrade').textContent = g;
+  document.getElementById('t-scoreLabel').textContent = l;
+  ['t-s1','t-s2','t-s3','t-s4','t-s5','t-s6'].forEach((id, i) => {
+    document.getElementById(id).textContent = [seo,act,trust,cvr,charm,ltvScore].map(Math.round)[i];
+  });
+
+  document.getElementById('t-statRows').innerHTML = statRowHtml([
+    { name:'제목 SEO', desc:'키워드·감성어 포함', val:seo },
+    { name:'액티비티 빈도', desc:'월 모임 횟수', val:Math.min(100,activity*25) },
+    { name:'참여율', desc:'액티비티 참여 비율', val:attend },
+    { name:'콘텐츠 활동', desc:'월 게시글·반응', val:Math.min(100,content*8+reaction*2) },
+    { name:'후기 신뢰도', desc:'후기 수 + 별점', val:trust },
+    { name:'전환율', desc:'조회 대비 가입', val:Math.min(100,cvrRate*8) },
+    { name:'비주얼 매력도', desc:'사진·호스트 브랜딩', val:charm },
+    { name:'멤버 잔존율', desc:'평균 활동 기간', val:ltvScore },
+  ], 'munto');
+
+  const checks = [];
+  if (photo === 'great') checks.push({ type:'ok', title:'감성 고퀄 사진', desc:'문토에서 비주얼은 가장 강력한 CTR 신호예요. 계속 유지하세요.' });
+  else if (photo === 'none') checks.push({ type:'bad', title:'대표 사진 없음', desc:'감성적인 활동 사진으로 즉시 교체하세요. CTR이 3배 이상 차이나요.' });
+  if (rating >= 4.7) checks.push({ type:'ok', title:`별점 ${rating.toFixed(1)}★ — 추천 배지 조건 충족`, desc:'문토 추천 클럽 배지 조건에 근접했어요.' });
+  else if (rating < 4.3) checks.push({ type:'warn', title:'별점 개선 필요', desc:'4.7점 이상이면 추천 배지가 부여돼요. 모임 품질 개선 + 후기 독려를 병행하세요.' });
+  if (recruit === 'screening') checks.push({ type:'ok', title:'심사 모집', desc:'심사 모집은 커뮤니티 밀도를 높이고 알고리즘 품질 점수에 유리해요.' });
+  if (sns >= 1000) checks.push({ type:'ok', title:`SNS 팔로워 ${sns.toLocaleString()}명`, desc:'호스트 브랜딩이 잘 되어 있어 클럽 신뢰도가 높아요.' });
+  else checks.push({ type:'warn', title:'호스트 브랜딩 강화 필요', desc:'인스타그램·링크드인 팔로워 1,000명 이상이면 클럽 신뢰도에 가산점이 생겨요.' });
+  if (abtest === 'regular') checks.push({ type:'ok', title:'A/B 테스트 정기 실시', desc:'데이터 기반 최적화로 전환율이 꾸준히 올라가고 있어요.' });
+  else checks.push({ type:'warn', title:'A/B 테스트 미실시', desc:'2주마다 제목 또는 대표 사진을 바꿔보고 조회수 변화를 추적하세요.' });
+  if (content >= 8) checks.push({ type:'ok', title:'콘텐츠 활발', desc:`월 ${content}회 게시글 — 멤버 잔존율을 높이는 핵심 활동이에요.` });
+  else checks.push({ type:'warn', title:'콘텐츠 부족', desc:'주 2회 이상 피드 게시글을 올려 멤버 참여를 유지하세요.' });
+
+  document.getElementById('t-checkList').innerHTML = checkHtml(checks);
+
+  const roads = [];
+  if (photo !== 'great') roads.push({ title:'① 대표 사진 교체', action:'전문적인 느낌의 감성 활동 사진으로 즉시 교체하세요', why:'CTR 최대 3배 향상 — 문토에서 가장 효과적인 단일 액션' });
+  if (!hasKw || title.length < 10) roads.push({ title:'② 제목 최적화', action:'"대상 + 가치관 + 활동" 구조로 제목을 재작성하세요', why:'검색·추천 노출 개선' });
+  if (reviews < 10) roads.push({ title:'③ 후기 수집 캠페인', action:'이번 액티비티 후 참여자에게 직접 후기 작성 메시지를 보내세요', why:'별점 4.7+ 달성이 추천 배지의 핵심' });
+  if (content < 6) roads.push({ title:'④ 콘텐츠 발행 루틴', action:'주 2회 클럽 피드에 인사이트·사진·공지를 올리세요', why:'멤버 잔존율과 앱 내 체류 시간 증가' });
+  if (abtest !== 'regular') roads.push({ title:'⑤ A/B 테스트 시작', action:'이번 주 제목을 한 가지 바꿔보고 2주 후 조회수를 비교하세요', why:'데이터 기반 전환율 최적화' });
+  document.getElementById('t-roadmap').innerHTML = roadmapHtml(roads, 'munto');
+
+  document.getElementById('munto-result').style.display = 'block';
+  document.getElementById('pdf-bar-munto').style.display = 'flex';
+  document.getElementById('munto-result').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function shareResult() {
+  if (navigator.share) {
+    navigator.share({ title:'소모임×문토 분석 결과', url: location.href });
+  } else {
+    navigator.clipboard.writeText(location.href).then(() => alert('링크가 복사되었어요!'));
+  }
+}
+</script>
+
+</body>
+</html>
