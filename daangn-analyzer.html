@@ -131,6 +131,7 @@
     .bar-mid  { background:linear-gradient(90deg,#FF6F0F,#FFB347); }
     .bar-bad  { background:linear-gradient(90deg,#ef4444,#fca5a5); }
     .stat-val { width:64px; text-align:right; font-size:0.82rem; color:#888; flex-shrink:0; }
+    .stat-tip { width:100%; font-size:0.78rem; color:#664; background:#FFF5EC; border-left:3px solid #FF6F0F; padding:6px 10px; border-radius:0 6px 6px 0; margin-top:4px; line-height:1.6; }
 
     /* 체크 아이템 */
     .check-item {
@@ -969,21 +970,95 @@ function analyze() {
 
   // ── 진행 바 ──
   const barClass = v => v >= 70 ? 'bar-good' : v >= 40 ? 'bar-mid' : 'bar-bad';
+  const seoVal  = seo;
+  const introVal= Math.min(100, intro.length >= 100 ? 90 : intro.length >= 50 ? 60 : intro.length >= 10 ? 30 : 0);
+  const freqVal = Math.min(100, meetingFreq * 20);
+  const atndVal = attendRate;
+  const postVal = Math.min(100, postCount * 5);
+  const tempVal = Math.min(100, (mannerTemp - 30) / 60 * 100);
+  const expVal  = exp;
+  const cvrVal  = Math.min(100, cvrRate * 6);
+  const growVal = grow;
+
   const statData = [
-    { name:'제목 SEO', desc:'키워드·지역명 포함 여부', val:seo },
-    { name:'소개글 품질', desc:'길이·정보 충실도', val: Math.min(100, intro.length >= 100 ? 90 : intro.length >= 50 ? 60 : intro.length >= 10 ? 30 : 0) },
-    { name:'모임 빈도', desc:'월 활동 횟수', val: Math.min(100, meetingFreq * 20) },
-    { name:'출석률', desc:'참여 멤버 비율', val: attendRate },
-    { name:'게시글 활동', desc:'월 콘텐츠 발행 수', val: Math.min(100, postCount * 5) },
-    { name:'매너온도', desc:'호스트 신뢰 지표', val: Math.min(100, (mannerTemp - 30) / 60 * 100) },
-    { name:'끌올 최적화', desc:'끌올 횟수·시간대', val: exp },
-    { name:'전환율', desc:'조회 대비 참여신청', val: Math.min(100, cvrRate * 6) },
-    { name:'멤버 성장', desc:'최근 30일 성장률', val: grow },
+    {
+      name:'제목 SEO', desc:'키워드·지역명 포함 여부', val: seoVal,
+      tip: seoVal >= 70
+        ? pick(['제목 SEO가 잘 최적화되어 있어요. 지역명과 키워드를 계속 유지하세요 ✅', '키워드가 잘 포함되어 있어요. 제목 맨 앞에 키워드를 배치하면 더 좋아요'])
+        : seoVal >= 40
+        ? pick(['제목에 활동 키워드(예: 독서·러닝·요리)를 추가하면 검색 노출이 2배 올라요', '지역명을 제목 앞쪽에 배치해보세요. 예: "강남 직장인 독서 모임"'])
+        : pick(['제목에 키워드가 없으면 검색에서 거의 안 보여요. 지역+활동+대상을 넣어보세요', '제목을 "지역 + 활동 + 대상" 형태로 바꿔보세요. 예: "홍대 20대 그림 모임 | 초보 환영"'])
+    },
+    {
+      name:'소개글 품질', desc:'길이·정보 충실도', val: introVal,
+      tip: introVal >= 70
+        ? pick(['소개글이 충실해요! 첫 3줄에 핵심 정보가 있는지 한 번 더 확인해보세요 ✅', '소개글 길이가 충분해요. "이런 분 환영해요" 섹션을 추가하면 전환율이 더 올라가요'])
+        : introVal >= 40
+        ? pick(['소개글을 100자 이상으로 늘려보세요. 일정·장소·분위기를 구체적으로 써주세요', '"언제 / 어디서 / 어떤 분과 / 무엇을" 4가지를 소개글에 모두 담아보세요'])
+        : pick(['소개글이 너무 짧아요. 최소 100자 이상, 가능하면 200자 이상 써보세요', '소개글 첫 줄에 "무슨 모임인지"를 바로 설명해야 이탈을 막을 수 있어요'])
+    },
+    {
+      name:'모임 빈도', desc:'월 활동 횟수', val: freqVal,
+      tip: freqVal >= 70
+        ? pick(['모임 빈도가 적당해요. 매번 새로운 테마나 활동을 넣으면 참여 동기가 유지돼요 ✅', '꾸준한 모임 빈도가 활성 모임 신호를 만들어요. 이 페이스를 유지하세요'])
+        : freqVal >= 40
+        ? pick(['월 2~4회가 참여 부담 없는 최적 빈도예요. 너무 잦거나 드물면 이탈이 생겨요', '모임 전날 공지를 올리면 참여율이 올라가요. 빈도보다 예고가 중요해요'])
+        : pick(['모임이 너무 드물어요. 최소 월 1회 이상 정기 모임을 잡아보세요', '첫 모임을 잡는 게 가장 중요해요. 소규모(2~3명)로 가볍게 시작해보세요'])
+    },
+    {
+      name:'출석률', desc:'참여 멤버 비율', val: atndVal,
+      tip: atndVal >= 70
+        ? pick(['출석률이 높아요! 모임 전날 리마인더 공지를 계속 유지하세요 ✅', '참여율이 좋아요. 매번 참여한 멤버에게 감사 인사를 하면 유지율이 더 올라가요'])
+        : atndVal >= 40
+        ? pick(['출석률을 높이려면 모임 전날 리마인더 공지를 꼭 올려보세요', '소규모로 확실히 오는 인원만 모아서 먼저 모임을 열어보세요. 성공 경험이 쌓여요'])
+        : pick(['출석률이 낮아요. 멤버에게 DM으로 "다음 모임 오실 건가요?" 확인해보세요', '모임 테마나 특별 이벤트를 추가해서 참여 동기를 만들어보세요'])
+    },
+    {
+      name:'게시글 활동', desc:'월 콘텐츠 발행 수', val: postVal,
+      tip: postVal >= 70
+        ? pick(['게시판이 활발해요! 정보형보다 참여 유도형 글을 섞어 올리면 댓글이 더 늘어나요 ✅', '꾸준한 게시글이 활성 모임 신호를 만들어요. 후기 사진 중심으로 이어가세요'])
+        : postVal >= 40
+        ? pick(['"다음 모임 이런 거 해봐요 어때요?" 의견 묻는 글 하나가 댓글 폭발을 만들어요', '모임 후기 사진 1장만 올려도 게시판 활성 점수가 올라가요'])
+        : pick(['게시판이 너무 조용해요. 호스트가 먼저 주 1회 짧은 글을 올려보세요', '"다음 모임 날짜 공지" 게시글 하나만 올려도 활성 모임 신호가 생겨요'])
+    },
+    {
+      name:'매너온도', desc:'호스트 신뢰 지표', val: tempVal,
+      tip: tempVal >= 70
+        ? pick(['매너온도가 높아요! 거래와 모임 활동을 꾸준히 이어가면 계속 유지돼요 ✅', '온도가 충분해요. 이제 후기를 쌓으면 신뢰 지표가 완성돼요'])
+        : tempVal >= 40
+        ? pick(['당근 거래를 활발히 하면 온도가 빠르게 올라가요. 거래 후기도 함께 쌓여요', '동네 이웃과 거래하면서 매너온도를 올려보세요. 36.5°C 이상이 기본이에요'])
+        : pick(['매너온도가 낮으면 신규 멤버가 가입을 망설여요. 당근 거래를 늘려보세요', '프로필에 인증 배지를 추가하고 거래 후기를 쌓으면 빠르게 올라가요'])
+    },
+    {
+      name:'끌올 최적화', desc:'끌올 횟수·시간대', val: expVal,
+      tip: expVal >= 70
+        ? pick(['끌올 전략이 잘 되어 있어요! 화·목·토 저녁 7~10시 패턴을 계속 유지하세요 ✅', '끌올 타이밍이 좋아요. 끌올 직전에 소개글을 점검하면 전환율이 더 올라가요'])
+        : expVal >= 40
+        ? pick(['화요일·목요일·토요일 저녁 7~10시에 끌올하면 조회수가 30~50% 올라요', '하루 1회, 황금시간대 집중 끌올이 무작위 여러 번보다 2배 효과적이에요'])
+        : pick(['끌올이 없거나 너무 적어요. 지금 바로 저녁 황금시간대(7~10시)에 끌올해보세요', '끌올은 당근이 제공하는 무료 노출 도구예요. 주 2~3회는 꼭 활용하세요'])
+    },
+    {
+      name:'전환율', desc:'조회 대비 참여신청', val: cvrVal,
+      tip: cvrVal >= 70
+        ? pick(['전환율이 높아요! 소개글과 사진이 잘 작동하고 있어요. 끌올로 조회수를 더 키워보세요 ✅', '전환율 우수예요. 이 상태에서 끌올 빈도를 높이면 멤버가 빠르게 늘어요'])
+        : cvrVal >= 40
+        ? pick(['소개글 첫 줄에 "지금 바로 참여 신청하세요!" CTA를 넣으면 전환율이 올라가요', '가입 절차가 복잡하면 이탈해요. 신청 방법을 소개글에 간단히 안내해보세요'])
+        : pick(['조회는 되는데 신청이 없다면 소개글·사진 개선이 시급해요', '대표 사진을 실제 모임 현장 사진으로 바꾸고, 소개글 첫 문장을 공감형으로 써보세요'])
+    },
+    {
+      name:'멤버 성장', desc:'최근 30일 성장률', val: growVal,
+      tip: growVal >= 70
+        ? pick(['멤버 성장이 빨라요! 이 속도를 유지하려면 신규 멤버 온보딩을 신경 써보세요 ✅', '성장률이 좋아요. 늘어나는 멤버에게 환영 공지를 꼭 보내 유지율을 높이세요'])
+        : growVal >= 40
+        ? pick(['동네생활에 모임 후기 글을 올리면 무료 추가 노출로 신규 유입이 생겨요', '끌올 빈도를 높이거나 황금시간대로 옮기면 조회수와 신규 가입이 함께 올라요'])
+        : pick(['멤버가 늘지 않고 있어요. 끌올 + 동네생활 글 + 외부 채널 홍보를 동시에 해보세요', '지인 1~2명을 먼저 초대해서 활동 사진을 만들어두면 신규 유입이 훨씬 쉬워요'])
+    },
   ];
 
   let statHtml = '';
   statData.forEach(s => {
     const pct = Math.min(100, Math.max(0, s.val));
+    const tipIcon = pct >= 70 ? '✅' : pct >= 40 ? '💡' : '⚠️';
     statHtml += `
       <div class="stat-row">
         <div class="stat-name-wrap">
@@ -992,6 +1067,7 @@ function analyze() {
         </div>
         <div class="bar-wrap"><div class="bar-fill ${barClass(pct)}" style="width:${pct}%"></div></div>
         <div class="stat-val">${Math.round(pct)}점</div>
+        <div class="stat-tip">${tipIcon} ${s.tip}</div>
       </div>`;
   });
   document.getElementById('statRows').innerHTML = statHtml;
