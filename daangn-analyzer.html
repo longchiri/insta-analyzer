@@ -495,6 +495,165 @@
   </div>
 </div>
 
+<!-- 6. 일정 & 운영 관리 -->
+<div class="card">
+  <h2>📅 일정 & 운영 관리</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>다음 모임까지 남은 일수
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">다음 예정 모임까지 몇 일 남았나요? 14일 이내 일정이 있는 모임이 우선 노출돼요.<span class="tooltip-where">📍 당근앱 → 모임 → 일정 탭에서 확인</span></span>
+        </span>
+        <span class="tip">14일 이내면 노출 부스트</span>
+      </label>
+      <input type="number" id="dday" placeholder="예: 5 (일정 없으면 999)" min="0" max="999"/>
+    </div>
+    <div class="form-group">
+      <label>모임 운영 방식
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">정기 모임은 알고리즘이 활성 모임으로 인식해 꾸준한 노출을 받아요.<span class="tooltip-where">📍 당근앱 → 모임 → 일정 탭</span></span>
+        </span>
+      </label>
+      <select id="scheduleType">
+        <option value="weekly">매주 정기 모임</option>
+        <option value="biweekly">격주 정기 모임</option>
+        <option value="monthly">매월 정기 모임</option>
+        <option value="irregular">비정기 (그때그때)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>가입 승인 방식
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">자유 가입은 신청 즉시 가입돼요. 전환율에 큰 영향을 줘요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 가입 설정</span></span>
+        </span>
+      </label>
+      <select id="joinType">
+        <option value="free">자유 가입 (즉시 승인)</option>
+        <option value="approval">수락 필요 (호스트 승인)</option>
+        <option value="question">가입 질문 있음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>단골 멤버 비율 (%)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">3회 이상 참여한 단골 멤버 비율이에요. 높을수록 모임 충성도가 높고 알고리즘 활성 점수가 올라가요.<span class="tooltip-where">📍 당근앱 → 모임 → 멤버 탭 → 참여 이력</span></span>
+        </span>
+        <span class="tip">3회 이상 참여자 기준</span>
+      </label>
+      <div class="range-row">
+        <input type="range" id="regularRate" min="0" max="100" value="30" oninput="document.getElementById('regularRateVal').textContent=this.value+'%'"/>
+        <span class="range-val" id="regularRateVal">30%</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>모임 주요 시간대
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임을 주로 언제 진행하나요? 저녁·주말 모임이 직장인 접근성이 높아 멤버 모집에 유리해요.<span class="tooltip-where">📍 당근앱 → 모임 → 일정 탭 참고</span></span>
+        </span>
+      </label>
+      <select id="meetingTime">
+        <option value="evening">평일 저녁 (7시 이후)</option>
+        <option value="weekend">주말</option>
+        <option value="daytime">평일 낮</option>
+        <option value="morning">아침 (9시 이전)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>소개글에 지역명 포함 여부
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">소개글에 "강남역", "홍대", "수원" 같은 구체적 장소명이 있으면 검색 노출에 유리해요.<span class="tooltip-where">📍 당근앱 → 모임 → 소개 편집</span></span>
+        </span>
+      </label>
+      <select id="introLocation">
+        <option value="yes">있음 (구체적 장소 명시)</option>
+        <option value="no">없음</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 7. 추가 노출 채널 -->
+<div class="card">
+  <h2>🌐 추가 노출 채널</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>모임 사진 개수
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임 페이지에 등록된 사진 수예요. 사진이 많을수록 모임 신뢰도와 클릭율이 올라가요.<span class="tooltip-where">📍 당근앱 → 모임 → 사진 탭</span></span>
+        </span>
+      </label>
+      <input type="number" id="photoCount" placeholder="예: 5" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>카카오맵 장소 등록 여부
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임 장소를 카카오맵에 등록하면 지도 검색으로도 유입이 생겨요.<span class="tooltip-where">📍 카카오맵 → 장소 등록 후 당근 소개글에 링크 삽입</span></span>
+        </span>
+      </label>
+      <select id="kakaoMap">
+        <option value="yes">등록됨</option>
+        <option value="no">미등록</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>SNS·블로그 외부 홍보
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">인스타그램, 네이버 블로그, 커뮤니티 등 외부 채널에서 당근 모임 링크를 홍보하면 추가 유입이 생겨요.<span class="tooltip-where">📍 당근 모임 → 공유하기 → 링크 복사 후 외부 채널에 공유</span></span>
+        </span>
+      </label>
+      <select id="snsPromo">
+        <option value="both">인스타+블로그 모두</option>
+        <option value="insta">인스타그램만</option>
+        <option value="blog">블로그/카페만</option>
+        <option value="none">외부 홍보 없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>당근 알바/동네생활 교차 활용
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">당근 알바 게시판이나 동네생활에 모임 관련 활동을 올리면 모임 계정의 전체 신뢰도가 올라가요.<span class="tooltip-where">📍 당근앱 → 알바 또는 동네생활 → 관련 글 작성</span></span>
+        </span>
+      </label>
+      <select id="crossPromo">
+        <option value="active">활발히 활용 중</option>
+        <option value="sometimes">가끔 활용</option>
+        <option value="never">활용 안 함</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>멤버 이탈 수 (최근 30일)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">최근 한 달간 탈퇴한 멤버 수예요. 이탈이 많으면 알고리즘이 비건강 모임으로 판단해요.<span class="tooltip-where">📍 당근앱 → 모임 → 멤버 탭 → 탈퇴 이력</span></span>
+        </span>
+      </label>
+      <input type="number" id="churnCount" placeholder="예: 2" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>네이버 검색 등록 여부
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">네이버에 모임 이름을 검색했을 때 블로그나 카페가 뜨면 외부 유입이 생겨요.<span class="tooltip-where">📍 네이버 블로그/카페에 모임 후기 글 등록</span></span>
+        </span>
+      </label>
+      <select id="naverSearch">
+        <option value="yes">등록됨 (블로그·카페 있음)</option>
+        <option value="no">없음</option>
+      </select>
+    </div>
+  </div>
+</div>
+
 <button class="btn-analyze" onclick="analyze()">🥕 당근 모임 노출 점수 분석하기</button>
 
 <!-- ══════════ 결과 ══════════ -->
@@ -661,29 +820,58 @@ function analyze() {
   const externalLink = document.getElementById('externalLink').value;
   const visibility   = document.getElementById('visibility').value;
 
+  // 섹션 6 — 일정 & 운영
+  const dday         = parseInt(document.getElementById('dday').value) || 999;
+  const scheduleType = document.getElementById('scheduleType').value;
+  const joinType     = document.getElementById('joinType').value;
+  const regularRate  = parseInt(document.getElementById('regularRate').value) || 0;
+  const meetingTime  = document.getElementById('meetingTime').value;
+  const introLocation= document.getElementById('introLocation').value;
+
+  // 섹션 7 — 추가 노출 채널
+  const photoCount   = parseInt(document.getElementById('photoCount').value) || 0;
+  const kakaoMap     = document.getElementById('kakaoMap').value;
+  const snsPromo     = document.getElementById('snsPromo').value;
+  const crossPromo   = document.getElementById('crossPromo').value;
+  const churnCount   = parseInt(document.getElementById('churnCount').value) || 0;
+  const naverSearch  = document.getElementById('naverSearch').value;
+
   // ── 점수 계산 (각 항목 0~100) ──
 
   // 1. SEO 점수 (25%)
   let seo = 0;
   const titleLen = title.length;
-  if (titleLen >= 10) seo += 30; else if (titleLen >= 5) seo += 15;
+  if (titleLen >= 10) seo += 25; else if (titleLen >= 5) seo += 12;
   // 제목에 키워드 포함 여부
   const titleKeywords = ['모임','크루','동아리','클럽','스터디','독서','러닝','요가','여행','맛집','게임'];
   const hasKeyword = titleKeywords.some(k => title.includes(k));
-  if (hasKeyword) seo += 25;
+  if (hasKeyword) seo += 20;
   // 소개글 길이
-  if (intro.length >= 100) seo += 30; else if (intro.length >= 30) seo += 15;
+  if (intro.length >= 100) seo += 20; else if (intro.length >= 30) seo += 10;
   // 좁은 지역 = SEO 점수 유리
   if (areaRange === 'narrow') seo += 15; else if (areaRange === 'medium') seo += 8;
+  // 소개글 지역명 포함
+  if (introLocation === 'yes') seo += 12;
+  // 네이버 검색 등록
+  if (naverSearch === 'yes') seo += 8;
   seo = Math.min(100, seo);
 
   // 2. 활성도 점수 (25%)
   let act = 0;
-  if (meetingFreq >= 4) act += 30; else if (meetingFreq >= 2) act += 18; else if (meetingFreq >= 1) act += 8;
-  if (attendRate >= 70) act += 25; else if (attendRate >= 50) act += 15; else if (attendRate >= 30) act += 8;
-  if (postCount >= 20) act += 25; else if (postCount >= 8) act += 15; else if (postCount >= 2) act += 8;
-  if (commentAvg >= 5) act += 20; else if (commentAvg >= 2) act += 10; else if (commentAvg >= 1) act += 5;
-  act = Math.min(100, act);
+  if (meetingFreq >= 4) act += 22; else if (meetingFreq >= 2) act += 14; else if (meetingFreq >= 1) act += 6;
+  if (attendRate >= 70) act += 20; else if (attendRate >= 50) act += 12; else if (attendRate >= 30) act += 6;
+  if (postCount >= 20) act += 18; else if (postCount >= 8) act += 12; else if (postCount >= 2) act += 6;
+  if (commentAvg >= 5) act += 15; else if (commentAvg >= 2) act += 8; else if (commentAvg >= 1) act += 4;
+  // D-Day 보너스 (14일 이내 일정)
+  if (dday <= 3) act += 15; else if (dday <= 7) act += 10; else if (dday <= 14) act += 6;
+  // 정기 모임 보너스
+  if (scheduleType === 'weekly') act += 10; else if (scheduleType === 'biweekly') act += 7; else if (scheduleType === 'monthly') act += 4;
+  // 단골 멤버 보너스
+  if (regularRate >= 50) act += 10; else if (regularRate >= 30) act += 5;
+  // 이탈률 패널티
+  const churnRate = memberCount > 0 ? (churnCount / memberCount) * 100 : 0;
+  if (churnRate >= 20) act -= 15; else if (churnRate >= 10) act -= 8;
+  act = Math.min(100, Math.max(0, act));
 
   // 3. 신뢰도 점수 (20%)
   let trust = 0;
@@ -696,18 +884,32 @@ function analyze() {
   // 4. 노출 점수 (15%)
   let exp = 0;
   // 끌올 최적 횟수는 주 2~3회 (월 8~12회)
-  if (boostCount >= 8 && boostCount <= 12) exp += 35; else if (boostCount >= 4) exp += 20; else if (boostCount >= 1) exp += 10;
-  if (boostTime === 'peak') exp += 30; else if (boostTime === 'lunch') exp += 18; else if (boostTime === 'morning') exp += 12; else exp += 5;
-  if (neighborPost === 'regular') exp += 25; else if (neighborPost === 'sometimes') exp += 12;
-  if (photoQuality === 'real') exp += 10; else if (photoQuality === 'basic') exp += 5;
+  if (boostCount >= 8 && boostCount <= 12) exp += 22; else if (boostCount >= 4) exp += 14; else if (boostCount >= 1) exp += 7;
+  if (boostTime === 'peak') exp += 18; else if (boostTime === 'lunch') exp += 12; else if (boostTime === 'morning') exp += 8; else exp += 3;
+  if (neighborPost === 'regular') exp += 16; else if (neighborPost === 'sometimes') exp += 8;
+  if (photoQuality === 'real') exp += 8; else if (photoQuality === 'basic') exp += 4;
+  // 사진 개수 보너스
+  if (photoCount >= 5) exp += 12; else if (photoCount >= 3) exp += 7; else if (photoCount >= 1) exp += 3;
+  // SNS 홍보 보너스
+  if (snsPromo === 'both') exp += 12; else if (snsPromo === 'insta' || snsPromo === 'blog') exp += 7;
+  // 교차 활용 보너스
+  if (crossPromo === 'active') exp += 8; else if (crossPromo === 'sometimes') exp += 4;
+  // 카카오맵 등록
+  if (kakaoMap === 'yes') exp += 4;
   exp = Math.min(100, exp);
 
   // 5. 전환율 점수 (10%)
   let cvr = 0;
   const cvrRate = monthlyViews > 0 ? (monthlyApply / monthlyViews) * 100 : 0;
-  if (cvrRate >= 10) cvr += 60; else if (cvrRate >= 5) cvr += 40; else if (cvrRate >= 2) cvr += 20; else if (monthlyViews > 0) cvr += 5;
-  if (externalLink === 'yes') cvr += 25;
-  if (visibility === 'public') cvr += 15;
+  if (cvrRate >= 10) cvr += 40; else if (cvrRate >= 5) cvr += 28; else if (cvrRate >= 2) cvr += 15; else if (monthlyViews > 0) cvr += 5;
+  if (externalLink === 'yes') cvr += 18;
+  if (visibility === 'public') cvr += 12;
+  // 가입 방식 보너스
+  if (joinType === 'free') cvr += 15; else if (joinType === 'question') cvr += 5;
+  // 모임 시간대 보너스 (직장인 접근성)
+  if (meetingTime === 'evening') cvr += 10; else if (meetingTime === 'weekend') cvr += 8;
+  // 소개글 지역명
+  if (introLocation === 'yes') cvr += 5;
   cvr = Math.min(100, cvr);
 
   // 6. 성장 점수 (5%)
@@ -931,6 +1133,87 @@ function analyze() {
       '신규 호스트는 인증 배지가 특히 중요해요. 당근 프로필에서 인증을 추가해보세요.',
     ])});
 
+  // 새 체크 항목 — 일정/운영
+  if (ddayOk)
+    checks.push({ type:'ok', title:`D-${dday} 일정 임박`, desc: pick([
+      `다음 모임이 ${dday}일 후예요. 14일 이내 일정이 있어 알고리즘 노출 보너스를 받고 있어요.`,
+      `${dday}일 안에 모임이 있어요. 일정 임박 모임이 검색 상단에 노출돼요.`,
+    ])});
+  else if (noScheduleAt)
+    checks.push({ type:'bad', title:'모임 일정 없음', desc: pick([
+      '다음 일정이 없어요. 14일 이내 일정이 없으면 검색 노출이 크게 떨어져요.',
+      '지금 바로 일정을 등록하세요. 일정 유무가 노출 순위에 가장 큰 영향을 줘요.',
+    ])});
+
+  if (scheduleType === 'weekly' || scheduleType === 'biweekly')
+    checks.push({ type:'ok', title:'정기 모임 운영 중', desc: pick([
+      '정기 일정을 운영 중이에요. 알고리즘이 활성 모임으로 인식해 꾸준한 노출을 받아요.',
+      '정기 모임은 멤버 신뢰도와 알고리즘 점수 모두에 유리해요.',
+    ])});
+  else if (irregular)
+    checks.push({ type:'warn', title:'비정기 모임', desc: pick([
+      '비정기 운영 중이에요. 정기 일정으로 바꾸면 노출이 안정화돼요.',
+      '"매월 첫째 주 토요일"처럼 정기화하면 알고리즘 활성 점수가 올라가요.',
+    ])});
+
+  if (joinType === 'free')
+    checks.push({ type:'ok', title:'자유 가입 설정', desc: pick([
+      '자유 가입 설정이에요. 가입 장벽이 낮아 전환율이 높아져요.',
+      '즉시 가입 가능한 모임이에요. 신청 전환율에 가장 유리한 설정이에요.',
+    ])});
+  else if (needApproval)
+    checks.push({ type:'warn', title:'수락 필요 가입', desc: pick([
+      '수락 방식은 가입 장벽이 높아요. 자유 가입으로 바꾸면 전환율이 올라가요.',
+      '관심자가 바로 가입 못 하면 이탈해요. 자유 가입 전환을 고려해보세요.',
+    ])});
+
+  if (regularRate >= 50)
+    checks.push({ type:'ok', title:`단골 멤버 ${regularRate}%`, desc: pick([
+      `단골 비율이 ${regularRate}%예요. 충성 멤버가 많은 건강한 모임이에요.`,
+      `재참여율이 높아요. 모임 만족도가 높다는 신호예요.`,
+    ])});
+
+  if (highChurn)
+    checks.push({ type:'bad', title:`이탈률 높음 (${Math.round(churnRate)}%)`, desc: pick([
+      `최근 이탈률이 ${Math.round(churnRate)}%예요. 알고리즘 패널티가 생길 수 있어요. 이탈 원인을 파악하세요.`,
+      '멤버 이탈이 많아요. 모임 빈도·분위기·기대 불일치를 점검해보세요.',
+    ])});
+
+  // 추가 노출 채널
+  if (snsPromo === 'both')
+    checks.push({ type:'ok', title:'SNS 외부 홍보 활발', desc: pick([
+      '인스타+블로그로 외부 홍보 중이에요. 당근 외 채널에서도 유입이 생겨요.',
+      '다채널 홍보가 잘 되고 있어요. 꾸준히 유지하세요.',
+    ])});
+  else if (noSns && memberCount >= 5)
+    checks.push({ type:'warn', title:'외부 SNS 홍보 없음', desc: pick([
+      '인스타·블로그 홍보가 없어요. 외부 채널로 당근 모임 링크를 공유하면 추가 유입이 생겨요.',
+      'SNS 홍보 없이는 당근 내 노출에만 의존해야 해요. 인스타 1개 포스팅만 해도 달라져요.',
+    ])});
+
+  if (photoCount >= 5)
+    checks.push({ type:'ok', title:`모임 사진 ${photoCount}장`, desc: pick([
+      `사진이 ${photoCount}장이에요. 풍부한 사진이 모임 신뢰도와 클릭율을 높여줘요.`,
+      '사진이 충분해요. 정기적으로 최신 활동 사진으로 업데이트해주세요.',
+    ])});
+  else if (fewPhotos && memberCount >= 3)
+    checks.push({ type:'warn', title:`사진 부족 (${photoCount}장)`, desc: pick([
+      `사진이 ${photoCount}장뿐이에요. 최소 5장 이상 올리면 모임 분위기가 훨씬 잘 전달돼요.`,
+      '사진이 적으면 신규 멤버가 모임 분위기를 파악하기 어려워요. 지난 모임 사진을 정리해서 올려보세요.',
+    ])});
+
+  if (naverSearch === 'yes')
+    checks.push({ type:'ok', title:'네이버 검색 등록됨', desc: pick([
+      '네이버에 모임이 검색돼요. 당근 외부 유입 채널이 확보된 상태예요.',
+      '블로그·카페를 통한 외부 유입이 있어요. 꾸준히 콘텐츠를 올려주세요.',
+    ])});
+
+  if (meetingTime === 'evening' || meetingTime === 'weekend')
+    checks.push({ type:'ok', title:'직장인 참여 가능한 시간대', desc: pick([
+      '저녁·주말 모임이에요. 직장인·학생 참여가 가능해 잠재 멤버 풀이 넓어요.',
+      '참여하기 좋은 시간대예요. 끌올도 이 시간대에 맞춰 하면 더 효과적이에요.',
+    ])});
+
   let checkHtml = '';
   checks.forEach(c => {
     checkHtml += `
@@ -965,12 +1248,27 @@ function analyze() {
   const badPhoto    = photoQuality === 'none';
   const noNeighbor  = neighborPost === 'never';
   const noExternal  = externalLink === 'no';
-  const wideArea    = areaRange === 'wide';
-  const newHost     = hostAge <= 3;
-  const lowPost     = postCount < 3 && memberCount >= 10;
-  const silentBoard = postCount >= 8 && commentAvg < 2;
+  const wideArea      = areaRange === 'wide';
+  const newHost       = hostAge <= 3;
+  const lowPost       = postCount < 3 && memberCount >= 10;
+  const silentBoard   = postCount >= 8 && commentAvg < 2;
   const growthStopped = growRate === 0 && memberCount >= 10;
-  const noBadge     = badgeCount === 0;
+  const noBadge       = badgeCount === 0;
+  // 새 신호
+  const ddayOk        = dday <= 14;
+  const ddayFar       = dday > 14 && dday < 999;
+  const noScheduleAt  = dday >= 999;
+  const irregular     = scheduleType === 'irregular';
+  const needApproval  = joinType === 'approval';
+  const lowRegular    = regularRate < 20 && memberCount >= 10;
+  const highChurn     = churnRate >= 15;
+  const noSns         = snsPromo === 'none';
+  const fewPhotos     = photoCount < 3;
+  const noKakaoMap    = kakaoMap === 'no';
+  const noNaver       = naverSearch === 'no';
+  const noCrossPromo  = crossPromo === 'never';
+  const noIntroLoc    = introLocation === 'no';
+  const badMeetTime   = meetingTime === 'daytime' || meetingTime === 'morning';
 
   const roadItems = [];
 
@@ -1148,6 +1446,130 @@ function analyze() {
         '모임 소개글·사진을 새롭게 리뉴얼해보세요. 오래된 콘텐츠는 신규 유입 효과가 떨어져요',
       ]),
       why: pick(['성장이 멈추면 알고리즘이 정체된 모임으로 판단해요', '꾸준한 신규 유입이 알고리즘 성장 점수를 유지해요'])
+    });
+  }
+
+  // ── 일정/운영 관련 추가 인사이트 ──
+
+  if (noScheduleAt || ddayFar) {
+    roadItems.push({ priority:1,
+      title: pick(['다음 일정이 너무 멀어요', '14일 안에 일정을 잡아야 해요']),
+      action: pick([
+        `다음 모임까지 ${dday >= 999 ? '일정이 없어요' : dday + '일 남았어요'}. 14일 이내에 일정이 없으면 검색 노출이 크게 떨어져요. 지금 바로 일정을 등록하세요`,
+        '당근 알고리즘은 14일 이내 일정 여부를 핵심 신호로 봐요. 작은 모임이라도 일정을 올려두는 게 중요해요',
+        '일정이 없으면 모임이 휴면 상태로 분류돼요. 간단한 온라인 모임이라도 일정을 만들어 두세요',
+      ]),
+      why: pick(['14일 이내 일정이 있는 모임이 검색 상단에 노출돼요', '일정 유무는 노출 여부를 결정하는 핵심 신호예요'])
+    });
+  }
+
+  if (irregular && memberCount >= 5) {
+    roadItems.push({ priority:2,
+      title: pick(['정기 일정으로 바꾸면 노출이 안정화돼요', '비정기 모임은 알고리즘이 예측하기 어려워요']),
+      action: pick([
+        '비정기 모임은 알고리즘이 활성도를 예측하기 어려워요. "매월 첫째 주 토요일"처럼 정기 일정을 잡으면 노출이 안정돼요',
+        '"격주 토요일" 정도로만 정해도 멤버들이 계획을 세울 수 있고, 알고리즘도 정기 활동 모임으로 인식해요',
+        '정기 일정을 만들고 매번 일정을 등록해두세요. 일정이 반복될수록 알고리즘 신뢰 점수가 올라가요',
+      ]),
+      why: pick(['정기 모임이 알고리즘 활성 점수에서 유리해요', '예측 가능한 활동 패턴이 노출 안정성을 높여요'])
+    });
+  }
+
+  if (needApproval && lowCvr) {
+    roadItems.push({ priority:1,
+      title: pick(['가입 장벽이 신청을 막고 있어요', '수락 방식이 전환율을 낮춰요']),
+      action: pick([
+        '수락 필요 방식은 가입 과정이 복잡해서 이탈이 많아요. 자유 가입으로 바꾸고 가입 후 간단한 인사 규칙을 안내하면 전환율이 올라가요',
+        '관심 있는 사람이 바로 가입 못 하면 그냥 나가요. 자유 가입으로 전환하되 첫 모임 참여 시 간단한 소개를 요청해보세요',
+        '가입 승인 방식을 "자유 가입"으로 바꿔보세요. 가입 후 운영 규칙을 공지로 안내하면 품질 유지가 가능해요',
+      ]),
+      why: pick(['가입 장벽이 높을수록 전환율이 낮아져요', '자유 가입 모임의 전환율이 수락 필요 모임보다 평균 2배 높아요'])
+    });
+  }
+
+  if (lowRegular) {
+    roadItems.push({ priority:2,
+      title: pick(['단골 멤버가 너무 적어요', '재참여율을 높여야 해요']),
+      action: pick([
+        `단골 멤버 비율이 ${regularRate}%예요. 모임 참여자에게 "다음 번에도 봬요!" 같은 한 마디와 다음 일정 예고를 해주면 재참여율이 올라가요`,
+        '단골 멤버가 적다면 모임 자체의 만족도를 점검해보세요. 참여 후기를 게시판에 올려달라고 부탁하면 커뮤니티 소속감이 생겨요',
+        '"3번 이상 참여하신 분께 소정의 혜택"처럼 단골 인센티브를 만들면 재참여율이 올라가요',
+      ]),
+      why: pick(['단골 멤버가 많을수록 모임 안정성과 알고리즘 신뢰 점수가 올라가요', '재참여율은 모임 품질의 핵심 지표예요'])
+    });
+  }
+
+  if (highChurn) {
+    roadItems.push({ priority:1,
+      title: pick(['멤버 이탈이 너무 많아요', '탈퇴가 많으면 알고리즘 패널티가 생겨요']),
+      action: pick([
+        `최근 이탈률이 ${Math.round(churnRate)}%예요. 이탈 이유를 파악하기 위해 탈퇴 멤버에게 간단한 피드백을 요청해보세요`,
+        '모임 빈도가 너무 높거나 분위기가 맞지 않아 이탈할 수 있어요. 멤버들에게 "모임 만족도" 설문을 익명으로 해보세요',
+        '이탈이 많다면 모임 소개글이 실제 운영과 달라 기대 불일치가 생긴 거예요. 소개글을 실제 분위기에 맞게 수정해보세요',
+      ]),
+      why: pick(['이탈률이 높으면 알고리즘이 불건강한 모임으로 판단해요', '멤버 유지율이 활성도 점수에 반영돼요'])
+    });
+  }
+
+  // ── 추가 노출 채널 관련 인사이트 ──
+
+  if (noSns && memberCount >= 5) {
+    roadItems.push({ priority:3,
+      title: pick(['SNS 외부 홍보가 없어요', '인스타·블로그로 유입을 늘려보세요']),
+      action: pick([
+        '인스타그램에 모임 활동 사진 + 당근 링크를 올리면 외부 유입이 생겨요. 해시태그는 "동네모임", "당근모임", 지역명을 넣으세요',
+        '네이버 블로그에 모임 후기를 주 1회 올려보세요. "○○동 모임 추천" 같은 검색어로 유입이 생겨요',
+        '카카오톡 오픈채팅 방에 모임 링크를 공유하거나, 관련 커뮤니티에 홍보글을 올려보세요. 외부 유입이 당근 알고리즘에도 긍정적이에요',
+      ]),
+      why: pick(['외부 채널 홍보는 당근 내 노출과 별개의 추가 유입 경로예요', 'SNS 홍보로 유입된 멤버가 모임 활성도를 높여줘요'])
+    });
+  }
+
+  if (fewPhotos && memberCount >= 3) {
+    roadItems.push({ priority:2,
+      title: pick(['모임 사진이 너무 적어요', '사진이 신뢰를 만들어요']),
+      action: pick([
+        `사진이 ${photoCount}개뿐이에요. 최소 5장 이상을 올리면 모임 분위기가 전달돼요. 지난 모임 사진을 정리해서 올려보세요`,
+        '스마트폰으로 찍은 자연스러운 활동 사진이 제일 좋아요. 음식, 활동 장면, 단체 사진 등 다양하게 올려보세요',
+        '사진이 많을수록 "실제 운영 중인 모임"이라는 신뢰가 생겨요. 매 모임마다 사진 1~2장씩 쌓아가세요',
+      ]),
+      why: pick(['사진 5장 이상인 모임의 클릭율이 적은 모임보다 평균 3배 높아요', '사진이 많을수록 신규 멤버 신뢰도가 올라가요'])
+    });
+  }
+
+  if (noIntroLoc && !goodTitle) {
+    roadItems.push({ priority:2,
+      title: pick(['소개글에 장소 정보가 없어요', '어디서 하는 모임인지 모르면 안 들어와요']),
+      action: pick([
+        '소개글에 "강남역 2번 출구 근처 카페"처럼 구체적인 장소를 적어보세요. 장소 정보가 있으면 검색 노출과 클릭율 모두 올라가요',
+        '"서울 마포구", "경기 수원" 같은 지역명을 소개글 첫 문단에 넣으세요. 알고리즘이 위치 기반 추천을 할 때 유리해요',
+        '접근 방법(지하철 몇 호선, 버스 등)을 소개글에 넣으면 참여 허들이 낮아지고 전환율이 올라가요',
+      ]),
+      why: pick(['장소가 명확할수록 참여 결정이 빨라져요', '지역명 포함 소개글이 검색 노출에 유리해요'])
+    });
+  }
+
+  if (noKakaoMap && !noExternal) {
+    roadItems.push({ priority:3,
+      title: pick(['카카오맵 장소 등록으로 추가 노출', '지도 검색 유입을 만들어보세요']),
+      action: pick([
+        '모임 장소를 카카오맵에 등록하고 링크를 소개글에 넣어보세요. 지도 검색으로도 모임이 발견될 수 있어요',
+        '카카오맵에 장소를 등록하면 "이 근처 모임"으로 자연스럽게 노출돼요. 5분이면 등록할 수 있어요',
+        '장소 등록 후 리뷰가 쌓이면 지역 신뢰도도 올라가요. 단골 멤버들에게 장소 리뷰를 부탁해보세요',
+      ]),
+      why: pick(['카카오맵 등록은 지도 기반 추가 노출 채널이에요', '오프라인 장소 인지도가 모임 신뢰도에 영향을 줘요'])
+    });
+  }
+
+  if (badMeetTime && !lowAttend) {
+    roadItems.push({ priority:3,
+      title: pick(['모임 시간대를 바꾸면 모집이 쉬워져요', '낮 시간대는 직장인 참여가 어려워요']),
+      action: pick([
+        '평일 낮이나 아침 모임은 직장인·학생 참여가 어려워요. 저녁 7시 이후나 주말로 시간을 옮기면 잠재 멤버 풀이 크게 넓어져요',
+        '현재 모임 시간에 참여 가능한 대상이 좁아요. 저녁 또는 주말 모임을 병행하거나 시간대를 변경해보세요',
+        '신규 일정을 저녁 시간대로 등록해보고 참여율을 비교해보세요. 시간대 하나가 모집에 큰 영향을 줘요',
+      ]),
+      why: pick(['저녁·주말 모임이 직장인 접근성이 높아 멤버 모집에 유리해요', '시간대가 잠재 멤버 풀의 크기를 결정해요'])
     });
   }
 
