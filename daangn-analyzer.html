@@ -634,6 +634,9 @@ document.addEventListener('click', e => {
 });
 
 function analyze() {
+  // ── 유틸 ──
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
   // ── 값 수집 ──
   const title       = (document.getElementById('moimTitle').value || '').trim();
   const intro       = (document.getElementById('moimIntro').value || '').trim();
@@ -771,56 +774,113 @@ function analyze() {
 
   // SEO
   if (titleLen >= 10 && hasKeyword)
-    checks.push({ type:'ok', title:'제목 SEO 최적화', desc:`제목에 키워드가 포함되어 있어요. 검색 노출에 매우 유리해요.` });
+    checks.push({ type:'ok', title:'제목 SEO 최적화', desc: pick([
+      `제목에 키워드가 포함되어 있어요. 검색 노출에 매우 유리해요.`,
+      `활동 키워드가 제목에 잘 들어가 있어요. 알고리즘이 모임을 잘 분류할 수 있어요.`,
+    ])});
   else if (!hasKeyword)
-    checks.push({ type:'bad', title:'제목에 키워드 없음', desc:`"강남 독서 모임", "주말 러닝 크루"처럼 활동 키워드를 제목에 꼭 넣으세요.` });
+    checks.push({ type:'bad', title:'제목에 키워드 없음', desc: pick([
+      `"강남 독서 모임", "주말 러닝 크루"처럼 활동 키워드를 제목에 꼭 넣으세요.`,
+      `제목에 활동명이 없으면 검색 노출이 거의 안 돼요. 키워드를 추가해보세요.`,
+    ])});
 
   if (intro.length >= 100)
-    checks.push({ type:'ok', title:'소개글 충실', desc:'소개글이 100자 이상이에요. 알고리즘이 모임 주제를 잘 파악해요.' });
+    checks.push({ type:'ok', title:'소개글 충실', desc: pick([
+      '소개글이 100자 이상이에요. 알고리즘이 모임 주제를 잘 파악해요.',
+      '소개글 길이가 좋아요. 일정·장소·분위기가 잘 담겨 있으면 더 효과적이에요.',
+    ])});
   else
-    checks.push({ type:'warn', title:'소개글 보강 필요', desc:'소개글을 100자 이상으로 늘리고 일정·장소·대상을 명확히 적으세요.' });
+    checks.push({ type:'warn', title:'소개글 보강 필요', desc: pick([
+      '소개글을 100자 이상으로 늘리고 일정·장소·대상을 명확히 적으세요.',
+      `현재 소개글이 ${intro.length}자예요. 100자 이상으로 늘리면 알고리즘 파악력이 올라가요.`,
+    ])});
 
   // 활성도
   if (meetingFreq >= 4)
-    checks.push({ type:'ok', title:'높은 모임 빈도', desc:`월 ${meetingFreq}회 모임 — 활성 모임으로 평가받아 상위 노출돼요.` });
+    checks.push({ type:'ok', title:'높은 모임 빈도', desc: pick([
+      `월 ${meetingFreq}회 모임 — 활성 모임으로 평가받아 상위 노출돼요.`,
+      `모임 빈도가 높아요. 꾸준한 일정이 알고리즘 활성 점수를 유지해줘요.`,
+    ])});
   else if (meetingFreq === 0)
-    checks.push({ type:'bad', title:'모임 일정 없음', desc:'당근은 최근 14일 내 일정이 있는 모임을 우선 노출해요. 지금 바로 일정을 등록하세요.' });
+    checks.push({ type:'bad', title:'모임 일정 없음', desc: pick([
+      '당근은 최근 14일 내 일정이 있는 모임을 우선 노출해요. 지금 바로 일정을 등록하세요.',
+      '일정이 없으면 알고리즘이 휴면 모임으로 분류해요. 가벼운 일정 하나만 올려보세요.',
+    ])});
 
   if (attendRate >= 70)
-    checks.push({ type:'ok', title:'높은 출석률', desc:`출석률 ${attendRate}% — 멤버 만족도가 높은 건강한 모임이에요.` });
+    checks.push({ type:'ok', title:'높은 출석률', desc: pick([
+      `출석률 ${attendRate}% — 멤버 만족도가 높은 건강한 모임이에요.`,
+      `출석률이 ${attendRate}%로 높아요. 알고리즘이 활성 모임으로 평가해요.`,
+    ])});
   else if (attendRate < 40)
-    checks.push({ type:'warn', title:'출석률 개선 필요', desc:'출석률이 낮으면 알고리즘이 비활성 모임으로 판단해요. 소규모로 확실히 참여하는 일정을 만들어 보세요.' });
+    checks.push({ type:'warn', title:'출석률 개선 필요', desc: pick([
+      '출석률이 낮으면 알고리즘이 비활성 모임으로 판단해요. 소규모로 확실히 참여하는 일정을 만들어 보세요.',
+      `출석률 ${attendRate}%는 낮은 편이에요. 리마인더 공지와 소규모 일정으로 참여율을 높여보세요.`,
+    ])});
 
   // 신뢰도
   if (mannerTemp >= 50)
-    checks.push({ type:'ok', title:`매너온도 ${mannerTemp.toFixed(1)}°C`, desc:'매너온도가 높아 신뢰 배지가 활성화될 수 있어요.' });
+    checks.push({ type:'ok', title:`매너온도 ${mannerTemp.toFixed(1)}°C`, desc: pick([
+      '매너온도가 높아 신뢰 배지가 활성화될 수 있어요.',
+      `${mannerTemp.toFixed(1)}°C는 상위 수준이에요. 모임 신뢰도에 긍정적으로 작용해요.`,
+    ])});
   else if (mannerTemp < 36.5)
-    checks.push({ type:'bad', title:'매너온도 낮음', desc:'거래 후기를 늘리고 좋은 활동을 쌓아 매너온도를 36.5°C 이상으로 유지하세요.' });
+    checks.push({ type:'bad', title:'매너온도 낮음', desc: pick([
+      '거래 후기를 늘리고 좋은 활동을 쌓아 매너온도를 36.5°C 이상으로 유지하세요.',
+      '매너온도가 기본값 이하예요. 당근 거래·모임 후기로 꾸준히 올려보세요.',
+    ])});
 
   // 노출
   if (boostTime === 'peak')
-    checks.push({ type:'ok', title:'황금시간대 끌올', desc:'저녁 7~10시 끌올 — 클릭율이 가장 높은 시간대예요.' });
+    checks.push({ type:'ok', title:'황금시간대 끌올', desc: pick([
+      '저녁 7~10시 끌올 — 클릭율이 가장 높은 시간대예요.',
+      '황금시간대에 끌올하고 있어요. 화·목·토에 집중하면 효과가 더 커져요.',
+    ])});
   else if (boostTime === 'random')
-    checks.push({ type:'warn', title:'끌올 시간 최적화 필요', desc:'저녁 7~10시에 끌올하면 클릭율이 최대 3배 올라가요.' });
+    checks.push({ type:'warn', title:'끌올 시간 최적화 필요', desc: pick([
+      '저녁 7~10시에 끌올하면 클릭율이 최대 3배 올라가요.',
+      '랜덤 끌올은 효율이 낮아요. 저녁 7시 30분으로 시간을 고정해보세요.',
+    ])});
 
   if (photoQuality === 'real')
-    checks.push({ type:'ok', title:'실제 활동 사진 있음', desc:'실제 활동 사진은 클릭율을 크게 높여요. 계속 업데이트하세요.' });
+    checks.push({ type:'ok', title:'실제 활동 사진 있음', desc: pick([
+      '실제 활동 사진은 클릭율을 크게 높여요. 계속 업데이트하세요.',
+      '좋은 활동 사진이 있어요. 3개월마다 최신 사진으로 교체하면 더 효과적이에요.',
+    ])});
   else if (photoQuality === 'none')
-    checks.push({ type:'bad', title:'대표 사진 없음', desc:'사진이 없으면 클릭율이 50% 이상 떨어져요. 바로 활동 사진을 추가하세요.' });
+    checks.push({ type:'bad', title:'대표 사진 없음', desc: pick([
+      '사진이 없으면 클릭율이 50% 이상 떨어져요. 바로 활동 사진을 추가하세요.',
+      '기본 이미지 상태예요. 스마트폰으로 찍은 사진이라도 추가하면 클릭율이 크게 올라가요.',
+    ])});
 
   if (neighborPost === 'regular')
-    checks.push({ type:'ok', title:'동네생활 정기 연동', desc:'동네생활 게시글로 추가 유입이 발생하고 있어요.' });
+    checks.push({ type:'ok', title:'동네생활 정기 연동', desc: pick([
+      '동네생활 게시글로 추가 유입이 발생하고 있어요.',
+      '주기적 동네생활 활용으로 무료 추가 노출 채널을 잘 쓰고 있어요.',
+    ])});
   else if (neighborPost === 'never')
-    checks.push({ type:'warn', title:'동네생활 연동 없음', desc:'동네생활에 주 1회 모임 후기·홍보글을 올리면 무료 추가 노출 효과가 있어요.' });
+    checks.push({ type:'warn', title:'동네생활 연동 없음', desc: pick([
+      '동네생활에 주 1회 모임 후기·홍보글을 올리면 무료 추가 노출 효과가 있어요.',
+      '동네생활 연동을 안 하고 있어요. 후기 사진 1장만 올려도 추가 유입이 생겨요.',
+    ])});
 
   // 전환
   if (externalLink === 'yes')
-    checks.push({ type:'ok', title:'외부 채널 연동', desc:'오픈채팅/카페 연동으로 멤버 이탈률이 낮아져요.' });
+    checks.push({ type:'ok', title:'외부 채널 연동', desc: pick([
+      '오픈채팅/카페 연동으로 멤버 이탈률이 낮아져요.',
+      '외부 채널이 연동되어 있어요. 멤버 유지율 향상에 도움이 돼요.',
+    ])});
   else
-    checks.push({ type:'warn', title:'외부 채널 미연동', desc:'카카오 오픈채팅이나 네이버 카페를 연동하면 멤버 유지율이 높아져요.' });
+    checks.push({ type:'warn', title:'외부 채널 미연동', desc: pick([
+      '카카오 오픈채팅이나 네이버 카페를 연동하면 멤버 유지율이 높아져요.',
+      '외부 채널 링크를 소개글에 넣으면 관심자가 이탈하지 않고 바로 참여할 수 있어요.',
+    ])});
 
   if (visibility === 'private')
-    checks.push({ type:'bad', title:'비공개 모임', desc:'비공개 설정은 검색 노출이 안 돼요. 노출을 원한다면 공개로 변경하세요.' });
+    checks.push({ type:'bad', title:'비공개 모임', desc: pick([
+      '비공개 설정은 검색 노출이 안 돼요. 노출을 원한다면 공개로 변경하세요.',
+      '비공개 상태라 검색에서 보이지 않아요. 공개로 바꾸는 게 가장 빠른 노출 개선이에요.',
+    ])});
 
   let checkHtml = '';
   checks.forEach(c => {
@@ -835,29 +895,194 @@ function analyze() {
   });
   document.getElementById('checkList').innerHTML = checkHtml;
 
-  // ── 로드맵 ──
+  // ── 로드맵 (조합 기반 · 다양한 텍스트 변형) ──
+
+  // 조합 신호 정의
+  const bigMember   = memberCount >= 20;
+  const lowAttend   = attendRate < 50;
+  const manyBoost   = boostCount >= 8;
+  const lowCvr      = cvrRate < 5 && monthlyViews > 0;
+  const goodTitle   = hasKeyword && titleLen >= 10;
+  const weakIntro   = intro.length < 80;
+  const highTemp    = mannerTemp >= 45;
+  const lowReview   = reviewCount < 5;
+  const highFreq    = meetingFreq >= 5;
+  const noSchedule  = meetingFreq === 0;
+  const badPhoto    = photoQuality === 'none';
+  const noNeighbor  = neighborPost === 'never';
+  const noExternal  = externalLink === 'no';
+
   const roadItems = [];
-  if (!hasKeyword || titleLen < 10)
-    roadItems.push({ title:'① 제목 리뉴얼', action:'동네명 + 활동 키워드로 제목을 재작성하세요 (예: "강남 목요 독서 모임 | 초보환영")', why:'검색 노출 즉시 개선 효과' });
-  if (intro.length < 100)
-    roadItems.push({ title:'② 소개글 보강', action:'모임 일정·장소·대상을 구체적으로 100자 이상 작성하세요', why:'알고리즘이 모임 주제를 정확히 파악해 관심 유저에게 추천' });
-  if (meetingFreq < 2)
-    roadItems.push({ title:'③ 일정 등록', action:'이번 주 안에 모임 일정을 최소 1개 등록하세요', why:'14일 내 일정 유무가 노출 여부를 결정' });
-  if (photoQuality !== 'real')
-    roadItems.push({ title:'④ 대표 사진 교체', action:'실제 모임 활동 사진으로 대표 이미지를 교체하세요', why:'클릭율 최대 2배 향상' });
-  if (boostTime !== 'peak')
-    roadItems.push({ title:'⑤ 끌올 시간 변경', action:'끌올을 저녁 7~10시로 옮기세요 (화·목·토 추천)', why:'황금시간대 클릭율 3배' });
-  if (neighborPost !== 'regular')
-    roadItems.push({ title:'⑥ 동네생활 홍보', action:'주 1회 동네생활에 모임 후기 또는 홍보글을 올리세요', why:'무료 추가 노출 채널 확보' });
 
-  if (roadItems.length === 0)
-    roadItems.push({ title:'✨ 최적화 완료!', action:'현재 모임이 잘 최적화되어 있어요. 꾸준히 유지하세요.', why:'현상 유지가 최선의 전략' });
+  // ── 조합 우선 인사이트 (상황별 맞춤, priority 1) ──
 
+  if (bigMember && lowAttend) {
+    roadItems.push({ priority:1,
+      title: pick(['멤버 케어가 먼저예요', '신규 모집보다 기존 멤버 활성화']),
+      action: pick([
+        `멤버가 ${memberCount}명인데 출석률이 ${attendRate}%예요. 신규 모집보다 기존 멤버에게 "다음 모임 나오실 건가요?" DM 또는 공지를 먼저 보내보세요`,
+        `출석률 ${attendRate}%는 낮은 편이에요. 소규모로 확실히 참여할 수 있는 일정부터 잡고, 전날 리마인더 공지를 올려보세요`,
+        `멤버는 충분해요. 이제 나오게 만드는 게 과제예요. 다음 모임 테마나 특별 이벤트를 공지해서 참여 동기를 만들어보세요`,
+      ]),
+      why: pick(['멤버 수 대비 출석률이 낮으면 알고리즘이 유령 모임으로 판단해요', '참여율이 높은 모임이 검색 상위로 올라가요'])
+    });
+  }
+
+  if (manyBoost && lowCvr) {
+    roadItems.push({ priority:1,
+      title: pick(['끌올보다 콘텐츠 개선이 먼저예요', '끌올 효과가 떨어지고 있어요']),
+      action: pick([
+        `끌올을 ${boostCount}회나 했는데 전환율이 낮아요. 조회는 되는데 신청이 안 된다면 소개글·사진 자체가 문제예요. 콘텐츠를 먼저 개선하세요`,
+        `끌올은 노출만 올려줘요. 전환은 소개글이 해야 해요. 지금 모임 소개 첫 문장을 "이런 분 환영해요"로 시작하도록 바꿔보세요`,
+        `조회 대비 신청 비율이 낮아요. 대표 사진과 소개글에 실제 모임 분위기를 보여주는 콘텐츠를 추가해보세요`,
+      ]),
+      why: pick(['끌올은 노출만 올려줘요. 전환은 콘텐츠가 해야 해요', '조회수 대비 신청 전환율이 낮은 상태예요'])
+    });
+  }
+
+  if (goodTitle && weakIntro) {
+    roadItems.push({ priority:1,
+      title: pick(['제목은 좋은데 소개글에서 이탈 중이에요', '소개글이 발목을 잡고 있어요']),
+      action: pick([
+        '제목이 좋아서 클릭은 돼요. 근데 소개글이 짧아서 바로 나가요. "언제·어디서·어떤 분 환영"을 첫 문단에 써보세요',
+        '첫 3줄에 핵심 정보가 없으면 80%는 뒤로 가요. 일정·장소·분위기를 소개글 맨 앞에 배치해보세요',
+        '소개글 시작을 공감 질문으로 바꿔보세요. "혼자 운동하기 지치셨나요?" 같은 한 줄이 체류시간을 크게 늘려요',
+      ]),
+      why: pick(['제목 클릭율은 높지만 소개글에서 이탈이 발생하고 있어요', '알고리즘은 소개글 체류시간도 신호로 봐요'])
+    });
+  }
+
+  if (highTemp && lowReview) {
+    roadItems.push({ priority:1,
+      title: pick(['신뢰는 있는데 증거가 부족해요', '매너온도는 높은데 후기가 없어요']),
+      action: pick([
+        `매너온도 ${mannerTemp.toFixed(1)}°C는 충분히 높아요. 이제 후기 1~2개만 받아도 신뢰 지표가 크게 올라가요. 지난 참여자에게 후기 요청을 해보세요`,
+        '모임 마지막에 "당근 프로필에 후기 남겨주시면 감사해요" 한 마디만 해보세요. 후기 3개가 있으면 신뢰 점수가 확 달라져요',
+        '온도는 좋은데 후기가 없으면 신규 멤버 입장에서 "새로 만든 모임인가?" 의심해요. 지인 후기 1개라도 먼저 받아보세요',
+      ]),
+      why: pick(['호스트 후기는 신규 멤버 가입 결정에 직접 영향을 줘요', '후기 수가 많을수록 알고리즘 신뢰 점수가 올라가요'])
+    });
+  }
+
+  if (highFreq && lowAttend) {
+    roadItems.push({ priority:1,
+      title: pick(['모임 빈도가 너무 잦을 수 있어요', '자주 열수록 참여가 줄고 있어요']),
+      action: pick([
+        `월 ${meetingFreq}회는 많은 편이에요. 격주로 줄이고 대신 한 번 할 때 꽉 채워보세요. 희소성이 참여 의지를 높여요`,
+        '너무 자주 하면 멤버들이 부담을 느껴요. 월 2회로 줄이고 "다음 모임 이렇게 해요" 예고 공지로 기대감을 만들어보세요',
+        '빈도보다 품질이에요. 횟수를 줄이고 각 모임에 특별한 테마나 활동을 넣으면 참여율이 올라가요',
+      ]),
+      why: pick(['모임 피로도가 낮은 출석률로 나타나고 있어요', '빈도보다 품질이 알고리즘 활성 점수에 더 중요해요'])
+    });
+  }
+
+  // ── 기본 개선 항목 (랜덤 변형, priority 2~3) ──
+
+  if (!hasKeyword || titleLen < 10) {
+    roadItems.push({ priority:2,
+      title: pick(['제목 리뉴얼', '검색 키워드 추가']),
+      action: pick([
+        '"망원동 주말 러닝 크루 | 초보환영" 처럼 동네명 + 활동명을 제목에 넣어보세요',
+        '제목에 "어디서·무엇을"이 빠져 있어요. 검색어가 될 키워드를 반드시 넣어야 해요',
+        '"강남 목요 독서 모임 | 20·30대 환영" 처럼 장소+활동+대상을 제목에 압축해 보세요',
+      ]),
+      why: pick(['키워드 포함 제목은 검색 노출을 즉시 끌어올려요', '제목은 알고리즘이 가장 먼저 읽는 부분이에요'])
+    });
+  }
+
+  if (weakIntro && !goodTitle) {
+    roadItems.push({ priority:2,
+      title: pick(['소개글 보강', '모임 설명 업그레이드']),
+      action: pick([
+        '일정·장소·참여 조건·분위기를 구체적으로 100자 이상 써보세요',
+        '"매주 목요일 저녁 7시, 강남역 카페 / 책 한 권 읽고 30분 이야기해요" 식으로 구체적으로 써보세요',
+        '소개글 마지막에 "이런 분 환영해요 ✅" 리스트를 넣으면 맞는 사람이 더 빠르게 가입해요',
+      ]),
+      why: pick(['소개글 품질이 낮으면 알고리즘이 모임 주제를 파악 못 해요', '소개글은 가입 전환율에 직접 영향을 줘요'])
+    });
+  }
+
+  if (noSchedule) {
+    roadItems.push({ priority:1,
+      title: pick(['일정 등록이 급해요', '모임 일정이 없어요']),
+      action: pick([
+        '이번 주 안에 일정을 1개라도 등록하세요. 14일 내 일정이 없으면 검색에서 거의 안 나와요',
+        '당근은 최근 일정이 있는 모임을 먼저 노출해요. 지금 바로 다음 모임 날짜를 올려보세요',
+        '시험 삼아 소규모 일정 하나만 올려보세요. 일정 유무가 노출 여부를 결정해요',
+      ]),
+      why: pick(['일정 유무는 노출 여부를 결정하는 핵심 신호예요', '최근 14일 내 일정이 있어야 검색 상위에 나와요'])
+    });
+  }
+
+  if (badPhoto) {
+    roadItems.push({ priority:2,
+      title: pick(['대표 사진 추가', '활동 사진으로 교체']),
+      action: pick([
+        '사진이 없으면 클릭율이 50% 이상 떨어져요. 스마트폰으로 찍은 실제 활동 사진도 충분해요',
+        '기본 이미지보다 실제 모임 사진이 클릭을 3배 더 받아요. 지난 모임에서 가장 활기찬 사진을 올려보세요',
+        '음식·책·운동 현장 사진 중 하나만 올려도 노출 효과가 달라져요. 지금 바로 추가해보세요',
+      ]),
+      why: pick(['대표 사진은 클릭율에 가장 빠르게 영향을 주는 요소예요', '사진이 있는 모임의 전환율이 평균 2배 높아요'])
+    });
+  }
+
+  if (boostTime !== 'peak' && boostCount > 0) {
+    roadItems.push({ priority:3,
+      title: pick(['끌올 시간 최적화', '황금시간대로 끌올 이동']),
+      action: pick([
+        '저녁 7~10시로 끌올 시간을 바꾸세요. 특히 화·목·토요일 접속자가 가장 많아요',
+        '지금 끌올 시간을 저녁 7시 30분으로 고정해보세요. 하루 1회·꾸준히가 핵심이에요',
+        '황금시간대 끌올은 낮 시간 대비 클릭율이 약 3배예요. 시간 하나만 바꿔도 결과가 달라져요',
+      ]),
+      why: pick(['끌올 시간 하나로 노출 효과가 3배 달라져요', '저녁 7~10시가 당근 활성 사용자가 가장 많은 시간대예요'])
+    });
+  }
+
+  if (noNeighbor) {
+    roadItems.push({ priority:3,
+      title: pick(['동네생활 홍보 시작', '동네생활 무료 노출 활용']),
+      action: pick([
+        '주 1회 동네생활에 모임 후기나 홍보글을 올리세요. 클릭이 오면 모임 페이지로 연결돼요',
+        '모임 현장 사진 + 짧은 후기를 동네생활에 올리면 비멤버에게도 노출돼요. 지금 1개만 올려보세요',
+        '"이번 모임 이런 분위기였어요 📸" 형태로 동네생활을 꾸준히 쓰면 무료 홍보 채널이 생겨요',
+      ]),
+      why: pick(['동네생활은 당근 내 무료 추가 노출 채널이에요', '동네생활 연동 모임은 추가 유입이 평균 30% 올라가요'])
+    });
+  }
+
+  if (noExternal && lowCvr) {
+    roadItems.push({ priority:3,
+      title: pick(['외부 채널 연동 추천', '카카오 오픈채팅 연결']),
+      action: pick([
+        '카카오 오픈채팅 링크를 소개글에 넣으면 관심자가 바로 합류할 수 있어요',
+        '당근 신청까지 가지 않아도 채팅으로 먼저 참여할 수 있게 문을 열어두세요',
+        '오픈채팅 링크 하나로 이탈 예정자를 잡을 수 있어요. 지금 소개글에 링크를 추가해보세요',
+      ]),
+      why: pick(['외부 채널이 없으면 관심 있는 사람이 이탈해요', '오픈채팅 연동 모임의 멤버 유지율이 높아요'])
+    });
+  }
+
+  if (roadItems.length === 0) {
+    roadItems.push({ priority:1,
+      title: '✨ 최적화 완료!',
+      action: pick([
+        '현재 모임이 잘 운영되고 있어요. 지금 이 루틴을 꾸준히 유지하는 게 최선이에요',
+        '지금 상태면 알고리즘이 모임을 잘 추천하고 있어요. 콘텐츠 품질만 계속 유지하세요',
+        '훌륭한 모임이에요! 멤버들의 후기와 활동 기록이 쌓일수록 더 강해져요',
+      ]),
+      why: '현재 지표가 모두 양호해요'
+    });
+  }
+
+  // priority 순 정렬 후 최대 5개만 노출
+  roadItems.sort((a, b) => a.priority - b.priority);
+  const showItems = roadItems.slice(0, 5);
+  const numLabel = ['①','②','③','④','⑤'];
   let roadHtml = '';
-  roadItems.forEach(r => {
+  showItems.forEach((r, i) => {
     roadHtml += `
       <div class="roadmap-item">
-        <div class="roadmap-title">${r.title}</div>
+        <div class="roadmap-title">${numLabel[i]} ${r.title}</div>
         <div class="roadmap-action">👉 ${r.action}</div>
         <div class="roadmap-why">💡 ${r.why}</div>
       </div>`;

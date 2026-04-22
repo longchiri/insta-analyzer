@@ -45,11 +45,13 @@ _year = datetime.now().year
 _month = datetime.now().month
 SEARCH_QUERIES = [
     f"인스타그램 알고리즘 최신 업데이트 {_year}년 {_month}월",
-    f"인스타그램 릴스 피드 알고리즘 변경 최신 {_year}",
     f"instagram algorithm update latest {_year}",
-    f"카카오톡 오픈채팅 알고리즘 최신 변경 {_year}",
-    f"당근마켓 소모임 문토 알고리즘 최신 {_year}",
+    f"카카오 당근 소모임 알고리즘 최신 변경 {_year}",
 ]
+
+# ── 안전 제한 ─────────────────────────────────────
+MAX_TURNS = 20          # 무한루프 방지: 최대 API 호출 횟수
+FILE_READ_LIMIT = 5000  # 파일 읽기 최대 글자 수 (토큰 절약)
 
 # ── 공통 프롬프트 ─────────────────────────────────
 SYSTEM_PROMPT = """
@@ -57,11 +59,10 @@ SYSTEM_PROMPT = """
 오늘 날짜: {today}
 
 ## 역할
-1. 웹 검색으로 인스타그램·카카오톡 오픈채팅·당근마켓·소모임·문토의 최신 알고리즘 변경사항을 조사합니다.
-2. 기존 HTML 분석기 파일을 읽고, 새로운 알고리즘 정보가 반영이 필요한지 판단합니다.
-3. 업데이트가 필요하면 해당 분석기 파일을 수정합니다 (점수 로직, 팁 박스, 버전 번호 등).
-4. 분석기 파일을 수정했으면 반드시 hub.html도 함께 수정합니다.
-5. 작업 결과를 report 도구로 보고합니다.
+1. 웹 검색(최대 3회)으로 각 플랫폼 최신 알고리즘 변경사항을 조사합니다.
+2. 분석기 파일을 읽고 업데이트 필요 여부를 판단합니다.
+3. 필요하면 patch_file로 수정하고, hub.html도 업데이트합니다.
+4. report로 결과를 보고하고 즉시 종료합니다.
 
 ## 파일 설명
 - insta:   인스타그램 분석기 (index.html)
@@ -70,54 +71,43 @@ SYSTEM_PROMPT = """
 - moim:    소모임×문토 분석기 (moim-analyzer.html)
 - hub:     메인 허브 페이지 (hub.html)
 
-## ⚠️ hub.html 업데이트 현황 — 필수 규칙
-분석기 파일(insta 또는 kakao)을 수정할 때마다 반드시 hub 파일도 수정해야 합니다.
-hub.html 안에 아래 두 곳을 업데이트하세요:
+## ⚠️ 토큰 절약 — 필수 규칙
+- 검색은 최대 3회만 합니다. 추가 검색 금지.
+- read_file 결과는 앞 5000자만 참고합니다.
+- patch_file 실패 시 **같은 파일에 재시도는 1회만** 허용. 2번 실패하면 그냥 넘어가세요.
+- 불필요한 확인용 read_file 금지. 패치 전 1회만 읽으세요.
+- 변화가 없으면 즉시 report하고 종료하세요.
 
-1. 해당 카드의 버전 번호 (예: Ver 3.7 → Ver 3.8)
-   - 인스타 카드: <span class="ver">Ver X.X</span>
-   - 카카오 카드: <span class="ver">Ver X.X</span>
+## 파일 수정 방법
+- insta·kakao·daangn·moim 파일은 매우 큽니다. **반드시 patch_file만 사용하세요.**
+- hub.html은 write_file 사용 가능합니다.
+- 분석기 수정 시 hub.html 버전 번호 + 로그도 업데이트하세요.
 
-2. 업데이트 현황 로그 맨 위에 새 항목 추가:
-   형식: <div class="log-row">
-           <span class="log-date">{today}</span>
-           <span class="log-text">
-             <span class="badge b-insta">인스타 Ver X.X</span>변경 내용 요약
-           </span>
-         </div>
-   - 인스타 뱃지: <span class="badge b-insta">인스타 Ver X.X</span>
-   - 카카오 뱃지: <span class="badge b-kakao">카카오 Ver X.X</span>
-   - 당근 뱃지:   <span class="badge b-daangn">당근 Ver X.X</span>
-   - 전체 뱃지:   <span class="badge b-all">전체</span>
-
-## 파일 수정 방법 — 중요!
-- insta·kakao 파일은 매우 큽니다 (100KB+). **절대 write_file로 전체를 다시 쓰지 마세요.**
-- 반드시 **patch_file**을 사용해 수정이 필요한 부분만 교체하세요.
-- 예: 점수 계산식 한 줄, 팁 텍스트 한 문단, 버전 번호 한 곳만 바꾸기
-- hub.html은 작으므로 write_file 사용 가능합니다.
+## hub.html 업데이트 형식
+버전 번호: <span class="ver">Ver X.X</span>
+로그 형식: <div class="log-row"><span class="log-date">{today}</span><span class="log-text"><span class="badge b-insta">인스타 Ver X.X</span>변경 내용 요약</span></div>
+뱃지: b-insta / b-kakao / b-daangn / b-moim / b-all
 
 ## 주의사항
-- 오늘은 {today}입니다. 반드시 이 날짜 기준 최신 정보를 사용하세요.
-- 검색 결과의 날짜를 반드시 확인하세요. 오래된 정보(6개월 이상)는 무시하세요.
-- 같은 주제 검색 결과 중 가장 최근 날짜 기준으로 판단하세요.
-- 검색 결과가 부족하면 영어 키워드로 추가 검색하세요 (예: "instagram algorithm {today} latest").
-- 검증된 최신 정보만 반영하세요 (루머 X).
-- 파일 수정 시 기존 HTML 구조·CSS·기능을 절대 망가뜨리지 마세요.
-- 큰 변화가 없으면 수정하지 않고 이유를 report에 적으세요.
+- 오래된 정보(6개월 이상)는 무시하세요.
+- 큰 변화가 없으면 수정하지 말고 report에 이유를 적으세요.
+- 파일 구조·CSS·기능을 절대 망가뜨리지 마세요.
 """.strip()
 
 USER_PROMPT = """
 오늘({today}) 알고리즘 업데이트 점검을 시작해주세요.
 
-순서:
-1. 각 플랫폼 알고리즘 최신 정보 웹 검색
-2. 기존 분석기 파일(insta, kakao) 내용 확인
-3. 새 정보가 있으면 해당 분석기 파일 업데이트 (버전 올리기 포함)
-4. 분석기를 수정했으면 hub 파일도 반드시 업데이트 (버전 번호 + 업데이트 현황 로그)
-5. 결과 report
+순서 (최대한 빠르고 간결하게):
+1. 아래 키워드로 웹 검색 (최대 3회)
+2. insta 파일 읽기 → 업데이트 필요 여부 판단
+3. 필요하면 patch_file로 수정 (실패 시 1회만 재시도, 그 이상은 건너뜀)
+4. hub.html 업데이트
+5. report 후 종료
 
 검색 키워드:
 {queries}
+
+⚠️ patch_file이 2번 연속 실패하면 해당 파일은 포기하고 다음 단계로 넘어가세요.
 """.strip()
 
 # ── 도구 정의 ──────────────────────────────────────
@@ -268,29 +258,43 @@ def execute_tool(name: str, inputs: dict) -> str:
 
     if name == "web_search":
         query = inputs["query"]
-        max_results = inputs.get("max_results", 5)
+        max_results = min(inputs.get("max_results", 3), 3)  # 최대 3개로 제한
         print(f"  🔍 검색 중: {query}")
+
+        def _ddgs_search(q, mr, timelimit=None):
+            """DuckDuckGo 검색 — 실패 시 재시도"""
+            for attempt in range(3):
+                try:
+                    time.sleep(2 + attempt * 2)  # 2초, 4초, 6초 간격
+                    results = []
+                    kwargs = {"max_results": mr}
+                    if timelimit:
+                        kwargs["timelimit"] = timelimit
+                    with DDGS() as ddgs:
+                        for r in ddgs.text(q, **kwargs):
+                            results.append({
+                                "title": r.get("title", ""),
+                                "body":  r.get("body", ""),
+                                "href":  r.get("href", ""),
+                                "date":  r.get("published", "")
+                            })
+                    if results:
+                        return results
+                except Exception as e:
+                    print(f"    검색 재시도 {attempt+1}/3: {e}")
+                    if attempt == 2:
+                        raise
+            return []
+
         try:
-            results = []
-            with DDGS() as ddgs:
-                # timelimit='m' = 최근 1개월 이내 결과만
-                for r in ddgs.text(query, max_results=max_results, timelimit='m'):
-                    results.append({
-                        "title": r.get("title", ""),
-                        "body":  r.get("body", ""),
-                        "href":  r.get("href", ""),
-                        "date":  r.get("published", "")
-                    })
-            # 최근 1개월 결과가 없으면 3개월로 재시도
+            # 최근 1개월 시도
+            results = _ddgs_search(query, max_results, timelimit='m')
+            # 결과 없으면 3개월로 재시도
             if not results:
-                with DDGS() as ddgs:
-                    for r in ddgs.text(query, max_results=max_results, timelimit='m3'):
-                        results.append({
-                            "title": r.get("title", ""),
-                            "body":  r.get("body", ""),
-                            "href":  r.get("href", ""),
-                            "date":  r.get("published", "")
-                        })
+                results = _ddgs_search(query, max_results, timelimit='m3')
+            # 그래도 없으면 timelimit 없이
+            if not results:
+                results = _ddgs_search(query, max_results)
             return json.dumps(results, ensure_ascii=False, indent=2)
         except Exception as e:
             return f"검색 실패: {str(e)}"
@@ -302,9 +306,9 @@ def execute_tool(name: str, inputs: dict) -> str:
         try:
             with open(path, "r", encoding="utf-8") as f:
                 content = f.read()
-            # 너무 길면 앞부분만 전달 (토큰 절약)
-            if len(content) > 12000:
-                return content[:12000] + "\n\n... (이하 생략, 필요시 특정 섹션 요청)"
+            # 토큰 절약: 앞 5000자만 전달
+            if len(content) > FILE_READ_LIMIT:
+                return content[:FILE_READ_LIMIT] + "\n\n... (이하 생략. patch_file 사용 시 정확한 텍스트를 이 앞부분에서 찾으세요)"
             return content
         except FileNotFoundError:
             return f"파일 없음: {path}"
@@ -538,12 +542,17 @@ def run_agent_with_callback(log_fn=None):
     log(f"🤖 AlgoChiri 시작 — {today}", "success")
 
     try:
-        while True:
+        turn = 0
+        while turn < MAX_TURNS:
+            turn += 1
+            if turn >= MAX_TURNS:
+                log(f"⚠️ 최대 턴({MAX_TURNS}회) 도달 — 강제 종료합니다.", "error")
+                break
             response = call_api_with_retry(
                 client,
                 log_fn=log_fn,
                 model="claude-sonnet-4-6",
-                max_tokens=8192,
+                max_tokens=4096,
                 system=system_prompt,
                 tools=tools,
                 messages=messages
