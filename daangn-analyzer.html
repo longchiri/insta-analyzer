@@ -133,6 +133,21 @@
     .stat-val { width:64px; text-align:right; font-size:0.82rem; color:#888; flex-shrink:0; }
     .stat-tip { width:100%; font-size:0.78rem; color:#664; background:#FFF5EC; border-left:3px solid #FF6F0F; padding:6px 10px; border-radius:0 6px 6px 0; margin-top:4px; line-height:1.6; }
 
+    /* 종합 진단 */
+    .diag-text { font-size:0.88rem; line-height:1.9; color:#444; background:#FFF8F4; border-left:4px solid #FF6F0F; padding:14px 16px; border-radius:0 10px 10px 0; margin-bottom:16px; }
+    .diag-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:500px){ .diag-grid{ grid-template-columns:1fr; } }
+    .diag-col { background:#fafafa; border-radius:10px; padding:12px 14px; }
+    .diag-label { font-size:0.76rem; font-weight:800; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid #eee; }
+    .diag-label.good { color:#16a34a; }
+    .diag-label.bad { color:#dc2626; }
+    .diag-item { font-size:0.82rem; color:#555; padding:6px 0; border-bottom:1px solid #f0f0f0; line-height:1.5; }
+    .diag-item:last-child { border-bottom:none; }
+    .diag-score { display:inline-block; font-size:0.72rem; font-weight:700; padding:2px 7px; border-radius:99px; margin-left:6px; }
+    .diag-score.good { background:#dcfce7; color:#16a34a; }
+    .diag-score.mid  { background:#fff3e0; color:#f57c00; }
+    .diag-score.bad  { background:#fee2e2; color:#dc2626; }
+
     /* 체크 아이템 */
     .check-item {
       display:flex; align-items:flex-start; gap:10px;
@@ -744,6 +759,22 @@
     </div>
   </div>
 
+  <!-- 종합 진단 -->
+  <div class="result-card">
+    <h2>📋 종합 진단 리포트</h2>
+    <div id="diagText" class="diag-text"></div>
+    <div class="diag-grid">
+      <div class="diag-col">
+        <div class="diag-label good">🏆 현재 잘 하고 있는 것</div>
+        <div id="strengths"></div>
+      </div>
+      <div class="diag-col">
+        <div class="diag-label bad">⚠️ 지금 당장 고쳐야 할 것</div>
+        <div id="weaknesses"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- 진행 바 -->
   <div class="result-card">
     <h2>📊 지표별 상세 분석</h2>
@@ -802,7 +833,7 @@
 </div><!-- #result -->
 
 <footer>
-  <p>© 2026 longchiri — 당근 모임 분석기 Ver 3.3.0</p>
+  <p>© 2026 longchiri — 당근 모임 분석기 Ver 3.5.0</p>
   <a class="tg-btn" href="https://t.me/longchiri" target="_blank">📢 롱치리 텔레그램</a>
 </footer>
 
@@ -1071,6 +1102,72 @@ function analyze() {
       </div>`;
   });
   document.getElementById('statRows').innerHTML = statHtml;
+
+  // ── 종합 진단 리포트 ──
+  const allStats = [
+    { name:'제목 SEO',    val: seoVal,   icon:'🔍' },
+    { name:'소개글 품질', val: introVal,  icon:'📝' },
+    { name:'모임 빈도',   val: freqVal,   icon:'📆' },
+    { name:'출석률',      val: atndVal,   icon:'👥' },
+    { name:'게시글 활동', val: postVal,   icon:'📌' },
+    { name:'매너온도',    val: tempVal,   icon:'🌡️' },
+    { name:'끌올 최적화', val: expVal,    icon:'📡' },
+    { name:'전환율',      val: cvrVal,    icon:'🔄' },
+    { name:'멤버 성장',   val: growVal,   icon:'📈' },
+  ];
+  const sortedStats = [...allStats].sort((a,b) => b.val - a.val);
+  const top3 = sortedStats.slice(0, 3);
+  const bottom3 = sortedStats.slice(-3).reverse();
+
+  const scClass = v => v >= 70 ? 'good' : v >= 40 ? 'mid' : 'bad';
+  document.getElementById('strengths').innerHTML = top3.map(s =>
+    `<div class="diag-item">${s.icon} <strong>${s.name}</strong><span class="diag-score ${scClass(s.val)}">${Math.round(s.val)}점</span></div>`
+  ).join('');
+  document.getElementById('weaknesses').innerHTML = bottom3.map(s =>
+    `<div class="diag-item">${s.icon} <strong>${s.name}</strong><span class="diag-score ${scClass(s.val)}">${Math.round(s.val)}점</span></div>`
+  ).join('');
+
+  const bestStat  = sortedStats[0];
+  const worstStat = sortedStats[sortedStats.length - 1];
+  const secondWorst = sortedStats[sortedStats.length - 2];
+  let diagLines = [];
+  if (total >= 85) {
+    diagLines = [
+      `현재 모임은 <strong>당근 알고리즘 상위 5%</strong>에 해당하는 <strong>${total}점</strong>이에요. 정말 대단해요 🎉`,
+      `특히 <strong>${bestStat.name}(${Math.round(bestStat.val)}점)</strong>이 탁월하게 잘 되어 있어서 알고리즘이 모임을 적극적으로 추천하고 있어요.`,
+      `유일한 약점은 <strong>${worstStat.name}(${Math.round(worstStat.val)}점)</strong> 정도예요. 이 부분만 보완하면 완벽한 모임이 돼요.`,
+      `지금처럼 꾸준히 유지하는 것 자체가 가장 강력한 전략이에요. 이 페이스를 절대 잃지 마세요 💪`
+    ];
+  } else if (total >= 70) {
+    diagLines = [
+      `총점 <strong>${total}점</strong> — 상위 20% 수준의 잘 운영되는 모임이에요. 탑5%까지 조금만 더 남았어요!`,
+      `<strong>${bestStat.name}(${Math.round(bestStat.val)}점)</strong>이 강점으로 작용해 노출을 이끌고 있어요. 이 부분은 계속 유지하면 돼요.`,
+      `반면 <strong>${worstStat.name}(${Math.round(worstStat.val)}점)</strong>과 <strong>${secondWorst.name}(${Math.round(secondWorst.val)}점)</strong>이 발목을 잡고 있어요.`,
+      `이 두 가지만 집중적으로 개선하면 <strong>2~3주 안에 상위 5%</strong>로 진입할 수 있어요. 아래 로드맵 ①~③번을 이번 주 안에 실행해보세요!`
+    ];
+  } else if (total >= 55) {
+    diagLines = [
+      `총점 <strong>${total}점</strong> — 평균 이상이지만 아직 성장 여지가 많이 남아 있어요.`,
+      `<strong>${bestStat.name}(${Math.round(bestStat.val)}점)</strong>은 잘 되어 있는데, <strong>${worstStat.name}(${Math.round(worstStat.val)}점)</strong>이 전체 점수를 끌어내리고 있어요.`,
+      `지금 상태에서 개선 가능한 포인트가 <strong>3~4개</strong> 있어요. 로드맵 순서대로 하나씩 해결하면 <strong>한 달 안에 상위 20%</strong>로 도약할 수 있어요.`,
+      `가장 쉬운 것부터 시작하세요. 작은 변화 하나가 알고리즘에 즉시 반영돼요.`
+    ];
+  } else if (total >= 40) {
+    diagLines = [
+      `총점 <strong>${total}점</strong> — 평균 수준이에요. 기초 세팅이 덜 된 부분이 있어요.`,
+      `<strong>${worstStat.name}(${Math.round(worstStat.val)}점)</strong>과 <strong>${secondWorst.name}(${Math.round(secondWorst.val)}점)</strong>이 매우 낮아서 노출이 제한되고 있어요.`,
+      `그나마 <strong>${bestStat.name}(${Math.round(bestStat.val)}점)</strong>이 강점으로 남아 있어요. 이 장점을 살리면서 약점을 하나씩 잡아가면 돼요.`,
+      `로드맵 <strong>①번 하나만</strong> 이번 주 실행해도 점수가 5~10점 오를 수 있어요. 작게 시작해보세요!`
+    ];
+  } else {
+    diagLines = [
+      `총점 <strong>${total}점</strong> — 현재 알고리즘 노출이 많이 부족한 상태예요. 지금 당장 핵심 3가지를 고쳐야 해요.`,
+      `<strong>${worstStat.name}(${Math.round(worstStat.val)}점)</strong>, <strong>${secondWorst.name}(${Math.round(secondWorst.val)}점)</strong>이 특히 낮아서 검색 노출이 거의 안 되는 상태예요.`,
+      `아래 로드맵을 ①번부터 순서대로 따라가세요. 3가지만 실행해도 점수가 <strong>15~20점</strong> 오를 수 있어요.`,
+      `포기하지 마세요! 지금 상태에서 기초만 다져도 <strong>한 달 안에 크게 달라질 수 있어요</strong> 🔥`
+    ];
+  }
+  document.getElementById('diagText').innerHTML = diagLines.join('<br/><br/>');
 
   // ── 체크리스트 ──
   const checks = [];
