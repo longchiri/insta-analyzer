@@ -176,6 +176,12 @@
     .tg-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:9px 20px; background:#229ED9; border-radius:99px; text-decoration:none; color:#fff; font-size:0.8rem; font-weight:700; }
     .back-btn { display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; max-width:720px; margin-left:auto; margin-right:auto; text-decoration:none; color:#999; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px; }
     .back-wrap { max-width:720px; margin:0 auto 10px; }
+/* 스크롤 버튼 */
+.scroll-btns { position:fixed; bottom:24px; right:20px; display:flex; flex-direction:column; gap:8px; z-index:1000; }
+.scroll-btn { width:42px; height:42px; border-radius:50%; border:none; background:linear-gradient(135deg,#3C1E1E,#FEE500); color:#3C1E1E; font-size:1.1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(254,229,0,0.4); transition:all 0.2s; }
+.scroll-btn:hover { transform:scale(1.12); box-shadow:0 6px 20px rgba(254,229,0,0.6); }
+#scrollTopBtn { opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.2s; }
+#scrollTopBtn.visible { opacity:1; pointer-events:auto; }
   </style>
 </head>
 <body>
@@ -1335,5 +1341,15 @@ async function downloadPDF() {
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- 스크롤 버튼 -->
+<div class="scroll-btns">
+  <button class="scroll-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="맨 위로">↑</button>
+  <button class="scroll-btn" id="scrollBotBtn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="맨 아래로">↓</button>
+</div>
+<script>
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 300);
+});
+</script>
 </body>
 </html>
