@@ -95,6 +95,12 @@ SYSTEM_PROMPT = """
 로그 형식: <div class="log-row"><span class="log-date">{today}</span><span class="log-text"><span class="badge b-insta">인스타 Ver X.Y.Z</span>변경 내용 요약</span></div>
 뱃지: b-insta / b-kakao / b-daangn / b-moim / b-all
 
+## hub.html 로그 관리 규칙 (반드시 준수)
+- **업데이트 현황**: 항상 최신 5개만 유지합니다. 새 항목을 맨 위에 추가하고, 6번째 이하 항목은 삭제합니다.
+- **업데이트 예정**: 아래 고정 항목 1개만 유지하고 절대 변경·추가·삭제하지 마세요:
+  <div class="log-row"><span class="log-date">매주 월</span><span class="log-text"><span class="badge b-all">전체</span>매주 월요일 10:00 알고리즘 정기 점검 — AlgoChiri 자동 실행</span></div>
+- 완료(✅) 항목을 업데이트 예정에 추가하지 않습니다.
+
 ## 주의사항
 - 오래된 정보(6개월 이상)는 무시하세요.
 - 큰 변화가 없으면 수정하지 말고 report에 이유를 적으세요.
