@@ -260,14 +260,48 @@
         document.getElementById('pushVal').style.color = '#22c55e';
         return;
       }
-      addLog(log.time, log.msg, log.type);
+      // 시간은 항상 브라우저 로컬 시간 사용
+      const localTime = new Date().toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+      addLog(localTime, log.msg, log.type);
     };
 
-    eventSource.onerror = () => {
+    eventSource.onerror = (e) => {
+      // SSE 연결 끊김 — 에이전트가 아직 실행 중이면 재연결 시도
       eventSource.close();
-      setRunning(false);
+      if (isRunning) {
+        addLog(new Date().toLocaleTimeString('ko-KR'), '⚠️ 연결이 끊겼어요. 3초 후 재연결...', 'error');
+        setTimeout(() => {
+          if (isRunning) {
+            eventSource = new EventSource('/logs');
+          }
+        }, 3000);
+      }
     };
   }
+
+  // ── 인터넷 연결 감지 ──────────────────────────
+  const netBanner = document.createElement('div');
+  netBanner.style.cssText = `
+    display:none; position:fixed; top:0; left:0; right:0;
+    background:#ef4444; color:#fff; text-align:center;
+    padding:10px; font-size:0.82rem; font-weight:700; z-index:999;
+  `;
+  netBanner.textContent = '🔴 인터넷 연결이 끊겼어요. 재연결 대기 중...';
+  document.body.prepend(netBanner);
+
+  window.addEventListener('offline', () => {
+    netBanner.style.display = 'block';
+    if (eventSource) eventSource.close();
+  });
+
+  window.addEventListener('online', () => {
+    netBanner.style.display = 'none';
+    netBanner.style.background = '#16A34A';
+    netBanner.textContent = '🟢 인터넷 재연결됐어요! 페이지를 새로고침합니다...';
+    netBanner.style.display = 'block';
+    // 2초 후 자동 새로고침 (서버 재시작 대기)
+    setTimeout(() => location.reload(), 2000);
+  });
 </script>
 
 </body>

@@ -10,8 +10,8 @@
   <!-- 실행 명령 — 경로는 아래 설치 스크립트가 자동으로 수정해줍니다 -->
   <key>ProgramArguments</key>
   <array>
-    <string>/usr/bin/python3</string>
-    <string>ALGOCHIRI_PATH/app.py</string>
+    <string>/bin/bash</string>
+    <string>ALGOCHIRI_PATH/start.sh</string>
   </array>
 
   <!-- 작업 디렉토리 -->
@@ -22,9 +22,13 @@
   <key>RunAtLoad</key>
   <true/>
 
-  <!-- 크래시 시 자동 재시작 -->
+  <!-- 항상 실행 유지 (크래시 시 자동 재시작) -->
   <key>KeepAlive</key>
   <true/>
+
+  <!-- 크래시 후 재시작 대기 시간 (초) -->
+  <key>ThrottleInterval</key>
+  <integer>10</integer>
 
   <!-- 로그 저장 위치 -->
   <key>StandardOutPath</key>
@@ -39,6 +43,10 @@
     <string>ALGOCHIRI_API_KEY</string>
     <key>PATH</key>
     <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>PYTHONPATH</key>
+    <string>ALGOCHIRI_PYTHONPATH</string>
+    <key>HOME</key>
+    <string>ALGOCHIRI_HOME</string>
   </dict>
 </dict>
 </plist>
