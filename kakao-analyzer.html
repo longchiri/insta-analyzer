@@ -1284,7 +1284,9 @@ function analyze() {
 
   document.getElementById('result').style.display = 'block';
   document.getElementById('pdf-bar').style.display = 'flex';
-  document.getElementById('result').scrollIntoView({ behavior:'smooth' });
+  setTimeout(() => {
+    document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 100);
 }
 
 // ── PDF 내보내기 ──

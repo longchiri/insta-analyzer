@@ -1283,7 +1283,9 @@ function analyzeMoim() {
 
   document.getElementById('moim-result').style.display = 'block';
   document.getElementById('pdf-bar-moim').style.display = 'flex';
-  document.getElementById('moim-result').scrollIntoView({ behavior:'smooth', block:'start' });
+  setTimeout(() => {
+    document.getElementById('moim-result').scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 100);
 }
 
 // ════════════ 문토 분석 ════════════
@@ -1394,7 +1396,9 @@ function analyzeMunto() {
 
   document.getElementById('munto-result').style.display = 'block';
   document.getElementById('pdf-bar-munto').style.display = 'flex';
-  document.getElementById('munto-result').scrollIntoView({ behavior:'smooth', block:'start' });
+  setTimeout(() => {
+    document.getElementById('munto-result').scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 100);
 }
 
 function shareResult() {
