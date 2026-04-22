@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- AlgoChiri 주 1회 자동 업데이트 스케줄러 -->
+  <key>Label</key>
+  <string>com.longchiri.algochiri-update</string>
+
+  <!-- 실행 명령 -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>ALGOCHIRI_PATH/run-update.sh</string>
+  </array>
+
+  <!-- 작업 디렉토리 -->
+  <key>WorkingDirectory</key>
+  <string>ALGOCHIRI_PATH</string>
+
+  <!-- 매주 월요일 오전 9시 자동 실행 -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>2</integer>
+    <key>Hour</key>
+    <integer>9</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <!-- 로그 저장 위치 -->
+  <key>StandardOutPath</key>
+  <string>ALGOCHIRI_PATH/algochiri-update.log</string>
+  <key>StandardErrorPath</key>
+  <string>ALGOCHIRI_PATH/algochiri-update-error.log</string>
+
+  <!-- 환경변수 -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>ANTHROPIC_API_KEY</key>
+    <string>ALGOCHIRI_API_KEY</string>
+    <key>PATH</key>
+    <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin</string>
+    <key>PYTHONPATH</key>
+    <string>ALGOCHIRI_PYTHONPATH</string>
+    <key>HOME</key>
+    <string>ALGOCHIRI_HOME</string>
+  </dict>
+</dict>
+</plist>

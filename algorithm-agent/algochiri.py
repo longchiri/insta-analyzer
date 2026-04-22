@@ -83,9 +83,16 @@ SYSTEM_PROMPT = """
 - hub.html은 write_file 사용 가능합니다.
 - 분석기 수정 시 hub.html 버전 번호 + 로그도 업데이트하세요.
 
+## 버전 번호 규칙 (X.Y.Z 시맨틱 버전)
+- Z (패치): AlgoChiri 자동 업데이트로 내용 수정 시 +1 (예: 3.3.0 → 3.3.1)
+- Y (마이너): 새 지표·기능 추가 시 +1, Z는 0으로 리셋 (예: 3.3.x → 3.4.0)
+- X (메이저): 대형 개편 시 +1, Y·Z 모두 0 리셋 (예: 3.x.x → 4.0.0)
+- Y 또는 Z가 9를 넘으면 상위 버전을 올리고 리셋 (예: 3.9.9 → 4.0.0)
+- 현재 버전은 hub.html 내 <span class="ver">Ver X.Y.Z</span>에서 읽으세요
+
 ## hub.html 업데이트 형식
-버전 번호: <span class="ver">Ver X.X</span>
-로그 형식: <div class="log-row"><span class="log-date">{today}</span><span class="log-text"><span class="badge b-insta">인스타 Ver X.X</span>변경 내용 요약</span></div>
+버전 번호: <span class="ver">Ver X.Y.Z</span>
+로그 형식: <div class="log-row"><span class="log-date">{today}</span><span class="log-text"><span class="badge b-insta">인스타 Ver X.Y.Z</span>변경 내용 요약</span></div>
 뱃지: b-insta / b-kakao / b-daangn / b-moim / b-all
 
 ## 주의사항
