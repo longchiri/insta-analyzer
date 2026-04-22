@@ -24,35 +24,52 @@
       pointer-events: none;
       transform: rotate(-14deg);
       overflow: hidden;
+      opacity: 0.22;
     }
     .bg-marquee-row {
       display: flex;
       gap: 0;
       white-space: nowrap;
       margin: 0;
-      padding: 14px 0;
+      padding: 10px 0;
       will-change: transform;
     }
-    .bg-marquee-row.odd  { animation: marquee-left  22s linear infinite; }
-    .bg-marquee-row.even { animation: marquee-left  28s linear infinite; animation-delay: -10s; }
+    .bg-marquee-row.odd  { animation: marquee-left 26s linear infinite; }
+    .bg-marquee-row.even { animation: marquee-left 34s linear infinite; animation-delay: -13s; }
     @keyframes marquee-left {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
     .bg-marquee-text {
-      font-size: 1.55rem;
+      font-size: 2.8rem;
       font-weight: 900;
-      letter-spacing: 0.08em;
-      color: transparent;
-      -webkit-text-stroke: 1.2px rgba(22,163,74,0.13);
-      text-transform: uppercase;
-      font-family: 'Georgia', 'Times New Roman', serif;
-      padding: 0 28px;
+      letter-spacing: 0.06em;
+      font-family: 'Arial Black', 'Helvetica Neue', 'Impact', sans-serif;
+      padding: 0 36px;
       user-select: none;
-    }
-    .bg-marquee-text .dot {
-      color: transparent;
-      -webkit-text-stroke: 1.2px rgba(234,88,12,0.10);
+
+      /* 크롬 메탈릭 그라디언트 */
+      background: linear-gradient(
+        to bottom,
+        #6e6e6e  0%,
+        #c8c8c8 12%,
+        #ffffff 25%,
+        #d4d4d4 38%,
+        #888888 50%,
+        #efefef 62%,
+        #ffffff 72%,
+        #b0b0b0 84%,
+        #787878 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      /* 입체 그림자 */
+      filter:
+        drop-shadow(0px 1px 0px rgba(255,255,255,0.9))
+        drop-shadow(1px 2px 0px rgba(0,0,0,0.35))
+        drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
     }
 
     /* 콘텐츠가 배경 위에 뜨도록 */
@@ -207,14 +224,14 @@
 <script>
 (function(){
   const wrap = document.getElementById('bgMarquee');
-  const unit = 'By Longchiri <span class="dot">✦</span> ';
-  const repeated = unit.repeat(18);
-  for(let i = 0; i < 18; i++){
+  const unit = 'By Longchiri  ';
+  const repeated = unit.repeat(16);
+  for(let i = 0; i < 20; i++){
     const row = document.createElement('div');
     row.className = 'bg-marquee-row ' + (i % 2 === 0 ? 'odd' : 'even');
-    // 홀수 줄은 살짝 offset
-    const offset = i % 2 === 1 ? ' style="margin-left:-160px"' : '';
-    row.innerHTML = `<span class="bg-marquee-text"${offset}>${repeated}</span><span class="bg-marquee-text"${offset}>${repeated}</span>`;
+    const ml = i % 2 === 1 ? 'margin-left:-200px' : '';
+    row.innerHTML = `<span class="bg-marquee-text" style="${ml}">${repeated}</span>`
+                  + `<span class="bg-marquee-text" style="${ml}">${repeated}</span>`;
     wrap.appendChild(row);
   }
 })();
