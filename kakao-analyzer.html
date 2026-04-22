@@ -374,6 +374,111 @@
   </div>
 </div>
 
+<!-- 섹션 A: 채팅방 운영 관리 -->
+<div class="card">
+  <h2>💬 채팅방 운영 관리</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>공지 업데이트 빈도</label>
+      <select id="noticeFreq">
+        <option value="daily">매일</option>
+        <option value="weekly23">주 2~3회</option>
+        <option value="weekly1">주 1회</option>
+        <option value="never">거의 안 함</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>가장 활발한 시간대</label>
+      <select id="activeTime">
+        <option value="evening">저녁 7~10시</option>
+        <option value="lunch">점심</option>
+        <option value="morning">아침</option>
+        <option value="random">랜덤</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>관리자(부방장) 수</label>
+      <select id="adminCount">
+        <option value="many">3명 이상</option>
+        <option value="few">1~2명</option>
+        <option value="none">없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>이모티콘/짤 활용</label>
+      <select id="emojiUsage">
+        <option value="often">자주</option>
+        <option value="sometimes">가끔</option>
+        <option value="never">없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>신규 멤버 환영 공지</label>
+      <select id="welcomeNotice">
+        <option value="always">항상</option>
+        <option value="sometimes">가끔</option>
+        <option value="never">없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>채팅방 규칙 공지</label>
+      <select id="ruleNotice">
+        <option value="yes">있음</option>
+        <option value="no">없음</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 섹션 B: 성장 & 외부 유입 -->
+<div class="card">
+  <h2>🚀 성장 &amp; 외부 유입</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>외부 SNS 홍보 <span class="tip">카카오스토리·인스타·카페 등</span></label>
+      <select id="snsPromo">
+        <option value="active">활발</option>
+        <option value="sometimes">가끔</option>
+        <option value="none">없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>네이버 카페/블로그 연동</label>
+      <select id="naverLink">
+        <option value="yes">있음</option>
+        <option value="no">없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>오픈채팅방 공유 링크 배포</label>
+      <select id="linkShare">
+        <option value="regular">정기 공유</option>
+        <option value="sometimes">가끔</option>
+        <option value="never">없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>월 탈퇴 멤버 수</label>
+      <input type="number" id="churnKakao" placeholder="예: 5" min="0"/>
+    </div>
+    <div class="form-group">
+      <label>주제 관련 이벤트/챌린지 운영</label>
+      <select id="eventFreq">
+        <option value="monthly">월 1회 이상</option>
+        <option value="sometimes">가끔</option>
+        <option value="never">없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>오픈채팅 내 봇 활용 여부</label>
+      <select id="botUsage">
+        <option value="yes">환영봇 등 있음</option>
+        <option value="no">없음</option>
+      </select>
+    </div>
+  </div>
+</div>
+
 <button class="btn-analyze" onclick="analyze()">💬 오픈채팅 알고리즘 분석하기</button>
 
 <!-- ── PDF 저장 바 ── -->
@@ -461,7 +566,7 @@
 
 <footer>
   <p>by <b style="color:#c8a800;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.1.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -480,6 +585,9 @@ function syncRange(targetId, sourceId) {
 
 function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
+
+// ── 랜덤 선택 헬퍼 ──
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 // ── 주요 분석 ──
 function analyze() {
@@ -510,6 +618,22 @@ function analyze() {
   const shortformUsed = getVal('shortformUsed') || 'no';
   const trendingTab   = getVal('trendingTab')   || 'never';
   const mlPenalty     = getVal('mlPenalty')     || 'no';
+
+  // ── 채팅방 운영 관리 (섹션 A) ──
+  const noticeFreq    = getVal('noticeFreq')    || 'never';
+  const activeTime    = getVal('activeTime')    || 'random';
+  const adminCount    = getVal('adminCount')    || 'none';
+  const emojiUsage    = getVal('emojiUsage')    || 'never';
+  const welcomeNotice = getVal('welcomeNotice') || 'never';
+  const ruleNotice    = getVal('ruleNotice')    || 'no';
+
+  // ── 성장 & 외부 유입 (섹션 B) ──
+  const snsPromo      = getVal('snsPromo')      || 'none';
+  const naverLink     = getVal('naverLink')     || 'no';
+  const linkShare     = getVal('linkShare')     || 'never';
+  const churnKakao    = getNum('churnKakao');
+  const eventFreq     = getVal('eventFreq')     || 'never';
+  const botUsage      = getVal('botUsage')      || 'no';
 
   if (!title && !currentMem) {
     alert('방 제목과 현재 인원 수는 꼭 입력해 주세요!'); return;
@@ -624,8 +748,53 @@ function analyze() {
   if (mlPenalty === 'multiple') { penalty += 15; penaltyItems.push({ icon:'🤖', label:'AI 유해 콘텐츠 감지 2회+', pt:-15, desc:'2025 머신러닝 필터링 누적 경고 — 검색 결과 제외 위험' }); }
   else if (mlPenalty === 'once') { penalty += 5; penaltyItems.push({ icon:'⚠️', label:'AI 유해 콘텐츠 감지 1회', pt:-5, desc:'콘텐츠 운영 방식을 점검해 주세요.' }); }
 
+  // ────────── 신규 입력 기반 보너스/패널티 ──────────
+  let newBonus = 0;
+
+  // 공지 자주 업데이트 → 활성도 보너스
+  if (noticeFreq === 'daily')    newBonus += 3;
+  else if (noticeFreq === 'weekly23') newBonus += 2;
+  else if (noticeFreq === 'weekly1')  newBonus += 1;
+
+  // 저녁 황금시간대 활발 → 보너스
+  if (activeTime === 'evening')  newBonus += 2;
+
+  // 관리자 3명↑ → 신뢰도 보너스
+  if (adminCount === 'many')     newBonus += 3;
+  else if (adminCount === 'few') newBonus += 1;
+
+  // 이모티콘 활용 → 활성도 보너스
+  if (emojiUsage === 'often')    newBonus += 1;
+
+  // SNS 홍보 있음 → 노출 보너스
+  if (snsPromo === 'active')     newBonus += 3;
+  else if (snsPromo === 'sometimes') newBonus += 1;
+
+  // 이벤트 있음 → 성장 보너스
+  if (eventFreq === 'monthly')   newBonus += 2;
+  else if (eventFreq === 'sometimes') newBonus += 1;
+
+  // 탈퇴 많음 → 패널티
+  if (churnKakao >= 20) { penalty += 8; penaltyItems.push({ icon:'📉', label:`월 탈퇴 ${churnKakao}명 과다`, pt:-8, desc:'이탈이 심해요. 채팅방 주제·분위기를 점검하고 멤버 기대치를 맞춰보세요.' }); }
+  else if (churnKakao >= 10) { penalty += 4; penaltyItems.push({ icon:'⚠️', label:`월 탈퇴 ${churnKakao}명 주의`, pt:-4, desc:'탈퇴 멤버가 많아요. 첫 인상 개선과 정기 공지로 소속감을 높여보세요.' }); }
+
+  newBonus = Math.min(10, newBonus); // 신규 보너스 최대 10점 캡
+
+  // ────────── 조합 신호 정의 ──────────
+  const noNotice       = noticeFreq === 'never';
+  const peakActive     = activeTime === 'evening';
+  const noAdmin        = adminCount === 'none';
+  const hasEmoji       = emojiUsage !== 'never';
+  const noWelcome      = welcomeNotice === 'never';
+  const noRule         = ruleNotice === 'no';
+  const noSnsPromo     = snsPromo === 'none';
+  const hasEvent       = eventFreq !== 'never';
+  const highChurnKakao = churnKakao >= 10;
+  const noBot          = botUsage === 'no';
+  const ghostRoom      = currentMem >= 30 && dailyMsgs < 5;
+
   // ────────── 최종 점수 ──────────
-  const rawTotal = seoScore + activityScore + socialScore + nowTabScore;
+  const rawTotal = seoScore + activityScore + socialScore + nowTabScore + newBonus;
   const total = Math.max(0, Math.min(100, rawTotal - penalty));
 
   // ────────── 등급 ──────────
@@ -644,7 +813,7 @@ function analyze() {
   document.getElementById('scoreGrade').textContent = grade;
   document.getElementById('scoreGrade').style.color = gradeColor;
   document.getElementById('scoreLabel').textContent =
-    `SEO ${seoScore}/30 · 활성도 ${activityScore}/35 · 소셜 ${socialScore}/25 · 지금탭 +${nowTabScore} · 페널티 -${penalty}`;
+    `SEO ${seoScore}/30 · 활성도 ${activityScore}/35 · 소셜 ${socialScore}/25 · 지금탭 +${nowTabScore} · 운영보너스 +${newBonus} · 페널티 -${penalty}`;
 
   // 세부 점수 4칸
   document.getElementById('subScoreGrid').innerHTML = [
@@ -692,13 +861,14 @@ function analyze() {
 
   // ── 공식 분해 ──
   document.getElementById('formulaBreakdown').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;">
       ${[
         { label:'SEO 가중치', val:seoScore, max:30, color:'#FEE500', desc:'제목·해시태그·소개글' },
         { label:'실시간 활성도', val:activityScore, max:35, color:'#22c55e', desc:'메시지·참여·리텐션' },
         { label:'소셜 지표', val:socialScore, max:25, color:'#3b82f6', desc:'하트·방장·외부유입' },
         { label:'지금탭 ⚡', val:nowTabScore, max:10, color:'#f97316', desc:'피드·숏폼·뜨는탭' },
-        { label:'페널티', val:-penalty, max:0, color:'#ef4444', desc:'신고·스팸·봇·이탈' },
+        { label:'운영 보너스', val:newBonus, max:10, color:'#a855f7', desc:'공지·관리자·SNS·이벤트' },
+        { label:'페널티', val:-penalty, max:0, color:'#ef4444', desc:'신고·스팸·봇·이탈·탈퇴' },
       ].map(f => `
         <div style="background:${f.color}18;border-radius:12px;padding:12px 8px;text-align:center;border:1.5px solid ${f.color}33;">
           <div style="font-size:1.3rem;font-weight:900;color:${f.color};">${f.val>0?'':''}${f.val}</div>
@@ -707,7 +877,7 @@ function analyze() {
         </div>`).join('')}
     </div>
     <div style="margin-top:14px;padding:12px 16px;background:#3C1E1E;border-radius:12px;text-align:center;">
-      <span style="color:#FEE500;font-size:1rem;font-weight:700;">${seoScore} + ${activityScore} + ${socialScore} + ${nowTabScore} - ${penalty} = </span>
+      <span style="color:#FEE500;font-size:1rem;font-weight:700;">${seoScore} + ${activityScore} + ${socialScore} + ${nowTabScore} + ${newBonus} - ${penalty} = </span>
       <span style="color:#fff;font-size:1.4rem;font-weight:900;">${total}점</span>
     </div>`;
 
@@ -911,6 +1081,109 @@ function analyze() {
         </div>`).join('')}
     </div>`;
 
+  // ── 조합 피드백 (pick() 기반 동적 피드백) ──
+  const comboFeedbacks = [];
+
+  if (ghostRoom) comboFeedbacks.push({
+    icon:'👻', color:'#888',
+    title:'유령 채팅방 감지',
+    msg: pick([
+      '멤버는 많은데 대화가 없어요. 주제 질문이나 이벤트로 불을 붙여보세요.',
+      '인원 대비 대화가 너무 적어요. 방장이 먼저 가볍게 질문을 던져보세요.',
+      '채팅방이 잠들어 있어요. 오늘 저녁 짧은 투표나 퀴즈로 깨워보세요.',
+    ])
+  });
+
+  if (noNotice && currentMem >= 30) comboFeedbacks.push({
+    icon:'📢', color:'#f97316',
+    title:'공지 없음 + 인원 多',
+    msg: pick([
+      '공지가 없으면 채팅방이 방향을 잃어요. 주 2~3회 가벼운 공지로 존재감을 유지하세요.',
+      '멤버가 많은데 공지가 없으면 채팅방이 표류해요. 짧은 공지로 구심점을 만들어 보세요.',
+      '공지는 채팅방의 심장이에요. 주 2회만 올려도 활성도가 눈에 띄게 달라져요.',
+    ])
+  });
+
+  if (noAdmin && currentMem >= 50) comboFeedbacks.push({
+    icon:'🛡️', color:'#f97316',
+    title:'관리자 없음 + 50명↑',
+    msg: pick([
+      '혼자 운영하기엔 규모가 커요. 부방장을 1~2명 세우면 운영이 훨씬 안정돼요.',
+      '50명 이상 채팅방을 혼자 관리하면 지쳐요. 신뢰할 수 있는 부방장을 세워보세요.',
+      '관리자가 없으면 방장 부재 시 채팅방이 무너져요. 지금 부방장을 임명할 때예요.',
+    ])
+  });
+
+  if (noWelcome) comboFeedbacks.push({
+    icon:'👋', color:'#c8a800',
+    title:'환영 공지 없음',
+    msg: pick([
+      '신규 멤버가 들어와도 환영 공지가 없으면 소속감이 생기지 않아요.',
+      '첫인상이 중요해요. 신규 멤버에게 환영 메시지를 보내면 이탈률이 크게 줄어요.',
+      '환영 공지 하나로 신규 멤버의 잔류율이 달라져요. 고정 메시지로 설정해보세요.',
+    ])
+  });
+
+  if (noSnsPromo && newMem7d < 5) comboFeedbacks.push({
+    icon:'📣', color:'#3b82f6',
+    title:'SNS 홍보 없음 + 성장률 낮음',
+    msg: pick([
+      '오픈채팅 링크를 외부 SNS에 올리지 않으면 성장이 정체돼요.',
+      '인스타·카페·블로그에 방 소개 글 하나만 올려도 신규 유입이 달라져요.',
+      'SNS 홍보 없이 성장하기는 어려워요. 주 1회 외부 채널에 링크를 공유해보세요.',
+    ])
+  });
+
+  if (highChurnKakao) comboFeedbacks.push({
+    icon:'📉', color:'#ef4444',
+    title:'탈퇴 많음',
+    msg: pick([
+      '이탈이 많아요. 채팅방 주제와 분위기가 기대와 다를 수 있어요.',
+      '월 탈퇴자가 많으면 알고리즘도 채팅방 품질을 낮게 봐요. 분위기 개선이 필요해요.',
+      '멤버가 나가는 이유를 파악해보세요. 주제·빈도·분위기 중 하나가 문제일 수 있어요.',
+    ])
+  });
+
+  if (hasEvent) comboFeedbacks.push({
+    icon:'🎉', color:'#22c55e',
+    title:'이벤트·챌린지 운영 중',
+    msg: pick([
+      '이벤트·챌린지 운영으로 멤버 참여를 잘 유도하고 있어요.',
+      '이벤트가 있는 채팅방은 활성도와 리텐션이 눈에 띄게 높아요. 계속 유지하세요!',
+      '정기 이벤트는 채팅방의 생명력이에요. 이 흐름을 월 1회 이상으로 굳혀보세요.',
+    ])
+  });
+
+  if (noRule) comboFeedbacks.push({
+    icon:'📋', color:'#c8a800',
+    title:'규칙 없음',
+    msg: pick([
+      '채팅방 규칙이 없으면 분위기가 산만해져요. 간단한 3가지 규칙만 공지해도 달라져요.',
+      '규칙이 없으면 스팸·도배·분쟁이 생기기 쉬워요. 고정 공지로 간단히 정해두세요.',
+      '명확한 규칙은 멤버들에게 신뢰를 줘요. 짧고 명확하게 3줄이면 충분해요.',
+    ])
+  });
+
+  if (noBot) comboFeedbacks.push({
+    icon:'🤖', color:'#888',
+    title:'자동화 봇 없음',
+    msg: pick([
+      '환영봇이 없으면 신규 멤버 첫인상이 약해요. 무료 카카오봇으로 자동 환영 메시지를 설정해보세요.',
+      '봇 없이 수동으로 환영하기엔 한계가 있어요. 자동화로 첫인상을 일관되게 관리해보세요.',
+      '카카오 오픈채팅 봇은 무료로 설정 가능해요. 자동 환영 메시지 하나로 이탈률을 줄여보세요.',
+    ])
+  });
+
+  if (peakActive) comboFeedbacks.push({
+    icon:'⏰', color:'#22c55e',
+    title:'황금시간대 활발',
+    msg: pick([
+      '황금시간대에 채팅이 활발해요. 공지와 이벤트도 이 시간에 맞춰 올려보세요.',
+      '저녁 7~10시 활성화는 최고의 알고리즘 신호예요. 이 시간대를 더 적극 활용하세요.',
+      '활발한 황금시간대를 갖고 있어요. 이때 퀴즈·투표를 열면 대화량이 폭발해요.',
+    ])
+  });
+
   // ── 30일 로드맵 ──
   const roadmapSteps = [
     {
@@ -938,7 +1211,20 @@ function analyze() {
       why:'단시간 메시지 급증은 "급상승 방" 노출 트리거가 돼요. 하루 200개 이상 메시지가 몰리면 검색 상단에 임시 배치될 수 있어요.'
     },
   ];
-  document.getElementById('roadmapSection').innerHTML = `
+  const comboHTML = comboFeedbacks.length > 0 ? `
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.88rem;font-weight:800;color:#3C1E1E;margin-bottom:10px;">💡 운영 진단 피드백</div>
+      <div style="display:grid;gap:8px;">
+        ${comboFeedbacks.map(c => `
+          <div class="roadmap-item" style="border-left-color:${c.color};">
+            <div class="roadmap-title" style="color:${c.color};">${c.icon} ${c.title}</div>
+            <div class="roadmap-action">${c.msg}</div>
+          </div>`).join('')}
+      </div>
+      <hr class="divider"/>
+    </div>` : '';
+
+  document.getElementById('roadmapSection').innerHTML = comboHTML + `
     <div style="display:grid;gap:10px;">
       ${roadmapSteps.map(s => `
         <div class="roadmap-item" style="border-left-color:${s.color};">
@@ -949,7 +1235,26 @@ function analyze() {
     </div>`;
 
   // ── 실전 팁 ──
-  document.getElementById('tipBox').innerHTML = `
+  // 동적 체크리스트 항목 생성
+  const dynChecks = [];
+  if (noticeFreq === 'daily' || noticeFreq === 'weekly23') dynChecks.push({ type:'ok',   text:'공지 자주 함 ✅ — 멤버 결속력과 활성도를 유지하고 있어요.' });
+  if (noticeFreq === 'never')                              dynChecks.push({ type:'warn',  text:'공지 없음 ⚠️ — 주 2~3회 가벼운 공지만으로도 활성도가 달라져요.' });
+  if (adminCount !== 'none')                               dynChecks.push({ type:'ok',   text:'관리자 있음 ✅ — 운영이 안정적으로 분담되고 있어요.' });
+  if (adminCount === 'none' && currentMem >= 30)           dynChecks.push({ type:'warn',  text:'관리자 없음 ⚠️ — 규모가 커지면 부방장이 필수예요.' });
+  if (eventFreq !== 'never')                              dynChecks.push({ type:'ok',   text:'이벤트 운영 중 ✅ — 참여 유도와 활성도 유지에 큰 도움이 돼요.' });
+  if (welcomeNotice === 'never')                           dynChecks.push({ type:'warn',  text:'환영 공지 없음 ⚠️ — 신규 멤버 이탈률을 높이는 주요 원인이에요.' });
+  if (highChurnKakao)                                      dynChecks.push({ type:'bad',   text:'이탈 많음 ❌ — 채팅방 주제·분위기 점검이 시급해요.' });
+  if (noSnsPromo)                                          dynChecks.push({ type:'warn',  text:'SNS 홍보 없음 ⚠️ — 외부 홍보 없이는 성장이 정체돼요.' });
+  if (noRule)                                              dynChecks.push({ type:'warn',  text:'규칙 없음 ⚠️ — 간단한 3가지 규칙만 공지해도 분위기가 잡혀요.' });
+
+  const dynCheckHTML = dynChecks.length > 0 ? `
+    <strong>🔎 운영 현황 체크리스트</strong><br/>
+    ${dynChecks.map(c => {
+      const color = c.type === 'ok' ? '#166534' : c.type === 'bad' ? '#991b1b' : '#92400e';
+      return `<span style="color:${color};">&nbsp;&nbsp;• ${c.text}</span><br/>`;
+    }).join('')}<br/>` : '';
+
+  document.getElementById('tipBox').innerHTML = dynCheckHTML + `
     <strong>📌 초기 세팅 체크리스트</strong><br/>
     &nbsp;&nbsp;1. 핵심 키워드를 포함한 제목 (10~40자) 설정<br/>
     &nbsp;&nbsp;2. 하트 10개 이상 확보 → 검색 노출 시작<br/>

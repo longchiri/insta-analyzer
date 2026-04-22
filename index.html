@@ -381,7 +381,7 @@
 <header>
   <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.2rem;">longchiri</span></p>
   <h1>Instagram 계정 분석기</h1>
-  <span class="algo-badge">⚡ 2026 인스타그램 알고리즘 기반 (Ver 4.1) · Trial Reels 예약 발송 · Your Algorithm 확장</span>
+  <span class="algo-badge">⚡ 2026 인스타그램 알고리즘 기반 (Ver 4.1.0) · 콘텐츠 전략 · 외부채널 분석 추가</span>
   <p>ZIP 데이터 파일을 업로드하거나 직접 입력해서 인스타 전략을 받아보세요</p>
 </header>
 
@@ -807,6 +807,115 @@
   </div>
 </div>
 
+<!-- ══════════════ 섹션 A: 콘텐츠 전략 ══════════════ -->
+<div class="card" style="max-width:720px;margin-left:auto;margin-right:auto;margin-bottom:20px;">
+  <h2>📱 콘텐츠 전략</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>주 포스팅 유형</label>
+      <select id="s-contentType">
+        <option value="reels">릴스 위주</option>
+        <option value="feed">피드 위주</option>
+        <option value="mixed" selected>혼합</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>해시태그 전략</label>
+      <select id="s-hashtagStrategy">
+        <option value="optimized">30개 최적화</option>
+        <option value="moderate" selected>적당히 사용</option>
+        <option value="none">거의 안 씀</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>협업(콜라보) 계정 여부</label>
+      <select id="s-collabFreq">
+        <option value="monthly">월 1회↑</option>
+        <option value="sometimes">가끔</option>
+        <option value="none" selected>없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>포스팅 주요 시간대</label>
+      <select id="s-postingTime">
+        <option value="golden">저녁 황금시간대</option>
+        <option value="lunch">점심</option>
+        <option value="random" selected>랜덤</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>스토리 주 활용 방식</label>
+      <select id="s-storyUsage">
+        <option value="daily">매일</option>
+        <option value="event">이벤트시</option>
+        <option value="never" selected>거의 안 함</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>캡션 길이</label>
+      <select id="s-captionLength">
+        <option value="long">긴 스토리텔링</option>
+        <option value="medium" selected>중간</option>
+        <option value="short">짧은 1줄</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ 섹션 B: 외부 채널 & 전환 ══════════════ -->
+<div class="card" style="max-width:720px;margin-left:auto;margin-right:auto;margin-bottom:20px;">
+  <h2>🔗 외부 채널 &amp; 전환</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>링크인바이오 연동</label>
+      <select id="s-bioLink">
+        <option value="multi">멀티링크 최적화</option>
+        <option value="single">단일링크</option>
+        <option value="none" selected>없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>타 플랫폼 연동</label>
+      <select id="s-extPlatform">
+        <option value="both">유튜브+틱톡</option>
+        <option value="one">한 곳만</option>
+        <option value="none" selected>없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>콘텐츠 재활용 여부</label>
+      <select id="s-crossPost">
+        <option value="active">릴스→틱톡 등 크로스포스팅</option>
+        <option value="sometimes">가끔</option>
+        <option value="none" selected>없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>팔로워 CTA 활용</label>
+      <select id="s-ctaUsage">
+        <option value="always">매 게시글</option>
+        <option value="sometimes">가끔</option>
+        <option value="none" selected>없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>협찬/브랜드 딜 경험</label>
+      <select id="s-brandDeal">
+        <option value="yes">있음</option>
+        <option value="no" selected>없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>DM 응답 속도</label>
+      <select id="s-dmResponse">
+        <option value="fast">24시간내</option>
+        <option value="medium">2~3일</option>
+        <option value="slow" selected>거의 안 함</option>
+      </select>
+    </div>
+  </div>
+</div>
+
 <button class="btn-analyze" onclick="analyze()">🔍 분석하기</button>
 
 <!-- ══════════════ 결과 ══════════════ -->
@@ -939,7 +1048,7 @@
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 3.6</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.1.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -1737,6 +1846,7 @@ function getVal(id) { const el = document.getElementById(id); return el ? el.val
 function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
 
 function analyze() {
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
   let D = {};  // working data object
 
   if (currentTab === 'upload' && parsedData) {
@@ -1836,6 +1946,35 @@ function analyze() {
   const niche   = guessNiche(D.topHashtags || [], D.niche);
   D.niche       = niche;
 
+  // ────── 새 입력 섹션 변수 수집 ──────
+  const contentType      = document.getElementById('s-contentType')      ? document.getElementById('s-contentType').value      : 'mixed';
+  const hashtagStrategy  = document.getElementById('s-hashtagStrategy')  ? document.getElementById('s-hashtagStrategy').value  : 'moderate';
+  const collabFreq       = document.getElementById('s-collabFreq')       ? document.getElementById('s-collabFreq').value       : 'none';
+  const postingTime      = document.getElementById('s-postingTime')      ? document.getElementById('s-postingTime').value      : 'random';
+  const storyUsage       = document.getElementById('s-storyUsage')       ? document.getElementById('s-storyUsage').value       : 'never';
+  const captionLength    = document.getElementById('s-captionLength')    ? document.getElementById('s-captionLength').value    : 'medium';
+  const bioLink          = document.getElementById('s-bioLink')          ? document.getElementById('s-bioLink').value          : 'none';
+  const extPlatform      = document.getElementById('s-extPlatform')      ? document.getElementById('s-extPlatform').value      : 'none';
+  const crossPost        = document.getElementById('s-crossPost')        ? document.getElementById('s-crossPost').value        : 'none';
+  const ctaUsage         = document.getElementById('s-ctaUsage')         ? document.getElementById('s-ctaUsage').value         : 'none';
+  const brandDeal        = document.getElementById('s-brandDeal')        ? document.getElementById('s-brandDeal').value        : 'no';
+  const dmResponse       = document.getElementById('s-dmResponse')       ? document.getElementById('s-dmResponse').value       : 'slow';
+
+  // ────── 조합 신호 정의 ──────
+  const reelsHeavy    = contentType === 'reels';
+  const noHashtag     = hashtagStrategy === 'none';
+  const hasCollab     = collabFreq !== 'none';
+  const noCollab      = collabFreq === 'none';
+  const goldenTime    = postingTime === 'golden';
+  const hasBio        = bioLink !== 'none';
+  const noBio         = bioLink === 'none';
+  const hasCrossPosts = crossPost !== 'none';
+  const noCTA         = ctaUsage === 'none';
+  const slowDM        = dmResponse === 'slow';
+  const noExtPlatform = extPlatform === 'none';
+  const storyActive   = storyUsage !== 'never';
+  const storyInactive = storyUsage === 'never';
+
   // ────── 점수 계산 ──────
   const er        = D.engagementRate || 0;
   const sr        = D.saveRate       || 0;
@@ -1872,7 +2011,16 @@ function analyze() {
   // 카루셀 보너스 (평균 ER 10.15% 최고)
   const carBonus     = carRatio >= 50 ? 3 : carRatio >= 30 ? 2 : carRatio >= 15 ? 1 : 0;
 
-  const total = Math.min(erScore + ssScore + grScore + conScore + watchBonus + origPenalty + carBonus, 100);
+  // ★추가: 콘텐츠 전략 & 외부채널 보너스
+  const reelsBonus    = reelsHeavy    ? 2 : 0;   // 릴스 위주 → reach 보너스
+  const hashtagBonus  = !noHashtag && hashtagStrategy === 'optimized' ? 2 : 0; // 해시태그 최적화 → SEO 보너스
+  const collabBonus   = hasCollab     ? 2 : 0;   // 협업 있으면 성장 보너스
+  const goldenBonus   = goldenTime    ? 1 : 0;   // 황금시간대 포스팅 보너스
+  const bioBonus      = hasBio        ? 2 : 0;   // 멀티링크 있으면 전환 보너스
+  const crossBonus    = hasCrossPosts ? 2 : 0;   // 크로스포스팅 → 노출 보너스
+  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + goldenBonus + bioBonus + crossBonus;
+
+  const total = Math.min(erScore + ssScore + grScore + conScore + watchBonus + origPenalty + carBonus + stratBonus, 100);
 
   let grade = '', gradeColor = '';
   if (total >= 85) { grade = '🔥 인플루언서급'; gradeColor = '#833ab4'; }
@@ -2409,6 +2557,113 @@ function analyze() {
       • H-V-L-C 구조 릴스: Hook(0~2초) → Value(2~10초) → Loop(끝을 처음과 연결) → CTA(캡션에서 정보 제공)
     </div>`;
 
+  // ── 조합 기반 맞춤 피드백 ──
+  const comboFeedbacks = [];
+
+  // 1. reelsHeavy + 저장율 낮음
+  if (reelsHeavy && sr < 2) {
+    comboFeedbacks.push({ icon:'🎬', type:'fix', txt: pick([
+      '릴스는 많은데 저장이 안 돼요 — 훅 문구와 정보성 콘텐츠를 넣어보세요',
+      '릴스 위주 계정인데 저장율이 낮아요 — 슬라이드형 정보 릴스로 저장을 유도해보세요',
+      '릴스 비중이 높지만 저장이 부족해요 — 첫 3초에 "저장해두세요" 오버레이를 추가해보세요',
+    ]) });
+  }
+
+  // 2. 팔로워 많은데 ER 낮음
+  if (D.followers >= 1000 && er < 2) {
+    comboFeedbacks.push({ icon:'👥', type:'fix', txt: pick([
+      '팔로워 대비 반응이 낮아요 — 구독자 청소 또는 CTA 강화가 필요해요',
+      '팔로워는 많은데 인게이지먼트가 떨어져요 — 유령 팔로워를 정리하거나 CTA를 추가해보세요',
+      '팔로워 수 대비 반응이 너무 낮아요 — 활성 팔로워 비율이 낮은 신호, CTA와 스토리 참여 유도가 필요해요',
+    ]) });
+  }
+
+  // 3. noHashtag
+  if (noHashtag) {
+    comboFeedbacks.push({ icon:'#️⃣', type:'fix', txt: pick([
+      '해시태그 없으면 검색 노출이 거의 안 돼요 — 틈새 해시태그 전략을 써보세요',
+      '해시태그를 쓰지 않으면 탐색탭 노출이 대폭 줄어요 — 5~15개 혼합 전략을 시작해보세요',
+      '해시태그 전략이 없으면 알고리즘이 계정을 분류하지 못해요 — 분야별 틈새 태그부터 시작하세요',
+    ]) });
+  }
+
+  // 4. noBio
+  if (noBio) {
+    comboFeedbacks.push({ icon:'🔗', type:'fix', txt: pick([
+      '링크인바이오가 없으면 팔로워가 갈 곳이 없어요 — 멀티링크 도구를 추가하세요',
+      '링크인바이오가 없어요 — Linktree나 단일 링크라도 연결해서 팔로워 이동 경로를 만드세요',
+      '바이오에 링크가 없으면 팔로워의 행동이 끊겨요 — 멀티링크 페이지를 만들어 CTA와 연결하세요',
+    ]) });
+  }
+
+  // 5. noCollab + 성장률 낮음
+  if (noCollab && gr < 5) {
+    comboFeedbacks.push({ icon:'🤝', type:'fix', txt: pick([
+      '협업 계정 없이 성장이 어려워요 — 비슷한 규모 계정과 맞팔·콜라보를 해보세요',
+      '콜라보 없이 저성장이 계속되고 있어요 — 유사 분야 소규모 계정과 콜라보를 시작해보세요',
+      '협업이 없으면 새 팔로워 유입이 어려워요 — 비슷한 규모의 크리에이터와 맞팔·공동 라이브를 해보세요',
+    ]) });
+  }
+
+  // 6. noCTA
+  if (noCTA) {
+    comboFeedbacks.push({ icon:'📣', type:'fix', txt: pick([
+      'CTA가 없으면 팔로워가 행동하지 않아요 — 저장/공유/DM 유도 문구를 넣으세요',
+      'CTA 없이는 알고리즘 신호가 약해요 — "저장해두세요!" 같은 직접적인 문구를 모든 게시글에 추가하세요',
+      '행동 유도 문구가 없어요 — 캡션 마지막에 "저장 / DM / 댓글"을 유도하는 CTA를 넣어보세요',
+    ]) });
+  }
+
+  // 7. storyInactive + 팔로워 1000명↑
+  if (storyInactive && D.followers >= 1000) {
+    comboFeedbacks.push({ icon:'📖', type:'fix', txt: pick([
+      '스토리를 안 올리면 알고리즘이 비활성 계정으로 판단해요',
+      '팔로워가 1,000명이 넘는데 스토리를 거의 안 올리면 알고리즘이 활성도를 낮게 봐요',
+      '스토리 미활용은 알고리즘 비활성 신호예요 — 하루 1~2개 스토리로 피드 노출 우선도를 높여보세요',
+    ]) });
+  }
+
+  // 8. noExtPlatform
+  if (noExtPlatform) {
+    comboFeedbacks.push({ icon:'📱', type:'add', txt: pick([
+      '인스타만으로는 성장에 한계가 있어요 — 유튜브 쇼츠나 틱톡 크로스포스팅을 해보세요',
+      '외부 플랫폼 연동이 없어요 — 틱톡이나 유튜브 쇼츠에 같은 콘텐츠를 올려 역유입을 만들어보세요',
+      '인스타 단독 운영은 성장 속도에 한계가 생겨요 — 쇼츠·틱톡 크로스포스팅으로 채널을 다각화하세요',
+    ]) });
+  }
+
+  // 9. slowDM
+  if (slowDM) {
+    comboFeedbacks.push({ icon:'💬', type:'fix', txt: pick([
+      'DM 응답이 느리면 알고리즘 신호가 낮아져요 — 24시간 내 답장을 목표로 하세요',
+      'DM 답장이 느리면 팔로워 친밀도 점수가 떨어져요 — 하루 한 번 DM 확인 루틴을 만들어보세요',
+      'DM 응답 속도가 낮으면 알고리즘이 계정 활성도를 낮게 평가해요 — 24시간 내 답장 목표를 설정하세요',
+    ]) });
+  }
+
+  // 10. hasCrossPosts (긍정)
+  if (hasCrossPosts) {
+    comboFeedbacks.push({ icon:'🔄', type:'keep', txt: pick([
+      '크로스포스팅이 있어요. 릴스를 틱톡·쇼츠에도 올리면 역유입이 생겨요',
+      '멀티플랫폼 크로스포스팅을 하고 있어요 — 각 플랫폼에서 인스타 계정을 언급해 역유입을 극대화하세요',
+      '콘텐츠 재활용을 잘 하고 있어요 — 틱톡·쇼츠 프로필에 인스타 링크를 꼭 추가해 역유입을 노려보세요',
+    ]) });
+  }
+
+  if (comboFeedbacks.length > 0) {
+    const comboHTML = `
+    <hr class="section-divider" style="margin-top:16px;"/>
+    <div style="font-size:0.82rem;font-weight:700;color:#833ab4;margin-bottom:10px;">🔍 전략 조합 맞춤 피드백</div>
+    ${comboFeedbacks.map(f => {
+      const bgColor = f.type === 'keep' ? '#f0fff4' : f.type === 'fix' ? '#fffbeb' : '#ebf8ff';
+      const txColor = f.type === 'keep' ? '#276749' : f.type === 'fix' ? '#744210' : '#2c5282';
+      return `<div class="reco-item" style="background:${bgColor};color:${txColor};"><span class="reco-icon">${f.icon}</span><span>${f.txt}</span></div>`;
+    }).join('')}`;
+
+    const roadmapEl = document.getElementById('roadmap30Section');
+    if (roadmapEl) roadmapEl.insertAdjacentHTML('beforeend', comboHTML);
+  }
+
   // ── 새 입력값 읽기 ──
   const bioText      = (document.getElementById('bioText')     ? document.getElementById('bioText').value.trim()     : '');
   const latestCaption= (document.getElementById('latestCaption')? document.getElementById('latestCaption').value.trim(): '');
@@ -2584,6 +2839,15 @@ function analyze() {
     { ok: capHashtagCount >= 3,       label:'해시태그 3개 이상',           tip:'3~15개가 최적. 과도한 해시태그(20개+)는 오히려 스팸 신호.', score:10 },
     { ok: capHasEmoji && capHasLineBreak, label:'가독성 좋은 캡션 구조',  tip:'이모지 + 줄바꿈으로 스크롤 없이 읽히는 구조.', score:10 },
     { ok: rrChk >= 5,                    label:`재시청율 ${rrChk||'?'}% (목표 5%+)`, tip:'루프형 엔딩 (끝이 처음으로 자연스럽게 연결)으로 재시청율을 높여요.', score:5 },
+    // ★추가: 콘텐츠 전략 & 외부채널 체크리스트
+    { ok: reelsHeavy,                label:'릴스 중심 전략 — 2.25× 리치 공식화된 형식',    tip:'릴스 위주 업로드는 알고리즘에서 비팔로워 도달이 최대 2.25배 높아요.', score:0 },
+    { ok: !noHashtag,                label:'해시태그 전략 운영 중',                          tip:'해시태그가 없으면 탐색탭 노출이 대폭 감소해요.', score:0 },
+    { ok: hasBio,                    label:'링크인바이오 최적화',                            tip:'멀티링크 도구(Linktree 등)로 팔로워 전환 경로를 만드세요.', score:0 },
+    { ok: hasCollab,                 label:'협업 콘텐츠 운영 중',                            tip:'콜라보는 서로 팔로워를 교환하는 가장 빠른 성장 방법이에요.', score:0 },
+    { ok: !noCTA,                    label:'CTA 전략 운영 중',                               tip:'매 게시글에 저장·공유·DM 유도 문구를 넣으면 알고리즘 신호가 강해져요.', score:0 },
+    { ok: storyActive,               label:'스토리 활성화',                                  tip:'스토리를 매일 올리면 팔로워 피드에서 우선 노출 확률이 높아져요.', score:0 },
+    { ok: !slowDM,                   label:'DM 빠른 응답 (24시간 내)',                       tip:'DM 답장이 빠를수록 알고리즘이 계정 활성도를 높게 평가해요.', score:0 },
+    { ok: hasCrossPosts,             label:'멀티플랫폼 크로스포스팅',                        tip:'릴스를 틱톡·유튜브 쇼츠에 올리면 역유입이 발생해요.', score:0 },
   ];
   const reelsTotal = reelsChecks.filter(c=>c.ok).reduce((a,c)=>a+c.score,0);
   const reelsMax   = reelsChecks.reduce((a,c)=>a+c.score,0);
@@ -2599,7 +2863,7 @@ function analyze() {
         <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:10px;background:${c.ok?'#f5f0ff':'#fff5f5'};border-left:3px solid ${c.ok?'#c13584':'#fc8181'};">
           <span style="flex-shrink:0;">${c.ok?'✅':'❌'}</span>
           <div style="flex:1;">
-            <div style="font-weight:700;font-size:0.84rem;color:${c.ok?'#833ab4':'#742a2a'};">${c.label} <span style="font-size:0.72rem;color:#aaa;font-weight:400;">(+${c.score}점)</span></div>
+            <div style="font-weight:700;font-size:0.84rem;color:${c.ok?'#833ab4':'#742a2a'};">${c.label}${c.score > 0 ? ` <span style="font-size:0.72rem;color:#aaa;font-weight:400;">(+${c.score}점)</span>` : ''}</div>
             <div style="font-size:0.78rem;color:#888;margin-top:2px;">${c.tip}</div>
           </div>
         </div>`).join('')}
