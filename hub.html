@@ -18,48 +18,48 @@
     /* ── 대각선 흐르는 배경 마키 ── */
     .bg-marquee-wrap {
       position: fixed;
-      top: -40%; left: -20%;
-      width: 160%; height: 200%;
+      top: -30%; left: -10%;
+      width: 140%; height: 180%;
       z-index: 0;
       pointer-events: none;
       transform: rotate(-14deg);
       overflow: hidden;
-      opacity: 0.22;
+      opacity: 0.28;
     }
     .bg-marquee-row {
       display: flex;
-      gap: 0;
+      align-items: center;
       white-space: nowrap;
-      margin: 0;
-      padding: 10px 0;
+      padding: 32px 0;
       will-change: transform;
     }
-    .bg-marquee-row.odd  { animation: marquee-left 26s linear infinite; }
-    .bg-marquee-row.even { animation: marquee-left 34s linear infinite; animation-delay: -13s; }
+    .bg-marquee-row.odd  { animation: marquee-left 18s linear infinite; }
+    .bg-marquee-row.even { animation: marquee-left 22s linear infinite; animation-delay: -9s; }
     @keyframes marquee-left {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
     .bg-marquee-text {
-      font-size: 2.8rem;
+      font-size: 7rem;
       font-weight: 900;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.04em;
       font-family: 'Arial Black', 'Helvetica Neue', 'Impact', sans-serif;
-      padding: 0 36px;
+      padding: 0 120px;
       user-select: none;
+      line-height: 1;
 
       /* 크롬 메탈릭 그라디언트 */
       background: linear-gradient(
         to bottom,
-        #6e6e6e  0%,
-        #c8c8c8 12%,
-        #ffffff 25%,
-        #d4d4d4 38%,
-        #888888 50%,
-        #efefef 62%,
-        #ffffff 72%,
-        #b0b0b0 84%,
-        #787878 100%
+        #5a5a5a  0%,
+        #c0c0c0 12%,
+        #ffffff 28%,
+        #d8d8d8 40%,
+        #888888 52%,
+        #f0f0f0 64%,
+        #ffffff 74%,
+        #aaaaaa 86%,
+        #6a6a6a 100%
       );
       -webkit-background-clip: text;
       background-clip: text;
@@ -67,9 +67,9 @@
 
       /* 입체 그림자 */
       filter:
-        drop-shadow(0px 1px 0px rgba(255,255,255,0.9))
-        drop-shadow(1px 2px 0px rgba(0,0,0,0.35))
-        drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+        drop-shadow(0px 2px 0px rgba(255,255,255,0.95))
+        drop-shadow(2px 4px 0px rgba(0,0,0,0.4))
+        drop-shadow(3px 6px 10px rgba(0,0,0,0.2));
     }
 
     /* 콘텐츠가 배경 위에 뜨도록 */
@@ -224,12 +224,12 @@
 <script>
 (function(){
   const wrap = document.getElementById('bgMarquee');
-  const unit = 'By Longchiri  ';
-  const repeated = unit.repeat(16);
-  for(let i = 0; i < 20; i++){
+  const unit = 'By Longchiri';
+  const repeated = (unit + '<span style="padding:0 120px"> </span>').repeat(4);
+  for(let i = 0; i < 6; i++){
     const row = document.createElement('div');
     row.className = 'bg-marquee-row ' + (i % 2 === 0 ? 'odd' : 'even');
-    const ml = i % 2 === 1 ? 'margin-left:-200px' : '';
+    const ml = i % 2 === 1 ? 'margin-left:-340px' : '';
     row.innerHTML = `<span class="bg-marquee-text" style="${ml}">${repeated}</span>`
                   + `<span class="bg-marquee-text" style="${ml}">${repeated}</span>`;
     wrap.appendChild(row);
