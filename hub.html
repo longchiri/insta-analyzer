@@ -12,6 +12,53 @@
       min-height: 100vh;
       padding: 48px 16px 64px;
       color: #1a1a2e;
+      position: relative;
+    }
+
+    /* ── 대각선 흐르는 배경 마키 ── */
+    .bg-marquee-wrap {
+      position: fixed;
+      top: -40%; left: -20%;
+      width: 160%; height: 200%;
+      z-index: 0;
+      pointer-events: none;
+      transform: rotate(-14deg);
+      overflow: hidden;
+    }
+    .bg-marquee-row {
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+      margin: 0;
+      padding: 14px 0;
+      will-change: transform;
+    }
+    .bg-marquee-row.odd  { animation: marquee-left  22s linear infinite; }
+    .bg-marquee-row.even { animation: marquee-left  28s linear infinite; animation-delay: -10s; }
+    @keyframes marquee-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .bg-marquee-text {
+      font-size: 1.55rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: transparent;
+      -webkit-text-stroke: 1.2px rgba(22,163,74,0.13);
+      text-transform: uppercase;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      padding: 0 28px;
+      user-select: none;
+    }
+    .bg-marquee-text .dot {
+      color: transparent;
+      -webkit-text-stroke: 1.2px rgba(234,88,12,0.10);
+    }
+
+    /* 콘텐츠가 배경 위에 뜨도록 */
+    header, .grid, .update-wrap, footer {
+      position: relative;
+      z-index: 1;
     }
 
     /* ── 헤더 ── */
@@ -153,6 +200,25 @@
   </style>
 </head>
 <body>
+
+<!-- 대각선 흐르는 배경 -->
+<div class="bg-marquee-wrap" aria-hidden="true" id="bgMarquee"></div>
+
+<script>
+(function(){
+  const wrap = document.getElementById('bgMarquee');
+  const unit = 'By Longchiri <span class="dot">✦</span> ';
+  const repeated = unit.repeat(18);
+  for(let i = 0; i < 18; i++){
+    const row = document.createElement('div');
+    row.className = 'bg-marquee-row ' + (i % 2 === 0 ? 'odd' : 'even');
+    // 홀수 줄은 살짝 offset
+    const offset = i % 2 === 1 ? ' style="margin-left:-160px"' : '';
+    row.innerHTML = `<span class="bg-marquee-text"${offset}>${repeated}</span><span class="bg-marquee-text"${offset}>${repeated}</span>`;
+    wrap.appendChild(row);
+  }
+})();
+</script>
 
 <header>
   <div class="logo">
