@@ -1089,6 +1089,51 @@ function analyze() {
       '비공개 설정은 검색 노출이 안 돼요. 노출을 원한다면 공개로 변경하세요.',
       '비공개 상태라 검색에서 보이지 않아요. 공개로 바꾸는 게 가장 빠른 노출 개선이에요.',
     ])});
+  // ── 조합 신호 ──
+  const bigMember   = memberCount >= 20;
+  const smallMember = memberCount > 0 && memberCount < 5;
+  const lowAttend   = attendRate < 50;
+  const manyBoost   = boostCount >= 8;
+  const noBoost     = boostCount === 0;
+  const tooManyBoost= boostCount > 15;
+  const lowCvr      = cvrRate < 5 && monthlyViews > 0;
+  const highCvr     = cvrRate >= 10 && monthlyViews > 0;
+  const viewsHighNoApply = monthlyViews >= 50 && cvrRate < 2;
+  const goodTitle   = hasKeyword && titleLen >= 10;
+  const weakIntro   = intro.length < 80;
+  const highTemp    = mannerTemp >= 45;
+  const lowReview   = reviewCount < 5;
+  const highFreq    = meetingFreq >= 5;
+  const noSchedule  = meetingFreq === 0;
+  const badPhoto    = photoQuality === 'none';
+  const noNeighbor  = neighborPost === 'never';
+  const noExternal  = externalLink === 'no';
+  const wideArea      = areaRange === 'wide';
+  const newHost       = hostAge <= 3;
+  const lowPost       = postCount < 3 && memberCount >= 10;
+  const silentBoard   = postCount >= 8 && commentAvg < 2;
+  const growthStopped = growRate === 0 && memberCount >= 10;
+  const noBadge       = badgeCount === 0;
+  // 새 신호
+  const ddayOk        = dday <= 14;
+  const ddayFar       = dday > 14 && dday < 999;
+  const noScheduleAt  = dday >= 999;
+  const irregular     = scheduleType === 'irregular';
+  const needApproval  = joinType === 'approval';
+  const lowRegular    = regularRate < 20 && memberCount >= 10;
+  const highChurn     = churnRate >= 15;
+  const noSns         = snsPromo === 'none';
+  const fewPhotos     = photoCount < 3;
+  const noKakaoMap    = kakaoMap === 'no';
+  const noNaver       = naverSearch === 'no';
+  const noCrossPromo  = crossPromo === 'never';
+  const noIntroLoc    = introLocation === 'no';
+  const badMeetTime   = meetingTime === 'daytime' || meetingTime === 'morning';
+
+  const roadItems = [];
+
+  // ── 조합 우선 인사이트 (상황별 맞춤, priority 1) ──
+
 
   // 추가 체크 항목
   if (highCvr)
@@ -1236,49 +1281,6 @@ function analyze() {
   // ── 로드맵 (조합 기반 · 다양한 텍스트 변형) ──
 
   // 조합 신호 정의
-  const bigMember   = memberCount >= 20;
-  const smallMember = memberCount > 0 && memberCount < 5;
-  const lowAttend   = attendRate < 50;
-  const manyBoost   = boostCount >= 8;
-  const noBoost     = boostCount === 0;
-  const tooManyBoost= boostCount > 15;
-  const lowCvr      = cvrRate < 5 && monthlyViews > 0;
-  const highCvr     = cvrRate >= 10 && monthlyViews > 0;
-  const viewsHighNoApply = monthlyViews >= 50 && cvrRate < 2;
-  const goodTitle   = hasKeyword && titleLen >= 10;
-  const weakIntro   = intro.length < 80;
-  const highTemp    = mannerTemp >= 45;
-  const lowReview   = reviewCount < 5;
-  const highFreq    = meetingFreq >= 5;
-  const noSchedule  = meetingFreq === 0;
-  const badPhoto    = photoQuality === 'none';
-  const noNeighbor  = neighborPost === 'never';
-  const noExternal  = externalLink === 'no';
-  const wideArea      = areaRange === 'wide';
-  const newHost       = hostAge <= 3;
-  const lowPost       = postCount < 3 && memberCount >= 10;
-  const silentBoard   = postCount >= 8 && commentAvg < 2;
-  const growthStopped = growRate === 0 && memberCount >= 10;
-  const noBadge       = badgeCount === 0;
-  // 새 신호
-  const ddayOk        = dday <= 14;
-  const ddayFar       = dday > 14 && dday < 999;
-  const noScheduleAt  = dday >= 999;
-  const irregular     = scheduleType === 'irregular';
-  const needApproval  = joinType === 'approval';
-  const lowRegular    = regularRate < 20 && memberCount >= 10;
-  const highChurn     = churnRate >= 15;
-  const noSns         = snsPromo === 'none';
-  const fewPhotos     = photoCount < 3;
-  const noKakaoMap    = kakaoMap === 'no';
-  const noNaver       = naverSearch === 'no';
-  const noCrossPromo  = crossPromo === 'never';
-  const noIntroLoc    = introLocation === 'no';
-  const badMeetTime   = meetingTime === 'daytime' || meetingTime === 'morning';
-
-  const roadItems = [];
-
-  // ── 조합 우선 인사이트 (상황별 맞춤, priority 1) ──
 
   if (bigMember && lowAttend) {
     roadItems.push({ priority:1,
@@ -1704,7 +1706,7 @@ function analyze() {
   document.getElementById('pdf-bar').style.display = 'flex';
   setTimeout(() => {
     document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 100);
+  }, 150);
 }
 
 function shareResult() {
