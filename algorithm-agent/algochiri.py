@@ -101,6 +101,16 @@ SYSTEM_PROMPT = """
   <div class="log-row"><span class="log-date">매주 월</span><span class="log-text"><span class="badge b-all">전체</span>매주 월요일 10:00 알고리즘 정기 점검 — AlgoChiri 자동 실행</span></div>
 - 완료(✅) 항목을 업데이트 예정에 추가하지 않습니다.
 
+## 당근 모임 분석기 고정 사실 (절대 변경 금지)
+- 당근 모임에는 **끌올(끌어올리기) 기능이 없습니다.** 당근 고객센터에서 공식 확인된 사항입니다.
+  - 끌올은 중고거래 게시글에만 존재하며 모임에는 적용되지 않습니다.
+  - daangn-analyzer.html에 끌올 관련 입력·분석·팁을 절대 추가하지 마세요.
+- daangn-analyzer.html v3.6.0 현재 입력 항목 구성 (섹션 4 노출 최적화):
+  - tagSet: 모임 태그 설정 (many/few/none)
+  - responseSpeed: 호스트 응답 속도 (fast/same/slow/very_slow)
+  - memberLimit: 멤버 상한 설정 (yes/no)
+  - publicReview: 모임 공개 후기 수 (숫자)
+
 ## 주의사항
 - 오래된 정보(6개월 이상)는 무시하세요.
 - 큰 변화가 없으면 수정하지 말고 report에 이유를 적으세요.
