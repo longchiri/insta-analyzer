@@ -82,6 +82,9 @@ SYSTEM_PROMPT = """
 - insta·kakao·daangn·moim 파일은 매우 큽니다. **반드시 patch_file만 사용하세요.**
 - hub.html은 write_file 사용 가능합니다.
 - 분석기 수정 시 hub.html 버전 번호 + 로그도 업데이트하세요.
+- **버전 UP + 로그 작성 조건**: 기능 추가 또는 알고리즘 내용 변경이 있을 때만 올리세요.
+  - ✅ 올리는 경우: 새 지표 추가, 피드백 내용 변경, 알고리즘 팁 업데이트, 섹션 신규 추가
+  - ❌ 올리지 않는 경우: 버튼 디자인 변경, 텍스트 색상 수정, 푸터 정렬 등 UI/스타일 잡업
 
 ## 버전 번호 규칙 (X.Y.Z 시맨틱 버전)
 - Z (패치): AlgoChiri 자동 업데이트로 내용 수정 시 +1 (예: 3.3.0 → 3.3.1)
@@ -127,7 +130,7 @@ SYSTEM_PROMPT = """
   - publicReview: 모임 공개 후기 수 (숫자)
 
 ## 현재 버전 현황 (2026.04.23 기준)
-- 인스타그램 분석기: Ver 4.2.0
+- 인스타그램 분석기: Ver 4.3.0
 - 당근 모임 분석기: Ver 3.6.0
 - 소모임×문토 분석기: Ver 2.2.0
 - 카카오 오픈채팅 분석기: Ver 2.2.0
@@ -148,6 +151,21 @@ SYSTEM_PROMPT = """
 
 4. **hub.html 배경 마키** — `By Longchiri` 텍스트가 seamless 무한 루프로 흐릅니다.
    - 마키 관련 JS·CSS를 수정하지 마세요.
+
+5. **푸터 문의 버튼** — 모든 분석기 푸터는 아래 형식으로 통일되어 있습니다:
+   ```html
+   <footer>
+     <p>by <b style="color:{브랜드색};">longchiri</b></p>
+     <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver X.Y.Z</p>
+     <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
+       <svg width="15" height="15" ...Telegram SVG...>
+       문의 @long_c_hill
+     </a>
+   </footer>
+   ```
+   - href는 반드시 `https://t.me/long_c_hill` 입니다 (`t.me/longchiri` 아님).
+   - 버튼 텍스트는 `문의 @long_c_hill` 형식으로 고정입니다.
+   - hub.html의 문의 버튼은 별도 디자인으로 유지하세요 (건드리지 마세요).
 
 ## 주의사항
 - 오래된 정보(6개월 이상)는 무시하세요.
