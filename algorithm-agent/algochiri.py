@@ -496,7 +496,9 @@ def run_agent():
         no_update = final_report.get("no_update_reason", "")
         if no_update:
             print(f"\n업데이트 없음 이유: {no_update}")
-        print()
+        print(f"\n{'─'*50}")
+        print("  ⚠️  해당 결과 값은 참고만 부탁드립니다.")
+        print(f"{'─'*50}\n")
 
 
 def _backup_all_files(log_fn=None):
@@ -637,6 +639,9 @@ def run_agent_with_callback(log_fn=None):
             else:
                 # tool_use 없으면 작업 완료
                 log("✅ 에이전트 작업 완료!", "success")
+                log("─" * 50, "info")
+                log("⚠️  해당 결과 값은 참고만 부탁드립니다.", "info")
+                log("─" * 50, "info")
                 success = True
                 break
 
