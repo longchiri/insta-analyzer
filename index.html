@@ -2352,7 +2352,7 @@ function analyze() {
   if (D.hashtagCount < 8 && D.hashtagCount !== null) fixes.push({ icon:'#️⃣', txt:`해시태그 평균 ${D.hashtagCount}개 — 8~15개 사용을 권장해요. 대·중·소형 해시태그를 골고루 혼합하세요.` });
   // ★추가: 2025 신규 알고리즘 경고
   if (origRatio >= 0 && origRatio < 80) fixes.push({ icon:'🔴', txt:`오리지널 콘텐츠 비율 ${origRatio}% — Dec 2025 업데이트로 리포스트·재업로드 계정은 추천 탭 노출이 최대 80% 감소해요. 직접 제작 콘텐츠 비율을 80% 이상으로 올리세요.` });
-  if (watchRate > 0 && watchRate < 30) fixes.push({ icon:'⏱️', txt:`릴스 시청 유지율 ${watchRate}% — Mosseri가 #1 알고리즘 지표로 확인한 지표예요. 첫 3초 훅을 강화하고, 영상 길이를 7~15초로 줄여보세요.` });
+  if (watchRate > 0 && watchRate < 30) fixes.push({ icon:'⏱️', txt:`릴스 시청 유지율 ${watchRate}% — Mosseri가 #1 알고리즘 지표로 확인한 지표예요. 첫 3초 훅을 강화하고, 릴스 최적 길이 20~40초를 목표로 잡으세요.` });
   if (carRatio > 0 && carRatio < 20) fixes.push({ icon:'🖼️', txt:`카루셀 비율 ${carRatio}% — 카루셀은 2025년 평균 ER 10.15%로 단일 이미지 대비 3배 높아요. 정보성 콘텐츠는 카루셀로 제작해보세요.` });
 
   document.getElementById('recoFix').innerHTML = fixes.length
@@ -2384,11 +2384,12 @@ function analyze() {
     &nbsp;&nbsp;마지막 슬라이드에 "저장해두고 나중에 써보세요 🔖" 문구 추가<br/><br/>
     <b>Step 3 · ${niche} 키워드 강화</b><br/>
     &nbsp;&nbsp;${topTag} 등 핵심 해시태그 꾸준히 사용 + 캡션 첫 줄에 키워드 포함<br/>
-    &nbsp;&nbsp;릴스 월 2개 목표 — 짧고 강렬하게 (7~15초)<br/><br/>
+    &nbsp;&nbsp;릴스 월 2개 목표 — <b>20~40초</b> 최적 구간 공략 (문제 제시→판단→결론 구조)<br/><br/>
     <strong>🆕 2026 신규 알고리즘 팁</strong><br/>
     &nbsp;&nbsp;• 피드·스토리·릴스·탐색 각각 <b>별도 AI 시스템</b>으로 독립 운영 (2025~)<br/>
-    &nbsp;&nbsp;• 추천이 이상하다면: 설정 → 콘텐츠 선호도 → <b>추천 콘텐츠 초기화</b> 기능 활용 (2025년 12월 출시)<br/>
-    &nbsp;&nbsp;• DM 공유 = 가장 강력한 신호 (모세리 1월 공식 확인) — "DM으로 친구 공유" 유도 CTA 필수`;
+    &nbsp;&nbsp;• <b>DM 공유(Sends) = 릴스 배포 최강 신호</b> — 좋아요·댓글보다 위. "DM으로 친구 공유해요" CTA를 캡션·영상 끝에 필수 삽입<br/>
+    &nbsp;&nbsp;• <b>릴스 최적 길이 20~40초</b> (2026 기준) — 5~7초는 피로 구간, 90초↑는 배포 감소. 문제 제시→판단 기준→결론 구조로 압축<br/>
+    &nbsp;&nbsp;• <b>"Your Algorithm" 토픽 대시보드 신규</b> — 설정 → 콘텐츠 환경설정에서 내 피드 추천 토픽을 직접 추가·삭제 가능. 계정 주제와 맞게 설정하면 노출 정확도 상승`;
 
   // ── 릴스 떡상 지수 (2026 공식) ──
   // Score = (완독×3) + (재시청×5) + (공유×10) + (저장×7) - (초반 이탈×2)
@@ -2539,7 +2540,7 @@ function analyze() {
     <div style="display:grid;gap:10px;">
       ${[
         { days:'Day 1~5', title:'AI 학습 & 계정 테마 고정', color:'#68d391',
-          action:'프로필 SEO 최적화. 주제 일관성 유지하며 릴스 3개 업로드 (7~15초).',
+          action:'프로필 SEO 최적화. 주제 일관성 유지하며 릴스 3개 업로드 (20~40초, DM 공유 CTA 필수).',
           why:'알고리즘이 내 계정을 특정 카테고리로 분류해야 정확한 타겟에게 배달해요.' },
         { days:'Day 6~12', title:'유입량 확장 (숏폼 집중)', color:'#fcb045',
           action:'7초 내외 정보성 릴스 매일 업로드. 인기 사운드 활용. 캡션 첫 줄에 핵심 키워드.',
@@ -2561,7 +2562,9 @@ function analyze() {
       <b>🔑 꿀팁:</b><br/>
       • 업로드 직후 <b>15분간 다른 유저와 소통</b>하여 내 프로필 유입 유도<br/>
       • 캡션 첫 줄에 반드시 핵심 키워드 (SEO 검색 노출)<br/>
-      • H-V-L-C 구조 릴스: Hook(0~2초) → Value(2~10초) → Loop(끝을 처음과 연결) → CTA(캡션에서 정보 제공)
+      • H-V-L-C 구조 릴스: Hook(0~2초) → Value(2~10초) → Loop(끝을 처음과 연결) → CTA(캡션에서 정보 제공)<br/>
+      • <b>DM 공유 유도</b>가 릴스 배포 최강 신호 — 캡션 마지막에 "도움됐다면 친구한테 DM 공유해요 💌" 1줄 추가<br/>
+      • <b>Your Algorithm</b> 설정 → 콘텐츠 환경설정에서 내 계정 주제 토픽을 직접 지정하면 피드 노출 정확도가 올라가요
     </div>`;
 
   // ── 조합 기반 맞춤 피드백 ──
