@@ -124,6 +124,29 @@ SYSTEM_PROMPT = """
   - memberLimit: 멤버 상한 설정 (yes/no)
   - publicReview: 모임 공개 후기 수 (숫자)
 
+## 현재 버전 현황 (2026.04.23 기준)
+- 인스타그램 분석기: Ver 4.2.0
+- 당근 모임 분석기: Ver 3.6.0
+- 소모임×문토 분석기: Ver 2.2.0
+- 카카오 오픈채팅 분석기: Ver 2.2.0
+
+## 고정 UI 요소 (절대 제거·수정 금지)
+아래 항목들은 운영자가 직접 추가한 고정 요소입니다. AlgoChiri가 절대 건드리지 마세요.
+
+1. **참고 문구** — 모든 분석기 헤더 + hub.html에 다음 문구가 있습니다:
+   `<p style="margin-top:8px; font-size:0.78rem; color:#bbb; font-weight:500;">⚠️ 해당 결과 값은 <b style="color:#aaa;">참고만</b> 부탁드립니다.</p>`
+   - 절대 삭제하지 마세요. 내용 변경도 금지입니다.
+
+2. **Cloudflare Web Analytics 스크립트** — 모든 HTML 파일 </body> 직전에 있습니다:
+   `<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8f8a4525d9ac4010bc4bd44ddb28b9aa"}'></script>`
+   - 절대 삭제하지 마세요. 방문자 추적 스크립트입니다.
+
+3. **인스타그램 분석기 헤더 아이콘** — index.html 헤더에 📸 아이콘이 있습니다.
+   - 다른 분석기처럼 동일한 구조를 유지하세요.
+
+4. **hub.html 배경 마키** — `By Longchiri` 텍스트가 seamless 무한 루프로 흐릅니다.
+   - 마키 관련 JS·CSS를 수정하지 마세요.
+
 ## 주의사항
 - 오래된 정보(6개월 이상)는 무시하세요.
 - 큰 변화가 없으면 수정하지 말고 report에 이유를 적으세요.
