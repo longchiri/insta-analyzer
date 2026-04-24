@@ -33,8 +33,8 @@
       padding: 32px 0;
       will-change: transform;
     }
-    .bg-marquee-row.odd  { animation: marquee-left 18s linear infinite; }
-    .bg-marquee-row.even { animation: marquee-left 22s linear infinite; animation-delay: -9s; }
+    .bg-marquee-row.odd  { animation: marquee-left 40s linear infinite; }
+    .bg-marquee-row.even { animation: marquee-left 52s linear infinite; animation-delay: -20s; }
     @keyframes marquee-left {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -225,11 +225,14 @@
 (function(){
   const wrap = document.getElementById('bgMarquee');
   const unit = 'By Longchiri';
-  const repeated = (unit + '<span style="padding:0 120px"> </span>').repeat(4);
+  const sep   = '\u00A0\u00A0·\u00A0\u00A0';
+  // 충분히 많이 반복해서 한 span이 화면 너비를 훨씬 초과하도록
+  const repeated = (unit + sep).repeat(12);
   for(let i = 0; i < 6; i++){
     const row = document.createElement('div');
     row.className = 'bg-marquee-row ' + (i % 2 === 0 ? 'odd' : 'even');
-    const ml = i % 2 === 1 ? 'margin-left:-340px' : '';
+    const ml = i % 2 === 1 ? 'margin-left:-600px' : '';
+    // 동일한 span 2개 → -50% 이동 시 seamless loop
     row.innerHTML = `<span class="bg-marquee-text" style="${ml}">${repeated}</span>`
                   + `<span class="bg-marquee-text" style="${ml}">${repeated}</span>`;
     wrap.appendChild(row);
