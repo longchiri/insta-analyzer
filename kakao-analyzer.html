@@ -191,7 +191,7 @@
   <div class="logo">💬</div>
   <h1>카카오톡 오픈채팅 분석기</h1>
   <p>오픈채팅방 알고리즘 점수를 진단하고 검색 노출 전략을 받아보세요</p>
-  <p style="margin-top:8px; font-size:0.78rem; color:#bbb; font-weight:500;">⚠️ 해당 결과 값은 <b style="color:#aaa;">참고만</b> 부탁드립니다.</p>
+  <p style="margin-top:8px; font-size:0.78rem; color:#e53e3e; font-weight:600;">⚠️ 해당 결과 값은 <b>참고만</b> 부탁드립니다.</p>
 </header>
 
 <div class="back-wrap">
@@ -514,6 +514,18 @@
     <div id="statBars"></div>
   </div>
 
+  <!-- 노출 알고리즘 지표 -->
+  <div class="result-card">
+    <h2>🔍 노출 알고리즘 지표</h2>
+    <div id="kakaoExpList"></div>
+  </div>
+
+  <!-- 운영완성도 -->
+  <div class="result-card">
+    <h2>⚙️ 운영완성도</h2>
+    <div id="kakaoOpList"></div>
+  </div>
+
   <!-- 검색 노출 공식 -->
   <div class="result-card">
     <h2>⚙️ 종합 점수 공식 (알고리즘 구조)</h2>
@@ -562,17 +574,12 @@
     <div id="roadmapSection"></div>
   </div>
 
-  <!-- 실전 운영 가이드 -->
-  <div class="result-card">
-    <h2>📌 실전 운영 가이드 (Tip)</h2>
-    <div class="tip-box" id="tipBox"></div>
-  </div>
 
 </div>
 
 <footer>
   <p>by <b style="color:#c8a800;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.2.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.4.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1279,48 +1286,165 @@ function analyze() {
         </div>`).join('')}
     </div>`;
 
-  // ── 실전 팁 ──
-  // 동적 체크리스트 항목 생성
-  const dynChecks = [];
-  if (noticeFreq === 'daily' || noticeFreq === 'weekly23') dynChecks.push({ type:'ok',   text:'공지 자주 함 ✅ — 멤버 결속력과 활성도를 유지하고 있어요.' });
-  if (noticeFreq === 'never')                              dynChecks.push({ type:'warn',  text:'공지 없음 ⚠️ — 주 2~3회 가벼운 공지만으로도 활성도가 달라져요.' });
-  if (adminCount !== 'none')                               dynChecks.push({ type:'ok',   text:'관리자 있음 ✅ — 운영이 안정적으로 분담되고 있어요.' });
-  if (adminCount === 'none' && currentMem >= 30)           dynChecks.push({ type:'warn',  text:'관리자 없음 ⚠️ — 규모가 커지면 부방장이 필수예요.' });
-  if (eventFreq !== 'never')                              dynChecks.push({ type:'ok',   text:'이벤트 운영 중 ✅ — 참여 유도와 활성도 유지에 큰 도움이 돼요.' });
-  if (welcomeNotice === 'never')                           dynChecks.push({ type:'warn',  text:'환영 공지 없음 ⚠️ — 신규 멤버 이탈률을 높이는 주요 원인이에요.' });
-  if (highChurnKakao)                                      dynChecks.push({ type:'bad',   text:'이탈 많음 ❌ — 채팅방 주제·분위기 점검이 시급해요.' });
-  if (noSnsPromo)                                          dynChecks.push({ type:'warn',  text:'SNS 홍보 없음 ⚠️ — 외부 홍보 없이는 성장이 정체돼요.' });
-  if (noRule)                                              dynChecks.push({ type:'warn',  text:'규칙 없음 ⚠️ — 간단한 3가지 규칙만 공지해도 분위기가 잡혀요.' });
+  // ── 노출 알고리즘 지표 & 운영완성도 체크리스트 ──
+  const expChecks = []; // 노출 알고리즘
+  const opChecks  = []; // 운영완성도
 
-  const dynCheckHTML = dynChecks.length > 0 ? `
-    <strong>🔎 운영 현황 체크리스트</strong><br/>
-    ${dynChecks.map(c => {
-      const color = c.type === 'ok' ? '#166534' : c.type === 'bad' ? '#991b1b' : '#92400e';
-      return `<span style="color:${color};">&nbsp;&nbsp;• ${c.text}</span><br/>`;
-    }).join('')}<br/>` : '';
+  // 하트(검색 노출 임계값) → 노출
+  if (hearts >= 30) expChecks.push({ type:'ok', title:`하트 ${hearts}개 — 검색 노출 상위권`, desc: pick([
+    `하트 30개↑는 카카오 검색 랭킹 상위 10% 구간이에요. 지금 유지하면서 신규 멤버 입장 때마다 하트 요청 루틴을 만들면 계속 쌓여요.`,
+    `하트 ${hearts}개는 "인기 방" 분류 조건을 이미 충족했어요. 하트는 한번 받으면 취소가 거의 없어서 복리로 누적돼요 — 지금 이 숫자를 지키는 게 핵심이에요.`,
+  ]) });
+  else if (hearts >= 10) expChecks.push({ type:'warn', title:`하트 ${hearts}개 — 기초 노출은 되지만 경쟁 불리`, desc: pick([
+    `하트 10~29개 구간은 검색 노출은 되지만 상위 노출 경쟁에서 밀려요. 하트 30개가 넘으면 랭킹이 눈에 띄게 올라가요 — 멤버에게 "하트 눌러주세요" 공지 1회가 가장 빠른 방법이에요.`,
+    `현재 하트 수로는 검색 결과 2~3페이지에 노출돼요. 30개 돌파가 첫 번째 목표예요. 오늘 저녁 공지에 "하트 눌러주신 분 감사해요 🙏" 한 줄만 써도 클릭률이 올라가요.`,
+  ]) });
+  else expChecks.push({ type:'bad', title:`하트 ${hearts}개 — 검색 노출 임계값 미달`, desc: pick([
+    `하트 10개 미만은 카카오 검색 노출이 사실상 차단된 상태예요. 지금 당장 방 내 모든 멤버에게 하트 요청 공지를 올리는 게 1순위예요 — 10개만 넘으면 검색 결과에 뜨기 시작해요.`,
+    `하트 ${hearts}개는 카카오 알고리즘 "검색 노출 최소 조건" 미달이에요. 방 입장 시 고정 메시지에 "하트 눌러주시면 더 많은 분들이 찾아올 수 있어요!" 문구를 추가하는 게 가장 빠른 해결책이에요.`,
+  ]) });
 
-  document.getElementById('tipBox').innerHTML = dynCheckHTML + `
-    <strong>📌 초기 세팅 체크리스트</strong><br/>
-    &nbsp;&nbsp;1. 핵심 키워드를 포함한 제목 (10~40자) 설정<br/>
-    &nbsp;&nbsp;2. 하트 10개 이상 확보 → 검색 노출 시작<br/>
-    &nbsp;&nbsp;3. 공지사항·웰컴 메시지로 신규 인원 이탈 방지<br/><br/>
-    <strong>💬 이탈 방지 전략</strong><br/>
-    &nbsp;&nbsp;• 입장 즉시 자동 인사 + 간단한 자기소개 유도<br/>
-    &nbsp;&nbsp;• 규칙·활동 안내를 고정 메시지로 고정<br/>
-    &nbsp;&nbsp;• 첫 대화를 쉽게 시작할 수 있는 가벼운 질문 던지기<br/><br/>
-    <strong>⏰ 골든 타임 활용</strong><br/>
-    &nbsp;&nbsp;• 인원이 모이는 오후 7~10시에 퀴즈·토론 이벤트 열기<br/>
-    &nbsp;&nbsp;• 주말 오전 10~12시: 참여율이 가장 높은 시간대<br/>
-    &nbsp;&nbsp;• 대화가 집중될수록 "급상승" 노출 확률 상승<br/><br/>
-    <strong>⚡ 2025 지금탭 활용 전략</strong><br/>
-    &nbsp;&nbsp;• 지금탭 "커뮤니티 피드"에 노출되려면 방 내 대화 활성화가 핵심<br/>
-    &nbsp;&nbsp;• 숏폼 콘텐츠 공유 → 지금탭 숏폼 섹션과 교차 노출 효과<br/>
-    &nbsp;&nbsp;• "지금 뜨는" 탭 진입 = 하루 200메시지 이상 + 다양한 참여 인원<br/>
-    &nbsp;&nbsp;• 체류 시간 기준: 개편 후 일평균 26분 → 활성 방일수록 더 오래 표시<br/><br/>
-    <strong>🚫 절대 피해야 할 것</strong><br/>
-    &nbsp;&nbsp;• 도배성 링크·광고 허용 → 머신러닝 자동 감지 + 신고 누적으로 유령 방<br/>
-    &nbsp;&nbsp;• 매크로·봇 유입 → AI 감지 시 계정 제재 (2025 강화)<br/>
-    &nbsp;&nbsp;• 방장 잠수 → 신뢰도 점수 급락`;
+  // 메시지 밀도 → 노출
+  if (dailyMsg >= 50) expChecks.push({ type:'ok', title:`일 평균 ${dailyMsg}개 메시지 — 지금탭 노출 가능`, desc: pick([
+    `하루 50개↑ 메시지는 카카오 "지금 뜨는" 탭 진입 기준선이에요. 이 활성도를 유지하면 커뮤니티 피드 자연 노출 확률도 높아져요.`,
+    `메시지 밀도 ${dailyMsg}개/일은 상위 15% 활성 방 수준이에요. 이 흐름을 유지하면서 오후 7~9시 피크타임에 대화를 집중시키면 "급상승" 노출까지 노릴 수 있어요.`,
+  ]) });
+  else if (dailyMsg >= 20) expChecks.push({ type:'warn', title:`일 평균 ${dailyMsg}개 메시지 — 활성도 유지 중`, desc: pick([
+    `하루 20~49개는 알고리즘이 "보통 활성" 으로 분류하는 구간이에요. 50개를 넘기면 "지금 뜨는" 탭 진입 가능성이 생겨요. 저녁 퀴즈/투표 하나가 하루 메시지를 10~20개 늘려요.`,
+    `메시지 수는 양보다 참여 인원 다양성이 중요해요. 방장 혼자 20개 보내는 것보다 5명이 4개씩 보내는 게 알고리즘 점수에 훨씬 유리해요.`,
+  ]) });
+  else expChecks.push({ type:'bad', title:`일 평균 ${dailyMsg}개 메시지 — 비활성 위험`, desc: pick([
+    `하루 5개 미만은 카카오 알고리즘이 "비활성 방"으로 분류하는 기준이에요. 비활성 분류되면 검색 노출 우선순위가 떨어져요. 방장이 하루 1개라도 질문을 던지면 다른 멤버의 반응이 따라와요.`,
+    `메시지 ${dailyMsg}개/일은 방 생존 최저선이에요. 오늘 저녁 8시, "이번 주 가장 OO했던 것?" 단답형 질문 1개만 올려보세요. 대화가 시작되면 알고리즘이 반응해요.`,
+  ]) });
+
+  // 신규 유입 → 노출
+  if (newMem7d >= 10) expChecks.push({ type:'ok', title:`7일 신규 ${newMem7d}명 — 유입 경로 정상`, desc: pick([
+    `주 10명↑ 신규 유입은 검색 + 외부 채널이 제대로 돌아가고 있다는 신호예요. 이 흐름에서 가장 많이 들어오는 요일과 시간을 파악해서 그때 대화를 집중시키면 전환율이 더 올라가요.`,
+    `7일 신규 ${newMem7d}명은 검색 알고리즘이 방을 활성으로 판단하고 있다는 증거예요. 신규 멤버가 입장 후 24시간 내 대화에 참여하도록 환영 공지 → 첫 질문 유도 흐름을 만들면 잔류율이 높아져요.`,
+  ]) });
+  else if (newMem7d >= 3) expChecks.push({ type:'warn', title:`7일 신규 ${newMem7d}명 — 유입 개선 여지`, desc: pick([
+    `주 3~9명은 검색 노출은 되지만 클릭 전환율이 낮은 상태예요. 방 제목·소개글 첫 줄을 바꾸거나 하트를 더 확보하면 같은 노출에서 유입이 2배까지 늘어요.`,
+    `신규 유입 ${newMem7d}명/주는 성장 속도가 느린 편이에요. 네이버 카페나 인스타 스토리에 방 링크 1회 올리면 일주일 안에 유입이 3~5명 늘어나는 경우가 흔해요.`,
+  ]) });
+  else expChecks.push({ type:'bad', title:`7일 신규 ${newMem7d}명 — 유입 사실상 단절`, desc: pick([
+    `신규 유입이 주 2명 이하면 검색 랭킹에서 거의 노출되지 않고 있다는 신호예요. 하트 수·제목 키워드·소개글 길이 중 1개 이상 반드시 개선이 필요해요.`,
+    `유입 ${newMem7d}명/주는 경보 수준이에요. 지금 당장 할 수 있는 것: ①방 제목에 키워드 추가 ②하트 10개↑ 확보 ③네이버 카페 홍보 1회. 이 3가지면 다음 주 유입이 달라져요.`,
+  ]) });
+
+  // 이탈율 → 운영완성도
+  if (churnRate <= 10) opChecks.push({ type:'ok', title:`이탈율 ${churnRate}% — 커뮤니티 결속력 우수`, desc: pick([
+    `이탈율 10% 이하는 상위 20% 방이에요. 멤버들이 방에서 가치를 느끼고 있다는 명확한 신호예요. 지금 운영 방식을 유지하면서 신규 유입에 더 집중하세요.`,
+    `이탈율 ${churnRate}%는 카카오 알고리즘이 방 품질 점수를 높게 유지하는 수준이에요. 이 수치를 유지하는 비결이 뭔지 분석해서 루틴화하면 장기 성장이 가능해요.`,
+  ]) });
+  else if (churnRate <= 25) opChecks.push({ type:'warn', title:`이탈율 ${churnRate}% — 이탈 원인 파악 필요`, desc: pick([
+    `이탈율 10~25%는 "관찰 필요" 구간이에요. 입장 후 24시간 이내 이탈인지, 1개월 이상 멤버 이탈인지 구분하면 원인 파악이 달라져요. 환영 공지로 단기 이탈부터 잡으세요.`,
+    `${churnRate}% 이탈은 신규 멤버 경험이 기대에 못 미친다는 신호일 수 있어요. 방 입장 직후 첫 경험(공지 내용, 분위기, 첫 대화 참여 여부)을 점검해보세요.`,
+  ]) });
+  else opChecks.push({ type:'bad', title:`이탈율 ${churnRate}% — 멤버 경험 긴급 점검 필요`, desc: pick([
+    `이탈율 25%↑는 방 소개와 실제 운영 간 간극이 크다는 신호예요. 이탈 원인 TOP3를 특정해야 해요: ①주제 불일치 ②대화 빈도 문제 ③기대한 정보/커뮤니티가 없음.`,
+    `이탈율 ${churnRate}%는 방 소개글을 실제 분위기에 맞게 현실적으로 수정하면 기대 불일치로 인한 이탈이 줄어요.`,
+  ]) });
+
+  // 공지 빈도 → 운영완성도
+  if (noticeFreq === 'daily' || noticeFreq === 'weekly23') opChecks.push({ type:'ok', title:'공지 정기 운영 — 멤버 결속력 유지', desc: pick([
+    `정기 공지는 멤버에게 "이 방은 살아있다"는 신호를 줘요. 이탈율을 낮추는 단일 액션 중 효과가 가장 빠른 방법이에요. 공지 내용보다 빈도가 더 중요해요.`,
+    `주 2~3회 공지 방이 없는 방보다 멤버 잔류율이 평균 18% 높다는 운영자 데이터가 있어요. 지금 리듬을 유지하세요.`,
+  ]) });
+  else if (noticeFreq === 'weekly1') opChecks.push({ type:'warn', title:'주 1회 공지 — 빈도 늘리면 효과 2배', desc: pick([
+    `주 1회는 멤버가 방을 "잊지 않는 최저선"이에요. 주 2회로만 늘려도 대화 참여율이 20~30% 달라져요. 무거운 내용 말고 "이번 주 OO 어때요?" 한 줄도 충분해요.`,
+    `공지 빈도를 주 2회로 늘리면 멤버들이 방을 인식하는 빈도가 달라져요. 화요일·금요일 저녁 8시에 가벼운 공지 루틴을 만들어보세요.`,
+  ]) });
+  else opChecks.push({ type:'bad', title:'공지 없음 — 방장 부재 신호', desc: pick([
+    `공지 없는 방은 알고리즘이 "방장 부재 상태"로 판단해요. 주 2회 3줄 이내 공지만으로 멤버 잔류율이 평균 18% 올라가요. 오늘 첫 공지를 올려보세요.`,
+    `멤버들은 공지가 없으면 방향성을 잃어요. "이번 주 주제는 OO입니다" 한 줄 공지 → 멤버 인식 → 대화 유도의 연결고리가 만들어져요.`,
+  ]) });
+
+  // 환영 공지 → 운영완성도
+  if (welcomeNotice !== 'never') opChecks.push({ type:'ok', title:'환영 메시지 설정됨 — 신규 이탈 방어', desc: pick([
+    `환영 공지가 있는 방은 신규 멤버 24시간 이탈율이 없는 방 대비 절반 수준이에요. 환영 메시지에 "자기소개 해주세요!" 유도 문구가 있으면 효과가 3배예요.`,
+    `입장 직후 환영 받은 멤버는 첫 대화 참여율이 2배 높아요. 지금 환영 메시지 내용에 방 링크와 첫 질문이 포함되어 있으면 완벽해요.`,
+  ]) });
+  else opChecks.push({ type:'bad', title:'환영 공지 없음 — 신규 멤버 24시간 이탈 위험', desc: pick([
+    `신규 멤버의 70%는 입장 후 24시간 내에 방을 판단해요. 환영 공지 없으면 "아무것도 없네"로 이탈해요. 고정 메시지에 방 소개 + 첫 질문을 30초 안에 보여줘야 해요.`,
+    `환영 없는 채팅방은 신규 이탈률이 2~3배 높아요. "반갑습니다! 간단히 자기소개 해주세요 😊" 한 줄짜리 첫 공지만으로도 체류율이 달라져요.`,
+  ]) });
+
+  // 관리자 → 운영완성도
+  if (adminCount !== 'none' && currentMem >= 30) opChecks.push({ type:'ok', title:'관리자 운영 — 방 안정성 확보', desc: pick([
+    `관리자가 있는 방은 스팸·분쟁 발생 시 대응 속도가 3배 빨라요. 방장이 잠수해도 방이 유지되는 핵심 구조예요.`,
+    `부방장이 있으면 방장 번아웃 없이 장기 운영이 가능해요. 활동 분담(공지 담당·이벤트 담당)으로 각자 역할을 명확히 하면 운영 퀄리티가 올라가요.`,
+  ]) });
+  else if (adminCount === 'none' && currentMem >= 30) opChecks.push({ type:'warn', title:`관리자 없음 + ${currentMem}명 — 단일 실패점 위험`, desc: pick([
+    `${currentMem}명 규모를 방장 1인이 관리하는 건 단일 실패점(SPOF)이에요. 부방장 1명만 세워도 스팸 대응 속도가 3배 빨라지고 방장 잠수 시 방 붕괴를 막아요.`,
+    `활발한 멤버 중 1명을 부방장으로 임명하면 운영 안정성과 멤버 충성도가 동시에 올라가요. "운영 도와주실 분?" 공지 한 번으로 자원자가 나오는 경우가 많아요.`,
+  ]) });
+
+  // 방 규칙 → 운영완성도
+  if (!noRule) opChecks.push({ type:'ok', title:'방 규칙 있음 — 커뮤니티 분위기 관리', desc: pick([
+    `규칙이 명확한 방은 스팸·분쟁 빈도가 낮고 고품질 멤버가 남아요. 규칙을 고정 메시지로 항상 보이게 해두는 것만으로도 자정 효과가 생겨요.`,
+    `방 규칙은 멤버에게 "이 방은 관리되고 있다"는 신뢰 신호예요. 3가지 이하로 간결하게 유지하면 새 멤버도 쉽게 읽고 따라요.`,
+  ]) });
+  else opChecks.push({ type:'warn', title:'방 규칙 없음 — 분위기 통제 불가', desc: pick([
+    `규칙 없는 방은 스팸·광고·갈등 발생 시 대응 근거가 없어요. 단 3가지 규칙(①광고 금지 ②주제 관련 대화만 ③욕설 금지)만 공지해도 분위기가 완전히 달라져요.`,
+    `방 규칙은 멤버 자정 효과를 만들어요. "규칙 위반 시 강퇴" 한 줄이 있는 방과 없는 방은 품질 차이가 6개월 후에 극명하게 갈려요.`,
+  ]) });
+
+  // 이벤트 → 운영완성도
+  if (eventFreq !== 'never') opChecks.push({ type:'ok', title:'이벤트·챌린지 운영 중 — 리텐션 강점', desc: pick([
+    `이벤트를 정기 운영하는 방은 미운영 방보다 멤버 잔류율이 평균 35% 높아요. 이벤트 후 24시간이 신규 멤버가 대화에 참여하기 가장 좋은 타이밍이에요.`,
+    `이벤트는 "방에 올 이유"를 만들어줘요. 단순 OX 퀴즈 하나도 하루 메시지 수를 3~5배 올려요 — 복잡한 이벤트보다 참여 허들이 낮은 게 훨씬 효과적이에요.`,
+  ]) });
+
+  // AI 감지 / 페널티 → 노출
+  if (aiDetect === 'multiple') expChecks.push({ type:'bad', title:'AI 유해 콘텐츠 감지 2회↑ — 검색 노출 패널티', desc: pick([
+    `AI 감지 2회 이상은 카카오 알고리즘이 방에 품질 패널티를 부과하는 기준이에요. 감지된 콘텐츠 유형을 방 규칙에 명시하고 멤버에게 공지해야 재발을 막을 수 있어요.`,
+    `반복 감지는 검색 노출 차단으로 이어질 수 있어요. 방 내 링크·이미지 공유 규칙을 강화하고 관리자를 통해 실시간 모니터링 체계를 만들어야 해요.`,
+  ]) });
+  else if (aiDetect === 'once') expChecks.push({ type:'warn', title:'AI 감지 1회 — 재발 방지 조치 필요', desc: pick([
+    `1회 감지는 경고 신호예요. 어떤 콘텐츠가 걸렸는지 파악하고 방 규칙에 해당 유형을 금지 항목으로 추가하세요. 2회부터 검색 노출에 영향이 생겨요.`,
+    `AI 감지 경험이 있다면 방 내 외부 링크 공유에 대한 규칙을 만들어야 해요. "관련 링크는 방장에게 DM 후 공유" 규칙 하나로 재감지 위험이 크게 줄어요.`,
+  ]) });
+
+  // 커뮤니티 피드 노출 → 노출
+  if (communityFeed === 'yes') expChecks.push({ type:'ok', title:'커뮤니티 피드 노출 중 — 지금탭 핵심 신호', desc: pick([
+    `커뮤니티 피드 노출은 현재 카카오 오픈채팅 노출의 가장 강력한 신호예요. 이 노출이 유지되려면 방 내 대화 다양성(다수 멤버 참여)이 핵심이에요.`,
+    `커뮤니티 피드에 뜨는 방은 그렇지 않은 방보다 일 신규 유입이 평균 3~5명 더 많아요. 이 노출을 유지하기 위해 피크타임(저녁 7~10시)에 대화를 집중시키세요.`,
+  ]) });
+  else expChecks.push({ type:'warn', title:'커뮤니티 피드 미노출 — 활성도 집중 필요', desc: pick([
+    `커뮤니티 피드 노출은 하루 대화 밀도 + 참여 인원 다양성이 결정해요. 방장 혼자 보내는 메시지보다 5명이 10개씩 주고받는 대화가 훨씬 효과적이에요.`,
+    `지금탭 커뮤니티 피드에 노출되려면 오후 7~10시에 대화가 집중되어야 해요. 저녁 퀴즈나 투표 하나가 이 시간대 메시지를 10~20개 끌어내는 가장 쉬운 방법이에요.`,
+  ]) });
+
+  // 인원 포화 → 노출
+  const memRatio = maxMem > 0 ? currentMem / maxMem : 0;
+  if (memRatio >= 0.95 && maxMem > 0) expChecks.push({ type:'warn', title:`인원 포화 ${Math.round(memRatio*100)}% — 신규 유입 차단 위험`, desc: pick([
+    `최대 인원의 95%↑를 채우면 신규 멤버가 입장할 자리가 없어 검색 전환율이 0으로 수렴해요. 최대 인원 상한을 10~20% 높이거나 비활성 멤버를 정리하세요.`,
+    `방이 거의 꽉 찼으면 검색에서 클릭해도 입장 못 하는 사람이 생겨요. 인원 상한을 높이거나 "대기 리스트" 운영 공지를 올리면 이탈 없이 관리할 수 있어요.`,
+  ]) });
+
+  // SNS 홍보 → 노출
+  if (!noSnsPromo) expChecks.push({ type:'ok', title:'SNS 외부 홍보 활발 — 유입 채널 다변화', desc: pick([
+    `외부 홍보가 있는 방은 검색 의존도가 낮아서 알고리즘 변화에 덜 흔들려요. 외부 유입은 카카오 검색 랭킹에도 가산점으로 작용해요.`,
+    `SNS 홍보 유입 멤버는 이미 방 정보를 알고 들어온 상태라 이탈율이 일반 검색 유입보다 40% 낮아요. 홍보 채널을 늘릴수록 품질 멤버 비율이 올라가요.`,
+  ]) });
+  else if (newMem7d < 5) expChecks.push({ type:'bad', title:'SNS 홍보 없음 + 신규 유입 저조 — 유입 경로 단절', desc: pick([
+    `검색 의존도 100% 상태에서 신규 유입까지 적으면 방 성장이 멈춰요. 네이버 카페 글 1개 + 인스타 스토리 1개로 이번 주 유입을 3~10명 늘릴 수 있어요.`,
+    `외부 홍보 없이는 카카오 알고리즘이 바뀔 때마다 유입이 출렁여요. 네이버 카페·당근 동네생활·인스타 중 하나만 선택해서 주 1회 루틴을 만들어보세요.`,
+  ]) });
+
+  // 렌더링
+  const renderChecks = (arr) => arr.map(c => {
+    const bg     = c.type === 'ok' ? '#f0fdf4' : c.type === 'bad' ? '#fef2f2' : '#fffbeb';
+    const border = c.type === 'ok' ? '#16a34a' : c.type === 'bad' ? '#ef4444' : '#f59e0b';
+    const icon   = c.type === 'ok' ? '✅' : c.type === 'bad' ? '❌' : '⚠️';
+    return `<div style="border-radius:10px;border-left:4px solid ${border};background:${bg};padding:12px 14px;margin-bottom:10px;">
+      <div style="font-weight:700;font-size:0.88rem;color:#333;margin-bottom:4px;">${icon} ${c.title}</div>
+      <div style="font-size:0.82rem;color:#555;line-height:1.6;">${c.desc}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('kakaoExpList').innerHTML = renderChecks(expChecks);
+  document.getElementById('kakaoOpList').innerHTML  = renderChecks(opChecks);
 
   document.getElementById('result').style.display = 'block';
   document.getElementById('pdf-bar').style.display = 'flex';

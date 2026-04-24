@@ -242,7 +242,7 @@
   <div class="logo">🥕</div>
   <h1>당근 모임 분석기</h1>
   <p>당근 알고리즘 기반으로 모임 노출 점수를 진단하고 성장 전략을 받아보세요</p>
-  <p style="margin-top:8px; font-size:0.78rem; color:#bbb; font-weight:500;">⚠️ 해당 결과 값은 <b style="color:#aaa;">참고만</b> 부탁드립니다.</p>
+  <p style="margin-top:8px; font-size:0.78rem; color:#e53e3e; font-weight:600;">⚠️ 해당 결과 값은 <b>참고만</b> 부탁드립니다.</p>
 </header>
 
 <div class="back-wrap">
@@ -812,10 +812,16 @@
     <span class="section-divider-label">🔧 운영 팁</span>
   </div>
 
-  <!-- 체크리스트 -->
+  <!-- 노출 알고리즘 지표 -->
   <div class="result-card">
-    <h2>✅ 강점 & 개선 포인트</h2>
-    <div id="checkList"></div>
+    <h2>🔍 노출 알고리즘 지표</h2>
+    <div id="expList"></div>
+  </div>
+
+  <!-- 운영완성도 -->
+  <div class="result-card">
+    <h2>⚙️ 운영완성도</h2>
+    <div id="opList"></div>
   </div>
 
   <!-- 개선 로드맵 -->
@@ -1289,114 +1295,119 @@ function analyze() {
   document.getElementById('diagText').innerHTML = diagLines.join('<br/><br/>');
 
   // ── 체크리스트 ──
-  const checks = [];
+  const expChecks = []; // 노출 알고리즘
+  const opChecks  = []; // 운영완성도
 
-  // SEO
+  // SEO → 노출
   if (titleLen >= 10 && hasKeyword)
-    checks.push({ type:'ok', title:'제목 SEO 최적화', desc: pick([
+    expChecks.push({ type:'ok', title:'제목 SEO 최적화', desc: pick([
       `제목에 키워드가 포함되어 있어요. 검색 노출에 매우 유리해요.`,
       `활동 키워드가 제목에 잘 들어가 있어요. 알고리즘이 모임을 잘 분류할 수 있어요.`,
     ])});
   else if (!hasKeyword)
-    checks.push({ type:'bad', title:'제목에 키워드 없음', desc: pick([
+    expChecks.push({ type:'bad', title:'제목에 키워드 없음', desc: pick([
       `"강남 독서 모임", "주말 러닝 크루"처럼 활동 키워드를 제목에 꼭 넣으세요.`,
       `제목에 활동명이 없으면 검색 노출이 거의 안 돼요. 키워드를 추가해보세요.`,
     ])});
 
   if (intro.length >= 100)
-    checks.push({ type:'ok', title:'소개글 충실', desc: pick([
+    expChecks.push({ type:'ok', title:'소개글 충실', desc: pick([
       '소개글이 100자 이상이에요. 알고리즘이 모임 주제를 잘 파악해요.',
       '소개글 길이가 좋아요. 일정·장소·분위기가 잘 담겨 있으면 더 효과적이에요.',
     ])});
   else
-    checks.push({ type:'warn', title:'소개글 보강 필요', desc: pick([
+    expChecks.push({ type:'warn', title:'소개글 보강 필요', desc: pick([
       '소개글을 100자 이상으로 늘리고 일정·장소·대상을 명확히 적으세요.',
       `현재 소개글이 ${intro.length}자예요. 100자 이상으로 늘리면 알고리즘 파악력이 올라가요.`,
     ])});
 
-  // 활성도
+  // 활성도 → 노출
   if (meetingFreq >= 4)
-    checks.push({ type:'ok', title:'높은 모임 빈도', desc: pick([
+    expChecks.push({ type:'ok', title:'높은 모임 빈도', desc: pick([
       `월 ${meetingFreq}회 모임 — 활성 모임으로 평가받아 상위 노출돼요.`,
       `모임 빈도가 높아요. 꾸준한 일정이 알고리즘 활성 점수를 유지해줘요.`,
     ])});
   else if (meetingFreq === 0)
-    checks.push({ type:'bad', title:'모임 일정 없음', desc: pick([
+    expChecks.push({ type:'bad', title:'모임 일정 없음', desc: pick([
       '당근은 최근 14일 내 일정이 있는 모임을 우선 노출해요. 지금 바로 일정을 등록하세요.',
       '일정이 없으면 알고리즘이 휴면 모임으로 분류해요. 가벼운 일정 하나만 올려보세요.',
     ])});
 
+  // 출석률 → 운영완성도
   if (attendRate >= 70)
-    checks.push({ type:'ok', title:'높은 출석률', desc: pick([
+    opChecks.push({ type:'ok', title:'높은 출석률', desc: pick([
       `출석률 ${attendRate}% — 멤버 만족도가 높은 건강한 모임이에요.`,
-      `출석률이 ${attendRate}%로 높아요. 알고리즘이 활성 모임으로 평가해요.`,
+      `출석률이 ${attendRate}%로 높아요. 멤버들이 모임을 신뢰하고 있다는 증거예요.`,
     ])});
   else if (attendRate < 40)
-    checks.push({ type:'warn', title:'출석률 개선 필요', desc: pick([
-      '출석률이 낮으면 알고리즘이 비활성 모임으로 판단해요. 소규모로 확실히 참여하는 일정을 만들어 보세요.',
+    opChecks.push({ type:'warn', title:'출석률 개선 필요', desc: pick([
+      '출석률이 낮으면 모임 활력이 떨어져요. 소규모로 확실히 참여하는 일정을 만들어 보세요.',
       `출석률 ${attendRate}%는 낮은 편이에요. 리마인더 공지와 소규모 일정으로 참여율을 높여보세요.`,
     ])});
 
-  // 신뢰도
+  // 매너온도 → 운영완성도
   if (mannerTemp >= 50)
-    checks.push({ type:'ok', title:`매너온도 ${mannerTemp.toFixed(1)}°C`, desc: pick([
+    opChecks.push({ type:'ok', title:`매너온도 ${mannerTemp.toFixed(1)}°C`, desc: pick([
       '매너온도가 높아 신뢰 배지가 활성화될 수 있어요.',
       `${mannerTemp.toFixed(1)}°C는 상위 수준이에요. 모임 신뢰도에 긍정적으로 작용해요.`,
     ])});
   else if (mannerTemp < 36.5)
-    checks.push({ type:'bad', title:'매너온도 낮음', desc: pick([
+    opChecks.push({ type:'bad', title:'매너온도 낮음', desc: pick([
       '거래 후기를 늘리고 좋은 활동을 쌓아 매너온도를 36.5°C 이상으로 유지하세요.',
       '매너온도가 기본값 이하예요. 당근 거래·모임 후기로 꾸준히 올려보세요.',
     ])});
 
-  // 노출
+  // 태그 → 노출
   if (tagSet === 'many')
-    checks.push({ type:'ok', title:'태그 최적화 완료', desc: pick([
+    expChecks.push({ type:'ok', title:'태그 최적화 완료', desc: pick([
       '태그가 3개 이상 설정되어 있어요. 검색 노출이 잘 되고 있을 거예요.',
       '키워드 태그가 충분해요. 분기마다 인기 태그로 업데이트해보세요.',
     ])});
   else if (tagSet === 'none')
-    checks.push({ type:'bad', title:'태그 없음', desc: pick([
+    expChecks.push({ type:'bad', title:'태그 없음', desc: pick([
       '태그가 없으면 검색에서 거의 안 보여요. 지금 바로 활동 키워드 태그 3개를 추가하세요.',
       '태그가 없으면 알고리즘이 모임 주제를 파악 못 해요. 당장 태그부터 추가해보세요.',
     ])});
 
+  // 사진 → 노출 (CTR)
   if (photoQuality === 'real')
-    checks.push({ type:'ok', title:'실제 활동 사진 있음', desc: pick([
+    expChecks.push({ type:'ok', title:'실제 활동 사진 있음', desc: pick([
       '실제 활동 사진은 클릭율을 크게 높여요. 계속 업데이트하세요.',
       '좋은 활동 사진이 있어요. 3개월마다 최신 사진으로 교체하면 더 효과적이에요.',
     ])});
   else if (photoQuality === 'none')
-    checks.push({ type:'bad', title:'대표 사진 없음', desc: pick([
+    expChecks.push({ type:'bad', title:'대표 사진 없음', desc: pick([
       '사진이 없으면 클릭율이 50% 이상 떨어져요. 바로 활동 사진을 추가하세요.',
       '기본 이미지 상태예요. 스마트폰으로 찍은 사진이라도 추가하면 클릭율이 크게 올라가요.',
     ])});
 
+  // 동네생활 → 노출
   if (neighborPost === 'regular')
-    checks.push({ type:'ok', title:'동네생활 정기 연동', desc: pick([
+    expChecks.push({ type:'ok', title:'동네생활 정기 연동', desc: pick([
       '동네생활 게시글로 추가 유입이 발생하고 있어요.',
       '주기적 동네생활 활용으로 무료 추가 노출 채널을 잘 쓰고 있어요.',
     ])});
   else if (neighborPost === 'never')
-    checks.push({ type:'warn', title:'동네생활 연동 없음', desc: pick([
+    expChecks.push({ type:'warn', title:'동네생활 연동 없음', desc: pick([
       '동네생활에 주 1회 모임 후기·홍보글을 올리면 무료 추가 노출 효과가 있어요.',
       '동네생활 연동을 안 하고 있어요. 후기 사진 1장만 올려도 추가 유입이 생겨요.',
     ])});
 
-  // 전환
+  // 외부 채널 → 운영완성도 (멤버 유지 도구)
   if (externalLink === 'yes')
-    checks.push({ type:'ok', title:'외부 채널 연동', desc: pick([
+    opChecks.push({ type:'ok', title:'외부 채널 연동', desc: pick([
       '오픈채팅/카페 연동으로 멤버 이탈률이 낮아져요.',
       '외부 채널이 연동되어 있어요. 멤버 유지율 향상에 도움이 돼요.',
     ])});
   else
-    checks.push({ type:'warn', title:'외부 채널 미연동', desc: pick([
+    opChecks.push({ type:'warn', title:'외부 채널 미연동', desc: pick([
       '카카오 오픈채팅이나 네이버 카페를 연동하면 멤버 유지율이 높아져요.',
       '외부 채널 링크를 소개글에 넣으면 관심자가 이탈하지 않고 바로 참여할 수 있어요.',
     ])});
 
+  // 공개/비공개 → 노출
   if (visibility === 'private')
-    checks.push({ type:'bad', title:'비공개 모임', desc: pick([
+    expChecks.push({ type:'bad', title:'비공개 모임', desc: pick([
       '비공개 설정은 검색 노출이 안 돼요. 노출을 원한다면 공개로 변경하세요.',
       '비공개 상태라 검색에서 보이지 않아요. 공개로 바꾸는 게 가장 빠른 노출 개선이에요.',
     ])});
@@ -1448,163 +1459,176 @@ function analyze() {
 
 
   // 추가 체크 항목
+  // 전환율 → 노출
   if (highCvr)
-    checks.push({ type:'ok', title:`전환율 ${Math.round(cvrRate)}% 우수`, desc: pick([
+    expChecks.push({ type:'ok', title:`전환율 ${Math.round(cvrRate)}% 우수`, desc: pick([
       `조회 대비 신청 전환율이 ${Math.round(cvrRate)}%예요. 소개글과 사진이 잘 작동하고 있어요. 동네생활 홍보로 조회수를 더 키워보세요.`,
       `전환율이 높아요. 지금 모임 페이지가 잘 최적화된 상태예요. 이 상태를 유지하면서 동네생활 홍보로 조회수를 늘려보세요.`,
     ])});
 
+  // 성장률 → 노출
   if (growRate >= 20)
-    checks.push({ type:'ok', title:'멤버 급성장 중', desc: pick([
+    expChecks.push({ type:'ok', title:'멤버 급성장 중', desc: pick([
       `최근 30일 멤버 성장률이 ${Math.round(growRate)}%예요. 알고리즘이 성장하는 모임을 우선 노출해요. 지금 추세를 유지하세요.`,
       `성장률 ${Math.round(growRate)}% — 신규 유입이 활발해요. 이 모멘텀을 유지하려면 태그 최적화와 동네생활 활동을 이어가세요.`,
     ])});
 
+  // 댓글 활발 → 운영완성도
   if (commentAvg >= 5)
-    checks.push({ type:'ok', title:'댓글 활발한 게시판', desc: pick([
-      `게시글 평균 댓글 ${commentAvg}개 — 커뮤니티 활성도가 높아요. 이런 소통이 알고리즘 점수를 올려줘요.`,
-      `댓글이 활발해요. 멤버들이 적극 참여하는 모임이에요. 참여형 게시글을 꾸준히 올리면 더 좋아요.`,
+    opChecks.push({ type:'ok', title:'댓글 활발한 게시판', desc: pick([
+      `게시글 평균 댓글 ${commentAvg}개 — 커뮤니티 활성도가 높아요. 참여형 게시글을 꾸준히 올리면 더 좋아요.`,
+      `댓글이 활발해요. 멤버들이 적극 참여하는 모임이에요.`,
     ])});
 
+  // 응답 속도 → 운영완성도
   if (fastResp)
-    checks.push({ type:'ok', title:'빠른 응답 속도', desc: pick([
+    opChecks.push({ type:'ok', title:'빠른 응답 속도', desc: pick([
       '1시간 이내 응답은 가입 전환율을 크게 높여요. 이 속도를 계속 유지하세요.',
       '빠른 답장이 신뢰감을 줘요. 관심자가 망설이지 않고 바로 가입하게 돼요.',
     ])});
   else if (slowResp)
-    checks.push({ type:'warn', title:'응답 속도 느림', desc: pick([
+    opChecks.push({ type:'warn', title:'응답 속도 느림', desc: pick([
       '응답이 느리면 관심자가 기다리다 이탈해요. 당근 알림 설정을 켜고 당일 내 답장 루틴을 만들어보세요.',
       '가입 신청 후 2일 이상 응답이 없으면 다른 모임으로 가요. 빠른 응답이 곧 멤버예요.',
     ])});
 
+  // 공개 후기 → 운영완성도
   if (publicReview >= 5)
-    checks.push({ type:'ok', title:`공개 후기 ${publicReview}개`, desc: pick([
+    opChecks.push({ type:'ok', title:`공개 후기 ${publicReview}개`, desc: pick([
       `후기 ${publicReview}개 — 신규 멤버가 모임을 신뢰하기 좋은 환경이에요.`,
-      '공개 후기가 충분해요. 후기가 많은 모임이 검색에서 더 신뢰를 받아요.',
+      '공개 후기가 충분해요. 후기가 많은 모임이 신뢰를 더 받아요.',
     ])});
   else if (publicReview === 0 && memberCount >= 5)
-    checks.push({ type:'warn', title:'공개 후기 없음', desc: pick([
+    opChecks.push({ type:'warn', title:'공개 후기 없음', desc: pick([
       '모임 후기가 없어요. 기존 멤버에게 "후기 남겨주세요" 한 마디만 해도 금방 쌓여요.',
       '후기 0개는 신규 멤버에게 아무도 안 다녀간 모임 인상을 줄 수 있어요. 지금 바로 요청해보세요.',
     ])});
 
+  // 멤버 상한 → 운영완성도
   if (memberLimit === 'yes')
-    checks.push({ type:'ok', title:'멤버 상한 설정됨', desc: pick([
+    opChecks.push({ type:'ok', title:'멤버 상한 설정됨', desc: pick([
       '정원 제한이 있어요. 자리가 얼마 안 남았어요 효과로 신청 전환율이 올라가요.',
       '상한 설정은 희소성을 만들어요. 빨리 신청하게 만드는 심리적 동기가 생겨요.',
     ])});
 
+  // 활동 지역 → 노출
   if (wideArea)
-    checks.push({ type:'warn', title:'활동 지역 너무 넓음', desc: pick([
+    expChecks.push({ type:'warn', title:'활동 지역 너무 넓음', desc: pick([
       '광역 설정은 경쟁 모임이 많아 노출 순위가 낮아요. 핵심 동네 1~2곳으로 좁히면 상위 노출이 가능해요.',
       '지역을 좁힐수록 그 동네에서 1등 가능성이 올라가요. 실제 모임 장소 근처로 좁혀보세요.',
     ])});
 
+  // 게시글 대비 댓글 → 운영완성도
   if (silentBoard)
-    checks.push({ type:'warn', title:'게시글 대비 댓글 부족', desc: pick([
+    opChecks.push({ type:'warn', title:'게시글 대비 댓글 부족', desc: pick([
       `게시글 ${postCount}개인데 댓글이 평균 ${commentAvg}개예요. 참여 유도형 게시글로 소통을 늘려보세요.`,
       '글은 많은데 반응이 없어요. 질문형·투표형 게시글로 멤버 참여를 유도해보세요.',
     ])});
 
+  // 프로필 인증 → 운영완성도
   if (noBadge && newHost)
-    checks.push({ type:'warn', title:'프로필 인증 없음', desc: pick([
+    opChecks.push({ type:'warn', title:'프로필 인증 없음', desc: pick([
       '인증 배지가 없어요. 직업·학교 인증을 추가하면 신뢰도가 빠르게 올라가요.',
       '신규 호스트는 인증 배지가 특히 중요해요. 당근 프로필에서 인증을 추가해보세요.',
     ])});
 
-  // 새 체크 항목 — 일정/운영
+  // D-day / 일정 → 노출
   if (ddayOk)
-    checks.push({ type:'ok', title:`D-${dday} 일정 임박`, desc: pick([
+    expChecks.push({ type:'ok', title:`D-${dday} 일정 임박`, desc: pick([
       `다음 모임이 ${dday}일 후예요. 14일 이내 일정이 있어 알고리즘 노출 보너스를 받고 있어요.`,
       `${dday}일 안에 모임이 있어요. 일정 임박 모임이 검색 상단에 노출돼요.`,
     ])});
   else if (noScheduleAt)
-    checks.push({ type:'bad', title:'모임 일정 없음', desc: pick([
+    expChecks.push({ type:'bad', title:'모임 일정 없음', desc: pick([
       '다음 일정이 없어요. 14일 이내 일정이 없으면 검색 노출이 크게 떨어져요.',
       '지금 바로 일정을 등록하세요. 일정 유무가 노출 순위에 가장 큰 영향을 줘요.',
     ])});
 
+  // 정기/비정기 → 노출
   if (scheduleType === 'weekly' || scheduleType === 'biweekly')
-    checks.push({ type:'ok', title:'정기 모임 운영 중', desc: pick([
+    expChecks.push({ type:'ok', title:'정기 모임 운영 중', desc: pick([
       '정기 일정을 운영 중이에요. 알고리즘이 활성 모임으로 인식해 꾸준한 노출을 받아요.',
       '정기 모임은 멤버 신뢰도와 알고리즘 점수 모두에 유리해요.',
     ])});
   else if (irregular)
-    checks.push({ type:'warn', title:'비정기 모임', desc: pick([
+    expChecks.push({ type:'warn', title:'비정기 모임', desc: pick([
       '비정기 운영 중이에요. 정기 일정으로 바꾸면 노출이 안정화돼요.',
       '"매월 첫째 주 토요일"처럼 정기화하면 알고리즘 활성 점수가 올라가요.',
     ])});
 
+  // 가입 방식 → 노출 (전환율 영향)
   if (joinType === 'free')
-    checks.push({ type:'ok', title:'자유 가입 설정', desc: pick([
+    expChecks.push({ type:'ok', title:'자유 가입 설정', desc: pick([
       '자유 가입 설정이에요. 가입 장벽이 낮아 전환율이 높아져요.',
       '즉시 가입 가능한 모임이에요. 신청 전환율에 가장 유리한 설정이에요.',
     ])});
   else if (needApproval)
-    checks.push({ type:'warn', title:'수락 필요 가입', desc: pick([
+    expChecks.push({ type:'warn', title:'수락 필요 가입', desc: pick([
       '수락 방식은 가입 장벽이 높아요. 자유 가입으로 바꾸면 전환율이 올라가요.',
       '관심자가 바로 가입 못 하면 이탈해요. 자유 가입 전환을 고려해보세요.',
     ])});
 
+  // 단골/이탈률 → 운영완성도
   if (regularRate >= 50)
-    checks.push({ type:'ok', title:`단골 멤버 ${regularRate}%`, desc: pick([
+    opChecks.push({ type:'ok', title:`단골 멤버 ${regularRate}%`, desc: pick([
       `단골 비율이 ${regularRate}%예요. 충성 멤버가 많은 건강한 모임이에요.`,
       `재참여율이 높아요. 모임 만족도가 높다는 신호예요.`,
     ])});
 
   if (highChurn)
-    checks.push({ type:'bad', title:`이탈률 높음 (${Math.round(churnRate)}%)`, desc: pick([
-      `최근 이탈률이 ${Math.round(churnRate)}%예요. 알고리즘 패널티가 생길 수 있어요. 이탈 원인을 파악하세요.`,
-      '멤버 이탈이 많아요. 모임 빈도·분위기·기대 불일치를 점검해보세요.',
+    opChecks.push({ type:'bad', title:`이탈률 높음 (${Math.round(churnRate)}%)`, desc: pick([
+      `최근 이탈률이 ${Math.round(churnRate)}%예요. 이탈 원인을 파악하세요. 모임 빈도·분위기·기대 불일치를 점검해보세요.`,
+      '멤버 이탈이 많아요. 소개글이 실제 모임 분위기와 다르진 않은지 확인해보세요.',
     ])});
 
-  // 추가 노출 채널
+  // SNS 홍보 → 노출
   if (snsPromo === 'both')
-    checks.push({ type:'ok', title:'SNS 외부 홍보 활발', desc: pick([
+    expChecks.push({ type:'ok', title:'SNS 외부 홍보 활발', desc: pick([
       '인스타+블로그로 외부 홍보 중이에요. 당근 외 채널에서도 유입이 생겨요.',
       '다채널 홍보가 잘 되고 있어요. 꾸준히 유지하세요.',
     ])});
   else if (noSns && memberCount >= 5)
-    checks.push({ type:'warn', title:'외부 SNS 홍보 없음', desc: pick([
+    expChecks.push({ type:'warn', title:'외부 SNS 홍보 없음', desc: pick([
       '인스타·블로그 홍보가 없어요. 외부 채널로 당근 모임 링크를 공유하면 추가 유입이 생겨요.',
       'SNS 홍보 없이는 당근 내 노출에만 의존해야 해요. 인스타 1개 포스팅만 해도 달라져요.',
     ])});
 
+  // 모임 사진 → 노출 (CTR)
   if (photoCount >= 5)
-    checks.push({ type:'ok', title:`모임 사진 ${photoCount}장`, desc: pick([
+    expChecks.push({ type:'ok', title:`모임 사진 ${photoCount}장`, desc: pick([
       `사진이 ${photoCount}장이에요. 풍부한 사진이 모임 신뢰도와 클릭율을 높여줘요.`,
       '사진이 충분해요. 정기적으로 최신 활동 사진으로 업데이트해주세요.',
     ])});
   else if (fewPhotos && memberCount >= 3)
-    checks.push({ type:'warn', title:`사진 부족 (${photoCount}장)`, desc: pick([
+    expChecks.push({ type:'warn', title:`사진 부족 (${photoCount}장)`, desc: pick([
       `사진이 ${photoCount}장뿐이에요. 최소 5장 이상 올리면 모임 분위기가 훨씬 잘 전달돼요.`,
       '사진이 적으면 신규 멤버가 모임 분위기를 파악하기 어려워요. 지난 모임 사진을 정리해서 올려보세요.',
     ])});
 
+  // 네이버 검색 → 노출
   if (naverSearch === 'yes')
-    checks.push({ type:'ok', title:'네이버 검색 등록됨', desc: pick([
+    expChecks.push({ type:'ok', title:'네이버 검색 등록됨', desc: pick([
       '네이버에 모임이 검색돼요. 당근 외부 유입 채널이 확보된 상태예요.',
       '블로그·카페를 통한 외부 유입이 있어요. 꾸준히 콘텐츠를 올려주세요.',
     ])});
 
+  // 시간대 → 노출 (타겟 풀)
   if (meetingTime === 'evening' || meetingTime === 'weekend')
-    checks.push({ type:'ok', title:'직장인 참여 가능한 시간대', desc: pick([
+    expChecks.push({ type:'ok', title:'직장인 참여 가능한 시간대', desc: pick([
       '저녁·주말 모임이에요. 직장인·학생 참여가 가능해 잠재 멤버 풀이 넓어요.',
       '참여하기 좋은 시간대예요. 동네생활 홍보글도 이 시간대에 올리면 더 효과적이에요.',
     ])});
 
-  let checkHtml = '';
-  checks.forEach(c => {
-    checkHtml += `
-      <div class="check-item check-${c.type}">
-        <span class="check-icon">${c.type==='ok'?'✅':c.type==='warn'?'⚠️':'❌'}</span>
-        <div>
-          <div class="check-title">${c.title}</div>
-          <div class="check-desc">${c.desc}</div>
-        </div>
-      </div>`;
-  });
-  document.getElementById('checkList').innerHTML = checkHtml;
+  const renderChecks = (arr) => arr.map(c => `
+    <div class="check-item check-${c.type}">
+      <span class="check-icon">${c.type==='ok'?'✅':c.type==='warn'?'⚠️':'❌'}</span>
+      <div>
+        <div class="check-title">${c.title}</div>
+        <div class="check-desc">${c.desc}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('expList').innerHTML = renderChecks(expChecks);
+  document.getElementById('opList').innerHTML  = renderChecks(opChecks);
 
   // ── 로드맵 (조합 기반 · 다양한 텍스트 변형) ──
 
