@@ -100,8 +100,10 @@ SYSTEM_PROMPT = """
 
 ## hub.html 로그 관리 규칙 (반드시 준수)
 - **업데이트 현황**: 항상 최신 5개만 유지합니다. 새 항목을 맨 위에 추가하고, 6번째 이하 항목은 삭제합니다.
-- **업데이트 예정**: 아래 고정 항목 1개만 유지하고 절대 변경·추가·삭제하지 마세요:
+- **업데이트 예정**: 아래 고정 항목 2개를 순서 그대로 유지하고 절대 변경·추가·삭제하지 마세요:
+  <div class="log-row"><span class="log-date">매일</span><span class="log-text"><span class="badge b-all">전체</span>주기적 알고리즘 변화 · 신규 이슈 모니터링</span></div>
   <div class="log-row"><span class="log-date">매주 월</span><span class="log-text"><span class="badge b-all">전체</span>매주 월요일 10:00 알고리즘 정기 점검 — AlgoChiri 자동 실행</span></div>
+- 순서는 반드시 매일 → 매주 → (추후) 매월 순으로 고정입니다.
 - 완료(✅) 항목을 업데이트 예정에 추가하지 않습니다.
 
 ## 인스타그램 알고리즘 2026 확인된 변경사항 (분석기 업데이트 시 반영)

@@ -385,7 +385,7 @@
   <div class="logo" style="font-size:2.8rem; margin-bottom:6px;">📸</div>
   <h1>Instagram 계정 분석기</h1>
   <p>ZIP 데이터 파일을 업로드하거나 직접 입력해서 인스타 전략을 받아보세요</p>
-  <p style="margin-top:8px; font-size:0.78rem; color:#bbb; font-weight:500;">⚠️ 해당 결과 값은 <b style="color:#aaa;">참고만</b> 부탁드립니다.</p>
+  <p style="margin-top:8px; font-size:0.78rem; color:#e53e3e; font-weight:600;">⚠️ 해당 결과 값은 <b>참고만</b> 부탁드립니다.</p>
 </header>
 
 <div style="max-width:720px; margin:0 auto 10px;">
@@ -2337,6 +2337,13 @@ function analyze() {
   if (watchRate >= 50) keeps.push({ icon:'⏱️', txt:`릴스 시청 유지율 <b>${watchRate}%</b> — 2025 #1 알고리즘 지표에서 우수해요! 탐색 탭 노출 확률이 높아요.` });
   if (origRatio >= 80) keeps.push({ icon:'✨', txt:`오리지널 콘텐츠 비율 <b>${origRatio}%</b> — Dec 2025 업데이트 수혜 대상이에요. 직접 제작 비율이 높아 추천 탭 노출이 40~60% 상승해요.` });
   if (carRatio >= 30) keeps.push({ icon:'🖼️', txt:`카루셀 비율 <b>${carRatio}%</b> — 평균 ER 10.15%로 가장 높은 포맷을 잘 활용하고 있어요.` });
+  // 중간 구간 긍정 신호
+  if (er >= 3 && er < 5) keeps.push({ icon:'⭐', txt:`인게이지먼트율 <b>${er.toFixed(2)}%</b> — 업계 평균 수준이에요. 5%를 넘으면 알고리즘 "고품질 계정"으로 진입해요.` });
+  if (D.reelsPosts >= 5) keeps.push({ icon:'🎬', txt:`릴스 <b>${D.reelsPosts}개</b> — 인스타가 가장 적극 배포하는 포맷을 꾸준히 활용하고 있어요. 릴스는 비팔로워 도달에 가장 직접적으로 기여해요.` });
+  if (nfr >= 20 && nfr < 50) keeps.push({ icon:'🌐', txt:`비팔로워 도달 <b>${nfr}%</b> — 팔로워 밖으로 콘텐츠가 퍼지고 있어요. 릴스·해시태그 전략이 효과를 내고 있다는 신호예요.` });
+  if (watchRate >= 30 && watchRate < 50) keeps.push({ icon:'⏱️', txt:`릴스 시청 유지율 <b>${watchRate}%</b> — 평균 이상이에요. 50%를 목표로 첫 3초 훅을 조금만 더 강화해보세요.` });
+  if (carRatio >= 20 && carRatio < 30) keeps.push({ icon:'🖼️', txt:`카루셀 비율 <b>${carRatio}%</b> — 카루셀을 활용하고 있어요. 30% 이상으로 늘리면 ER 상승 효과가 두드러져요.` });
+  if (ffRatio >= 0.8 && ffRatio < 1.5) keeps.push({ icon:'👥', txt:`팔로워/팔로잉 비율 <b>${ffRatio.toFixed(1)}x</b> — 균형 잡힌 계정이에요. 팔로워가 더 늘어날수록 신뢰도 지표가 올라가요.` });
 
   document.getElementById('recoKeep').innerHTML = keeps.length
     ? keeps.map(k => `<div class="reco-item reco-keep"><span class="reco-icon">${k.icon}</span><span>${k.txt}</span></div>`).join('')
@@ -2352,8 +2359,17 @@ function analyze() {
   if (D.hashtagCount < 8 && D.hashtagCount !== null) fixes.push({ icon:'#️⃣', txt:`해시태그 평균 ${D.hashtagCount}개 — 8~15개 사용을 권장해요. 대·중·소형 해시태그를 골고루 혼합하세요.` });
   // ★추가: 2025 신규 알고리즘 경고
   if (origRatio >= 0 && origRatio < 80) fixes.push({ icon:'🔴', txt:`오리지널 콘텐츠 비율 ${origRatio}% — Dec 2025 업데이트로 리포스트·재업로드 계정은 추천 탭 노출이 최대 80% 감소해요. 직접 제작 콘텐츠 비율을 80% 이상으로 올리세요.` });
-  if (watchRate > 0 && watchRate < 30) fixes.push({ icon:'⏱️', txt:`릴스 시청 유지율 ${watchRate}% — Mosseri가 #1 알고리즘 지표로 확인한 지표예요. 첫 3초 훅을 강화하고, 릴스 최적 길이 20~40초를 목표로 잡으세요.` });
+  if (watchRate > 0 && watchRate < 30) fixes.push({ icon:'⏱️', txt:`릴스 시청 유지율 ${watchRate}% — Mosseri가 #1 알고리즘 지표로 확인한 지표예요. 첫 3초 훅을 강화하고, 릴스 최적 길이 20~40초을 목표로 잡으세요.` });
   if (carRatio > 0 && carRatio < 20) fixes.push({ icon:'🖼️', txt:`카루셀 비율 ${carRatio}% — 카루셀은 2025년 평균 ER 10.15%로 단일 이미지 대비 3배 높아요. 정보성 콘텐츠는 카루셀로 제작해보세요.` });
+  // ── 중간 구간 warn 추가 ──
+  if (er >= 3 && er < 5) fixes.push({ icon:'⚠️', txt:`인게이지먼트율 ${er.toFixed(2)}% — 평균 구간이에요. 5% 돌파 시 알고리즘이 "고품질 계정"으로 분류해요. 질문형 캡션·스토리 투표 스티커로 반응을 조금 더 끌어내 보세요.` });
+  if (sr >= 1.5 && sr < 3) fixes.push({ icon:'🔖', txt:`저장율 ${sr.toFixed(2)}% — 성장 구간이에요. 3% 이상이면 알고리즘 가산점이 커져요. 마지막 슬라이드에 "저장해두고 써보세요 🔖" 한 줄만 추가해도 저장율이 30~40% 오르는 경우가 많아요.` });
+  if (shr >= 3 && shr < 5) fixes.push({ icon:'📤', txt:`공유율 ${shr.toFixed(2)}% — 5% 이상이 바이럴 임계선이에요. 캡션 끝에 "DM으로 친구에게 공유해요" CTA를 넣거나, 공감·정보성 콘텐츠 비중을 높여보세요.` });
+  if (watchRate >= 30 && watchRate < 50) fixes.push({ icon:'⏱️', txt:`릴스 시청 유지율 ${watchRate}% — 성장 구간이에요. 50% 이상이면 탐색 탭 배포가 크게 늘어요. 첫 3초 훅을 더 강하게 잡고, 중간 텍스트 자막과 화면 전환 속도를 빠르게 해보세요.` });
+  if (carRatio >= 20 && carRatio < 30) fixes.push({ icon:'🖼️', txt:`카루셀 비율 ${carRatio}% — 30% 이상에서 ER 상승 효과가 두드러져요. 기존 정보성 게시물 1개를 카루셀로 리메이크하는 게 가장 쉬운 방법이에요.` });
+  if (nfr > 0 && nfr < 30) fixes.push({ icon:'🌐', txt:`비팔로워 도달 ${nfr}% — 계정이 팔로워 외부로 잘 확산되지 않고 있어요. 릴스 + 해시태그 최적화 + 주제 일관성이 비팔로워 도달을 높이는 가장 직접적인 방법이에요.` });
+  if (ffRatio > 0 && ffRatio < 0.8) fixes.push({ icon:'👥', txt:`팔로잉(${D.following||0})이 팔로워(${D.followers||0})보다 많아요 — 비활성 계정 팔로잉이 많으면 피드 알고리즘 학습이 흐트러져요. 6개월 이상 활동 없는 계정 팔로잉부터 정리해 보세요.` });
+  if (D.hashtagCount > 15) fixes.push({ icon:'#️⃣', txt:`해시태그 ${D.hashtagCount}개 — 2026 기준 5개 핵심 태그 집중 전략이 더 효과적이에요. 너무 많은 태그는 스팸 신호로 분류될 수 있어요. 계정 주제와 딱 맞는 5개만 추려서 매 게시물 일관되게 써보세요.` });
 
   document.getElementById('recoFix').innerHTML = fixes.length
     ? fixes.map(f => `<div class="reco-item reco-fix"><span class="reco-icon">${f.icon}</span><span>${f.txt}</span></div>`).join('')
@@ -2365,6 +2381,10 @@ function analyze() {
   adds.push({ icon:'🤝', txt:`콜라보 콘텐츠 — 비슷한 분야의 크리에이터와 콜라보해서 새 팔로워를 유입시켜 보세요.` });
   adds.push({ icon:'📊', txt:`릴스 트렌드 활용 — 현재 유행하는 BGM이나 편집 스타일을 ${niche} 콘텐츠에 접목해보세요.` });
   if (!D.dmCount || D.dmCount < 50) adds.push({ icon:'💬', txt:`DM 소통 강화 — 팔로워와 DM 소통을 늘리면 관계가 깊어지고 충성 팔로워가 늘어요.` });
+  if (wp >= 3) adds.push({ icon:'🧪', txt:`테스트 릴스 활용 — 논팔로워에게 먼저 노출해서 반응을 확인하는 기능이에요. 설정에서 활성화하면 배포 전 A/B 테스트가 가능해요.` });
+  if (er >= 3) adds.push({ icon:'📌', txt:`저장 유도 CTA 루틴화 — 모든 카루셀·정보성 게시물 마지막 슬라이드에 "저장해두면 나중에 유용해요 🔖" 고정 문구를 추가해 보세요. 저장율은 알고리즘 상위 신호 중 하나예요.` });
+  if (!D.storyCount || D.storyCount < 20) adds.push({ icon:'🗳️', txt:`스토리 참여 유도 — 투표·슬라이더·퀴즈 스티커를 스토리에 매일 1개씩 추가하면 스토리 알고리즘 점수가 크게 올라가요. 10초짜리 콘텐츠도 충분해요.` });
+  adds.push({ icon:'🔗', txt:`프로필 링크 최적화 — 바이오 링크를 링크트리 등 멀티링크로 교체하고, 최신 콘텐츠 링크를 매 업로드마다 업데이트하면 프로필 방문 전환율이 올라가요.` });
 
   document.getElementById('recoAdd').innerHTML = adds.map(a =>
     `<div class="reco-item reco-add"><span class="reco-icon">${a.icon}</span><span>${a.txt}</span></div>`).join('');
