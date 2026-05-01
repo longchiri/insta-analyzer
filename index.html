@@ -3220,9 +3220,6 @@ document.addEventListener('DOMContentLoaded', injectInfoButtons);
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<!-- SNS 홍보 키트 -->
-<div id="sns-kit-insta" style="display:none;max-width:720px;margin:0 auto 20px;"></div>
-
 <script>
 /* ─── 인스타 SNS 홍보 키트 ─── */
 var _ISK_KW={
@@ -3258,8 +3255,15 @@ function _detectISKW(text){
 }
 
 function renderSNSKitInsta(){
-  var el=document.getElementById('sns-kit-insta');
-  if(!el)return;
+  // 기존 키트 제거 후 result 안 맨 아래에 다시 추가
+  var old=document.getElementById('sns-kit-insta');
+  if(old)old.remove();
+  var resultEl=document.getElementById('result');
+  if(!resultEl)return;
+  var el=document.createElement('div');
+  el.id='sns-kit-insta';
+  el.style.cssText='max-width:720px;margin:0 auto 20px;';
+  resultEl.appendChild(el);
 
   var niches=(document.getElementById('niche')||{value:''}).value.trim();
   var bio=(document.getElementById('bioText')||{value:''}).value.trim();
@@ -3316,7 +3320,6 @@ function renderSNSKitInsta(){
     +'</div>'+cHtml+'</div>';
 
   window._snsKitInsta=kitHtml;
-  el.style.display='block';
   el.innerHTML='<div style="text-align:center;padding:20px;background:linear-gradient(135deg,#fdf4ff,#f0f4ff);border-radius:16px;border:2px dashed #c084fc;">'
     +'<p style="font-size:0.85rem;color:#888;margin:0 0 14px;">📊 분석 결과를 기반으로 인스타 캡션과 해시태그를 생성해드려요</p>'
     +'<button onclick="document.getElementById(\'sns-kit-insta\').innerHTML=window._snsKitInsta" style="padding:13px 32px;background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(131,58,180,0.3);">📱 SNS 홍보 키트 생성하기</button>'
