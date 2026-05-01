@@ -275,13 +275,6 @@
   <a class="back-btn" href="hub.html">← 홈으로 돌아가기</a>
 </div>
 
-<!-- 메인 탭 네비게이션 -->
-<div style="display:flex;gap:0;border-bottom:2px solid #eee;margin-bottom:0;">
-  <button id="main-tab-analyzer" onclick="switchMainTab('analyzer')" style="flex:1;padding:13px 8px;border:none;background:#16A34A;color:#fff;font-weight:700;font-size:0.95rem;cursor:pointer;border-radius:0;transition:all 0.2s;">🔍 모임 최적화 분석기</button>
-  <button id="main-tab-snskit" onclick="switchMainTab('snskit')" style="flex:1;padding:13px 8px;border:none;background:#f5f5f5;color:#888;font-weight:600;font-size:0.95rem;cursor:pointer;border-radius:0;transition:all 0.2s;">📱 SNS 홍보 키트</button>
-</div>
-
-<div id="analyzerSection">
 
 <!-- 플랫폼 탭 -->
 <div class="tab-wrap">
@@ -1860,7 +1853,7 @@ function renderSNSKit(targetId, platform) {
     ...niche.map(h=>`<span style="background:#f3f0ff;color:#7c3aed;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
     ...extras.map(h=>`<span style="background:#fff3e0;color:#e65100;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`)
   ].join('');
-  el.innerHTML=`<div style="margin-top:28px;padding:22px;background:#f8fffe;border-radius:16px;border:2px dashed ${borderColor}44;">
+  const _kitHtml=`<div style="margin-top:28px;padding:22px;background:#f8fffe;border-radius:16px;border:2px dashed ${borderColor}44;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
       <span style="font-size:1.1rem;">📱</span>
       <strong style="font-size:0.97rem;color:#111;">SNS 홍보 키트</strong>
@@ -1881,181 +1874,12 @@ function renderSNSKit(targetId, platform) {
       </div>`).join('')}
     </div>
   </div>`;
-}
-</script>
-
-</div><!-- /analyzerSection -->
-
-<!-- SNS 홍보 키트 섹션 -->
-<div id="snskitSection" style="display:none;padding-bottom:40px;">
-  <div class="card">
-    <h2>📱 SNS 홍보 키트</h2>
-    <p style="color:#666;font-size:0.9rem;margin-bottom:18px;">업종·키워드를 입력하면 해시태그 15개 + 캡션 3종을 즉시 생성해드려요.<br>모임, 헬스, 프리랜서, 로컬 소규모 사업 모두 지원합니다.</p>
-    <div class="form-grid">
-      <div class="form-group full">
-        <label>업종 / 키워드 <span class="tip">독서·러닝·카페·쥬얼리·PT·요가 등 자유 입력</span></label>
-        <input type="text" id="sk-keyword" placeholder="예: 독서, 헬스, 카페, 쥬얼리샵, PT, 요가, 테니스..." oninput="updateSKSuggestions()"/>
-        <div id="sk-suggestions" style="margin-top:5px;min-height:20px;"></div>
-      </div>
-      <div class="form-group">
-        <label>지역 <span class="tip">선택</span></label>
-        <input type="text" id="sk-region" placeholder="예: 서울, 대전, 강남"/>
-      </div>
-      <div class="form-group">
-        <label>업체명 / 모임명 <span class="tip">선택</span></label>
-        <input type="text" id="sk-name" placeholder="예: 대전 독서모임, 홍대 쥬얼리샵"/>
-      </div>
-      <div class="form-group full">
-        <label>한 줄 소개 <span class="tip">선택 — 캡션 품질 향상</span></label>
-        <textarea id="sk-intro" rows="2" placeholder="예: 매주 토요일 오전 10시 갑천 러닝크루. 초보 환영!"></textarea>
-      </div>
-      <div class="form-group full">
-        <label>주 플랫폼</label>
-        <select id="sk-platform">
-          <option value="instagram">인스타그램</option>
-          <option value="kakao">카카오채널</option>
-          <option value="daangn">당근마켓</option>
-          <option value="blog">네이버 블로그</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn-analyze" onclick="generateSNSKit()" style="background:linear-gradient(135deg,#FF6B6B,#FF8E53);">📱 SNS 홍보 키트 생성</button>
-  </div>
-  <div id="sk-result"></div>
-</div>
-
-<script>
-/* ── 메인 탭 전환 ── */
-function switchMainTab(tab){
-  var a=document.getElementById('analyzerSection');
-  var s=document.getElementById('snskitSection');
-  var tA=document.getElementById('main-tab-analyzer');
-  var tS=document.getElementById('main-tab-snskit');
-  if(tab==='analyzer'){
-    a.style.display='';s.style.display='none';
-    tA.style.background='#16A34A';tA.style.color='#fff';tA.style.fontWeight='700';
-    tS.style.background='#f5f5f5';tS.style.color='#888';tS.style.fontWeight='600';
-  } else {
-    a.style.display='none';s.style.display='';
-    tS.style.background='#FF6B6B';tS.style.color='#fff';tS.style.fontWeight='700';
-    tA.style.background='#f5f5f5';tA.style.color='#888';tA.style.fontWeight='600';
-  }
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-/* ── 키워드 DB ── */
-var _SK_KW={
-  '독서':{l:['#독서','#책스타그램','#북스타그램','#독서모임','#책읽기'],m:['#독서클럽','#책추천','#북클럽','#독서챌린지','#책그램'],n:['#독서메이트','#독서일상','#책읽는사람','#북스타','#독서인증'],hook:'책 좋아하시는 분들 여기 다 모이세요 📚',pain:'혼자 읽다 중간에 포기한 적 있으세요?',benefit:'같이 읽으면 완독률이 완전 달라져요',type:'moim'},
-  '러닝':{l:['#러닝','#런스타그램','#러닝크루','#마라톤','#달리기'],m:['#러닝메이트','#러닝일상','#러닝클럽','#러닝챌린지','#러닝그램'],n:['#사회인러닝','#새벽러닝','#주말러닝','#러닝모임','#러닝인증'],hook:'같이 달리면 포기 못 해요 🏃',pain:'혼자 운동하면 작심삼일이잖아요',benefit:'러닝 메이트 생기면 페이스가 달라져요',type:'health'},
-  '운동':{l:['#운동','#헬스','#운동스타그램','#피트니스','#헬스타그램'],m:['#운동일상','#헬스인','#운동메이트','#운동인증','#헬스클럽'],n:['#운동크루','#운동챌린지','#헬스일상','#운동하는사람','#피트니스그램'],hook:'같이 운동하면 꾸준해져요 💪',pain:'혼자 하면 꾸준히 못 하는 분?',benefit:'운동 메이트 있으면 출석률 3배!',type:'health'},
-  '헬스':{l:['#헬스','#운동스타그램','#피트니스','#헬스타그램','#헬스장'],m:['#헬스인','#헬스일상','#운동일상','#헬스클럽','#헬스챌린지'],n:['#헬스초보','#헬스메이트','#헬스인증','#헬스그램','#피트니스라이프'],hook:'오늘도 헬스장 갔다 왔어요 💪',pain:'헬스 시작하고 싶은데 방법을 모르겠다면?',benefit:'제대로 된 프로그램으로 시작하세요',type:'health'},
-  'PT':{l:['#PT','#퍼스널트레이닝','#운동스타그램','#피트니스','#트레이닝'],m:['#PT추천','#PT후기','#퍼스널트레이너','#운동처방','#체형교정'],n:['#PT시작','#PT일지','#PT효과','#PT비포애프터','#홈트대신PT'],hook:'PT 받으면 진짜 달라져요 🏋️',pain:'혼자 운동해도 효과가 없다면?',benefit:'전문 트레이너와 1:1 맞춤 운동',type:'health'},
-  '요가':{l:['#요가','#yoga','#요가스타그램','#요가일상','#명상'],m:['#요가하는사람','#요가그램','#요가인','#요가클래스','#요가크루'],n:['#요가초보','#요가챌린지','#요가매트','#아침요가','#요가바디'],hook:'몸도 마음도 가벼워지는 요가 🧘',pain:'스트레스 쌓이고 몸이 뻣뻣하다면?',benefit:'요가 한 달이면 몸이 달라져요',type:'health'},
-  '필라테스':{l:['#필라테스','#pilates','#필라테스스타그램','#필라테스일상','#필라테스바디'],m:['#필라테스하는사람','#필라테스크루','#필라테스인','#필라테스클래스','#코어운동'],n:['#필라테스초보','#필라테스챌린지','#체형교정필라테스','#아침필라테스','#홈필라테스'],hook:'체형 교정에는 필라테스가 답이에요 ✨',pain:'굽은 등, 거북목 때문에 고민이라면?',benefit:'필라테스로 라인 만들고 자세 교정까지',type:'health'},
-  '수영':{l:['#수영','#수영장','#수영스타그램','#수영인','#수영일상'],m:['#수영크루','#수영클럽','#수영레슨','#수영초보','#수영챌린지'],n:['#새벽수영','#수영메이트','#수영모임','#수영인증','#수영하는사람'],hook:'물 속에서 스트레스 다 날려요 🏊',pain:'수영 배우고 싶은데 어디서 시작하지?',benefit:'체계적인 레슨으로 빠르게 실력 향상',type:'health'},
-  '복싱':{l:['#복싱','#boxing','#복싱스타그램','#복싱일상','#복싱크루'],m:['#복싱하는사람','#복싱클럽','#킥복싱','#복싱초보','#복싱챌린지'],n:['#복싱메이트','#복싱인증','#사회인복싱','#복싱모임','#복싱그램'],hook:'스트레스 해소는 복싱이 최고예요 🥊',pain:'운동은 하고 싶은데 지루한 건 싫다면?',benefit:'복싱으로 체력+스트레스 동시에 해결',type:'health'},
-  '테니스':{l:['#테니스','#tennis','#테니스스타그램','#테니스일상','#테니스크루'],m:['#테니스클럽','#사회인테니스','#테니스초보','#테니스모임','#테니스레슨'],n:['#테니스메이트','#테니스챌린지','#테니스인증','#테니스하는사람','#테니스그램'],hook:'테니스 배우고 싶으셨죠? 🎾',pain:'테니스 시작하고 싶은데 같이 칠 사람이 없다면?',benefit:'레슨부터 실전까지 함께해요',type:'health'},
-  '클라이밍':{l:['#클라이밍','#climbing','#클라이밍스타그램','#볼더링','#암벽등반'],m:['#클라이밍크루','#클라이밍클럽','#클라이밍일상','#클라이밍초보','#클라이밍챌린지'],n:['#클라이밍메이트','#클라이밍인증','#사회인클라이밍','#클라이밍모임','#클라이밍그램'],hook:'클라이밍은 한 번 빠지면 못 나와요 🧗',pain:'클라이밍 배우고 싶은데 혼자 가면 무섭다면?',benefit:'초보자도 재밌게 시작할 수 있어요',type:'health'},
-  '등산':{l:['#등산','#등산스타그램','#산행','#등산인','#하이킹'],m:['#등산크루','#등산클럽','#등산모임','#산악회','#등산메이트'],n:['#등산초보','#등산챌린지','#등산인증','#주말등산','#등산일상'],hook:'정상에서 보는 뷰가 다 보상해줘요 ⛰️',pain:'등산 혼자 가면 무섭고 심심하죠?',benefit:'같이 오르면 힘들어도 즐거워요',type:'health'},
-  '자전거':{l:['#자전거','#라이딩','#사이클','#자전거스타그램','#cycling'],m:['#자전거크루','#자전거모임','#자전거클럽','#자전거메이트','#라이딩크루'],n:['#자전거초보','#자전거일상','#자전거챌린지','#자전거인증','#라이딩인증'],hook:'라이딩 한 번 나가볼까요? 🚴',pain:'혼자 라이딩 나가면 외롭고 무섭죠?',benefit:'크루와 함께 달리면 더 멀리 갈 수 있어요',type:'health'},
-  '캠핑':{l:['#캠핑','#캠핑스타그램','#캠핑인','#캠핑일상','#camping'],m:['#캠핑크루','#캠핑모임','#캠핑클럽','#글램핑','#캠핑메이트'],n:['#캠핑초보','#솔로캠핑','#캠핑챌린지','#캠핑인증','#캠핑요리'],hook:'자연 속에서 쉬고 싶을 때 캠핑이죠 ⛺',pain:'캠핑 가고 싶은데 같이 갈 사람이 없다면?',benefit:'캠핑 크루와 함께라면 더 즐거워요',type:'moim'},
-  '사진':{l:['#사진','#포토그래피','#사진스타그램','#사진작가','#포토그래퍼'],m:['#사진모임','#사진크루','#사진클럽','#출사','#사진공부'],n:['#사진초보','#사진배우기','#출사모임','#사진인','#카메라취미'],hook:'사진으로 일상을 특별하게 ✨',pain:'사진 찍고 싶은데 혼자 하기 외롭다면?',benefit:'함께 출사하고 실력도 빠르게 성장',type:'moim'},
-  '영상':{l:['#영상편집','#유튜브','#영상제작','#콘텐츠크리에이터','#비디오그래피'],m:['#영상편집배우기','#유튜버','#크리에이터','#영상작업','#촬영편집'],n:['#영상초보','#영상모임','#영상크루','#콘텐츠제작','#유튜브시작'],hook:'영상 제작, 어렵지 않아요 🎬',pain:'유튜브 시작하고 싶은데 혼자는 막막하다면?',benefit:'같이 배우고 서로 피드백하며 성장해요',type:'moim'},
-  '스터디':{l:['#스터디','#공부스타그램','#스터디그램','#공부','#study'],m:['#스터디모임','#스터디크루','#스터디카페','#공부모임','#스터디인증'],n:['#스터디메이트','#스터디챌린지','#공부인증','#스터디일상','#같이공부'],hook:'혼자보다 같이 하면 효율이 달라요 📖',pain:'혼자 공부하면 집중이 안 되죠?',benefit:'스터디 메이트와 함께 목표 달성',type:'moim'},
-  '영어':{l:['#영어','#영어공부','#영어스터디','#english','#영어회화'],m:['#영어모임','#영어크루','#영어스터디그룹','#원어민영어','#영어배우기'],n:['#영어초보','#영어일상','#영어인증','#영어공부법','#영어메이트'],hook:'영어 실력, 같이 키워요 🗣️',pain:'영어 혼자 공부하면 금방 포기하죠?',benefit:'원어민과의 대화로 자연스럽게 늘어요',type:'moim'},
-  '코딩':{l:['#코딩','#개발','#프로그래밍','#개발자','#coding'],m:['#코딩공부','#코딩스터디','#개발공부','#코딩모임','#개발스터디'],n:['#코딩초보','#코딩배우기','#개발자일상','#코딩인','#프론트엔드'],hook:'코딩, 같이 하면 포기 안 해요 💻',pain:'혼자 독학하면 막히는 거 너무 많죠?',benefit:'코딩 스터디로 실력과 인맥 동시에',type:'moim'},
-  '디자인':{l:['#디자인','#그래픽디자인','#디자이너','#디자인스타그램','#일러스트'],m:['#디자인공부','#디자인배우기','#디자인모임','#디자인크루','#ui디자인'],n:['#디자인초보','#디자인인','#그래픽디자이너','#디자인일상','#디자인스터디'],hook:'디자인 실력, 함께 키워요 🎨',pain:'디자인 배우고 싶은데 독학이 힘들다면?',benefit:'스터디로 빠르게 실력 향상',type:'freelance'},
-  '마케팅':{l:['#마케팅','#디지털마케팅','#sns마케팅','#마케터','#콘텐츠마케팅'],m:['#마케팅공부','#마케팅스터디','#마케팅크루','#sns운영','#퍼포먼스마케팅'],n:['#마케팅배우기','#마케팅모임','#마케터일상','#마케팅인','#디마팅'],hook:'마케팅 제대로 배우고 싶으세요? 📊',pain:'마케팅 혼자 공부하기 너무 어렵죠?',benefit:'실무 마케터들과 함께 공부해요',type:'freelance'},
-  '강의':{l:['#클래스','#강의','#원데이클래스','#취미클래스','#클래스101'],m:['#강의추천','#클래스추천','#온라인강의','#취미강좌','#원데이'],n:['#강의후기','#클래스후기','#취미배우기','#새로운취미','#취미생활'],hook:'배우고 싶었던 거 지금 시작하세요 ✨',pain:'배우고 싶은 건 많은데 어디서 시작하지?',benefit:'전문 강사와 함께 확실하게 배워요',type:'freelance'},
-  '카페':{l:['#카페','#카페스타그램','#카페투어','#커피','#카페인기'],m:['#카페추천','#카페일상','#카페그램','#카페탐방','#카페뷰맛집'],n:['#로컬카페','#동네카페','#카페오픈','#신상카페','#카페인생샷'],hook:'이런 카페 찾고 계셨죠? ☕',pain:'분위기 있는 카페 찾기 힘드셨죠?',benefit:'편안한 공간에서 맛있는 커피 한 잔',type:'local'},
-  '쥬얼리':{l:['#쥬얼리','#악세사리','#핸드메이드','#주얼리','#jewelry'],m:['#쥬얼리샵','#핸드메이드쥬얼리','#악세서리샵','#쥬얼리추천','#쥬얼리선물'],n:['#쥬얼리공방','#수제악세사리','#쥬얼리디자인','#쥬얼리작가','#쥬얼리오더'],hook:'이런 쥬얼리 찾고 계셨나요? 💍',pain:'어디서도 못 찾던 나만의 스타일?',benefit:'핸드메이드로 세상에 하나뿐인 악세사리',type:'local'},
-  '주얼리':{l:['#쥬얼리','#악세사리','#핸드메이드','#주얼리','#jewelry'],m:['#쥬얼리샵','#핸드메이드쥬얼리','#악세서리샵','#쥬얼리추천','#쥬얼리선물'],n:['#쥬얼리공방','#수제악세사리','#쥬얼리디자인','#쥬얼리작가','#쥬얼리오더'],hook:'이런 쥬얼리 찾고 계셨나요? 💍',pain:'어디서도 못 찾던 나만의 스타일?',benefit:'핸드메이드로 세상에 하나뿐인 악세사리',type:'local'},
-  '네일':{l:['#네일','#네일아트','#네일스타그램','#젤네일','#네일디자인'],m:['#네일샵','#네일추천','#네일일상','#네일그램','#네일아티스트'],n:['#셀프네일','#네일후기','#네일리스트','#네일케어','#홈네일'],hook:'손끝이 예뻐야 완성이죠 💅',pain:'마음에 드는 네일 디자인 찾기 어렵죠?',benefit:'내 취향대로 맞춤 네일 완성',type:'local'},
-  '미용':{l:['#헤어','#미용실','#헤어스타그램','#헤어디자이너','#헤어그램'],m:['#헤어추천','#헤어살롱','#헤어컷','#헤어컬러','#염색'],n:['#동네미용실','#로컬살롱','#헤어후기','#헤어스타일','#헤어변신'],hook:'머리 하나 바꿨을 뿐인데 달라 보여요 ✂️',pain:'마음에 드는 헤어샵 찾기 힘드셨죠?',benefit:'취향을 아는 원장님과 원하는 스타일로',type:'local'},
-  '음식점':{l:['#맛집','#음식점','#푸드스타그램','#맛스타그램','#먹스타그램'],m:['#맛집추천','#음식','#로컬맛집','#동네맛집','#맛집탐방'],n:['#신상맛집','#맛집후기','#오늘점심','#오늘저녁','#맛집공유'],hook:'이런 맛집 찾고 있었잖아요 🍽️',pain:'근처에 괜찮은 음식점 없어서 고민이라면?',benefit:'한 번 오면 단골이 되는 맛',type:'local'},
-  '맛집':{l:['#맛집','#푸드스타그램','#맛스타그램','#먹스타그램','#음식스타그램'],m:['#맛집추천','#로컬맛집','#동네맛집','#맛집탐방','#맛집소개'],n:['#신상맛집','#맛집후기','#오늘점심','#맛집공유','#맛집발굴'],hook:'이런 맛집 찾고 있었잖아요 🍽️',pain:'근처에 괜찮은 음식점 없어서 고민이라면?',benefit:'한 번 오면 단골이 되는 맛',type:'local'},
-  '베이커리':{l:['#베이커리','#빵스타그램','#빵집','#베이킹','#bread'],m:['#베이커리추천','#빵맛집','#홈베이킹','#케이크','#디저트'],n:['#동네빵집','#수제빵','#신상베이커리','#빵후기','#베이커리일상'],hook:'이 빵 맛있는 거 알면 매일 와요 🥐',pain:'맛있는 빵집 찾기 어렵죠?',benefit:'매일 구운 신선한 빵을 만나보세요',type:'local'},
-  '꽃집':{l:['#꽃','#꽃집','#플라워샵','#꽃스타그램','#flower'],m:['#꽃다발','#부케','#플라워레슨','#꽃배달','#꽃선물'],n:['#동네꽃집','#수제화환','#꽃공방','#플로리스트','#꽃작업'],hook:'꽃 한 송이가 하루를 바꿔요 🌸',pain:'선물하고 싶은데 어떤 꽃을 골라야 할지?',benefit:'감성 가득한 꽃다발로 마음을 전해요',type:'local'},
-  '공방':{l:['#공방','#핸드메이드','#공방클래스','#공예','#만들기'],m:['#공방원데이클래스','#핸드메이드클래스','#공예클래스','#도자기','#가죽공방'],n:['#공방추천','#공방일상','#공방후기','#핸드메이드작가','#공방오픈'],hook:'직접 만든 것만의 뿌듯함 있잖아요 🎨',pain:'나만의 것을 만들고 싶었던 분?',benefit:'초보자도 쉽게 따라 만들 수 있어요',type:'local'},
-  '의류':{l:['#의류','#패션','#옷스타그램','#패션스타그램','#ootd'],m:['#의류샵','#쇼핑몰','#패션추천','#코디추천','#데일리룩'],n:['#소규모쇼핑몰','#인스타쇼핑몰','#의류추천','#옷추천','#패션인플루언서'],hook:'이 옷 어디서 샀어요? 소리 들어요 👗',pain:'나한테 어울리는 옷 찾기 힘드셨죠?',benefit:'취향 저격 코디 제안해드려요',type:'local'}
-};
-
-var _SK_TYPE_DEF={
-  moim:{extras:['#모임추천','#소모임','#카카오모임','#모임앱','#소모임추천'],platTags:{instagram:['#인스타모임'],kakao:['#카카오채널'],daangn:['#당근동네모임'],blog:['#블로그모임']},borderColor:'#16A34A'},
-  health:{extras:['#운동','#건강한생활','#헬시라이프','#운동추천','#건강'],platTags:{instagram:['#인스타운동'],kakao:['#카카오채널'],daangn:['#당근운동'],blog:['#블로그운동후기']},borderColor:'#FF6B6B'},
-  freelance:{extras:['#프리랜서','#의뢰문의','#작업의뢰','#프리랜서구인','#외주'],platTags:{instagram:['#인스타비즈니스'],kakao:['#카카오채널'],daangn:['#재능기부'],blog:['#블로그광고']},borderColor:'#9B59B6'},
-  local:{extras:['#로컬','#소규모사업','#동네가게','#단골손님모집','#소상공인'],platTags:{instagram:['#인스타로컬'],kakao:['#카카오채널'],daangn:['#당근마켓'],blog:['#블로그리뷰']},borderColor:'#FF9800'}
-};
-
-var _SK_REGIONS=['서울','부산','대구','인천','광주','대전','울산','세종','수원','성남','고양','용인','창원','청주','전주','안산','안양','화성','의정부','파주','시흥','김포','강남','강서','마포','송파','관악','서초','노원','은평','강동','성동','동작','영등포','홍대','신촌','분당','판교','일산','잠실','목동','강북','용산','종로','제주','속초','강릉','경주','여수','순천'];
-
-function _detectSKKW(text){
-  var keys=Object.keys(_SK_KW);
-  for(var i=0;i<keys.length;i++){if(text.indexOf(keys[i])>=0)return keys[i];}
-  return null;
-}
-
-function updateSKSuggestions(){
-  var kw=document.getElementById('sk-keyword').value.trim();
-  var detected=_detectSKKW(kw);
-  var sugDiv=document.getElementById('sk-suggestions');
-  if(detected&&_SK_KW[detected]){
-    sugDiv.innerHTML='<span style="color:#555;font-size:0.82rem;background:#f0fdf4;padding:3px 8px;border-radius:6px;">✅ 감지됨: <b>'+detected+'</b> — <i>'+_SK_KW[detected].hook+'</i></span>';
-  } else if(kw.length>0){
-    sugDiv.innerHTML='<span style="color:#aaa;font-size:0.82rem;">자유 키워드로 생성됩니다</span>';
-  } else {
-    sugDiv.innerHTML='';
-  }
-}
-
-function generateSNSKit(){
-  var kw=document.getElementById('sk-keyword').value.trim();
-  var regionInput=document.getElementById('sk-region').value.trim();
-  var name=document.getElementById('sk-name').value.trim();
-  var intro=document.getElementById('sk-intro').value.trim();
-  var platform=document.getElementById('sk-platform').value;
-  if(!kw){alert('업종/키워드를 입력해주세요!');return;}
-  var searchText=kw+' '+name+' '+intro+' '+regionInput;
-  var region=regionInput||_SK_REGIONS.find(function(r){return searchText.indexOf(r)>=0;})||'';
-  var detectedKW=_detectSKKW(searchText);
-  var kwData=detectedKW?_SK_KW[detectedKW]:null;
-  var typeKey=kwData?kwData.type:'local';
-  var typeDef=_SK_TYPE_DEF[typeKey];
-  var large=kwData?kwData.l.slice():['#'+kw,'#'+kw+'추천','#'+kw+'스타그램','#'+kw+'일상','#'+kw+'그램'];
-  var medium=kwData?kwData.m.slice():['#'+kw+'모임','#'+kw+'클럽','#'+kw+'크루','#'+kw+'메이트','#'+kw+'인'];
-  var niche=kwData?kwData.n.slice():['#'+kw+'초보','#'+kw+'인증','#'+kw+'챌린지','#'+kw+'후기','#'+kw+'배우기'];
-  var regionTags=region?['#'+region+kw,'#'+region+'모임']:[];
-  var platTags=typeDef.platTags[platform]?typeDef.platTags[platform]:[];
-  var seen={};var allTags=[];
-  var pool=large.slice(0,3).concat(medium.slice(0,3)).concat(niche.slice(0,3)).concat(regionTags.slice(0,2)).concat(platTags.slice(0,1)).concat(typeDef.extras.slice(0,3));
-  for(var i=0;i<pool.length&&allTags.length<15;i++){if(!seen[pool[i]]){seen[pool[i]]=1;allTags.push(pool[i]);}}
-  var hook=kwData?kwData.hook:kw+' 찾고 계셨죠? ✨';
-  var pain=kwData?kwData.pain:'원하는 '+kw+'를 못 찾고 계신가요?';
-  var benefit=kwData?kwData.benefit:'저희와 함께라면 달라져요';
-  var nameStr=name||kw;
-  var regionStr=region?region+' ':'';
-  var tagsLine=allTags.join(' ');
-  var bc=typeDef.borderColor;
-  var cap0=hook+'\n\n'+pain+'\n\n'+regionStr+nameStr+'에서 해결해드려요!\n'+benefit+' 💫\n\n프로필 링크에서 확인하세요 👆\n\n.\n.\n.\n'+tagsLine;
-  var cap1=regionStr+nameStr+' 오픈/모집 중입니다 ✨\n\n'+benefit+'\n\n📍 '+(region||'지역')+(name?' | '+name:'')+'\n\n저장해두고 나중에 봐요 🔖\n\n.\n.\n.\n'+tagsLine;
-  var cap2='💡 '+kw+' 찾는 분들 주목!\n\n'+pain+'\n→ '+benefit+'\n\n지금 바로 시작하세요!\n관심 있으시면 DM 또는 댓글 남겨주세요 💬\n\n.\n.\n.\n'+tagsLine;
-  var capLabels=['✍️ 후킹형 캡션','📌 정보형 캡션','💬 공감형 캡션'];
-  var caps=[cap0,cap1,cap2];
-  var cHtml='';
-  for(var j=0;j<3;j++){
-    cHtml+='<div style="background:#f8f8f8;border-radius:10px;padding:14px;margin-bottom:12px;">'
-      +'<div style="font-weight:700;font-size:0.85rem;color:#555;margin-bottom:8px;">'+capLabels[j]+'</div>'
-      +'<pre id="sk-cap-'+j+'" style="white-space:pre-wrap;font-size:0.88rem;line-height:1.7;color:#333;margin:0;font-family:inherit;">'+caps[j]+'</pre>'
-      +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'sk-cap-'+j+'\').innerText).then(function(){alert(\'캡션 복사됐어요!\');})" style="margin-top:8px;padding:5px 14px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.77rem;font-weight:700;cursor:pointer;">📋 복사</button>'
-      +'</div>';
-  }
-  document.getElementById('sk-result').innerHTML='<div style="border:2px solid '+bc+';border-radius:14px;padding:20px;margin-top:18px;background:#fff;">'
-    +'<h3 style="color:'+bc+';margin:0 0 14px;font-size:1.05rem;">📱 SNS 홍보 키트 — '+regionStr+nameStr+'</h3>'
-    +'<div style="background:#f8f8f8;border-radius:10px;padding:14px;margin-bottom:16px;">'
-    +'<div style="font-weight:700;font-size:0.85rem;color:#555;margin-bottom:8px;">🏷️ 추천 해시태그 ('+allTags.length+'개)</div>'
-    +'<div id="sk-tags-box" style="font-size:0.9rem;line-height:1.9;color:#333;word-break:break-all;">'+tagsLine+'</div>'
-    +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'sk-tags-box\').innerText).then(function(){alert(\'태그 복사됐어요!\');})" style="margin-top:8px;padding:5px 14px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.77rem;font-weight:700;cursor:pointer;">📋 복사</button>'
-    +'</div>'+cHtml+'</div>';
+  window._snsKit=window._snsKit||{};
+  window._snsKit[targetId]=_kitHtml;
+  el.innerHTML=`<div style="text-align:center;margin:28px 0 8px;padding:20px;background:#f8fffe;border-radius:16px;border:2px dashed ${borderColor}44;">`
+    +`<p style="font-size:0.85rem;color:#888;margin:0 0 14px;">📊 분석 결과를 바탕으로 인스타 캡션과 해시태그를 생성해드려요</p>`
+    +`<button onclick="(function(){var el=document.getElementById('${targetId}');el.innerHTML=window._snsKit['${targetId}'];})()" style="padding:13px 32px;background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(255,107,107,0.3);">📱 SNS 홍보 키트 생성하기</button>`
+    +`</div>`;
 }
 </script>
 
