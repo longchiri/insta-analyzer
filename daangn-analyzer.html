@@ -828,6 +828,7 @@
   <div class="result-card">
     <h2>🗺️ 이번 주 실행 로드맵</h2>
     <div id="roadmap"></div>
+    <div id="daangn-sns-kit"></div>
   </div>
 
   <!-- 알고리즘 팁 -->
@@ -1662,13 +1663,13 @@ function analyze() {
     expChecks.push({ type:'ok', title:'SNS 외부 홍보 활발', desc: pick([
       '인스타+블로그로 외부 홍보 중이에요. 당근 외 채널에서도 유입이 생겨요.',
       '다채널 홍보는 당근 알고리즘 변화에도 흔들리지 않는 안정적인 유입 구조를 만들어줘요.',
-      '2026년 인스타 알고리즘은 공유(Shares)를 1순위 신호로 봐요. 모임 소개를 저장·공유하기 좋은 정보카드 형식으로 만들면 팔로워 없이도 도달이 늘어요.',
+      '2026년 인스타 4대 신호: 공유(1위)·저장(2위)·시청시간·프로필 클릭. 좋아요·팔로워는 가중치 거의 0이에요. 모임 소개를 "저장하고 싶은 정보카드"로 만들면 팔로워 없이도 탐색 탭에 확산돼요.',
       '인스타 DM 반응이 2026 알고리즘 가중치 상위예요. "참여 신청 DM 받아요" 한 줄을 게시물에 넣으면 DM 반응 → 알고리즘 상위 노출로 이어져요.',
     ])});
   else if (noSns && memberCount >= 5)
     expChecks.push({ type:'warn', title:'외부 SNS 홍보 없음', desc: pick([
       '인스타·블로그 홍보가 없어요. 외부 채널로 당근 모임 링크를 공유하면 추가 유입이 생겨요.',
-      '2026년 인스타는 공유(Shares)가 1순위 신호예요. 모임 후기를 정보카드 형식으로 올리면 팔로워 없이도 탐색 탭에서 확산돼요.',
+      '2026년 인스타는 공유(1위)·저장(2위)이 알고리즘을 결정해요. 모임 후기를 "저장하고 싶은 정보카드" 형식으로 올리면 팔로워 없이도 탐색 탭에서 확산돼요.',
       '가장 쉬운 외부 홍보는 인스타 스토리에 모임 후기 사진을 올리는 거예요. 스토리에 당근 모임 링크를 달면 직접 유입이 생겨요.',
       '블로그 후기 1개가 장기적으로 당근 외부 유입을 만들어줘요. 네이버 블로그에 "OO 모임 후기" 포스팅 하나만 올려도 검색으로 지속적인 유입이 생겨요.',
     ])});
@@ -2363,6 +2364,7 @@ function analyze() {
       </div>`;
   });
   document.getElementById('roadmap').innerHTML = roadHtml;
+  renderSNSKit('daangn-sns-kit', 'daangn');
 
   // ── 결과 표시 ──
   document.getElementById('result').style.display = 'block';
@@ -2378,6 +2380,89 @@ function shareResult() {
   } else {
     navigator.clipboard.writeText(location.href).then(() => alert('링크가 복사되었어요!'));
   }
+}
+
+// ── SNS 홍보 키트 ──────────────────────────────────────────────
+const _SNS_HT = {
+  '독서':    { l:['#독서','#책스타그램','#북스타그램'], m:['#독서모임','#북클럽','#책읽는사람','#독서일상'], n:['#독서하는사람들','#책과함께','#독서기록','#활자중독','#독서모임추천'] },
+  '운동':    { l:['#운동','#헬스','#운동스타그램'], m:['#운동모임','#피트니스','#운동일상','#헬스클럽'], n:['#같이운동','#운동루틴','#운동인증','#운동모임추천','#피트니스모임'] },
+  '맛집':    { l:['#맛집','#먹스타그램','#맛집탐방'], m:['#맛집모임','#먹방','#맛집투어','#푸드스타그램'], n:['#맛집모임추천','#미식가','#맛집기록','#맛집인증','#맛집탐방모임'] },
+  '게임':    { l:['#게임','#보드게임','#게임스타그램'], m:['#게임모임','#보드게임모임','#게임클럽','#게이머'], n:['#보드게임카페','#게임하는사람','#보드게임추천','#게임모임추천','#카드게임'] },
+  '아웃도어': { l:['#아웃도어','#등산','#자연'], m:['#등산모임','#트레킹','#하이킹','#아웃도어클럽'], n:['#등산모임추천','#산사람','#등린이','#트레킹모임','#산악회'] },
+  '음악':    { l:['#음악','#뮤직','#음악스타그램'], m:['#음악모임','#밴드','#악기','#음악클럽'], n:['#음악하는사람','#악기배우기','#음악모임추천','#밴드모임','#악기연주'] },
+  '공예':    { l:['#공예','#취미','#handmade'], m:['#공예모임','#취미모임','#만들기','#공예클럽'], n:['#공예하는사람','#핸드메이드','#공예일상','#취미모임추천','#만들기모임'] },
+  '언어':    { l:['#영어','#언어공부','#어학'], m:['#영어스터디','#언어교환','#스터디모임','#어학모임'], n:['#영어공부하는사람','#언어모임','#스터디추천','#영어모임','#회화스터디'] },
+  '반려동물': { l:['#반려동물','#강아지','#고양이'], m:['#반려동물모임','#펫모임','#강아지모임','#펫스타그램'], n:['#반려동물모임추천','#강아지친구','#펫팸','#반려견모임','#펫라이프'] },
+  '기타':    { l:['#모임','#당근모임','#동네모임'], m:['#당근마켓모임','#취미모임','#동네커뮤니티','#함께해요'], n:['#동네생활','#모임추천','#당근모임추천','#동네모임추천','#같이해요'] }
+};
+function renderSNSKit(targetId, platform) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  let name='', category='기타', areaLabel='', borderColor='#16A34A', platformTags=[];
+  if (platform==='somoim') {
+    name=(document.getElementById('m-title')?.value||'').trim();
+    category=document.getElementById('m-category')?.value||'기타';
+    const av=document.getElementById('m-area')?.value||'none';
+    areaLabel=av==='specific'?'특정 지역':av==='city'?'시·도':av==='online'?'온라인':'';
+    borderColor='#16A34A'; platformTags=['#소모임','#소모임앱'];
+  } else if (platform==='munto') {
+    name=(document.getElementById('t-title')?.value||'').trim();
+    category=document.getElementById('t-category')?.value||'기타';
+    borderColor='#EA580C'; platformTags=['#문토','#문토클럽'];
+  } else if (platform==='kakao') {
+    name=(document.getElementById('roomTitle')?.value||'').trim();
+    category=document.getElementById('category')?.value||'기타';
+    borderColor='#c8a800'; platformTags=['#오픈채팅','#카카오오픈채팅'];
+  } else if (platform==='daangn') {
+    name=(document.getElementById('moimTitle')?.value||'').trim();
+    category=document.getElementById('category')?.value||'기타';
+    const av=document.getElementById('areaRange')?.value||'medium';
+    areaLabel=av==='narrow'?'우리동네':av==='medium'?'인근지역':'광역';
+    borderColor='#FF6F0F'; platformTags=['#당근모임','#당근마켓모임'];
+  }
+  const tw=name.replace(/[|·—\-\/]/g,' ').split(/\s+/).filter(k=>k.length>=2&&/[가-힣]/.test(k));
+  const titleTag=tw.length?'#'+tw[0]:'';
+  const ht=_SNS_HT[category]||_SNS_HT['기타'];
+  const large=ht.l.slice(0,2), medium=ht.m.slice(0,4), niche=ht.n.slice(0,5);
+  const extras=[...platformTags,...(areaLabel?['#'+areaLabel.replace(/\s/g,'')+'모임']:[]),...(titleTag?[titleTag]:[])];
+  const allTags=[...new Set([...large,...medium,...niche,...extras])].slice(0,15);
+  const htText=allTags.join(' ');
+  const CL={'독서':'독서','운동':'운동','맛집':'맛집','아웃도어':'아웃도어','음악':'음악','공예':'공예','언어':'언어','사교':'네트워킹','게임':'게임','반려동물':'반려동물','커리어':'커리어','아트':'아트','여행':'여행','음식':'요리','취미':'취미','직장':'직장인','연애':'연애','부업':'부업','기타':'취미'};
+  const catLabel=CL[category]||category;
+  const moimLabel=name||catLabel+' 모임';
+  const areaStr=areaLabel||'가까운 지역';
+  const caps=[
+    {style:'후킹형 🔥',text:`${catLabel} 모임 찾고 계신 분 여기 모이세요 🔥\n\n혼자 ${catLabel} 하다가 지치셨나요?\n「${moimLabel}」에서 같이 해봐요!\n\n📍 ${areaStr} · 정기 모임 운영 중\n💬 참여 문의는 DM으로 주세요!\n저장하고 공유해주시면 정말 감사해요 🙌\n\n${htText}`},
+    {style:'공감형 😊',text:`${catLabel}... 혼자 하니까 금방 포기하게 되더라고요 😅\n\n그래서 만든 모임이에요.\n「${moimLabel}」— 같이 하면 꾸준해지더라구요.\n\n${areaStr}에서 함께할 분들 환영해요!\n관심 있으시면 저장 후 DM 주세요 📩\n\n${htText}`},
+    {style:'정보형 📋',text:`📋 [${moimLabel}] 멤버 모집 안내\n\n✅ 활동: ${catLabel} 정기 모임\n📍 지역: ${areaStr}\n👥 대상: ${catLabel}에 관심 있는 누구나\n🔗 신청: 프로필 링크 또는 DM\n\n💡 꾸준히 함께 성장하고 싶은 분들을 찾아요.\n저장·공유 해주시면 큰 힘이 돼요 🙏\n\n${htText}`}
+  ];
+  const htHtml=[
+    ...large.map(h=>`<span style="background:#e8f4fd;color:#1a6fb5;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
+    ...medium.map(h=>`<span style="background:#eef6ee;color:#16A34A;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
+    ...niche.map(h=>`<span style="background:#f3f0ff;color:#7c3aed;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
+    ...extras.map(h=>`<span style="background:#fff3e0;color:#e65100;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`)
+  ].join('');
+  el.innerHTML=`<div style="margin-top:28px;padding:22px;background:#f8fffe;border-radius:16px;border:2px dashed ${borderColor}44;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+      <span style="font-size:1.1rem;">📱</span>
+      <strong style="font-size:0.97rem;color:#111;">SNS 홍보 키트</strong>
+      <span style="font-size:0.71rem;background:${borderColor}22;color:${borderColor};padding:2px 10px;border-radius:99px;font-weight:700;">인스타 최적화 · 2026 알고리즘 반영</span>
+    </div>
+    <div style="margin-bottom:22px;">
+      <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:8px;">🏷️ 해시태그 추천 15개</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">${htHtml}</div>
+      <div style="font-size:0.7rem;color:#aaa;margin-bottom:10px;">🔵 대형(100만+) · 🟢 중형(10만~100만) · 🟣 니치(1만~10만, 핵심!) · 🟠 플랫폼/지역</div>
+      <button onclick="(()=>{navigator.clipboard.writeText(${JSON.stringify(htText)}).then(()=>alert('해시태그 15개 복사됐어요!'))})()" style="padding:6px 16px;background:${borderColor};color:#fff;border:none;border-radius:8px;font-size:0.79rem;font-weight:700;cursor:pointer;">📋 해시태그 전체 복사</button>
+    </div>
+    <div>
+      <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:10px;">✍️ 캡션 초안 3종 (저장·공유 유도 포함)</div>
+      ${caps.map((c,i)=>`<div style="margin-bottom:14px;">
+        <div style="display:inline-block;font-size:0.75rem;font-weight:700;background:${borderColor};color:#fff;padding:3px 10px;border-radius:6px 6px 0 0;">${c.style}</div>
+        <pre id="${targetId}-cap-${i}" style="background:#fff;border:1px solid #e5e5e5;border-radius:0 8px 8px 8px;padding:12px;font-size:0.81rem;line-height:1.75;white-space:pre-wrap;font-family:inherit;margin:0 0 6px;">${c.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-cap-${i}').innerText).then(()=>alert('캡션 복사됐어요!'))" style="padding:5px 14px;background:#fff;color:${borderColor};border:1.5px solid ${borderColor};border-radius:7px;font-size:0.77rem;font-weight:700;cursor:pointer;">📋 복사</button>
+      </div>`).join('')}
+    </div>
+  </div>`;
 }
 </script>
 
