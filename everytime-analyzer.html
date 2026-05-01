@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <link rel="icon" href="logo.png" type="image/png"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>에브리타임 홍보게시판 분석기</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#FFF0F0 0%,#FFE0E0 100%);
+      min-height:100vh; padding:30px 16px; color:#1a1a1a;
+    }
+    header { text-align:center; margin-bottom:30px; }
+    header .logo { font-size:2.8rem; margin-bottom:6px; }
+    header h1 {
+      font-size:1.9rem; font-weight:900;
+      background:linear-gradient(90deg,#E53E3E,#FC8181);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    header p { color:#aaa; margin-top:6px; font-size:0.9rem; }
+
+    /* ── 카드 ── */
+    .card {
+      background:#fff; border-radius:18px; padding:24px;
+      margin-bottom:18px; box-shadow:0 4px 20px rgba(229,62,62,0.1);
+      max-width:720px; margin-left:auto; margin-right:auto;
+      border:1.5px solid #FFC8C8;
+    }
+    .card h2 {
+      font-size:1.05rem; font-weight:800; margin-bottom:18px;
+      color:#7a0000; display:flex; align-items:center; gap:8px;
+    }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:500px){ .form-grid { grid-template-columns:1fr; } }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group.full { grid-column:1/-1; }
+    label { font-size:0.82rem; font-weight:700; color:#666; display:flex; align-items:center; gap:4px; }
+    label .tip { font-size:0.72rem; font-weight:400; color:#aaa; margin-left:4px; }
+    input, textarea, select {
+      border:1.5px solid #e5e5e5; border-radius:10px;
+      padding:10px 12px; font-size:0.93rem; outline:none;
+      transition:border 0.2s; background:#fafafa; font-family:inherit;
+    }
+    input:focus, textarea:focus, select:focus { border-color:#E53E3E; background:#fff8f8; }
+
+    /* 슬라이더 */
+    input[type="range"] {
+      border:none; background:none; padding:0;
+      width:100%; cursor:pointer; accent-color:#E53E3E;
+    }
+    .range-row { display:flex; align-items:center; gap:10px; }
+    .range-val { font-size:1rem; font-weight:800; color:#E53E3E; min-width:50px; text-align:right; }
+
+    /* 분석 버튼 */
+    .btn-analyze {
+      display:block; width:100%; max-width:720px; margin:0 auto 24px;
+      padding:16px; background:linear-gradient(90deg,#E53E3E,#FC8181);
+      color:#fff; font-size:1.05rem; font-weight:800;
+      border:none; border-radius:14px; cursor:pointer;
+      transition:opacity 0.2s, transform 0.1s;
+      box-shadow:0 4px 20px rgba(229,62,62,0.4);
+    }
+    .btn-analyze:hover { opacity:0.9; transform:translateY(-1px); }
+
+    /* ── 결과 ── */
+    #result { display:none; }
+    .result-card {
+      background:#fff; border-radius:18px; padding:24px;
+      margin-bottom:18px; box-shadow:0 4px 20px rgba(229,62,62,0.1);
+      max-width:720px; margin-left:auto; margin-right:auto;
+      border:1.5px solid #FFC8C8;
+    }
+    .result-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:16px; color:#7a0000; display:flex; align-items:center; gap:8px; }
+
+    /* 종합 점수 */
+    .score-big-box {
+      text-align:center; padding:24px 20px 20px;
+      background:linear-gradient(135deg,#FFF0F0,#FFE0E0);
+      border-radius:14px; margin-bottom:22px;
+      border:2px solid #FC8181;
+    }
+    .score-number {
+      font-size:4rem; font-weight:900;
+      background:linear-gradient(90deg,#E53E3E,#c53030);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      line-height:1;
+    }
+    .score-grade { font-size:1.2rem; font-weight:800; margin-top:6px; color:#7a0000; }
+    .score-label { color:#888; font-size:0.85rem; margin-top:4px; }
+
+    /* 세부 점수 */
+    .sub-score-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+    .sub-item {
+      background:#FFF0F0; border-radius:12px; padding:14px 8px; text-align:center;
+      border:1.5px solid #FFC8C8;
+    }
+    .sub-item .sv { font-size:1.4rem; font-weight:900; color:#E53E3E; }
+    .sub-item .sn { font-size:0.72rem; color:#888; margin-top:4px; font-weight:700; }
+    .sub-item .sm { font-size:0.68rem; color:#bbb; margin-top:2px; }
+
+    /* 진행 바 */
+    .stat-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+    .stat-name-wrap { width:120px; flex-shrink:0; }
+    .stat-name { font-size:0.83rem; color:#555; font-weight:600; }
+    .stat-desc { font-size:0.72rem; color:#aaa; margin-top:2px; line-height:1.4; }
+    .bar-wrap { flex:1; background:#f0f0f0; border-radius:99px; height:10px; min-width:80px; }
+    .bar-fill { height:10px; border-radius:99px; transition:width 0.6s; }
+    .bar-good { background:linear-gradient(90deg,#22c55e,#86efac); }
+    .bar-mid  { background:linear-gradient(90deg,#E53E3E,#FC8181); }
+    .bar-bad  { background:linear-gradient(90deg,#ef4444,#fca5a5); }
+    .stat-val { width:64px; text-align:right; font-size:0.82rem; color:#888; flex-shrink:0; }
+
+    /* 체크 아이템 */
+    .check-item {
+      display:flex; align-items:flex-start; gap:10px;
+      padding:11px 14px; border-radius:10px; margin-bottom:8px;
+    }
+    .check-ok   { background:#f0fff4; border-left:3px solid #22c55e; }
+    .check-warn { background:#fff8f8; border-left:3px solid #E53E3E; }
+    .check-bad  { background:#fff5f5; border-left:3px solid #ef4444; }
+    .check-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+    .check-title { font-size:0.84rem; font-weight:700; }
+    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.5; }
+
+    /* 팁 박스 */
+    .tip-box {
+      background:linear-gradient(135deg,#FFF0F0,#FFE0E0);
+      border-left:4px solid #E53E3E; border-radius:0 10px 10px 0;
+      padding:14px 16px; font-size:0.87rem; color:#7a0000; line-height:1.7;
+    }
+    .tip-box strong { color:#E53E3E; }
+
+    /* 로드맵 */
+    .roadmap-item {
+      padding:14px 16px; border-radius:12px; margin-bottom:10px;
+      background:#fafafa;
+    }
+    .roadmap-item.p1 { border-left:4px solid #E53E3E; }
+    .roadmap-item.p2 { border-left:4px solid #ED8936; }
+    .roadmap-item.p3 { border-left:4px solid #48BB78; }
+    .roadmap-badge {
+      display:inline-block; font-size:0.68rem; font-weight:800;
+      padding:2px 8px; border-radius:99px; margin-bottom:6px;
+    }
+    .badge-p1 { background:#FFF0F0; color:#E53E3E; }
+    .badge-p2 { background:#FFFAF0; color:#ED8936; }
+    .badge-p3 { background:#F0FFF4; color:#38A169; }
+    .roadmap-title { font-weight:700; font-size:0.88rem; color:#333; margin-bottom:4px; }
+    .roadmap-action { font-size:0.82rem; color:#444; margin-bottom:3px; }
+    .roadmap-why { font-size:0.77rem; color:#888; font-style:italic; }
+
+    /* 메트릭 그리드 */
+    .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+    @media(max-width:500px){ .metric-grid { grid-template-columns:repeat(2,1fr); } }
+    .metric-box { background:linear-gradient(135deg,#FFF0F0,#FFE0E0); border-radius:12px; padding:14px 10px; text-align:center; border:1px solid #FFC8C8; }
+    .metric-box .m-val { font-size:1.3rem; font-weight:800; color:#E53E3E; }
+    .metric-box .m-label { font-size:0.72rem; color:#888; margin-top:4px; }
+
+    /* 섹션 구분 */
+    .divider { border:none; border-top:1px solid #FFC8C8; margin:16px 0; }
+
+    /* ⓘ 버튼 */
+    .info-wrap { position:relative; display:inline-block; vertical-align:middle; margin-left:5px; }
+    .info-btn {
+      width:16px; height:16px; background:#FFC8C8; color:#E53E3E;
+      border-radius:50%; border:none; cursor:pointer; font-size:0.62rem;
+      font-weight:800; line-height:16px; text-align:center; padding:0;
+      display:inline-flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+    .info-btn:hover { background:#E53E3E; color:#fff; }
+    .info-wrap:hover .info-tooltip { display:block; }
+    .info-tooltip {
+      display:none; position:absolute; width:230px;
+      bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+      background:#fff; border:1.5px solid #FFC8C8; border-radius:12px;
+      padding:10px 12px; font-size:0.78rem; color:#444; z-index:999;
+      box-shadow:0 6px 24px rgba(229,62,62,0.15); line-height:1.6;
+      font-weight:400; text-align:left; pointer-events:none;
+    }
+    .tooltip-where { background:#FFF0F0; color:#E53E3E; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
+
+    /* PDF 바 */
+    #pdf-bar {
+      display:none; max-width:720px; margin:0 auto 18px;
+      background:#fff; border-radius:14px; padding:14px 20px;
+      box-shadow:0 4px 20px rgba(229,62,62,0.15); border:1.5px solid #FFC8C8;
+      align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .pdf-label { font-size:0.88rem; color:#555; font-weight:600; }
+    .pdf-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      background:linear-gradient(90deg,#E53E3E,#FC8181);
+      color:#fff; border:none; border-radius:99px; padding:8px 18px;
+      font-size:0.82rem; font-weight:700; cursor:pointer;
+      box-shadow:0 2px 10px rgba(229,62,62,0.35); transition:opacity 0.2s;
+    }
+    .pdf-btn:hover { opacity:0.88; }
+
+    footer { text-align:center; color:#bbb; font-size:0.8rem; margin-top:10px; padding-bottom:20px; }
+    .back-btn {
+      display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+      color:#999; font-size:0.82rem; font-weight:600; background:#fff;
+      border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px;
+    }
+    .back-btn:hover { border-color:#E53E3E; color:#E53E3E; }
+    .back-wrap { max-width:720px; margin:0 auto 10px; }
+
+    /* 스크롤 버튼 */
+    .scroll-btns {
+      position:fixed; bottom:24px; right:20px; display:flex;
+      flex-direction:column; gap:8px; z-index:1000;
+    }
+    .scroll-btn {
+      width:42px; height:42px; border-radius:50%; border:none;
+      background:#E53E3E; color:#fff; font-size:1.1rem; font-weight:700;
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 4px 14px rgba(229,62,62,0.35); transition:all 0.2s;
+    }
+    .scroll-btn:hover { transform:scale(1.12); box-shadow:0 6px 20px rgba(229,62,62,0.5); }
+    #scrollTopBtn { opacity:0; pointer-events:none; transition:opacity 0.3s; }
+    #scrollTopBtn.visible { opacity:1; pointer-events:auto; }
+
+    /* 배지 */
+    .algo-badge {
+      display:inline-block; background:linear-gradient(90deg,#E53E3E,#FC8181);
+      color:#fff; font-size:0.72rem; font-weight:800;
+      padding:3px 12px; border-radius:99px; margin-top:8px;
+    }
+
+    /* 점수 미터 */
+    .score-meter-wrap { margin:0 auto 10px; max-width:260px; }
+    .score-meter-bar { height:12px; background:#f0f0f0; border-radius:99px; overflow:hidden; margin-top:4px; }
+    .score-meter-fill { height:12px; border-radius:99px; transition:width 0.8s; background:linear-gradient(90deg,#E53E3E,#FC8181); }
+  </style>
+</head>
+<body>
+
+<header>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#E53E3E; font-weight:700; font-size:1.2rem;">longchiri</span></p>
+  <div class="logo">📋</div>
+  <h1>에브리타임 홍보게시판 분석기</h1>
+  <p>홍보게시판 포스팅 성과를 진단하고 조회수·반응률 향상 전략을 받아보세요</p>
+  <span class="algo-badge">MAU 450만 대학생 커뮤니티</span>
+</header>
+
+<div class="back-wrap">
+  <a class="back-btn" href="hub.html">← 홈으로 돌아가기</a>
+</div>
+
+<!-- 섹션 1: 게시물 기본 정보 -->
+<div class="card">
+  <h2>📋 게시물 기본 정보</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>업종/카테고리</label>
+      <select id="category">
+        <option value="contest">공모전·대외활동</option>
+        <option value="job">채용·인턴</option>
+        <option value="app">앱·서비스</option>
+        <option value="tutoring">과외·학원</option>
+        <option value="shopping">쇼핑몰·이커머스</option>
+        <option value="food">식음료·카페</option>
+        <option value="etc">기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>타겟 학교 수</label>
+      <select id="schoolCount">
+        <option value="1">1개</option>
+        <option value="2to5">2~5개</option>
+        <option value="6to10">6~10개</option>
+        <option value="11plus">11개 이상</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>포스팅 방식</label>
+      <select id="postMethod">
+        <option value="self">직접 포스팅</option>
+        <option value="agency">대행사 이용</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>학교 규모</label>
+      <select id="schoolSize">
+        <option value="small">소규모 (~5천명)</option>
+        <option value="mid">중규모 (5천~1만5천)</option>
+        <option value="large">대규모 (1만5천명 이상)</option>
+      </select>
+    </div>
+    <div class="form-group full">
+      <label>월 포스팅 횟수 <span class="tip">주 1회 = 월 4회</span></label>
+      <div class="range-row">
+        <input type="range" id="postCount" min="1" max="20" value="4" oninput="document.getElementById('postCountVal').textContent=this.value+'회'">
+        <span class="range-val" id="postCountVal">4회</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 섹션 2: 게시물 성과 -->
+<div class="card">
+  <h2>📊 게시물 성과
+    <span class="info-wrap">
+      <button class="info-btn" type="button">ⓘ</button>
+      <span class="info-tooltip">
+        조회수는 게시물 목록에서 눈 아이콘 옆 숫자, 링크 클릭수는 bit.ly 등 단축링크로 측정
+        <span class="tooltip-where">최근 포스팅 평균값을 입력하세요</span>
+      </span>
+    </span>
+  </h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>평균 조회수</label>
+      <input type="number" id="avgViews" placeholder="예: 850" min="0">
+    </div>
+    <div class="form-group">
+      <label>평균 공감수</label>
+      <input type="number" id="avgLikes" placeholder="예: 42" min="0">
+    </div>
+    <div class="form-group">
+      <label>평균 댓글수</label>
+      <input type="number" id="avgComments" placeholder="예: 8" min="0">
+    </div>
+    <div class="form-group">
+      <label>링크 클릭수</label>
+      <input type="number" id="linkClicks" placeholder="측정 안 함이면 0" min="0">
+    </div>
+  </div>
+</div>
+
+<!-- 섹션 3: 콘텐츠 전략 -->
+<div class="card">
+  <h2>✍️ 콘텐츠 전략</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>제목 유형</label>
+      <select id="titleType">
+        <option value="benefit">혜택·무료형 ("무료 체험", "선착순")</option>
+        <option value="question">질문형 ("혹시 이런 경험 있어요?")</option>
+        <option value="info">정보·팁형</option>
+        <option value="plain">단순 광고형 ("OO 홍보합니다")</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>이미지 첨부 수</label>
+      <select id="imgCount">
+        <option value="none">없음</option>
+        <option value="1">1장</option>
+        <option value="2to3">2~3장</option>
+        <option value="4plus">4장 이상</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>본문 첫 50자 CTA 포함</label>
+      <select id="ctaFirst50">
+        <option value="yes">포함</option>
+        <option value="no">미포함</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>링크 삽입 방식</label>
+      <select id="linkType">
+        <option value="none">없음</option>
+        <option value="short">단축링크 (bit.ly 등)</option>
+        <option value="normal">일반 URL</option>
+        <option value="kakao">카카오 오픈채팅 링크</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>포스팅 요일</label>
+      <select id="postDay">
+        <option value="mon">월</option>
+        <option value="tue">화</option>
+        <option value="wed">수</option>
+        <option value="thu">목 (최적)</option>
+        <option value="fri">금</option>
+        <option value="sat">토</option>
+        <option value="sun">일</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>포스팅 시간대</label>
+      <select id="postTime">
+        <option value="morning">오전 (9~12시)</option>
+        <option value="lunch">점심 (12~14시)</option>
+        <option value="afternoon">오후 (14~18시·추천)</option>
+        <option value="evening">저녁 (18~22시)</option>
+        <option value="night">심야 (22시 이후)</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 섹션 4: 운영 관리 -->
+<div class="card">
+  <h2>🔁 운영 관리</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>댓글 관리</label>
+      <select id="commentMgmt">
+        <option value="none">안 함</option>
+        <option value="sometimes">가끔 (신고·질문만)</option>
+        <option value="active">적극적으로 (댓글 달아주며 소통)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>재포스팅 주기</label>
+      <select id="repostCycle">
+        <option value="none">재포스팅 안 함</option>
+        <option value="2weeks">2주마다</option>
+        <option value="monthly">한 달마다</option>
+        <option value="2months">2달 이상</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>성과 측정 방식</label>
+      <select id="measurement">
+        <option value="none">측정 안 함</option>
+        <option value="views">조회수만 봄</option>
+        <option value="shortlink">단축링크로 클릭 추적</option>
+        <option value="conversion">전환(가입·구매)까지 추적</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>타 채널 병행</label>
+      <select id="otherChannel">
+        <option value="none">없음</option>
+        <option value="instagram">인스타그램</option>
+        <option value="kakao">카카오오픈채팅</option>
+        <option value="multi">복수 채널 운영</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<button class="btn-analyze" onclick="analyze()">🔍 분석하기</button>
+
+<!-- 결과 -->
+<div id="result">
+
+  <!-- PDF 바 -->
+  <div id="pdf-bar">
+    <span class="pdf-label">📄 분석 결과를 저장하시겠어요?</span>
+    <button class="pdf-btn" onclick="window.print()">🖨️ PDF로 저장</button>
+  </div>
+
+  <!-- 종합 점수 -->
+  <div class="result-card">
+    <h2>🎯 종합 진단 결과</h2>
+    <div class="score-big-box">
+      <div class="score-number" id="scoreNum">--</div>
+      <div class="score-label">/ 100점</div>
+      <div class="score-meter-wrap">
+        <div class="score-meter-bar">
+          <div class="score-meter-fill" id="scoreMeterFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="score-grade" id="scoreGrade">--</div>
+    </div>
+
+    <div class="sub-score-grid">
+      <div class="sub-item">
+        <div class="sv" id="subViews">--</div>
+        <div class="sn">조회수</div>
+        <div class="sm">/ 25점</div>
+      </div>
+      <div class="sub-item">
+        <div class="sv" id="subReact">--</div>
+        <div class="sn">반응률</div>
+        <div class="sm">/ 25점</div>
+      </div>
+      <div class="sub-item">
+        <div class="sv" id="subContent">--</div>
+        <div class="sn">콘텐츠 전략</div>
+        <div class="sm">/ 30점</div>
+      </div>
+    </div>
+
+    <div id="categoryBonus" style="display:none; text-align:center; margin-bottom:16px;">
+      <span style="display:inline-block; background:#FFF0F0; color:#E53E3E; font-size:0.8rem; font-weight:800; padding:5px 14px; border-radius:99px; border:1.5px solid #FFC8C8;">
+        🎁 업종 보너스 +5점 적용!
+      </span>
+    </div>
+
+    <hr class="divider">
+    <div id="metricsArea"></div>
+  </div>
+
+  <!-- 진단 분석 -->
+  <div class="result-card">
+    <h2>📈 항목별 진단</h2>
+    <div id="statBars"></div>
+  </div>
+
+  <!-- 로드맵 -->
+  <div class="result-card">
+    <h2>🗺️ 개인화 개선 로드맵</h2>
+    <div id="roadmapArea"></div>
+  </div>
+
+  <!-- 체크리스트 -->
+  <div class="result-card">
+    <h2>✅ 홍보게시판 최적화 체크리스트</h2>
+    <div id="checklistArea"></div>
+  </div>
+
+  <!-- 팁 박스 -->
+  <div class="result-card">
+    <h2>💡 에브리타임 홍보 핵심 인사이트</h2>
+    <div class="tip-box" id="tipBox"></div>
+  </div>
+
+</div>
+
+<!-- 스크롤 버튼 -->
+<div class="scroll-btns">
+  <button class="scroll-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="맨 위로">▲</button>
+  <button class="scroll-btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="맨 아래로">▼</button>
+</div>
+
+<footer>© 2026 longchiri — 에브리타임 홍보게시판 분석기 Ver 1.0.0</footer>
+
+<script>
+  // 스크롤 버튼 표시/숨김
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('scrollTopBtn');
+    if (window.scrollY > 300) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  });
+
+  function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function analyze() {
+    // ── 값 수집 ──
+    var category     = document.getElementById('category').value;
+    var schoolCount  = document.getElementById('schoolCount').value;
+    var postMethod   = document.getElementById('postMethod').value;
+    var postCountN   = parseInt(document.getElementById('postCount').value) || 4;
+    var schoolSize   = document.getElementById('schoolSize').value;
+
+    var views        = parseInt(document.getElementById('avgViews').value) || 0;
+    var likes        = parseInt(document.getElementById('avgLikes').value) || 0;
+    var comments     = parseInt(document.getElementById('avgComments').value) || 0;
+    var linkClicks   = parseInt(document.getElementById('linkClicks').value) || 0;
+
+    var titleType    = document.getElementById('titleType').value;
+    var imgCount     = document.getElementById('imgCount').value;
+    var ctaFirst50   = document.getElementById('ctaFirst50').value;
+    var linkType     = document.getElementById('linkType').value;
+    var postDay      = document.getElementById('postDay').value;
+    var postTime     = document.getElementById('postTime').value;
+
+    var commentMgmt  = document.getElementById('commentMgmt').value;
+    var repostCycle  = document.getElementById('repostCycle').value;
+    var measurement  = document.getElementById('measurement').value;
+    var otherChannel = document.getElementById('otherChannel').value;
+
+    // ── 점수 계산 ──
+    var scoreViews = 0, scoreReact = 0, scoreContent = 0, scoreOps = 0;
+
+    // 1. 조회수 (25점)
+    if (views >= 2000) scoreViews = 25;
+    else if (views >= 1000) scoreViews = 20;
+    else if (views >= 500) scoreViews = 13;
+    else if (views >= 200) scoreViews = 7;
+    else if (views > 0) scoreViews = 3;
+
+    // 2. 반응률 (25점)
+    var reactRate = (views > 0) ? (likes + comments) / views * 100 : 0;
+    if (reactRate >= 5) scoreReact = 25;
+    else if (reactRate >= 3) scoreReact = 18;
+    else if (reactRate >= 1.5) scoreReact = 11;
+    else if (reactRate > 0) scoreReact = 5;
+
+    // 3. 콘텐츠 전략 (30점)
+    var titleScore = 0;
+    if (titleType === 'benefit') titleScore = 12;
+    else if (titleType === 'question') titleScore = 10;
+    else if (titleType === 'info') titleScore = 7;
+    else titleScore = 2;
+
+    var imgScore = 0;
+    if (imgCount === '2to3') imgScore = 8;
+    else if (imgCount === '1') imgScore = 6;
+    else if (imgCount === '4plus') imgScore = 5;
+
+    var dayScore = 0;
+    if (postDay === 'thu') dayScore = 5;
+    else if (postDay === 'mon' || postDay === 'tue' || postDay === 'wed') dayScore = 3;
+    else dayScore = 1;
+
+    var timeScore = 0;
+    if (postTime === 'afternoon') timeScore = 5;
+    else if (postTime === 'evening') timeScore = 3;
+    else if (postTime === 'lunch') timeScore = 2;
+
+    scoreContent = titleScore + imgScore + dayScore + timeScore;
+
+    // 4. 운영 관리 (20점)
+    var linkScore = 0;
+    if (linkType === 'short') linkScore = 6;
+    else if (linkType === 'kakao') linkScore = 5;
+    else if (linkType === 'normal') linkScore = 3;
+
+    var commentScore = 0;
+    if (commentMgmt === 'active') commentScore = 6;
+    else if (commentMgmt === 'sometimes') commentScore = 3;
+
+    var repostScore = 0;
+    if (repostCycle === '2weeks') repostScore = 4;
+    else if (repostCycle === 'monthly') repostScore = 3;
+    else if (repostCycle === '2months') repostScore = 1;
+
+    var measureScore = 0;
+    if (measurement === 'conversion') measureScore = 4;
+    else if (measurement === 'shortlink') measureScore = 3;
+    else if (measurement === 'views') measureScore = 1;
+
+    scoreOps = linkScore + commentScore + repostScore + measureScore;
+
+    var score = scoreViews + scoreReact + scoreContent + scoreOps;
+
+    // 업종 보너스
+    var contestCat = (category === 'contest' || category === 'job');
+    if (contestCat) score = Math.min(100, score + 5);
+    score = Math.min(100, score);
+
+    // ── 등급 ──
+    var grade = '';
+    if (score >= 90) grade = '🔥 최적화 완료';
+    else if (score >= 75) grade = '✅ 양호';
+    else if (score >= 55) grade = '⚡ 개선 필요';
+    else if (score >= 35) grade = '⚠️ 전략 재검토';
+    else grade = '🚨 즉시 개선';
+
+    // ── 결과 DOM 업데이트 ──
+    document.getElementById('scoreNum').textContent = score;
+    document.getElementById('scoreMeterFill').style.width = score + '%';
+    document.getElementById('scoreGrade').textContent = grade;
+    document.getElementById('subViews').textContent = scoreViews;
+    document.getElementById('subReact').textContent = scoreReact;
+    document.getElementById('subContent').textContent = scoreContent;
+    document.getElementById('categoryBonus').style.display = contestCat ? 'block' : 'none';
+
+    // ── 핵심 지표 ──
+    var reactRateStr = (views > 0) ? reactRate.toFixed(2) + '%' : '-';
+    var ctrStr = (views > 0 && linkClicks > 0) ? (linkClicks / views * 100).toFixed(2) + '%' : '-';
+    document.getElementById('metricsArea').innerHTML =
+      '<div class="metric-grid">' +
+      '<div class="metric-box"><div class="m-val">' + views.toLocaleString() + '</div><div class="m-label">평균 조회수</div></div>' +
+      '<div class="metric-box"><div class="m-val">' + reactRateStr + '</div><div class="m-label">반응률</div></div>' +
+      '<div class="metric-box"><div class="m-val">' + ctrStr + '</div><div class="m-label">링크 CTR</div></div>' +
+      '<div class="metric-box"><div class="m-val">' + likes + '</div><div class="m-label">평균 공감</div></div>' +
+      '<div class="metric-box"><div class="m-val">' + comments + '</div><div class="m-label">평균 댓글</div></div>' +
+      '<div class="metric-box"><div class="m-val">' + postCountN + '회/월</div><div class="m-label">포스팅 빈도</div></div>' +
+      '</div>';
+
+    // ── 진단 바 ──
+    var bars = [
+      { name: '조회수',       desc: '목표: 1,000+',           val: scoreViews,   max: 25 },
+      { name: '반응률',       desc: '목표: 3% 이상',           val: scoreReact,   max: 25 },
+      { name: '콘텐츠 전략',  desc: '제목·이미지·요일·시간',   val: scoreContent, max: 30 },
+      { name: '운영 관리',    desc: '링크·댓글·재포스팅·측정', val: scoreOps,     max: 20 }
+    ];
+    var barsHtml = '';
+    for (var i = 0; i < bars.length; i++) {
+      var b = bars[i];
+      var pct = Math.round(b.val / b.max * 100);
+      var cls = (pct >= 70) ? 'bar-good' : (pct >= 40) ? 'bar-mid' : 'bar-bad';
+      barsHtml +=
+        '<div class="stat-row">' +
+        '<div class="stat-name-wrap"><div class="stat-name">' + b.name + '</div><div class="stat-desc">' + b.desc + '</div></div>' +
+        '<div class="bar-wrap"><div class="bar-fill ' + cls + '" style="width:' + pct + '%"></div></div>' +
+        '<div class="stat-val">' + b.val + '/' + b.max + '</div>' +
+        '</div>';
+    }
+    document.getElementById('statBars').innerHTML = barsHtml;
+
+    // ── 조합 신호 ──
+    var lowViews    = (views < 300 && views > 0);
+    var highViews   = (views >= 1000);
+    var lowReact    = (reactRate < 1.5 && views > 0);
+    var highReact   = (reactRate >= 3);
+    var badTitle    = (titleType === 'plain');
+    var goodTitle   = (titleType === 'benefit' || titleType === 'question');
+    var noImg       = (imgCount === 'none');
+    var badDay      = (postDay === 'sat' || postDay === 'sun');
+    var goodDay     = (postDay === 'thu');
+    var badTime     = (postTime === 'night' || postTime === 'morning');
+    var goodTime    = (postTime === 'afternoon');
+    var noLink      = (linkType === 'none');
+    var shortLink   = (linkType === 'short');
+    var noComment   = (commentMgmt === 'none');
+    var activeComment = (commentMgmt === 'active');
+    var noRepost    = (repostCycle === 'none');
+    var noMeasure   = (measurement === 'none');
+    var singleSchool  = (schoolCount === '1');
+    var multiSchool   = (schoolCount === '11plus' || schoolCount === '6to10');
+    var largeSchool   = (schoolSize === 'large');
+    var noCTA       = (ctaFirst50 === 'no');
+
+    // ── 로드맵 아이템 ──
+    var roadmapItems = [];
+
+    // 케이스 1: 조회수 낮음 + 단순광고 제목
+    if (lowViews && badTitle) {
+      roadmapItems.push({
+        p: 1,
+        title: '제목 전략부터 바꾸세요',
+        action: pick([
+          '"무료", "선착순", "혜택" 등 유인 키워드를 제목 앞에 배치하세요.',
+          '제목에 "혹시 ~해본 적 있으신가요?" 형식의 질문을 넣어보세요.',
+          '단순 홍보 문구 대신 독자에게 주는 가치를 제목에 직접 담으세요.'
+        ]),
+        why: '에브리타임 목록에서 제목이 클릭률을 결정합니다. 단순 광고형은 스크롤 무시율이 높습니다.'
+      });
+    }
+
+    // 케이스 2: 조회수 높음 + 반응률 낮음
+    if (highViews && lowReact) {
+      roadmapItems.push({
+        p: 1,
+        title: '본문 CTA를 강화하세요',
+        action: pick([
+          '본문 첫 50자 안에 "공감 눌러주시면 OO 드려요" 등 참여 유도를 넣으세요.',
+          '댓글로 질문에 답하면 혜택을 주는 이벤트를 설정해보세요.',
+          '본문 마지막에 "링크 클릭해서 무료 신청하기" 버튼 안내를 추가하세요.'
+        ]),
+        why: '조회수는 충분하지만 독자가 행동하지 않는 것은 본문의 CTA(행동 유도) 문구가 약하다는 신호입니다.'
+      });
+    }
+
+    // 케이스 3: 이미지 없음 + 낮은 반응
+    if (noImg && lowReact) {
+      roadmapItems.push({
+        p: 1,
+        title: '썸네일 이미지를 추가하세요',
+        action: pick([
+          '텍스트 위주 포스팅에 브랜드 컬러의 카드뉴스 1~2장을 추가해보세요.',
+          '스마트폰으로 찍은 실제 제품/서비스 이미지도 효과적입니다.',
+          'Canva로 에브리타임 사이즈(1:1 또는 4:3)에 맞는 이미지를 제작해보세요.'
+        ]),
+        why: '에브리타임 홍보게시판에서 이미지가 없으면 목록 클릭률이 평균 40% 이상 낮아집니다.'
+      });
+    }
+
+    // 케이스 4: 주말 포스팅 + 낮은 조회수
+    if (badDay && lowViews) {
+      roadmapItems.push({
+        p: 1,
+        title: '포스팅 요일을 평일로 바꾸세요',
+        action: pick([
+          '목요일 오후 2~6시 포스팅이 최적입니다. 주말 포스팅은 즉시 변경하세요.',
+          '월~수 오후에 포스팅하고 목요일 오전에 재포스팅하는 전략을 써보세요.',
+          '대학생은 주말보다 평일 수업 사이사이에 에브리타임을 더 많이 봅니다.'
+        ]),
+        why: '주말에는 대학생 커뮤니티 활성화가 낮아 조회수가 평일 대비 30~50% 낮습니다.'
+      });
+    }
+
+    // 케이스 5: 링크 없음 + 전환 측정 안 함
+    if (noLink && noMeasure) {
+      roadmapItems.push({
+        p: 1,
+        title: '성과 추적 체계를 세우세요',
+        action: pick([
+          'bit.ly나 링크트리로 단축링크를 만들어 클릭수를 측정하세요.',
+          '카카오오픈채팅 링크를 추가하고 유입 경로를 확인하세요.',
+          'UTM 파라미터를 달아 에브리타임에서 들어온 전환을 분리 추적하세요.'
+        ]),
+        why: '측정하지 않으면 개선할 수 없습니다. 지금 당장 bit.ly 계정을 만드세요.'
+      });
+    }
+
+    // 케이스 6: 재포스팅 없음 + 학교 1개
+    if (noRepost && singleSchool) {
+      roadmapItems.push({
+        p: 1,
+        title: '노출 확장 전략이 필요합니다',
+        action: pick([
+          '재포스팅 주기를 2주로 설정하고, 타겟 학교를 2~3개 더 추가하세요.',
+          '동일 콘텐츠로 인접 학교(같은 도시 내)에 순차 포스팅하세요.',
+          '학교를 5개씩 묶어 같은 날 일괄 포스팅하는 캘린더를 만드세요.'
+        ]),
+        why: '1개 학교에 재포스팅도 없으면 총 노출량이 극히 제한됩니다.'
+      });
+    }
+
+    // 케이스 7: 댓글 관리 안 함 + 낮은 반응률
+    if (noComment && lowReact) {
+      roadmapItems.push({
+        p: 2,
+        title: '댓글 소통을 시작하세요',
+        action: pick([
+          '포스팅 후 24시간 이내 댓글에 답글을 달면 게시물이 목록 상단에 유지됩니다.',
+          '"궁금한 점 댓글로 남겨주세요!" 문구를 본문에 추가하세요.',
+          '질문 댓글에 성실하게 답하면 신뢰도가 높아져 클릭으로 이어집니다.'
+        ]),
+        why: '에브리타임은 댓글이 달리면 최신 게시물처럼 상단 노출됩니다.'
+      });
+    }
+
+    // 케이스 8: 대규모 학교 + 높은 조회수
+    if (largeSchool && highViews) {
+      roadmapItems.push({
+        p: 2,
+        title: '타 학교 확장 적기입니다',
+        action: pick([
+          '현재 대규모 학교에서 성과가 검증됐으니 중규모 학교 5개에 동시 확장하세요.',
+          '성과 좋은 포스팅을 그대로 복붙해서 다른 학교 홍보게시판에 올리세요.',
+          '학교별 반응을 비교해 전환율이 높은 학교 그룹을 찾아 집중 투자하세요.'
+        ]),
+        why: '대규모 학교에서 조회수가 높다면 그 콘텐츠는 다른 학교에서도 통합니다.'
+      });
+    }
+
+    // 케이스 9: 공모전/채용 카테고리
+    if (contestCat) {
+      roadmapItems.push({
+        p: 2,
+        title: '공모전·채용은 에브리타임 강점 카테고리!',
+        action: pick([
+          '"선착순 마감", "D-7" 등 마감 긴박감을 제목과 본문에 명시하세요.',
+          '공모전은 상금, 채용은 연봉/처우를 첫 줄에 노출시키세요.',
+          '학과별 맞춤 멘트("경영대생이라면 꼭 확인!")로 타겟팅을 강화하세요.'
+        ]),
+        why: '대학생 관심사와 직결되는 카테고리로 업종 보너스 +5점이 자동 적용됩니다.'
+      });
+    }
+
+    // 케이스 10: 단축링크 미사용 + 전환 측정 안 함 (링크는 있지만 추적 없는 경우)
+    if (!shortLink && noMeasure && !noLink) {
+      roadmapItems.push({
+        p: 2,
+        title: 'bit.ly로 클릭 추적을 시작하세요',
+        action: pick([
+          'bit.ly 무료 계정으로 단축링크를 만들면 클릭수·국가·기기를 볼 수 있습니다.',
+          'Google Analytics UTM 파라미터를 추가해 에브리타임 전환을 분리 확인하세요.',
+          '링크별로 A/B 테스트를 해서 어떤 CTA 문구가 더 많은 클릭을 받는지 확인하세요.'
+        ]),
+        why: '링크는 있지만 추적하지 않으면 어떤 포스팅이 실제 전환으로 이어지는지 알 수 없습니다.'
+      });
+    }
+
+    // 케이스 11: 본문 CTA 없음
+    if (noCTA) {
+      roadmapItems.push({
+        p: 2,
+        title: '본문 첫 줄에 CTA를 배치하세요',
+        action: pick([
+          '"지금 바로 신청하기 →" 문구를 본문 맨 앞에 배치해 즉각 행동을 유도하세요.',
+          '"무료 체험 신청 마감 D-3!" 같은 긴박감 있는 CTA를 첫 문장으로 시작하세요.',
+          '"링크 클릭 → 5초 신청 완료" 등 쉬운 행동임을 강조하세요.'
+        ]),
+        why: '에브리타임 사용자는 모바일에서 빠르게 스크롤합니다. 첫 50자가 전환을 결정합니다.'
+      });
+    }
+
+    // 케이스 12: 나쁜 시간대
+    if (badTime) {
+      roadmapItems.push({
+        p: 2,
+        title: '포스팅 시간대를 오후로 조정하세요',
+        action: pick([
+          '오후 2~6시, 특히 3시 전후가 대학생 에브리타임 이용 피크 타임입니다.',
+          '심야 포스팅은 다음 날 오전에 묻힐 가능성이 높습니다. 예약 기능을 활용하세요.',
+          '오전 수업 후 점심시간(12~14시)도 두 번째로 좋은 시간대입니다.'
+        ]),
+        why: '피크 타임에 올린 포스팅이 최신 게시물 상위에 더 오래 머뭅니다.'
+      });
+    }
+
+    // 케이스 13: 타 채널 없음 + 낮은 점수
+    if (otherChannel === 'none' && score < 60) {
+      roadmapItems.push({
+        p: 3,
+        title: '멀티채널 전략으로 전환율을 높이세요',
+        action: pick([
+          '에브리타임에서 관심 유도 → 인스타 팔로우 → 구매/신청으로 이어지는 퍼널을 설계하세요.',
+          '카카오오픈채팅을 만들어 에브리타임 유입 후 리타겟팅하세요.',
+          '에브리타임 포스팅 + 인스타 스토리를 같은 날 동시 운영해 노출을 극대화하세요.'
+        ]),
+        why: '에브리타임 단독으로는 전환이 어렵습니다. 연결고리를 만들어야 ROI가 높아집니다.'
+      });
+    }
+
+    // 케이스 14: 이미지 4장 이상
+    if (imgCount === '4plus') {
+      roadmapItems.push({
+        p: 3,
+        title: '이미지는 2~3장이 최적입니다',
+        action: pick([
+          '4장 이상은 오히려 로딩 속도와 가독성을 떨어뜨립니다. 핵심 2~3장으로 줄이세요.',
+          '첫 이미지를 고화질 썸네일로, 나머지는 상세 내용 카드뉴스로 구성하세요.',
+          '이미지 순서: 1장(후킹 썸네일) → 2장(혜택 정리) → 3장(링크/CTA)로 구성하세요.'
+        ]),
+        why: '에브리타임 모바일 환경에서 2~3장이 스크롤 피로도 없이 정보 전달이 최적입니다.'
+      });
+    }
+
+    // 케이스 15: 포스팅 횟수 적음 + 학교 1개
+    if (postCountN <= 2 && singleSchool) {
+      roadmapItems.push({
+        p: 3,
+        title: '포스팅 빈도를 높이거나 학교를 늘리세요',
+        action: pick([
+          '월 2회 미만이면 노출이 너무 적습니다. 최소 주 1회(월 4회) 이상을 목표로 하세요.',
+          '직접 포스팅이 어렵다면 대행사를 이용해 10개 이상 학교에 일괄 포스팅하세요.',
+          '콘텐츠 캘린더를 미리 짜두면 빈도 유지가 쉬워집니다.'
+        ]),
+        why: '에브리타임 홍보게시판은 최신 글이 상위에 노출되므로 빈도가 곧 노출량입니다.'
+      });
+    }
+
+    // priority 순 정렬
+    roadmapItems.sort(function(a, b) { return a.p - b.p; });
+
+    var roadmapHtml = '';
+    if (roadmapItems.length === 0) {
+      roadmapHtml = '<div class="tip-box">현재 입력 조건에서는 로드맵 항목이 없습니다. 성과 데이터(조회수 등)를 입력하면 더 정확한 로드맵을 받을 수 있습니다.</div>';
+    } else {
+      for (var ri = 0; ri < roadmapItems.length; ri++) {
+        var item = roadmapItems[ri];
+        var pClass = 'p' + item.p;
+        var badgeCls = 'badge-p' + item.p;
+        var badgeText = (item.p === 1) ? '핵심 개선' : (item.p === 2) ? '개선 권장' : '선택 사항';
+        roadmapHtml +=
+          '<div class="roadmap-item ' + pClass + '">' +
+          '<span class="roadmap-badge ' + badgeCls + '">' + badgeText + '</span>' +
+          '<div class="roadmap-title">' + item.title + '</div>' +
+          '<div class="roadmap-action">' + item.action + '</div>' +
+          '<div class="roadmap-why">' + item.why + '</div>' +
+          '</div>';
+      }
+    }
+    document.getElementById('roadmapArea').innerHTML = roadmapHtml;
+
+    // ── 체크리스트 ──
+    var checklists = [
+      { text: '제목에 "무료", "선착순", "혜택" 등 유인 키워드 포함',          ok: (titleType === 'benefit') },
+      { text: '이미지 2~3장 첨부 (썸네일 퀄리티 중요)',                       ok: (imgCount === '2to3') },
+      { text: '본문 첫 50자 안에 핵심 내용+CTA 배치',                         ok: (ctaFirst50 === 'yes') },
+      { text: '목요일 오후 2~6시 포스팅',                                     ok: (postDay === 'thu' && postTime === 'afternoon') },
+      { text: '단축링크(bit.ly) 삽입으로 클릭 추적',                          ok: (linkType === 'short') },
+      { text: '포스팅 후 댓글 모니터링 및 소통',                              ok: (commentMgmt === 'active') },
+      { text: '2주~1달 주기 재포스팅 계획 수립',                              ok: (repostCycle === '2weeks' || repostCycle === 'monthly') },
+      { text: '2개 이상 학교 타겟팅',                                         ok: (schoolCount !== '1') },
+      { text: '인스타·카카오 등 타 채널과 동시 운영',                          ok: (otherChannel === 'multi' || otherChannel === 'instagram' || otherChannel === 'kakao') },
+      { text: '전환(가입·구매)까지 연결되는 랜딩페이지 준비',                 ok: (measurement === 'conversion') }
+    ];
+    var checkHtml = '';
+    for (var ci = 0; ci < checklists.length; ci++) {
+      var c = checklists[ci];
+      var cls = c.ok ? 'check-ok' : 'check-warn';
+      var icon = c.ok ? '✅' : '⬜';
+      var desc = c.ok ? '달성 완료!' : '아직 미적용 — 개선해보세요';
+      checkHtml +=
+        '<div class="check-item ' + cls + '">' +
+        '<span class="check-icon">' + icon + '</span>' +
+        '<div><div class="check-title">' + c.text + '</div><div class="check-desc">' + desc + '</div></div>' +
+        '</div>';
+    }
+    document.getElementById('checklistArea').innerHTML = checkHtml;
+
+    // ── 핵심 팁 ──
+    var tipText = '';
+    if (score >= 90) {
+      tipText = '<strong>최고 수준의 홍보 전략!</strong> 현재 설정이 이미 최적화되어 있습니다.<br>' +
+        '지금은 <strong>학교 확장(11개 이상)</strong>과 <strong>전환 추적 정교화</strong>에 집중할 시점입니다. ' +
+        '성과 데이터를 바탕으로 학교별 ROI를 분석하고 예산을 효율적으로 배분하세요.';
+    } else if (score >= 75) {
+      tipText = '<strong>전반적으로 양호합니다!</strong> 몇 가지 포인트만 개선하면 🔥 등급에 도달할 수 있어요.<br>' +
+        '<strong>핵심 3가지:</strong> ① 목요일 오후 2~6시 포스팅 ② 이미지 2~3장 최적화 ③ bit.ly 클릭 추적 세팅. ' +
+        '이 3가지만 실행해도 반응률이 눈에 띄게 달라집니다.';
+    } else if (score >= 55) {
+      tipText = '<strong>개선 여지가 충분합니다.</strong> 에브리타임 홍보게시판에서 평균 이상의 성과를 내려면<br>' +
+        '<strong>제목 전략 + 포스팅 타이밍 + 댓글 소통</strong> 이 3가지가 핵심입니다.<br>' +
+        '특히 <strong>단순 광고형 제목</strong>은 즉시 혜택형·질문형으로 바꾸세요. 조회수가 2배 이상 달라집니다.';
+    } else if (score >= 35) {
+      tipText = '<strong>전략 재검토가 필요합니다.</strong> 지금 당장 해야 할 것:<br>' +
+        '1) 제목을 "혜택·무료형"으로 변경 2) 이미지 2장 추가 3) 목요일 오후로 요일·시간 변경<br>' +
+        '이 3가지만 해도 점수가 20점 이상 올라갑니다. <strong>작은 변화가 큰 차이를 만듭니다.</strong>';
+    } else {
+      tipText = '<strong>즉시 개선이 필요합니다.</strong> 현재 설정은 에브리타임 홍보 효과가 매우 낮습니다.<br>' +
+        '오늘 바로: ① 제목 혜택형으로 변경 ② 이미지 2장 추가 ③ bit.ly 단축링크 삽입 ④ 목요일 오후 재포스팅<br>' +
+        '<strong>에브리타임 홍보는 세팅이 결과의 80%입니다. 기본부터 다시 잡으세요.</strong>';
+    }
+    document.getElementById('tipBox').innerHTML = tipText;
+
+    // ── 결과 표시 & PDF 바 ──
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('pdf-bar').style.display = 'flex';
+
+    // 결과로 스크롤
+    setTimeout(function() {
+      document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+</script>
+</body>
+</html>
