@@ -1842,10 +1842,50 @@ function renderSNSKit(targetId, platform) {
   const htText=allTags.join(' ');
   const moimLabel=name||cat.label+' 모임';
   const regionStr=region||'가까운 지역';
+  const _platCTA={
+    kakao:{contact:'오픈채팅 링크로 참여하세요! 💬',save:'링크 저장해두면 나중에 찾기 편해요 📌',join:'오픈채팅에서 만나요!'},
+    daangn:{contact:'당근채팅으로 문의주세요 🥕',save:'관심 이웃 추가해두세요 👋',join:'당근 이웃 여러분 환영해요!'},
+    somoim:{contact:'소모임 앱에서 신청해주세요 ✅',save:'모임 링크 저장해두세요 📌',join:'소모임에서 만나요!'},
+    munto:{contact:'문토 앱에서 클럽 신청하세요 ✅',save:'클럽 링크 저장해두세요 📌',join:'문토에서 만나요!'}
+  }[platform]||{contact:'참여 문의는 댓글로 남겨주세요!',save:'저장해두세요 📌',join:'함께해요!'};
   const caps=[
-    {style:'후킹형 🔥',text:`${cat.hook}\n\n${cat.pain}\n\n「${moimLabel}」${sizeStr?' — '+sizeStr:''}\n\n📍 ${regionStr} · 정기 모임${scheduleStr?' ('+scheduleStr+')':''}\n💬 참여 문의는 DM으로 주세요!\n❤️ 저장·공유해주시면 정말 감사해요 🙌\n\n${htText}`},
-    {style:'공감형 😊',text:`${cat.pain} 😅\n\n저도 그랬어요. 그래서 만든 모임이에요.\n\n「${moimLabel}」\n✨ ${cat.benefit}!\n\n${region?region+'에서 ':''}함께할 분들 환영해요 😊${scheduleStr?'\n⏰ '+scheduleStr:''}${sizeStr?'\n👥 '+sizeStr:''}\n📩 저장 후 DM 주세요!\n\n${htText}`},
-    {style:'정보형 📋',text:`📋 [${moimLabel}] 멤버 모집\n\n✅ 활동: ${cat.label} 정기 모임\n📍 지역: ${regionStr}${scheduleStr?'\n⏰ 일정: '+scheduleStr:''}${sizeStr?'\n👥 규모: '+sizeStr:''}\n👤 대상: ${cat.label} 관심 있는 누구나\n🔗 신청: 프로필 링크 또는 DM\n\n💡 ${cat.benefit}!\n저장·공유해주시면 큰 힘이 돼요 🙏\n\n${htText}`}
+    {style:'후킹형 🔥',text:`${cat.hook}
+
+${cat.pain}
+
+「${moimLabel}」${sizeStr?' — '+sizeStr:''}
+
+📍 ${regionStr} · 정기 모임${scheduleStr?' ('+scheduleStr+')':''}
+💬 ${_platCTA.contact}
+${_platCTA.save}
+
+${htText}`},
+    {style:'공감형 😊',text:`${cat.pain} 😅
+
+저도 그랬어요. 그래서 만든 모임이에요.
+
+「${moimLabel}」
+✨ ${cat.benefit}!
+
+${region?region+'에서 ':''}함께할 분들 환영해요 😊${scheduleStr?'
+⏰ '+scheduleStr:''}${sizeStr?'
+👥 '+sizeStr:''}
+💬 ${_platCTA.contact}
+
+${htText}`},
+    {style:'정보형 📋',text:`📋 [${moimLabel}] 멤버 모집
+
+✅ 활동: ${cat.label} 정기 모임
+📍 지역: ${regionStr}${scheduleStr?'
+⏰ 일정: '+scheduleStr:''}${sizeStr?'
+👥 규모: '+sizeStr:''}
+👤 대상: ${cat.label} 관심 있는 누구나
+🔗 신청: ${_platCTA.contact}
+
+💡 ${cat.benefit}!
+${_platCTA.save}
+
+${htText}`}
   ];
   const htHtml=[
     ...large.map(h=>`<span style="background:#e8f4fd;color:#1a6fb5;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
@@ -1863,7 +1903,7 @@ function renderSNSKit(targetId, platform) {
       <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:8px;">🏷️ 해시태그 추천 15개</div>
       <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">${htHtml}</div>
       <div style="font-size:0.7rem;color:#aaa;margin-bottom:10px;">🔵 대형(100만+) · 🟢 중형(10만~100만) · 🟣 니치(1만~10만, 핵심!) · 🟠 지역조합/플랫폼</div>
-      <button onclick="(()=>{navigator.clipboard.writeText(${JSON.stringify(htText)}).then(()=>alert('해시태그 15개 복사됐어요!'))})()" style="padding:6px 16px;background:${borderColor};color:#fff;border:none;border-radius:8px;font-size:0.79rem;font-weight:700;cursor:pointer;">📋 해시태그 전체 복사</button>
+      <span id="${targetId}-ht" style="display:none;">${htText}</span><button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-ht').innerText).then(()=>alert('해시태그 15개 복사됐어요!'))" style="padding:6px 16px;background:${borderColor};color:#fff;border:none;border-radius:8px;font-size:0.79rem;font-weight:700;cursor:pointer;">📋 해시태그 전체 복사</button>
     </div>
     <div>
       <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:10px;">✍️ 캡션 초안 3종 (저장·공유 유도 포함)</div>
