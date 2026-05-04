@@ -239,7 +239,7 @@
 <body>
 
 <header>
-  <p style="font-size:1.1rem; margin-bottom:6px;"><img src="logo.png" alt="Longchiri" style="height:40px;object-fit:contain;vertical-align:middle;"/></p>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#FF6F0F; font-weight:700; font-size:1.2rem;">longchiri</span></p>
   <div class="logo">🥕</div>
   <h1>당근 모임 분석기</h1>
   <p>당근 알고리즘 기반으로 모임 노출 점수를 진단하고 성장 전략을 받아보세요</p>
@@ -558,6 +558,20 @@
       </select>
     </div>
     <div class="form-group">
+      <label>당근 카페 연동 여부
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">2026년 1월 출시된 당근 자체 온라인 커뮤니티예요. 당근 카페와 오프라인 모임을 함께 운영하면 온·오프라인이 연결돼 멤버 결속력이 높아져요.<span class="tooltip-where">📍 당근앱 → 카페 탭 → 카페 만들기 (서울/수도권 중심, 17개 카테고리)</span></span>
+        </span>
+        <span class="tip">★ 2026.01 신규 — 당근 자체 커뮤니티</span>
+      </label>
+      <select id="daangnCafe">
+        <option value="yes">카페 운영 중 (모임과 연계)</option>
+        <option value="no">카페 없음</option>
+      </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 2026년 1월 출시된 당근 카페는 당근이 직접 운영하는 온라인 커뮤니티예요. 네이버 카페·카카오 오픈채팅과 달리 당근 앱 안에서 모임과 연동되기 때문에, 카페를 함께 운영하면 오프라인 모임 전·후 커뮤니케이션이 이어져 알고리즘 활성도 점수에 유리하게 작용해요.</div>
+    </div>
+    <div class="form-group">
       <label>모임 공개 범위
         <span class="info-wrap">
           <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
@@ -599,6 +613,22 @@
         <option value="monthly">매월 정기 모임</option>
         <option value="irregular">비정기 (그때그때)</option>
       </select>
+    </div>
+    <div class="form-group">
+      <label>활동 일관성
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">당근 AI 알고리즘이 운영 이력의 일관성을 평가해요. 꾸준히 같은 요일·시간에 활동한 모임일수록 "안정적 운영" 신호로 인식해 노출 우선순위를 높여요.<span class="tooltip-where">📍 당근앱 → 모임 → 일정 탭에서 과거 일정 참고</span></span>
+        </span>
+        <span class="tip">★ AI 운영 이력 평가 신호</span>
+      </label>
+      <select id="activityConsistency">
+        <option value="high">매우 일관됨 (같은 요일·시간 6개월+)</option>
+        <option value="mid">보통 (불규칙하지만 꾸준히 활동)</option>
+        <option value="low">불규칙 (자주 일정 변경·취소)</option>
+        <option value="new">신규 모임 (3개월 미만)</option>
+      </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 당근 알고리즘은 단순 빈도뿐 아니라 <b style="color:#888;">운영 패턴의 일관성</b>을 평가해요. 매주 토요일 오전 같은 시간처럼 예측 가능한 패턴으로 6개월 이상 운영하면 AI가 "안정적 모임"으로 분류해 검색 노출이 우선 배정돼요. 일정을 자주 바꾸거나 취소하면 점수가 깎여요.</div>
     </div>
     <div class="form-group">
       <label>가입 승인 방식
@@ -862,8 +892,8 @@
 </div><!-- #result -->
 
 <footer>
-  <p><img src="logo.png" alt="Longchiri" style="height:28px;object-fit:contain;vertical-align:middle;"/></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.6.0</p>
+  <p>by <b style="color:#FF6F0F;">longchiri</b></p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.7.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -912,11 +942,13 @@ function analyze() {
   const monthlyViews = parseInt(document.getElementById('monthlyViews').value) || 0;
   const monthlyApply = parseInt(document.getElementById('monthlyApply').value) || 0;
   const externalLink = document.getElementById('externalLink').value;
+  const daangnCafe   = document.getElementById('daangnCafe').value;
   const visibility   = document.getElementById('visibility').value;
 
   // 섹션 6 — 일정 & 운영
-  const dday         = parseInt(document.getElementById('dday').value) || 999;
-  const scheduleType = document.getElementById('scheduleType').value;
+  const dday                = parseInt(document.getElementById('dday').value) || 999;
+  const scheduleType        = document.getElementById('scheduleType').value;
+  const activityConsistency = document.getElementById('activityConsistency').value;
   const joinType     = document.getElementById('joinType').value;
   const regularRate  = parseInt(document.getElementById('regularRate').value) || 0;
   const meetingTime  = document.getElementById('meetingTime').value;
@@ -960,6 +992,8 @@ function analyze() {
   if (dday <= 3) act += 15; else if (dday <= 7) act += 10; else if (dday <= 14) act += 6;
   // 정기 모임 보너스
   if (scheduleType === 'weekly') act += 10; else if (scheduleType === 'biweekly') act += 7; else if (scheduleType === 'monthly') act += 4;
+  // 활동 일관성 보너스 (2026 AI 운영 이력 평가)
+  if (activityConsistency === 'high') act += 12; else if (activityConsistency === 'mid') act += 6; else if (activityConsistency === 'new') act += 3;
   // 단골 멤버 보너스
   if (regularRate >= 50) act += 10; else if (regularRate >= 30) act += 5;
   // 이탈률 패널티
@@ -993,6 +1027,8 @@ function analyze() {
   if (crossPromo === 'active') exp += 6; else if (crossPromo === 'sometimes') exp += 3;
   // 카카오맵 등록
   if (kakaoMap === 'yes') exp += 4;
+  // 당근 카페 연동 보너스 (2026.01 신규)
+  if (daangnCafe === 'yes') exp += 8;
   exp = Math.min(100, exp);
 
   // 5. 전환율 점수 (10%)
@@ -1439,6 +1475,40 @@ function analyze() {
       '동네생활 연동을 안 하고 있어요. 후기 사진 1장만 올려도 추가 유입이 생겨요.',
       '동네생활은 당근의 무료 광고판이에요. 모임 후 사진 1장 + 짧은 후기로 게시물을 올리면 해당 동네 주민들에게 추가 노출이 생겨요.',
       '동네생활 게시물에 모임 링크를 포함하면 직접 유입이 생겨요. 주 1회 5분 투자로 추가 채널을 확보하세요.',
+    ])});
+
+  // 당근 카페 연동 → 노출 (2026.01 신규)
+  if (daangnCafe === 'yes')
+    expChecks.push({ type:'ok', title:'당근 카페 연동 중 (2026 신규)', desc: pick([
+      '당근 카페와 모임을 함께 운영하고 있어요. 오프라인 모임 전·후 온라인 교류가 이어지면 멤버 결속력이 높아지고 알고리즘 활성도에 긍정 신호가 돼요.',
+      '당근 자체 커뮤니티인 카페를 활용 중이에요. 당근 앱 안에서 연동되니 외부 카페보다 알고리즘 친화적이에요. 꾸준히 유지하세요.',
+      '당근 카페 + 오프라인 모임 연계 운영은 2026년 당근 알고리즘이 가장 좋아하는 패턴 중 하나예요. 이 조합을 계속 유지하세요.',
+      '오프라인 모임 후 당근 카페에 후기를 올리는 루틴을 만들면 온라인 활성도가 모임 점수에도 반영돼요.',
+    ])});
+  else
+    expChecks.push({ type:'warn', title:'당근 카페 미연동 (2026 신규 신호)', desc: pick([
+      '2026년 1월 출시된 당근 카페를 모임과 연계하면 온·오프라인 활동이 하나로 이어지고 노출 점수에도 긍정 작용해요.',
+      '당근 카페는 당근 앱 내 온라인 커뮤니티예요. 오프라인 모임의 연장선으로 활용하면 멤버 이탈률을 줄일 수 있어요.',
+      '당근 카페를 만들어 모임과 연동하면 외부 카카오 오픈채팅보다 알고리즘 내 활성도 신호가 더 강하게 반영될 수 있어요.',
+      '당근 카페는 아직 이용자가 적어 선점 효과가 있어요. 지금 카페를 만들고 모임 소개글에 링크를 추가해보세요.',
+    ])});
+
+  // 활동 일관성 → 활성도 체크
+  if (activityConsistency === 'high')
+    opChecks.push({ type:'ok', title:'활동 일관성 높음 (AI 운영 이력 평가)', desc: pick([
+      '같은 요일·시간으로 6개월 이상 꾸준히 운영하고 있어요. 당근 AI가 "안정적 모임"으로 분류해 노출 우선순위를 높여요.',
+      '운영 일관성이 뛰어나요. 예측 가능한 패턴으로 운영된 모임은 AI 알고리즘 평가에서 높은 신뢰 점수를 받아요.',
+      '6개월+ 일관된 운영 이력은 당근 알고리즘이 가장 좋아하는 신호예요. 이 패턴을 유지하면 장기적으로 상위 노출이 안정화돼요.',
+    ])});
+  else if (activityConsistency === 'mid')
+    opChecks.push({ type:'warn', title:'활동 일관성 보통 (AI 운영 이력)', desc: pick([
+      '꾸준히 활동하고 있지만 일정이 불규칙해요. 같은 요일·시간으로 고정하면 AI 운영 이력 점수가 올라가요.',
+      '활동은 있지만 패턴이 불규칙해요. 매주 또는 격주 같은 요일·시간을 정해두면 멤버 출석률과 알고리즘 점수가 모두 올라요.',
+    ])});
+  else if (activityConsistency === 'low')
+    opChecks.push({ type:'bad', title:'활동 일관성 부족 (잦은 일정 변경)', desc: pick([
+      '일정 변경·취소가 잦으면 당근 AI가 "불안정 모임"으로 분류해 노출 순위가 낮아져요. 다음 모임부터는 최소 2주 전에 날짜를 확정해보세요.',
+      '일관된 일정이 없으면 멤버도 알고리즘도 모임을 신뢰하지 않아요. 고정 요일·시간을 정하고 최소 3개월 이상 유지하면 운영 신뢰 점수가 올라가요.',
     ])});
 
   // 외부 채널 → 노출 (유입 다변화 채널)
@@ -2146,6 +2216,43 @@ function analyze() {
         '신규 일정을 저녁 시간대로 등록해보고 참여율을 비교해보세요. 시간대 하나가 모집에 큰 영향을 줘요',
       ]),
       why: pick(['저녁·주말 모임이 직장인 접근성이 높아 멤버 모집에 유리해요', '시간대가 잠재 멤버 풀의 크기를 결정해요'])
+    });
+  }
+
+  // ── 신규 신호 로드맵 (2026) ──
+
+  if (daangnCafe === 'no' && memberCount >= 5) {
+    roadItems.push({ priority:2,
+      title: pick(['당근 카페를 아직 안 쓰고 있어요', '2026 신규 신호 — 당근 카페 연동']),
+      action: pick([
+        '당근앱 → 카페 탭에서 무료로 카페를 만들고 모임 소개글에 링크를 추가해보세요. 오프라인 모임 전·후 온라인 소통이 이어지면 멤버 이탈률이 낮아져요',
+        '2026년 1월 출시된 당근 카페를 모임과 연계하면 당근 내 활성도 신호가 강화돼요. 지금 당근 앱에서 카페를 만들어 모임 게시판으로 활용해보세요',
+        '당근 카페는 카카오 오픈채팅과 달리 당근 앱 안에서 모임과 연동돼요. 카페를 만들고 멤버들을 초대하면 온·오프라인 활동이 하나로 이어져요',
+      ]),
+      why: pick(['당근 카페 연동은 2026 알고리즘이 반영하는 활성도 신호예요', '당근 자체 서비스 활용이 외부 플랫폼보다 알고리즘 친화적이에요'])
+    });
+  }
+
+  if (activityConsistency === 'low') {
+    roadItems.push({ priority:1,
+      title: pick(['일정 패턴을 일관되게 잡아야 해요', '활동 일관성 부족 — AI 운영 이력 점수 하락']),
+      action: pick([
+        '다음 모임부터는 고정 요일·시간을 정해보세요. "매주 토요일 오전 10시"처럼 한 줄 규칙만 있어도 알고리즘 신뢰 점수가 올라가요',
+        '일정 변경·취소 시에는 최소 48시간 전에 공지하고 대체 일정을 함께 올려보세요. 패턴이 흐트러지지 않는 것이 가장 중요해요',
+        '앞으로 3개월 동안 같은 요일·시간을 유지해보세요. 당근 AI는 운영 이력 3개월 이상부터 "안정적 모임"으로 분류하기 시작해요',
+      ]),
+      why: pick(['당근 AI가 운영 이력의 일관성을 평가해 노출 우선순위에 반영해요', '일관된 일정이 멤버 출석률과 알고리즘 점수를 동시에 올려요'])
+    });
+  }
+
+  if (activityConsistency === 'mid' && scheduleType === 'irregular') {
+    roadItems.push({ priority:2,
+      title: pick(['운영 패턴을 정기화해보세요', '비정기 운영 → 정기 전환으로 AI 점수 상승']),
+      action: pick([
+        '"격주 토요일"처럼 큰 틀만 잡아도 정기 모임으로 분류돼요. 지금 모임 일정 탭에서 반복 일정을 설정해보세요',
+        '비정기 모임이지만 꾸준히 활동하고 있어요. 이제 고정 요일을 잡으면 AI 운영 이력 점수가 올라가요',
+      ]),
+      why: pick(['정기 일정 모임이 비정기 모임보다 알고리즘 노출 배정이 높아요', '패턴이 있는 모임이 멤버 재참여율도 높아요'])
     });
   }
 

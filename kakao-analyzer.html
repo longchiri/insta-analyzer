@@ -188,7 +188,7 @@
 <body>
 
 <header>
-  <p style="font-size:1.1rem; margin-bottom:6px;"><img src="logo.png" alt="Longchiri" style="height:40px;object-fit:contain;vertical-align:middle;"/></p>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#FEE500; font-weight:700; font-size:1.2rem;">longchiri</span></p>
   <div class="logo">💬</div>
   <h1>카카오톡 오픈채팅 분석기</h1>
   <p>오픈채팅방 알고리즘 점수를 진단하고 검색 노출 전략을 받아보세요</p>
@@ -351,6 +351,7 @@
         <option value="some">가끔 (주 1~2회)</option>
         <option value="active">자주 (주 3회 이상)</option>
       </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">⚠️ 현재 카카오가 <b style="color:#888;">사전 초대한 크리에이터·채널 운영자만</b> 숏폼 업로드가 가능해요. 일반 방장은 직접 올릴 수 없으며, 카카오가 점차 일반 공개를 확대할 예정이에요.</div>
     </div>
     <div class="form-group">
       <label>"지금 뜨는" 탭 진입 경험 <span class="tip">인기 채팅방 매일 자동 선정</span></label>
@@ -463,6 +464,11 @@
         <option value="yes">있음</option>
         <option value="no">없음</option>
       </select>
+    </div>
+    <div class="form-group">
+      <label>커뮤니티 피드 게시물 평균 댓글 수 <span class="tip">★ 2026.01 신규 — 지금탭 노출 핵심 신호</span></label>
+      <input type="number" id="communityComments" placeholder="예: 5" step="1" min="0"/>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 2026년 1월 댓글 기능 도입 후 커뮤니티 피드 게시물의 댓글 수가 지금탭 노출 신호로 작동해요. 채팅방 안 메시지 수와는 별개예요.</div>
     </div>
   </div>
 </div>
@@ -610,8 +616,8 @@
 </div>
 
 <footer>
-  <p><img src="logo.png" alt="Longchiri" style="height:28px;object-fit:contain;vertical-align:middle;"/></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.4.0</p>
+  <p>by <b style="color:#c8a800;">longchiri</b></p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.5.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -663,7 +669,8 @@ function analyze() {
   const feedExposure  = getVal('feedExposure')  || 'no';
   const shortformUsed = getVal('shortformUsed') || 'no';
   const trendingTab   = getVal('trendingTab')   || 'never';
-  const mlPenalty     = getVal('mlPenalty')     || 'no';
+  const mlPenalty          = getVal('mlPenalty')     || 'no';
+  const communityComments  = getNum('communityComments');
 
   // ── 채팅방 운영 관리 (섹션 A) ──
   const noticeFreq    = getVal('noticeFreq')    || 'never';
@@ -757,7 +764,7 @@ function analyze() {
 
   const socialScore = heartScore + ownerScore + trafficScore;
 
-  // ────────── 지금탭 가산점 (최대 10점) — 2025 대개편 신규 ──────────
+  // ────────── 지금탭 가산점 (최대 13점) — 2026.01 커뮤니티 댓글 신호 추가 ──────────
   let nowTabScore = 0;
   if (feedExposure === 'active')        nowTabScore += 5;
   else if (feedExposure === 'sometimes') nowTabScore += 2;
@@ -765,7 +772,11 @@ function analyze() {
   else if (shortformUsed === 'some')    nowTabScore += 1;
   if (trendingTab === 'often')          nowTabScore += 2;
   else if (trendingTab === 'once')      nowTabScore += 1;
-  nowTabScore = Math.min(10, nowTabScore);
+  // 커뮤니티 피드 댓글 수 (2026.01 신규 신호)
+  if (communityComments >= 20)      nowTabScore += 3;
+  else if (communityComments >= 10) nowTabScore += 2;
+  else if (communityComments >= 3)  nowTabScore += 1;
+  nowTabScore = Math.min(13, nowTabScore);
 
   // ────────── 페널티 계산 ──────────
   let penalty = 0;
@@ -875,9 +886,10 @@ function analyze() {
     </div>`).join('');
 
   // 진행 바
-  const feedPt = feedExposure==='active'?5:feedExposure==='sometimes'?2:0;
-  const sfPt   = shortformUsed==='active'?3:shortformUsed==='some'?1:0;
-  const trendPt= trendingTab==='often'?2:trendingTab==='once'?1:0;
+  const feedPt  = feedExposure==='active'?5:feedExposure==='sometimes'?2:0;
+  const sfPt    = shortformUsed==='active'?3:shortformUsed==='some'?1:0;
+  const trendPt = trendingTab==='often'?2:trendingTab==='once'?1:0;
+  const commPt  = communityComments>=20?3:communityComments>=10?2:communityComments>=3?1:0;
   const bars = [
     { name:'제목 키워드',    val:`${titleScore}/12`, score:titleScore,   max:12, desc:'제목에 핵심 키워드·지역·대상 포함', cls: titleScore>=9?'bar-good':titleScore>=5?'bar-mid':'bar-bad' },
     { name:'해시태그 전략',  val:`${hashScore}/10`,  score:hashScore,    max:10, desc:'대형+세부 태그 혼합, 3개 이상', cls: hashScore>=7?'bar-good':hashScore>=4?'bar-mid':'bar-bad' },
@@ -889,8 +901,9 @@ function analyze() {
     { name:'방장 신뢰도',    val:`${ownerScore}/8`,  score:ownerScore,   max:8,  desc:ownerAct==='active'?'매일 활동':ownerAct==='normal'?'보통 (주 3~4회)':ownerAct==='low'?'가끔':'잠수 중', cls: ownerScore>=6?'bar-good':ownerScore>=3?'bar-mid':'bar-bad' },
     { name:'외부 유입',      val:`${trafficScore}/7`,score:trafficScore, max:7,  desc:`외부 공유 ${extTraffic}명 추정`, cls: trafficScore>=5?'bar-good':trafficScore>=2?'bar-mid':'bar-bad' },
     { name:'⚡ 피드 노출',   val:`${feedPt}/5`,      score:feedPt,       max:5,  desc:'지금탭 커뮤니티 피드 노출 빈도', cls: feedPt>=4?'bar-good':feedPt>=2?'bar-mid':'bar-bad' },
-    { name:'⚡ 숏폼 활용',   val:`${sfPt}/3`,        score:sfPt,         max:3,  desc:'지금탭 숏폼 공유 활발도', cls: sfPt>=2?'bar-good':sfPt>=1?'bar-mid':'bar-bad' },
+    { name:'⚡ 숏폼 활용',   val:`${sfPt}/3`,        score:sfPt,         max:3,  desc:'지금탭 숏폼 공유 활발도 (초대 크리에이터 전용)', cls: sfPt>=2?'bar-good':sfPt>=1?'bar-mid':'bar-bad' },
     { name:'⚡ 지금뜨는탭',  val:`${trendPt}/2`,     score:trendPt,      max:2,  desc:'"지금 뜨는" 탭 진입 횟수', cls: trendPt>=2?'bar-good':trendPt>=1?'bar-mid':'bar-bad' },
+    { name:'💬 커뮤니티 댓글', val:`${commPt}/3`,    score:commPt,       max:3,  desc:`커뮤니티 게시물 평균 댓글 ${communityComments}개 (2026.01 신규)`, cls: commPt>=2?'bar-good':commPt>=1?'bar-mid':'bar-bad' },
   ];
   document.getElementById('statBars').innerHTML = bars.map(b => {
     const pct = Math.round((b.score / b.max) * 100);
@@ -1095,7 +1108,14 @@ function analyze() {
   if (shortformUsed === 'no' || shortformUsed === 'some') strategies.push({
     icon:'🎬', priority:'보통',
     title:'숏폼 콘텐츠 방 내 공유 활성화',
-    desc:'"지금" 탭은 숏폼과 오픈채팅이 통합돼 있어요. 관련 숏폼을 방에서 공유하면 외부 노출로 이어지는 교차 유입 효과가 있어요.',
+    desc:'"지금" 탭은 숏폼과 오픈채팅이 통합돼 있어요. 관련 숏폼을 방에서 공유하면 외부 노출로 이어지는 교차 유입 효과가 있어요. ※ 현재 숏폼 업로드는 카카오가 초대한 크리에이터·채널 운영자만 가능하며, 일반 방장은 직접 올릴 수 없어요.',
+    color:'#f97316'
+  });
+
+  if (commPt < 2) strategies.push({
+    icon:'💬', priority:'높음',
+    title:'커뮤니티 피드 댓글 유도',
+    desc:'2026년 1월 댓글 기능 도입 후 커뮤니티 피드 게시물의 댓글 수가 지금탭 노출 핵심 신호로 작동해요. 게시물에 "댓글로 의견 나눠요" 같은 CTA를 넣어 댓글을 유도하면 알고리즘 가산점이 생겨요.',
     color:'#f97316'
   });
 

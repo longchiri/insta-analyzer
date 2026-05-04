@@ -382,7 +382,7 @@
 <body>
 
 <header>
-  <p style="font-size:1.1rem; margin-bottom:6px;"><img src="logo.png" alt="Longchiri" style="height:40px;object-fit:contain;vertical-align:middle;"/></p>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.2rem;">longchiri</span></p>
   <div class="logo" style="font-size:2.8rem; margin-bottom:6px;">📸</div>
   <h1>Instagram 계정 분석기</h1>
   <p>ZIP 데이터 파일을 업로드하거나 직접 입력해서 인스타 전략을 받아보세요</p>
@@ -867,6 +867,25 @@
         <option value="short">짧은 1줄</option>
       </select>
     </div>
+    <div class="form-group">
+      <label>콘텐츠 토픽 일관성 <span class="hint">★ 2025.10 Your Algorithm 대응</span></label>
+      <select id="s-topicConsistency">
+        <option value="focused">1~2개 주제 집중</option>
+        <option value="moderate">3~4개 주제 혼합</option>
+        <option value="scattered">5개 이상 주제 분산</option>
+      </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 2025년 10월 "Your Algorithm(내 알고리즘)" 기능 도입 이후 사용자가 관심 토픽을 직접 설정해요. 계정이 특정 주제에 집중될수록 관심사가 맞는 사람들에게 우선 추천돼요.</div>
+    </div>
+    <div class="form-group">
+      <label>피드 게시물 비율 <span class="hint">★ 2025년 표준 변경</span></label>
+      <select id="s-feedRatio">
+        <option value="vertical">4:5 세로형 (권장)</option>
+        <option value="square">1:1 정방형</option>
+        <option value="landscape">가로형</option>
+        <option value="mixed">혼합</option>
+      </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 2025년부터 인스타가 4:5 세로형(1080×1350px)을 공식 권장 비율로 변경했어요. 정방형보다 화면을 33% 더 차지해 스크롤 체류 시간이 늘어나고 알고리즘 가산점이 붙어요.</div>
+    </div>
   </div>
 </div>
 
@@ -1055,8 +1074,8 @@
 
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
-  <p style="margin-top: 10px; font-size: 1rem;"><img src="logo.png" alt="Longchiri" style="height:40px;object-fit:contain;vertical-align:middle;"/></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.3.0</p>
+  <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.4.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -1960,8 +1979,10 @@ function analyze() {
   const collabFreq       = document.getElementById('s-collabFreq')       ? document.getElementById('s-collabFreq').value       : 'none';
   const postingTime      = document.getElementById('s-postingTime')      ? document.getElementById('s-postingTime').value      : 'random';
   const storyUsage       = document.getElementById('s-storyUsage')       ? document.getElementById('s-storyUsage').value       : 'never';
-  const captionLength    = document.getElementById('s-captionLength')    ? document.getElementById('s-captionLength').value    : 'medium';
-  const bioLink          = document.getElementById('s-bioLink')          ? document.getElementById('s-bioLink').value          : 'none';
+  const captionLength      = document.getElementById('s-captionLength')      ? document.getElementById('s-captionLength').value      : 'medium';
+  const topicConsistency   = document.getElementById('s-topicConsistency')   ? document.getElementById('s-topicConsistency').value   : 'moderate';
+  const feedRatio          = document.getElementById('s-feedRatio')          ? document.getElementById('s-feedRatio').value          : 'mixed';
+  const bioLink            = document.getElementById('s-bioLink')            ? document.getElementById('s-bioLink').value            : 'none';
   const extPlatform      = document.getElementById('s-extPlatform')      ? document.getElementById('s-extPlatform').value      : 'none';
   const crossPost        = document.getElementById('s-crossPost')        ? document.getElementById('s-crossPost').value        : 'none';
   const ctaUsage         = document.getElementById('s-ctaUsage')         ? document.getElementById('s-ctaUsage').value         : 'none';
@@ -2026,7 +2047,11 @@ function analyze() {
   const goldenBonus   = goldenTime    ? 1 : 0;   // 황금시간대 포스팅 보너스
   const bioBonus      = hasBio        ? 2 : 0;   // 멀티링크 있으면 전환 보너스
   const crossBonus    = hasCrossPosts ? 2 : 0;   // 크로스포스팅 → 노출 보너스
-  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + goldenBonus + bioBonus + crossBonus;
+  // ★추가: 2025.10 Your Algorithm 토픽 일관성 보너스
+  const topicBonus    = topicConsistency === 'focused' ? 3 : topicConsistency === 'moderate' ? 1 : 0;
+  // ★추가: 2025 피드 비율 보너스 (4:5 세로형 권장)
+  const ratioBonus    = feedRatio === 'vertical' ? 2 : feedRatio === 'mixed' ? 1 : 0;
+  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + goldenBonus + bioBonus + crossBonus + topicBonus + ratioBonus;
 
   const total = Math.min(erScore + ssScore + grScore + conScore + watchBonus + origPenalty + carBonus + stratBonus, 100);
 
@@ -2371,6 +2396,9 @@ function analyze() {
   if (nfr > 0 && nfr < 30) fixes.push({ icon:'🌐', txt:`비팔로워 도달 ${nfr}% — 계정이 팔로워 외부로 잘 확산되지 않고 있어요. 릴스 + 해시태그 최적화 + 주제 일관성이 비팔로워 도달을 높이는 가장 직접적인 방법이에요.` });
   if (ffRatio > 0 && ffRatio < 0.8) fixes.push({ icon:'👥', txt:`팔로잉(${D.following||0})이 팔로워(${D.followers||0})보다 많아요 — 비활성 계정 팔로잉이 많으면 피드 알고리즘 학습이 흐트러져요. 6개월 이상 활동 없는 계정 팔로잉부터 정리해 보세요.` });
   if (D.hashtagCount > 15) fixes.push({ icon:'#️⃣', txt:`해시태그 ${D.hashtagCount}개 — 2026 기준 5개 핵심 태그 집중 전략이 더 효과적이에요. 너무 많은 태그는 스팸 신호로 분류될 수 있어요. 계정 주제와 딱 맞는 5개만 추려서 매 게시물 일관되게 써보세요.` });
+  if (topicConsistency === 'scattered') fixes.push({ icon:'🎯', txt:`콘텐츠 주제가 너무 분산되어 있어요 — 2025년 10월 "Your Algorithm" 기능 도입 이후 사용자가 관심 토픽을 직접 설정해요. 주제가 1~2개로 좁혀진 계정이 맞춤 타깃에게 훨씬 잘 추천돼요. 지금 당장 핵심 주제 2개를 정하고 나머지는 서브로 줄여보세요.` });
+  if (topicConsistency === 'moderate') fixes.push({ icon:'🎯', txt:`콘텐츠 주제를 조금 더 좁혀보세요 — "Your Algorithm" 시대에는 1~2개 토픽 집중 계정이 관심사가 맞는 팔로워에게 우선 추천돼요. 3~4개 주제 중 가장 반응 좋은 2개에 집중하면 노출이 늘어요.` });
+  if (feedRatio !== 'vertical') fixes.push({ icon:'📐', txt:`피드 비율을 4:5 세로형(1080×1350px)으로 바꿔보세요 — 2025년 인스타 공식 권장 비율이에요. 정방형 대비 화면을 33% 더 차지해서 스크롤 중 시선을 더 오래 잡고 체류 시간이 늘어요. 같은 콘텐츠라도 비율만 바꿔도 노출 차이가 생겨요.` });
 
   document.getElementById('recoFix').innerHTML = fixes.length
     ? fixes.map(f => `<div class="reco-item reco-fix"><span class="reco-icon">${f.icon}</span><span>${f.txt}</span></div>`).join('')
