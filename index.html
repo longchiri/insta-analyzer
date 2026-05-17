@@ -886,6 +886,24 @@
       </select>
       <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 2025년부터 인스타가 4:5 세로형(1080×1350px)을 공식 권장 비율로 변경했어요. 정방형보다 화면을 33% 더 차지해 스크롤 체류 시간이 늘어나고 알고리즘 가산점이 붙어요.</div>
     </div>
+    <div class="form-group">
+      <label>트라이얼 릴스 활용 여부 <span class="hint">★ 2026 Mosseri 추천</span></label>
+      <select id="s-trialReels">
+        <option value="regular">정기적으로 사용 (월 2회+)</option>
+        <option value="sometimes">가끔 사용 (월 1회 이하)</option>
+        <option value="never" selected>사용 안 함</option>
+      </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 릴스를 팔로워에게 바로 공개하지 않고, 비팔로워 소수에게 먼저 테스트 노출하는 기능이에요. 반응이 좋으면 전체 배포 — 반응이 별로면 팔로워는 아예 모른 채 지나가요. 인스타 앱 → 릴스 공유 화면 → "트라이얼" 토글 ON으로 사용 가능해요.</div>
+    </div>
+    <div class="form-group">
+      <label>카루셀 배경음악 추가 여부 <span class="hint">★ 릴스 탭 추가 노출</span></label>
+      <select id="s-carouselMusic">
+        <option value="always">항상 추가</option>
+        <option value="sometimes">가끔 추가</option>
+        <option value="never" selected>추가 안 함</option>
+      </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 카루셀(슬라이드) 게시물에 배경음악을 추가하면 릴스 탭에도 추가 노출돼요. 사진 게시물이지만 릴스 피드에서 새로운 비팔로워에게 발견될 수 있어요. 인스타 앱 → 게시물 작성 → 음악 추가로 설정 가능해요.</div>
+    </div>
   </div>
 </div>
 
@@ -1075,7 +1093,7 @@
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.5.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.6.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -1982,6 +2000,8 @@ function analyze() {
   const captionLength      = document.getElementById('s-captionLength')      ? document.getElementById('s-captionLength').value      : 'medium';
   const topicConsistency   = document.getElementById('s-topicConsistency')   ? document.getElementById('s-topicConsistency').value   : 'moderate';
   const feedRatio          = document.getElementById('s-feedRatio')          ? document.getElementById('s-feedRatio').value          : 'mixed';
+  const trialReels         = document.getElementById('s-trialReels')         ? document.getElementById('s-trialReels').value         : 'never';
+  const carouselMusic      = document.getElementById('s-carouselMusic')      ? document.getElementById('s-carouselMusic').value      : 'never';
   const bioLink            = document.getElementById('s-bioLink')            ? document.getElementById('s-bioLink').value            : 'none';
   const extPlatform      = document.getElementById('s-extPlatform')      ? document.getElementById('s-extPlatform').value      : 'none';
   const crossPost        = document.getElementById('s-crossPost')        ? document.getElementById('s-crossPost').value        : 'none';
@@ -2051,7 +2071,11 @@ function analyze() {
   const topicBonus    = topicConsistency === 'focused' ? 3 : topicConsistency === 'moderate' ? 1 : 0;
   // ★추가: 2025 피드 비율 보너스 (4:5 세로형 권장)
   const ratioBonus    = feedRatio === 'vertical' ? 2 : feedRatio === 'mixed' ? 1 : 0;
-  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + goldenBonus + bioBonus + crossBonus + topicBonus + ratioBonus;
+  // ★추가: 2026 트라이얼 릴스 보너스 (Mosseri 추천)
+  const trialBonus    = trialReels === 'regular' ? 3 : trialReels === 'sometimes' ? 1 : 0;
+  // ★추가: 2026 카루셀 배경음악 → 릴스 탭 추가 노출 보너스
+  const musicBonus    = carouselMusic === 'always' ? 2 : carouselMusic === 'sometimes' ? 1 : 0;
+  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + goldenBonus + bioBonus + crossBonus + topicBonus + ratioBonus + trialBonus + musicBonus;
 
   const total = Math.min(erScore + ssScore + grScore + conScore + watchBonus + origPenalty + carBonus + stratBonus, 100);
 
@@ -2361,6 +2385,13 @@ function analyze() {
   if (nfr >= 50) keeps.push({ icon:'🌐', txt:`비팔로워 도달 <b>${nfr}%</b> — 팔로워가 아닌 사람들에게도 콘텐츠가 크게 확산되고 있어요.` });
   if (existingTags.length >= 8) keeps.push({ icon:'#️⃣', txt:`해시태그 <b>${existingTags.length}개</b> 활발히 사용 — 검색 노출에 도움이 되고 있어요.` });
   if (watchRate >= 50) keeps.push({ icon:'⏱️', txt:`릴스 시청 유지율 <b>${watchRate}%</b> — 2025 #1 알고리즘 지표에서 우수해요! 탐색 탭 노출 확률이 높아요.` });
+  // 트라이얼 릴스
+  if (trialReels === 'regular') keeps.push({ icon:'🧪', txt:`트라이얼 릴스를 정기적으로 활용 중이에요. 팔로워 피드 오염 없이 비팔로워 반응을 먼저 검증하고 배포하는 방식은 2026 Mosseri 공식 추천 전략이에요. 성과 좋은 콘텐츠만 전체 배포하면 계정 지표가 꾸준히 올라가요.` });
+  if (trialReels === 'sometimes') keeps.push({ icon:'🧪', txt:`트라이얼 릴스를 가끔 활용하고 있어요. 릴스를 올릴 때마다 습관적으로 트라이얼로 먼저 테스트하는 루틴을 만들어보세요. 실패해도 팔로워는 몰라요.` });
+  // 카루셀 배경음악
+  if (carouselMusic === 'always') keeps.push({ icon:'🎵', txt:`카루셀에 배경음악을 항상 추가하고 있어요. 사진 게시물이 릴스 탭에도 함께 노출되는 구조예요. 피드 노출 + 릴스 탭 노출 2중으로 비팔로워 도달을 만들고 있어요.` });
+  if (carouselMusic === 'sometimes') keeps.push({ icon:'🎵', txt:`카루셀에 배경음악을 가끔 추가하고 있어요. 매 카루셀마다 음악을 넣으면 릴스 탭 추가 노출 효과를 매번 얻을 수 있어요.` });
+
   if (origRatio >= 80) keeps.push({ icon:'✨', txt:`오리지널 콘텐츠 비율 <b>${origRatio}%</b> — 2026.04.30 강화 규정에서 완전 안전해요. 리포스트가 대부분인 계정이 추천에서 완전 제외되는 반면, 직접 제작 비율이 높은 계정은 Explore·릴스 피드에서 우선 배포 수혜를 받아요.` });
   if (carRatio >= 30) keeps.push({ icon:'🖼️', txt:`카루셀 비율 <b>${carRatio}%</b> — 평균 ER 10.15%로 가장 높은 포맷을 잘 활용하고 있어요.` });
   // 중간 구간 긍정 신호
@@ -2384,6 +2415,11 @@ function analyze() {
   if (D.reelsPosts < 3) fixes.push({ icon:'🎬', txt:`릴스 게시물이 ${D.reelsPosts||0}개로 적어요 — 릴스는 인스타그램이 가장 적극적으로 노출시키는 형식이에요. 주 1~2개는 올려보세요.` });
   if (D.hashtagCount < 8 && D.hashtagCount !== null) fixes.push({ icon:'#️⃣', txt:`해시태그 평균 ${D.hashtagCount}개 — 8~15개 사용을 권장해요. 대·중·소형 해시태그를 골고루 혼합하세요.` });
   // ★추가: 2025 신규 알고리즘 경고
+  // 트라이얼 릴스 미사용
+  if (trialReels === 'never') fixes.push({ icon:'🧪', txt:`트라이얼 릴스를 아직 안 쓰고 있어요. 릴스 올리기 전에 트라이얼로 먼저 테스트해보세요. 팔로워한테는 안 보이고 낯선 사람 반응만 먼저 확인할 수 있어요. 반응 좋으면 그때 전체 공개 — 실패해도 팔로워는 몰라요. 인스타 앱 → 릴스 공유 화면 → "트라이얼" 토글 ON` });
+  // 카루셀 배경음악 미사용
+  if (carouselMusic === 'never' && carRatio >= 15) fixes.push({ icon:'🎵', txt:`카루셀에 배경음악이 없어요. 음악 하나만 추가해도 릴스 탭에 추가 노출이 생겨요. 카루셀 게시물 작성 시 음악 추가 버튼을 눌러보세요. 노출 채널이 하나 더 생기는 효과예요.` });
+
   if (origRatio >= 0 && origRatio < 80) fixes.push({ icon:'🔴', txt:`오리지널 콘텐츠 비율 ${origRatio}% — 2026.04.30 강화 업데이트: 리포스트·재업로드가 대부분인 계정은 Explore·릴스·추천 피드에서 <b>완전 제외</b>돼요. 사진·캐러셀까지 적용 확대. TikTok 워터마크 영상도 즉시 패널티. 직접 제작 콘텐츠 비율을 80% 이상으로 올리세요.` });
   if (watchRate > 0 && watchRate < 30) fixes.push({ icon:'⏱️', txt:`릴스 시청 유지율 ${watchRate}% — Mosseri가 #1 알고리즘 지표로 확인한 지표예요. 첫 3초 훅을 강화하고, 비팔로워 도달 최적 길이 <b>90초~3분</b>을 목표로 잡으세요.` });
   if (carRatio > 0 && carRatio < 20) fixes.push({ icon:'🖼️', txt:`카루셀 비율 ${carRatio}% — 카루셀은 2025년 평균 ER 10.15%로 단일 이미지 대비 3배 높아요. 정보성 콘텐츠는 카루셀로 제작해보세요.` });
