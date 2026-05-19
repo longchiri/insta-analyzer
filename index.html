@@ -1000,6 +1000,13 @@
     <div id="topPostsSection"></div>
   </div>
 
+  <!-- 릴스 노출 진단 -->
+  <div class="result-card" id="reelsDiagCard" style="display:none">
+    <h2>🎬 릴스 노출 진단 TOP 3</h2>
+    <p style="font-size:0.78rem;color:#999;margin-bottom:14px;">최근 게시물 기준 · 저장율·공유율로 알고리즘 배포 상태 진단</p>
+    <div id="reelsDiagSection"></div>
+  </div>
+
   <!-- 팔로워 오디언스 -->
   <div class="result-card">
     <h2>👥 팔로워 오디언스 분석</h2>
@@ -1605,6 +1612,7 @@ function parseInstagramZIP(jsons, allPaths) {
             d.topHashtags = Object.entries(allTags).sort((a,b)=>b[1]-a[1]).slice(0,12).map(e=>e[0]);
         }
         d.topPosts = [...htmlPosts].sort((a,b)=>(b.likes+b.saves+b.shares)-(a.likes+a.saves+a.shares)).slice(0,3);
+        d.recentPosts = [...htmlPosts].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,3);
         // posts 카운트 보충
         if (!d.posts || d.posts < htmlPosts.length) d.posts = htmlPosts.length;
       }
@@ -1635,6 +1643,7 @@ function parseInstagramZIP(jsons, allPaths) {
           d.avgComments=Math.round(sumComments/cnt); d.avgImpressions=Math.round(sumImpr/cnt); d.postCount=cnt;
         }
         d.topPosts = posts.sort((a,b)=>(b.likes+b.saves+b.shares)-(a.likes+a.saves+a.shares)).slice(0,3);
+        d.recentPosts = [...posts].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,3);
       }
     }
   } catch(e) { console.warn('postsInsights 파싱 오류:', e); }
@@ -2251,6 +2260,69 @@ function analyze() {
       </div>`).join('');
   }
   document.getElementById('topPostsSection').innerHTML = topHTML;
+
+  // ── 릴스 노출 진단 TOP 3 ──
+  if (D.recentPosts && D.recentPosts.length > 0) {
+    document.getElementById('reelsDiagCard').style.display = '';
+    const diagHTML = D.recentPosts.map((p, i) => {
+      const reach = p.reach || 0;
+      const saveRate  = reach > 0 ? (p.saves  / reach * 100) : 0;
+      const shareRate = reach > 0 ? (p.shares / reach * 100) : 0;
+
+      // 알고리즘 배포 상태 판단
+      let status, statusColor, statusBg, advice;
+      if (p.saves === 0 && p.shares === 0) {
+        status = '⚠️ 확산 신호 없음'; statusColor = '#b45309'; statusBg = '#fef3c7';
+        advice = '캡션·영상에 "저장해두세요 🔖" CTA를 직접 넣어보세요. 유용한 정보형 콘텐츠는 저장율이 3~5배 높아요.';
+      } else if (saveRate >= 3 || shareRate >= 1) {
+        status = '🚀 알고리즘 적극 배포 중'; statusColor = '#065f46'; statusBg = '#d1fae5';
+        advice = '지금 알고리즘이 비팔로워에게 배포 중이에요! 비슷한 포맷으로 다음 영상도 빠르게 올리면 가속돼요.';
+      } else if (saveRate >= 1 || shareRate >= 0.3) {
+        status = '🟡 배포 시작 중'; statusColor = '#92400e'; statusBg = '#fde68a';
+        advice = '저장·공유 신호가 생기기 시작했어요. DM으로 보내고 싶어지는 포인트(공감·꿀팁)를 더 넣으면 확산돼요.';
+      } else {
+        status = '🔴 배포 제한 가능성'; statusColor = '#991b1b'; statusBg = '#fee2e2';
+        advice = '저장·공유율이 낮아 알고리즘이 배포를 줄이고 있을 수 있어요. 콘텐츠 유형(정보형·감성형)을 바꿔보세요.';
+      }
+
+      const caption = p.caption ? p.caption.replace(/#[\S]+/g,'').trim().slice(0,60) : '';
+      const title = caption || '(캡션 없음)';
+      const date = p.ts ? new Date(p.ts * 1000).toLocaleDateString('ko-KR', {month:'long', day:'numeric'}) : '';
+
+      return `<div style="background:#fafafa;border:1px solid #e8ecf4;border-radius:14px;padding:16px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="background:linear-gradient(135deg,#833ab4,#e1306c);color:#fff;font-weight:900;font-size:13px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${i+1}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:13px;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">🎬 ${title}</div>
+            ${date ? `<div style="font-size:11px;color:#94a3b8;margin-top:1px;">${date}</div>` : ''}
+          </div>
+          <div style="background:${statusBg};color:${statusColor};font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;">${status}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
+          <div style="text-align:center;background:#fff;border:1px solid #e8ecf4;border-radius:8px;padding:8px 4px;">
+            <div style="font-size:15px;font-weight:800;color:#1a1a2e;">${p.reach ? p.reach.toLocaleString() : '—'}</div>
+            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">도달</div>
+          </div>
+          <div style="text-align:center;background:#fff;border:1px solid #e8ecf4;border-radius:8px;padding:8px 4px;">
+            <div style="font-size:15px;font-weight:800;color:#833ab4;">${p.saves}</div>
+            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">저장 ${saveRate > 0 ? saveRate.toFixed(1)+'%' : ''}</div>
+          </div>
+          <div style="text-align:center;background:#fff;border:1px solid #e8ecf4;border-radius:8px;padding:8px 4px;">
+            <div style="font-size:15px;font-weight:800;color:#e1306c;">${p.shares}</div>
+            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">공유 ${shareRate > 0 ? shareRate.toFixed(1)+'%' : ''}</div>
+          </div>
+          <div style="text-align:center;background:#fff;border:1px solid #e8ecf4;border-radius:8px;padding:8px 4px;">
+            <div style="font-size:15px;font-weight:800;color:#fd1d1d;">${p.likes}</div>
+            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">좋아요</div>
+          </div>
+        </div>
+        <div style="background:${statusBg};border-radius:8px;padding:10px 12px;font-size:12px;color:${statusColor};line-height:1.6;">
+          💡 ${advice}
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('reelsDiagSection').innerHTML = diagHTML;
+  }
 
   // ── 오디언스 ──
   let audHTML = '';
