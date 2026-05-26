@@ -546,6 +546,17 @@
       <input type="number" id="monthlyApply" placeholder="예: 15" min="0"/>
     </div>
     <div class="form-group">
+      <label>월 채팅/관심 수
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">한 달간 모임 페이지에서 채팅 문의 또는 관심(하트) 클릭이 발생한 수예요. 조회수 대비 이 수치가 매우 낮으면 다른 사용자들이 게시글을 숨겼을 가능성이 있어요.<span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 통계 (채팅/관심 수)</span></span>
+        </span>
+        <span class="tip">★ 숨기기 패널티 간접 진단</span>
+      </label>
+      <input type="number" id="monthlyChatInterest" placeholder="예: 10" min="0"/>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#fff8f0;border-radius:8px;padding:6px 10px;border-left:3px solid #FF6F0F;">📌 당근 알고리즘은 타 사용자가 "이 글 숨기기"를 누르면 해당 게시글의 노출을 점진적으로 줄여요. 숨기기 횟수는 직접 확인이 불가능하지만, <b>조회수 대비 채팅·관심 비율이 1% 미만</b>이면 숨기기 신호가 쌓였을 가능성이 높아요.</div>
+    </div>
+    <div class="form-group">
       <label>카페/오픈채팅 연동 여부
         <span class="info-wrap">
           <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
@@ -941,6 +952,7 @@ function analyze() {
   const photoQuality = document.getElementById('photoQuality').value;
   const monthlyViews = parseInt(document.getElementById('monthlyViews').value) || 0;
   const monthlyApply = parseInt(document.getElementById('monthlyApply').value) || 0;
+  const monthlyChatInterest = parseInt(document.getElementById('monthlyChatInterest').value) || 0;
   const externalLink = document.getElementById('externalLink').value;
   const daangnCafe   = document.getElementById('daangnCafe').value;
   const visibility   = document.getElementById('visibility').value;
@@ -1546,6 +1558,8 @@ function analyze() {
   const lowCvr      = cvrRate < 5 && monthlyViews > 0;
   const highCvr     = cvrRate >= 10 && monthlyViews > 0;
   const viewsHighNoApply = monthlyViews >= 50 && cvrRate < 2;
+  const chatInterestRate = monthlyViews > 0 ? (monthlyChatInterest / monthlyViews) * 100 : -1;
+  const hidePenaltyRisk = chatInterestRate >= 0 && chatInterestRate < 1 && monthlyViews >= 30;
   const goodTitle   = hasKeyword && titleLen >= 10;
   const weakIntro   = intro.length < 80;
   const highTemp    = mannerTemp >= 45;
@@ -2044,6 +2058,18 @@ function analyze() {
         '모임 소개글에 "이전 모임 후기"나 "분위기 사진"을 추가하면 망설이는 사람이 결심하는 데 도움이 돼요',
       ]),
       why: pick(['조회 대비 신청 전환율이 2% 미만이에요. 소개 페이지 개선이 시급해요', '첫인상이 가입 결정을 좌우해요'])
+    });
+  }
+
+  // 숨기기 패널티 위험 감지
+  if (hidePenaltyRisk) {
+    roadItems.push({ priority:1,
+      title: pick(['조회수 대비 반응이 너무 낮아요', '게시글이 숨겨지고 있을 수 있어요']),
+      action: pick([
+        `조회수 ${monthlyViews}회인데 채팅·관심이 ${monthlyChatInterest}건(${chatInterestRate.toFixed(1)}%)이에요. 조회수 대비 1% 미만이면 다른 사용자들이 "이 글 숨기기"를 눌렀을 가능성이 높아요. 게시글 제목·사진·설명에 과장이나 불명확한 내용이 없는지 점검하고, 신선한 내용으로 다시 작성해보세요.`,
+        `채팅·관심 비율이 ${chatInterestRate.toFixed(1)}%로 매우 낮아요. 당근 알고리즘은 숨기기 누적 시 노출을 점진적으로 줄여요. 대표 사진을 실제 활동 현장 사진으로 교체하고, 제목의 키워드가 소개글 내용과 일치하는지 확인해보세요.`,
+      ]),
+      why: pick(['숨기기 신호가 쌓이면 알고리즘이 노출을 줄여요. 직접 확인은 불가능하지만 채팅·관심 비율로 간접 진단할 수 있어요'])
     });
   }
 
