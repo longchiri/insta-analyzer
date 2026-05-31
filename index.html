@@ -925,6 +925,7 @@
     <div class="form-group">
       <label>콘텐츠 토픽 일관성 <span class="hint">★ 2025.10 Your Algorithm 대응</span></label>
       <select id="s-topicConsistency">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="focused">1~2개 주제 집중</option>
         <option value="moderate">3~4개 주제 혼합</option>
         <option value="scattered">5개 이상 주제 분산</option>
@@ -934,6 +935,7 @@
     <div class="form-group">
       <label>피드 게시물 비율 <span class="hint">★ 2025년 표준 변경</span></label>
       <select id="s-feedRatio">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="vertical">4:5 세로형 (권장)</option>
         <option value="square">1:1 정방형</option>
         <option value="landscape">가로형</option>
@@ -2101,20 +2103,20 @@ function analyze() {
   const nfr       = D.nonFollowerReach || 0;
 
   // ① Engagement (40점)
-  const erScore = er >= 8 ? 40 : er >= 5 ? 34 : er >= 3 ? 26 : er >= 1.5 ? 18 : er > 0 ? 10 : 5;
+  const erScore = er >= 8 ? 40 : er >= 5 ? 34 : er >= 3 ? 26 : er >= 1.5 ? 18 : er > 0 ? 10 : 0;
 
   // ② Save+Share (25점)
-  const ssScore_save  = sr  >= 5 ? 14 : sr  >= 3 ? 11 : sr  >= 1.5 ? 8  : sr  > 0 ? 5 : 2;
-  const ssScore_share = shr >= 8 ? 11 : shr >= 5 ? 9  : shr >= 3   ? 6  : shr > 0 ? 4 : 2;
+  const ssScore_save  = sr  >= 5 ? 14 : sr  >= 3 ? 11 : sr  >= 1.5 ? 8  : sr  > 0 ? 5 : 0;
+  const ssScore_share = shr >= 8 ? 11 : shr >= 5 ? 9  : shr >= 3   ? 6  : shr > 0 ? 4 : 0;
   const ssScore = Math.min(ssScore_save + ssScore_share, 25);
 
   // ③ Growth (20점)
-  const grScore_growth = gr  >= 10 ? 10 : gr  >= 5 ? 8 : gr  >= 2 ? 5  : gr  > 0 ? 3 : 2;
-  const grScore_reach  = nfr >= 80 ? 10 : nfr >= 50 ? 7 : nfr >= 20 ? 4 : nfr > 0 ? 2 : (ffRatio >= 1.5 ? 6 : 3);
+  const grScore_growth = gr  >= 10 ? 10 : gr  >= 5 ? 8 : gr  >= 2 ? 5  : gr  > 0 ? 3 : 0;
+  const grScore_reach  = nfr >= 80 ? 10 : nfr >= 50 ? 7 : nfr >= 20 ? 4 : nfr > 0 ? 2 : 0;
   const grScore = Math.min(grScore_growth + grScore_reach, 20);
 
   // ④ Consistency (15점)
-  const conScore = wp >= 5 ? 15 : wp >= 3 ? 12 : wp >= 2 ? 8 : wp >= 1 ? 5 : 2;
+  const conScore = wp >= 5 ? 15 : wp >= 3 ? 12 : wp >= 2 ? 8 : wp >= 1 ? 5 : 0;
 
   // ★추가: 2025 신규 알고리즘 보정 모디파이어
   const watchRate    = D.reelsWatchRate || 0;

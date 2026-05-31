@@ -351,8 +351,9 @@
           </span>
         </label>
         <select id="m-area">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="specific">특정 지역 명시 (강남, 홍대 등)</option>
-          <option value="city" selected>시/도 단위 (서울, 경기 등)</option>
+          <option value="city">시/도 단위 (서울, 경기 등)</option>
           <option value="online">온라인</option>
           <option value="none">미설정</option>
         </select>
@@ -365,6 +366,7 @@
           </span>
         </label>
         <select id="m-photo">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="real">실제 활동 사진 (고퀄)</option>
           <option value="basic">기본 사진 있음</option>
           <option value="none">사진 없음</option>
@@ -378,6 +380,7 @@
           </span>
         </label>
         <select id="m-visibility">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="public">공개</option>
           <option value="private">비공개 (초대만)</option>
         </select>
@@ -424,8 +427,8 @@
           </span>
         </label>
         <div class="range-row">
-          <input type="range" id="m-attend" min="0" max="100" value="65" oninput="document.getElementById('m-attendVal').textContent=this.value+'%'"/>
-          <span class="range-val-moim" id="m-attendVal">65%</span>
+          <input type="range" id="m-attend" min="0" max="100" value="0" oninput="document.getElementById('m-attendVal').textContent=this.value+'%'"/>
+          <span class="range-val-moim" id="m-attendVal">0%</span>
         </div>
       </div>
       <div class="form-group">
@@ -463,8 +466,8 @@
           </span>
         </label>
         <div class="range-row">
-          <input type="range" id="m-rating" min="1" max="5" value="4.3" step="0.1" oninput="document.getElementById('m-ratingVal').textContent=parseFloat(this.value).toFixed(1)+'★'"/>
-          <span class="range-val-moim" id="m-ratingVal">4.3★</span>
+          <input type="range" id="m-rating" min="0" max="5" value="0" step="0.1" oninput="document.getElementById('m-ratingVal').textContent=parseFloat(this.value).toFixed(1)+'★'"/>
+          <span class="range-val-moim" id="m-ratingVal">0.0★</span>
         </div>
       </div>
     </div>
@@ -509,8 +512,8 @@
           </span>
         </label>
         <div class="range-row">
-          <input type="range" id="m-noshow" min="0" max="50" value="10" oninput="document.getElementById('m-noshowVal').textContent=this.value+'%'"/>
-          <span class="range-val-moim" id="m-noshowVal">10%</span>
+          <input type="range" id="m-noshow" min="0" max="100" value="100" oninput="document.getElementById('m-noshowVal').textContent=this.value+'%'"/>
+          <span class="range-val-moim" id="m-noshowVal">100%</span>
         </div>
       </div>
     </div>
@@ -523,6 +526,7 @@
       <div class="form-group">
         <label>주 모임 형태</label>
         <select id="m-meetingForm">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="offline">오프라인</option>
           <option value="online">온라인</option>
           <option value="hybrid">혼합 (온·오프라인)</option>
@@ -539,13 +543,14 @@
       <div class="form-group">
         <label>단골 멤버 비율 (%)</label>
         <div class="range-row">
-          <input type="range" id="m-regularMoim" min="0" max="100" value="30" oninput="document.getElementById('m-regularMoimVal').textContent=this.value+'%'"/>
-          <span class="range-val-moim" id="m-regularMoimVal">30%</span>
+          <input type="range" id="m-regularMoim" min="0" max="100" value="0" oninput="document.getElementById('m-regularMoimVal').textContent=this.value+'%'"/>
+          <span class="range-val-moim" id="m-regularMoimVal">0%</span>
         </div>
       </div>
       <div class="form-group">
         <label>번개모임 운영 여부</label>
         <select id="m-bunggaeFreq">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="active">월 1회 이상</option>
           <option value="sometimes">가끔</option>
           <option value="never">없음</option>
@@ -554,6 +559,7 @@
       <div class="form-group">
         <label>호스트 SNS 운영 여부</label>
         <select id="m-hostSns">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="yes">있음</option>
           <option value="no">없음</option>
         </select>
@@ -561,6 +567,7 @@
       <div class="form-group">
         <label>타 플랫폼 병행 여부</label>
         <select id="m-platformUse">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="both">소모임+문토 둘 다</option>
           <option value="one">하나만</option>
           <option value="none">없음 (이 플랫폼만)</option>
@@ -576,6 +583,7 @@
       <div class="form-group">
         <label>외부 SNS 홍보</label>
         <select id="m-extPromo">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="active">활발 (인스타·블로그 등)</option>
           <option value="sometimes">가끔</option>
           <option value="none">없음</option>
@@ -584,6 +592,7 @@
       <div class="form-group">
         <label>모임 후기 관리</label>
         <select id="m-reviewMgmt">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="active">적극 요청</option>
           <option value="sometimes">가끔</option>
           <option value="never">없음</option>
@@ -746,6 +755,7 @@
           </span>
         </label>
         <select id="t-photo">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="great">감성 고퀄 활동 사진</option>
           <option value="real">일반 활동 사진</option>
           <option value="basic">기본 사진 있음</option>
@@ -760,6 +770,7 @@
           </span>
         </label>
         <select id="t-recruit">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="screening">심사 후 선발 (큐레이션)</option>
           <option value="first">선착순</option>
           <option value="open">자유 가입</option>
@@ -807,8 +818,8 @@
           </span>
         </label>
         <div class="range-row">
-          <input type="range" id="t-attend" min="0" max="100" value="70" oninput="document.getElementById('t-attendVal').textContent=this.value+'%'"/>
-          <span class="range-val-munto" id="t-attendVal">70%</span>
+          <input type="range" id="t-attend" min="0" max="100" value="0" oninput="document.getElementById('t-attendVal').textContent=this.value+'%'"/>
+          <span class="range-val-munto" id="t-attendVal">0%</span>
         </div>
       </div>
       <div class="form-group">
@@ -846,8 +857,8 @@
           </span>
         </label>
         <div class="range-row">
-          <input type="range" id="t-rating" min="1" max="5" value="4.5" step="0.1" oninput="document.getElementById('t-ratingVal').textContent=parseFloat(this.value).toFixed(1)+'★'"/>
-          <span class="range-val-munto" id="t-ratingVal">4.5★</span>
+          <input type="range" id="t-rating" min="0" max="5" value="0" step="0.1" oninput="document.getElementById('t-ratingVal').textContent=parseFloat(this.value).toFixed(1)+'★'"/>
+          <span class="range-val-munto" id="t-ratingVal">0.0★</span>
         </div>
       </div>
     </div>
@@ -892,6 +903,7 @@
           </span>
         </label>
         <select id="t-abtest">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="regular">정기적으로 테스트 (월 1회+)</option>
           <option value="sometimes">가끔 테스트 (분기 1회)</option>
           <option value="never">테스트 안 함</option>
@@ -905,6 +917,7 @@
           </span>
         </label>
         <select id="t-external">
+          <option value="" disabled selected>— 선택 —</option>
           <option value="yes">연동 중</option>
           <option value="no">연동 없음</option>
         </select>
