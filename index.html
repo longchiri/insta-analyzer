@@ -390,9 +390,36 @@
   <p style="margin-top:8px; font-size:0.78rem; color:#e53e3e; font-weight:600;">⚠️ 해당 결과 값은 <b>참고만</b> 부탁드립니다.</p>
 </header>
 
-<div style="max-width:720px; margin:0 auto 10px;">
+<div style="max-width:720px; margin:0 auto 10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
   <a href="hub.html" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#999; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px;">← 홈으로 돌아가기</a>
 </div>
+
+<!-- 용어백과사전 배너 -->
+<a href="glossary.html" style="
+  display:flex; align-items:center; justify-content:space-between;
+  max-width:720px; margin:0 auto 18px;
+  background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);
+  border-radius:16px; padding:16px 22px;
+  text-decoration:none; color:#fff;
+  box-shadow:0 4px 20px rgba(26,26,46,0.18);
+  transition:transform 0.18s, box-shadow 0.18s;
+  " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(26,26,46,0.25)'"
+     onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(26,26,46,0.18)'">
+  <div style="display:flex; align-items:center; gap:14px;">
+    <div style="font-size:2rem; line-height:1;">📖</div>
+    <div>
+      <div style="font-size:0.72rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
+      <div style="font-size:1rem; font-weight:800; color:#fff;">릴스·CTR·Collab이 뭔지 모르겠다면?</div>
+      <div style="font-size:0.78rem; color:#8080b0; margin-top:2px;">분석기에 나오는 핵심 용어를 한 번에 정리했어요</div>
+    </div>
+  </div>
+  <div style="
+    background:linear-gradient(90deg,#833ab4,#fd1d1d);
+    border-radius:99px; padding:8px 16px;
+    font-size:0.8rem; font-weight:800; color:#fff;
+    flex-shrink:0; white-space:nowrap;
+  ">용어 보기 →</div>
+</a>
 
 <!-- 탭 선택 -->
 <div class="tab-wrap">
@@ -843,6 +870,23 @@
         <option value="sometimes">가끔</option>
         <option value="none" selected>없음</option>
       </select>
+    </div>
+    <div class="form-group">
+      <label>Collab Post 기능 활용 <span class="hint">★ 2026 도달 2배</span></label>
+      <select id="s-collabPost">
+        <option value="yes">활용 중 (공동 작성자 태그)</option>
+        <option value="no" selected>미사용</option>
+      </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 일반 콜라보(태그)와 다르게, Collab 기능은 두 계정이 <b>공동 작성자</b>로 등록돼 양쪽 프로필 피드에 동시 노출돼요. 같은 콘텐츠로 도달이 2배가 되는 구조예요. 게시물 작성 → 사람 태그 → Collab 초대에서 설정할 수 있어요.</div>
+    </div>
+    <div class="form-group">
+      <label>이미지 Alt Text 작성 여부 <span class="hint">★ 검색 SEO</span></label>
+      <select id="s-altText">
+        <option value="always">항상 작성</option>
+        <option value="sometimes">가끔</option>
+        <option value="never" selected>작성 안 함</option>
+      </select>
+      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 게시물 업로드 시 <b>대체 텍스트(Alt Text)</b>를 직접 입력하면 Instagram 내부 검색 알고리즘이 콘텐츠를 더 정확하게 분류해요. 탐색탭 노출 SEO에 직접 영향을 줘요. 사진 업로드 → 접근성 → 대체 텍스트에서 설정 가능해요.</div>
     </div>
     <div class="form-group">
       <label>포스팅 주요 시간대</label>
@@ -2005,6 +2049,8 @@ function analyze() {
   const contentType      = document.getElementById('s-contentType')      ? document.getElementById('s-contentType').value      : 'mixed';
   const hashtagStrategy  = document.getElementById('s-hashtagStrategy')  ? document.getElementById('s-hashtagStrategy').value  : 'moderate';
   const collabFreq       = document.getElementById('s-collabFreq')       ? document.getElementById('s-collabFreq').value       : 'none';
+  const collabPost       = document.getElementById('s-collabPost')       ? document.getElementById('s-collabPost').value       : 'no';
+  const altText          = document.getElementById('s-altText')          ? document.getElementById('s-altText').value          : 'never';
   const postingTime      = document.getElementById('s-postingTime')      ? document.getElementById('s-postingTime').value      : 'random';
   const storyUsage       = document.getElementById('s-storyUsage')       ? document.getElementById('s-storyUsage').value       : 'never';
   const captionLength      = document.getElementById('s-captionLength')      ? document.getElementById('s-captionLength').value      : 'medium';
@@ -2074,6 +2120,8 @@ function analyze() {
   const reelsBonus    = reelsHeavy    ? 2 : 0;   // 릴스 위주 → reach 보너스
   const hashtagBonus  = !noHashtag && hashtagStrategy === 'optimized' ? 2 : 0; // 해시태그 최적화 → SEO 보너스
   const collabBonus   = hasCollab     ? 2 : 0;   // 협업 있으면 성장 보너스
+  const collabPostBonus = collabPost === 'yes' ? 3 : 0;  // ★Collab Post 도달 2배 보너스
+  const altTextBonus  = altText === 'always' ? 2 : altText === 'sometimes' ? 1 : 0; // ★Alt Text SEO 보너스
   const goldenBonus   = goldenTime    ? 1 : 0;   // 황금시간대 포스팅 보너스
   const bioBonus      = hasBio        ? 2 : 0;   // 멀티링크 있으면 전환 보너스
   const crossBonus    = hasCrossPosts ? 2 : 0;   // 크로스포스팅 → 노출 보너스
@@ -2085,7 +2133,7 @@ function analyze() {
   const trialBonus    = trialReels === 'regular' ? 3 : trialReels === 'sometimes' ? 1 : 0;
   // ★추가: 2026 카루셀 배경음악 → 릴스 탭 추가 노출 보너스
   const musicBonus    = carouselMusic === 'always' ? 2 : carouselMusic === 'sometimes' ? 1 : 0;
-  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + goldenBonus + bioBonus + crossBonus + topicBonus + ratioBonus + trialBonus + musicBonus;
+  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + collabPostBonus + altTextBonus + goldenBonus + bioBonus + crossBonus + topicBonus + ratioBonus + trialBonus + musicBonus;
 
   const total = Math.min(erScore + ssScore + grScore + conScore + watchBonus + origPenalty + carBonus + stratBonus, 100);
 
@@ -2465,6 +2513,10 @@ function analyze() {
   if (carouselMusic === 'always') keeps.push({ icon:'🎵', txt:`카루셀에 배경음악을 항상 추가하고 있어요. 사진 게시물이 릴스 탭에도 함께 노출되는 구조예요. 피드 노출 + 릴스 탭 노출 2중으로 비팔로워 도달을 만들고 있어요.` });
   if (carouselMusic === 'sometimes') keeps.push({ icon:'🎵', txt:`카루셀에 배경음악을 가끔 추가하고 있어요. 매 카루셀마다 음악을 넣으면 릴스 탭 추가 노출 효과를 매번 얻을 수 있어요.` });
 
+  if (collabPost === 'yes') keeps.push({ icon:'🤝', txt:`Collab Post 기능을 활용하고 있어요 — 공동 작성자 포스팅은 두 계정 피드에 동시 노출돼 같은 콘텐츠로 도달이 2배가 돼요. 팔로워 풀이 다른 계정과 Collab하면 신규 팔로워 유입에 매우 효과적이에요.` });
+  if (altText === 'always') keeps.push({ icon:'🔍', txt:`이미지 Alt Text를 항상 작성하고 있어요 — Instagram 내부 검색 알고리즘이 콘텐츠를 더 정확하게 분류해요. Explore 탭 추천 정확도가 올라가는 SEO 신호예요.` });
+  if (altText === 'sometimes') keeps.push({ icon:'🔍', txt:`Alt Text를 가끔 작성하고 있어요 — 모든 게시물에 대체 텍스트를 입력하면 검색 노출이 꾸준히 쌓여요. 사진 업로드 → 접근성 → 대체 텍스트에서 설정하세요.` });
+
   if (origRatio >= 80) keeps.push({ icon:'✨', txt:`오리지널 콘텐츠 비율 <b>${origRatio}%</b> — 2026.04.30 강화 규정에서 완전 안전해요. 리포스트가 대부분인 계정이 추천에서 완전 제외되는 반면, 직접 제작 비율이 높은 계정은 Explore·릴스 피드에서 우선 배포 수혜를 받아요.` });
   if (carRatio >= 30) keeps.push({ icon:'🖼️', txt:`카루셀 비율 <b>${carRatio}%</b> — 평균 ER 10.15%로 가장 높은 포맷을 잘 활용하고 있어요.` });
   // 중간 구간 긍정 신호
@@ -2492,6 +2544,9 @@ function analyze() {
   if (trialReels === 'never') fixes.push({ icon:'🧪', txt:`트라이얼 릴스를 아직 안 쓰고 있어요. 릴스 올리기 전에 트라이얼로 먼저 테스트해보세요. 팔로워한테는 안 보이고 낯선 사람 반응만 먼저 확인할 수 있어요. 반응 좋으면 그때 전체 공개 — 실패해도 팔로워는 몰라요. 인스타 앱 → 릴스 공유 화면 → "트라이얼" 토글 ON` });
   // 카루셀 배경음악 미사용
   if (carouselMusic === 'never' && carRatio >= 15) fixes.push({ icon:'🎵', txt:`카루셀에 배경음악이 없어요. 음악 하나만 추가해도 릴스 탭에 추가 노출이 생겨요. 카루셀 게시물 작성 시 음악 추가 버튼을 눌러보세요. 노출 채널이 하나 더 생기는 효과예요.` });
+
+  if (collabPost === 'no') fixes.push({ icon:'🤝', txt:`Collab Post 기능을 아직 안 쓰고 있어요 — 일반 태그와 달리 공동 작성자로 등록하면 내 게시물이 상대 계정 피드에도 노출돼요. 같은 콘텐츠로 도달이 2배가 되는 구조예요. 게시물 작성 → 사람 태그 → Collab 초대에서 바로 설정할 수 있어요.` });
+  if (altText === 'never') fixes.push({ icon:'🔍', txt:`이미지 Alt Text를 작성하지 않고 있어요 — 대체 텍스트는 Instagram이 사진 내용을 분류하는 데 사용하는 SEO 신호예요. 게시물 업로드 → 접근성 → 대체 텍스트에 콘텐츠 핵심 키워드를 입력하면 탐색탭 노출 정확도가 올라가요.` });
 
   if (origRatio >= 0 && origRatio < 80) fixes.push({ icon:'🔴', txt:`오리지널 콘텐츠 비율 ${origRatio}% — 2026.04.30 강화 업데이트: 리포스트·재업로드가 대부분인 계정은 Explore·릴스·추천 피드에서 <b>완전 제외</b>돼요. 사진·캐러셀까지 적용 확대. TikTok 워터마크 영상도 즉시 패널티. 직접 제작 콘텐츠 비율을 80% 이상으로 올리세요.` });
   if (watchRate > 0 && watchRate < 30) fixes.push({ icon:'⏱️', txt:`릴스 시청 유지율 ${watchRate}% — Mosseri가 #1 알고리즘 지표로 확인한 지표예요. 첫 3초 훅을 강화하고, 비팔로워 도달 최적 길이 <b>90초~3분</b>을 목표로 잡으세요.` });

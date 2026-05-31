@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <link rel="icon" href="logo.png" type="image/png"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SNS 알고리즘 용어백과 — longchiri</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;
+      background:#f8f9ff;
+      min-height:100vh;
+      padding:36px 16px 64px;
+      color:#1a1a2e;
+    }
+
+    /* ── 헤더 ── */
+    header { text-align:center; margin-bottom:36px; }
+    .back-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      color:#888; font-size:0.82rem; text-decoration:none;
+      background:#fff; border:1.5px solid #eee; border-radius:99px;
+      padding:6px 14px; margin-bottom:20px;
+      transition:background 0.2s;
+    }
+    .back-btn:hover { background:#f3f3f6; }
+    header h1 {
+      font-size:1.9rem; font-weight:900;
+      background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      margin-bottom:8px;
+    }
+    header p { color:#aaa; font-size:0.88rem; }
+
+    /* ── 검색 ── */
+    .search-wrap {
+      max-width:720px; margin:0 auto 28px;
+      position:relative;
+    }
+    .search-wrap input {
+      width:100%; padding:14px 20px 14px 46px;
+      border:2px solid #e5e5e5; border-radius:14px;
+      font-size:0.95rem; outline:none;
+      background:#fff; transition:border 0.2s;
+      font-family:inherit;
+    }
+    .search-wrap input:focus { border-color:#833ab4; }
+    .search-icon {
+      position:absolute; left:16px; top:50%;
+      transform:translateY(-50%); font-size:1.1rem; pointer-events:none;
+    }
+    #searchCount {
+      text-align:center; font-size:0.78rem; color:#aaa;
+      margin-top:8px; min-height:18px;
+    }
+
+    /* ── 플랫폼 필터 탭 ── */
+    .filter-wrap {
+      display:flex; gap:8px; flex-wrap:wrap;
+      max-width:720px; margin:0 auto 24px;
+      justify-content:center;
+    }
+    .filter-btn {
+      padding:7px 18px; border-radius:99px;
+      border:2px solid #e5e5e5; background:#fff;
+      font-size:0.82rem; font-weight:700; color:#888;
+      cursor:pointer; transition:all 0.18s;
+    }
+    .filter-btn.active { border-color:transparent; color:#fff; }
+    .filter-btn[data-cat="all"].active    { background:#1a1a2e; }
+    .filter-btn[data-cat="insta"].active  { background:linear-gradient(90deg,#833ab4,#fd1d1d); }
+    .filter-btn[data-cat="daangn"].active { background:linear-gradient(90deg,#FF6F0F,#FFB347); }
+    .filter-btn[data-cat="moim"].active   { background:linear-gradient(90deg,#16A34A,#EA580C); }
+    .filter-btn[data-cat="kakao"].active  { background:linear-gradient(90deg,#c8a800,#FFD700); color:#3C1E1E; }
+
+    /* ── 용어 카드 ── */
+    .glossary-wrap {
+      max-width:720px; margin:0 auto;
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .term-card {
+      background:#fff; border-radius:16px;
+      border:1.5px solid #ebebeb;
+      overflow:hidden; transition:box-shadow 0.18s;
+    }
+    .term-card:hover { box-shadow:0 6px 24px rgba(0,0,0,0.08); }
+    .term-header {
+      display:flex; align-items:center; gap:12px;
+      padding:16px 20px; cursor:pointer;
+      user-select:none;
+    }
+    .term-platform {
+      font-size:0.65rem; font-weight:800; padding:3px 9px;
+      border-radius:99px; flex-shrink:0; white-space:nowrap;
+    }
+    .plat-insta  { background:#fd1d1d18; color:#c13584; }
+    .plat-daangn { background:#FF6F0F18; color:#d45a00; }
+    .plat-moim   { background:#16A34A18; color:#16A34A; }
+    .plat-kakao  { background:#FEE50028; color:#8a7200; }
+    .plat-common { background:#6366f118; color:#6366f1; }
+
+    .term-name {
+      font-size:1rem; font-weight:800; color:#111; flex:1;
+    }
+    .term-name .en {
+      font-size:0.75rem; font-weight:500; color:#aaa; margin-left:6px;
+    }
+    .term-arrow {
+      font-size:0.85rem; color:#ccc;
+      transition:transform 0.22s;
+    }
+    .term-card.open .term-arrow { transform:rotate(180deg); }
+
+    .term-body {
+      display:none; padding:0 20px 18px;
+      border-top:1px solid #f3f3f6;
+    }
+    .term-card.open .term-body { display:block; }
+
+    .term-desc {
+      font-size:0.88rem; color:#555; line-height:1.85;
+      margin-top:14px;
+    }
+    .term-desc b { color:#333; }
+    .term-desc .highlight {
+      display:inline-block; background:#f9f0ff;
+      border-radius:6px; padding:2px 7px;
+      color:#833ab4; font-weight:700; font-size:0.85rem;
+    }
+    .term-desc .highlight.orange { background:#fff3e0; color:#d45a00; }
+    .term-desc .highlight.green  { background:#f0fff4; color:#16A34A; }
+    .term-desc .highlight.yellow { background:#fffde7; color:#8a7200; }
+    .term-desc .highlight.blue   { background:#e8f4fd; color:#1a73e8; }
+
+    .tip-box {
+      margin-top:12px; background:#f9f9ff;
+      border-left:3px solid #833ab4;
+      border-radius:0 8px 8px 0;
+      padding:10px 14px; font-size:0.82rem;
+      color:#555; line-height:1.7;
+    }
+    .tip-box.orange { border-color:#FF6F0F; background:#fff8f3; }
+    .tip-box.green  { border-color:#16A34A; background:#f0fff4; }
+    .tip-box.yellow { border-color:#c8a800; background:#fffde7; }
+
+    /* ── 섹션 구분 ── */
+    .section-label {
+      max-width:720px; margin:8px auto 4px;
+      font-size:0.7rem; font-weight:700; color:#ccc;
+      letter-spacing:0.1em; text-transform:uppercase;
+      padding:0 4px;
+    }
+
+    .empty-state {
+      text-align:center; color:#ccc; padding:48px 0;
+      font-size:0.9rem;
+    }
+
+    footer {
+      text-align:center; margin-top:48px;
+      color:#ccc; font-size:0.76rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="index.html">← 인스타 분석기로 돌아가기</a>
+  <h1>📖 SNS 알고리즘 용어백과</h1>
+  <p>인스타·당근·소모임·카카오 분석기에 나오는 핵심 용어를 쉽게 정리했어요</p>
+</header>
+
+<!-- 검색 -->
+<div class="search-wrap">
+  <span class="search-icon">🔎</span>
+  <input type="text" id="searchInput" placeholder="용어 검색… (예: 릴스, 알고리즘, CTR)"/>
+</div>
+<div id="searchCount"></div>
+
+<!-- 필터 -->
+<div class="filter-wrap">
+  <button class="filter-btn active" data-cat="all">전체</button>
+  <button class="filter-btn" data-cat="insta">📸 인스타</button>
+  <button class="filter-btn" data-cat="daangn">🥕 당근</button>
+  <button class="filter-btn" data-cat="moim">🤝 소모임·문토</button>
+  <button class="filter-btn" data-cat="kakao">💬 오픈채팅</button>
+  <button class="filter-btn" data-cat="common">🌐 공통</button>
+</div>
+
+<!-- 용어 목록 -->
+<div class="glossary-wrap" id="glossaryWrap"></div>
+
+<div class="empty-state" id="emptyState" style="display:none;">검색 결과가 없어요 😢</div>
+
+<footer>by <b style="color:#16A34A;">longchiri</b></footer>
+
+<script>
+const TERMS = [
+
+  /* ───────────── 공통 ───────────── */
+  {
+    cat:'common', name:'알고리즘', en:'Algorithm',
+    desc:`SNS 플랫폼이 어떤 콘텐츠를 누구에게 보여줄지 결정하는 <b>자동화된 규칙 시스템</b>이에요. 좋아요·저장·공유·시청 시간 등 수백 가지 신호를 조합해 점수를 매기고, 점수가 높은 콘텐츠를 더 많은 사람에게 배포해요.`,
+    tip:`알고리즘은 "사람들이 좋아하는 콘텐츠"를 더 보여주도록 설계돼 있어요. 숫자를 억지로 올리려 하기보다 진짜 반응을 이끌어내는 콘텐츠가 장기적으로 유리해요.`
+  },
+  {
+    cat:'common', name:'인게이지먼트율', en:'Engagement Rate (ER)',
+    desc:`<b>팔로워 대비 반응(좋아요+댓글+저장+공유) 비율</b>이에요. 팔로워가 10만 명이어도 반응이 적으면 알고리즘이 "이 계정 콘텐츠는 안 좋은가?" 하고 배포를 줄여요. 일반적으로 <span class="highlight">3~5%</span>면 평균, <span class="highlight">6% 이상</span>이면 고반응 계정이에요.`,
+    tip:`ER = (좋아요 + 댓글 + 저장 + 공유) ÷ 팔로워 수 × 100`
+  },
+  {
+    cat:'common', name:'노출수', en:'Impressions',
+    desc:`콘텐츠가 화면에 <b>표시된 총 횟수</b>예요. 같은 사람이 3번 봤으면 노출수 3이에요. 도달수(Reach)와 다르게 중복 포함이에요.`,
+    tip:`노출수가 높아도 반응이 없으면 알고리즘은 "사람들이 관심 없다"고 판단해 배포를 줄여요.`
+  },
+  {
+    cat:'common', name:'도달수', en:'Reach',
+    desc:`콘텐츠를 <b>실제로 본 고유 계정 수</b>예요. 1명이 10번 봐도 도달수는 1이에요. 내 콘텐츠가 얼마나 많은 사람에게 닿았는지를 보는 지표예요.`,
+    tip:`비팔로워 도달이 높을수록 신규 유입이 활발하다는 신호예요.`
+  },
+  {
+    cat:'common', name:'CTR', en:'Click-Through Rate',
+    desc:`콘텐츠를 보고 실제로 <b>클릭(행동)한 비율</b>이에요. 썸네일·제목을 보고 들어온 사람 수 ÷ 노출수 × 100으로 계산해요. 높을수록 "눈길을 끄는 콘텐츠"라는 신호를 플랫폼에 줘요.`,
+    tip:`CTR은 제목과 대표 이미지가 결정해요. 첫인상이 전부예요.`
+  },
+  {
+    cat:'common', name:'전환율', en:'Conversion Rate (CVR)',
+    desc:`페이지를 방문한 사람 중 <b>원하는 행동(신청·가입·구매 등)을 한 비율</b>이에요. 조회수가 높아도 전환율이 낮으면 소개 페이지나 설명에 문제가 있다는 신호예요.`,
+    tip:`전환율 = 신청·가입 수 ÷ 조회수 × 100`
+  },
+  {
+    cat:'common', name:'LTV', en:'Lifetime Value',
+    desc:`한 명의 멤버·팔로워가 장기적으로 만들어내는 <b>총 가치</b>예요. 단순 숫자보다 "이 사람이 얼마나 오래, 자주, 깊게 참여하는가"를 측정해요. LTV가 높을수록 커뮤니티·계정의 질이 높다는 의미예요.`,
+    tip:`팔로워 수보다 LTV가 높은 소수의 팬이 훨씬 중요해요.`
+  },
+  {
+    cat:'common', name:'SEO', en:'Search Engine Optimization',
+    desc:`검색 결과에서 <b>상위에 노출되도록 최적화하는 작업</b>이에요. SNS에서는 프로필명·캡션·해시태그·Alt Text 등에 핵심 키워드를 넣어 검색 노출을 높이는 것을 의미해요.`,
+    tip:`인스타 내부 검색, 당근 검색, 소모임 카테고리 분류 모두 SEO 키워드에 영향을 받아요.`
+  },
+
+  /* ───────────── 인스타 ───────────── */
+  {
+    cat:'insta', name:'릴스', en:'Reels',
+    desc:`인스타그램의 <b>짧은 동영상 포맷</b>이에요. 2026년 기준 알고리즘이 가장 공격적으로 배포하는 포맷으로, 비팔로워에게도 적극 추천해요. 최적 길이는 <span class="highlight">90초~3분</span>이에요.`,
+    tip:`릴스 배포 순위 = 완주율 × 3 + 재시청 × 5 + 공유 × 10 + 저장 × 7 - 초반 이탈 × 2`
+  },
+  {
+    cat:'insta', name:'완주율', en:'Watch Through Rate',
+    desc:`릴스를 <b>끝까지 본 시청자 비율</b>이에요. Mosseri(인스타 CEO)가 2025년 1월 공식 확인한 <b>알고리즘 #1 신호</b>예요. 완주율이 높으면 "좋은 콘텐츠"로 판단해 더 많이 배포해요.`,
+    tip:`첫 3초 훅이 완주율을 결정해요. "이게 뭐지?" 하는 궁금증을 바로 만들어야 해요.`
+  },
+  {
+    cat:'insta', name:'DM 공유 (Sends)', en:'Direct Message Sends',
+    desc:`릴스를 DM으로 친구에게 공유한 횟수예요. 2025년부터 좋아요·댓글보다 <b>훨씬 강한 배포 신호</b>로 작용해요. "이걸 친구한테 보내고 싶다" = 매우 좋은 콘텐츠라는 의미로 알고리즘이 해석해요.`,
+    tip:`캡션 마지막에 "도움됐다면 친구에게 DM 공유해요 💌" 한 줄만 넣어도 공유율이 올라가요.`
+  },
+  {
+    cat:'insta', name:'카루셀', en:'Carousel',
+    desc:`사진·영상을 <b>여러 장 슬라이드로 묶은 게시물</b>이에요. 2025년 평균 인게이지먼트율 10.15%로 단일 이미지 대비 3배 높아요. 정보성 콘텐츠에 특히 적합해요.`,
+    tip:`배경음악을 추가하면 릴스 탭에도 추가 노출이 생겨요. 노출 채널이 2개가 돼요.`
+  },
+  {
+    cat:'insta', name:'Your Algorithm', en:'Your Algorithm (내 알고리즘)',
+    desc:`2025년 10월 도입된 기능으로, 사용자가 <b>자신의 피드·Explore 추천 토픽을 직접 설정</b>할 수 있어요. 설정 → 콘텐츠 환경설정에서 관심 주제를 추가·삭제할 수 있어요. <b>2026년 4월</b>에 Explore(탐색 탭)까지 확장됐어요.`,
+    tip:`크리에이터 입장에서는 1~2개 주제에 집중하는 계정이 토픽 매칭 정확도가 높아져요.`
+  },
+  {
+    cat:'insta', name:'Collab Post', en:'Collab (공동 게시물)',
+    desc:`두 계정이 <b>공동 작성자</b>로 등록되는 게시물이에요. 일반 태그와 다르게 양쪽 프로필 피드에 동시 노출돼 <b>같은 콘텐츠로 도달이 2배</b>가 돼요. 게시물 작성 → 사람 태그 → Collab 초대에서 설정할 수 있어요.`,
+    tip:`팔로워 풀이 다른 계정과 Collab하면 신규 팔로워 유입에 매우 효과적이에요.`
+  },
+  {
+    cat:'insta', name:'Alt Text (대체 텍스트)', en:'Alternative Text',
+    desc:`이미지 업로드 시 <b>사진 내용을 텍스트로 설명하는 항목</b>이에요. 인스타그램 알고리즘이 사진 내용을 분류할 때 Alt Text를 참고해요. Explore 탭 추천 정확도에 영향을 줘요. 사진 업로드 → 접근성 → 대체 텍스트에서 설정 가능해요.`,
+    tip:`"카페에서 책 읽는 여성, 독서 모임" 처럼 구체적 키워드를 포함해서 작성하면 관련 관심사 사용자에게 노출될 확률이 올라가요.`
+  },
+  {
+    cat:'insta', name:'오리지널 콘텐츠 비율', en:'Original Content Ratio',
+    desc:`전체 게시물 중 <b>직접 제작한 콘텐츠의 비율</b>이에요. 2026년 4월 30일 규정 강화로, 리포스트·재업로드가 대부분인 계정은 Explore·릴스·추천 피드에서 <b>완전 제외</b>돼요. 사진·캐러셀까지 적용되고 TikTok 워터마크 영상도 즉시 패널티예요.`,
+    tip:`직접 제작 비율을 80% 이상으로 유지하세요.`
+  },
+  {
+    cat:'insta', name:'Explore (탐색 탭)', en:'Explore Tab',
+    desc:`팔로우하지 않은 계정의 콘텐츠를 발견하는 <b>인스타그램 탐색 페이지</b>예요. 알고리즘이 사용자의 관심사·시청 이력·저장 패턴을 분석해 맞춤 콘텐츠를 추천해요. <b>2026년 4월</b>부터 Your Algorithm 설정이 Explore에도 적용돼요.`,
+    tip:`Explore 노출 = 비팔로워 도달의 핵심 채널이에요. 토픽 일관성과 오리지널 콘텐츠가 탐색 탭 추천의 핵심이에요.`
+  },
+  {
+    cat:'insta', name:'비팔로워 도달', en:'Non-Follower Reach',
+    desc:`팔로워가 아닌 사람에게 도달한 비율이에요. 높을수록 계정이 알고리즘을 통해 <b>외부로 확산</b>되고 있다는 의미예요. 릴스·Explore·해시태그 검색을 통해 주로 발생해요.`,
+    tip:`비팔로워 도달이 30% 이하면 팔로워에게만 보이는 상태예요. 릴스 강화가 가장 빠른 해결책이에요.`
+  },
+  {
+    cat:'insta', name:'팔로워:팔로잉 비율', en:'Follower-Following Ratio (F/F)',
+    desc:`팔로워 수를 팔로잉 수로 나눈 값이에요. 팔로잉이 팔로워보다 많으면 알고리즘 학습이 흐트러지고, 비활성 계정 팔로잉이 많으면 피드 알고리즘 정확도가 떨어져요.`,
+    tip:`6개월 이상 활동 없는 계정 팔로잉을 주기적으로 정리하면 피드 알고리즘 정확도가 개선돼요.`
+  },
+
+  /* ───────────── 당근 ───────────── */
+  {
+    cat:'daangn', name:'매너온도', en:'Manner Temperature',
+    desc:`당근마켓에서 <b>호스트 신뢰도를 나타내는 지표</b>예요. 기본값 36.5°C에서 시작하고, 좋은 거래·후기·활동으로 올라가요. 40°C 이상이면 신뢰 배지 활성화 조건에 가까워져요.`,
+    tip:'소액 당근 거래 후기를 꾸준히 쌓는 게 온도를 올리는 가장 빠른 방법이에요.',
+    tipColor:'orange'
+  },
+  {
+    cat:'daangn', name:'LLM 카테고리 분류', en:'LLM Auto-Categorization',
+    desc:`당근이 2025년부터 도입한 기능으로, <b>대형 언어 모델(AI)이 게시글 제목·설명을 읽고 약 1,000개의 세부 카테고리로 자동 분류</b>해요. 분류가 정확할수록 관련 관심사 사용자에게 노출될 확률이 높아져요.`,
+    tip:`제목과 소개글에 구체적인 키워드(지역명·활동 종류·대상)를 포함하면 AI 분류 정확도가 올라가요.`,
+    tipColor:'orange'
+  },
+  {
+    cat:'daangn', name:'숨기기 패널티', en:'Hide Penalty',
+    desc:`다른 사용자가 <b>"이 글 숨기기"를 누르면 알고리즘이 해당 게시글의 노출을 점진적으로 줄이는 것</b>이에요. 숨기기 횟수는 직접 확인이 불가능하지만, 조회수 대비 채팅·관심 비율이 1% 미만이면 의심할 수 있어요.`,
+    tip:`허위·과장 없는 정직한 게시글이 숨기기 패널티를 예방하는 가장 좋은 방법이에요.`,
+    tipColor:'orange'
+  },
+  {
+    cat:'daangn', name:'활성 모임 신호', en:'Active Meeting Signal',
+    desc:`당근은 <b>최근 14일 이내 일정이 등록된 모임을 활성 모임</b>으로 판단해 상위 노출시켜요. 일정을 자주 등록하고 업데이트하는 것이 가장 직접적인 노출 전략이에요.`,
+    tip:`모임 일정을 2주 이상 비워두지 마세요. 빈 일정 = 활성 신호 소멸이에요.`,
+    tipColor:'orange'
+  },
+  {
+    cat:'daangn', name:'동네생활 연동', en:'Neighbor Life Integration',
+    desc:`당근 동네생활에 모임 후기·사진을 올리면 <b>모임 페이지로의 추가 유입 경로</b>가 생겨요. 알고리즘 활성도 점수에도 긍정적으로 작용해요.`,
+    tip:`모임 후 단체 사진 1장만 동네생활에 올려도 충분해요.`,
+    tipColor:'orange'
+  },
+
+  /* ───────────── 소모임·문토 ───────────── */
+  {
+    cat:'moim', name:'정모 (정기 모임)', en:'Regular Meetup',
+    desc:`소모임·문토에서 <b>정기적으로 개최하는 오프라인 모임</b>이에요. 정모 빈도와 참여율이 알고리즘의 핵심 활성도 지표예요. 자주, 꾸준히 열수록 검색 상위 노출에 유리해요.`,
+    tip:`월 2회 이상 정모를 열면 활성 모임으로 분류될 확률이 높아요.`,
+    tipColor:'green'
+  },
+  {
+    cat:'moim', name:'활성도 점수', en:'Activity Score',
+    desc:`소모임 알고리즘이 모임의 <b>정모 빈도·참여율·최근 활동 등을 종합해 계산하는 점수</b>예요. 이 점수에 따라 검색 결과 노출 순위가 결정돼요. 사용자마다 보이는 모임 리스트가 다른 이유예요.`,
+    tip:`활성도 = 정모 빈도 + 참여율 + 최근 게시글 + 멤버 증가율로 구성돼요.`,
+    tipColor:'green'
+  },
+  {
+    cat:'moim', name:'취향 연결 (문토)', en:'Taste Connection (Munto)',
+    desc:`문토의 핵심 매칭 시스템으로, <b>AI가 프로필 취향·관심사·활동 이력을 분석해 맞는 사람을 추천</b>해요. 프로필에 취향을 상세히 기입할수록 매칭 정확도가 올라가요.`,
+    tip:`프로필 취향 항목을 최대한 구체적으로 채워야 AI 추천 풀에 진입할 수 있어요.`,
+    tipColor:'green'
+  },
+  {
+    cat:'moim', name:'매너 점수 (문토)', en:'Manner Score (Munto)',
+    desc:`문토에서 <b>신뢰도를 나타내는 점수</b>예요. 멤버 평가와 신고 내역을 바탕으로 계산돼요. 매너 점수가 낮아지면 취향 연결 추천 풀에서 밀려날 수 있어요.`,
+    tip:`약속 취소나 노쇼는 매너 점수에 직접 타격이 가요. 참여 전 신중하게 결정하세요.`,
+    tipColor:'green'
+  },
+  {
+    cat:'moim', name:'호스트 브랜딩', en:'Host Branding',
+    desc:`소모임·문토에서 <b>호스트(모임장)의 신뢰도와 매력을 높이는 활동</b>이에요. 프로필 사진·소개·활동 이력이 신규 멤버의 가입 결정에 큰 영향을 줘요.`,
+    tip:`호스트 프로필에 "왜 이 모임을 만들었는지" 스토리를 1~2줄 넣으면 신뢰도가 크게 올라가요.`,
+    tipColor:'green'
+  },
+
+  /* ───────────── 카카오 오픈채팅 ───────────── */
+  {
+    cat:'kakao', name:'지금 뜨는 탭', en:'"Trending Now" Tab',
+    desc:`카카오 오픈채팅에서 <b>인기 있는 채팅방을 매일 업데이트해 노출하는 공간</b>이에요. 활성도·멤버 수·대화량·하트 수 등을 기준으로 알고리즘이 자동으로 선정해요.`,
+    tip:`지금 탭에 오르려면 채팅방 활성도(일평균 메시지 수)가 가장 중요해요.`,
+    tipColor:'yellow'
+  },
+  {
+    cat:'kakao', name:'커뮤니티 피드', en:'Community Feed',
+    desc:`2025년 개편된 기능으로, <b>채팅방에 입장하지 않아도 화제성 있는 대화가 피드 형태로 노출</b>돼요. 댓글을 달면 해당 채팅방으로 유입이 생겨요.`,
+    tip:`채팅방 대화 중 화제성 있는 내용이 커뮤니티 피드에 노출되면 외부 유입이 크게 늘어요.`,
+    tipColor:'yellow'
+  },
+  {
+    cat:'kakao', name:'활성도 지표', en:'Activity Index',
+    desc:`오픈채팅 알고리즘이 채팅방의 <b>일평균 메시지 수·하트 수·멤버 활동률 등을 종합한 점수</b>예요. 이 점수가 높을수록 "지금 뜨는" 탭과 키워드 검색에서 상위에 노출돼요.`,
+    tip:`공지·이벤트를 주기적으로 올려 재방문율을 높이면 활성도가 유지돼요.`,
+    tipColor:'yellow'
+  },
+  {
+    cat:'kakao', name:'키워드 탭', en:'Keyword Tab',
+    desc:`오픈채팅의 <b>실시간 트렌드 주제를 기반으로 관련 방을 추천하는 탭</b>이에요. 채팅방 이름에 트렌드 키워드가 포함돼 있으면 키워드 탭에 노출될 확률이 높아져요.`,
+    tip:`방 이름을 만들 때 현재 이슈·시즌 키워드를 포함하면 키워드 탭 노출 기회가 생겨요.`,
+    tipColor:'yellow'
+  },
+];
+
+let currentCat = 'all';
+let searchQuery = '';
+
+function render() {
+  const wrap = document.getElementById('glossaryWrap');
+  const empty = document.getElementById('emptyState');
+  const countEl = document.getElementById('searchCount');
+
+  const filtered = TERMS.filter(t => {
+    const matchCat = currentCat === 'all' || t.cat === currentCat;
+    const q = searchQuery.toLowerCase();
+    const matchSearch = !q ||
+      t.name.toLowerCase().includes(q) ||
+      (t.en && t.en.toLowerCase().includes(q)) ||
+      t.desc.toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+
+  if (searchQuery) {
+    countEl.textContent = `"${searchQuery}" 검색 결과 ${filtered.length}개`;
+  } else {
+    countEl.textContent = '';
+  }
+
+  if (filtered.length === 0) {
+    wrap.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  wrap.innerHTML = filtered.map((t, i) => {
+    const platClass = {insta:'plat-insta', daangn:'plat-daangn', moim:'plat-moim', kakao:'plat-kakao', common:'plat-common'}[t.cat];
+    const platLabel = {insta:'인스타', daangn:'당근', moim:'소모임·문토', kakao:'오픈채팅', common:'공통'}[t.cat];
+    const tipColor = t.tipColor || '';
+    return `
+    <div class="term-card" id="card-${i}">
+      <div class="term-header" onclick="toggleCard(${i})">
+        <span class="term-platform ${platClass}">${platLabel}</span>
+        <span class="term-name">${t.name}<span class="en">${t.en || ''}</span></span>
+        <span class="term-arrow">▼</span>
+      </div>
+      <div class="term-body">
+        <div class="term-desc">${t.desc}</div>
+        ${t.tip ? `<div class="tip-box ${tipColor}">💡 ${t.tip}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCard(i) {
+  const card = document.getElementById('card-' + i);
+  card.classList.toggle('open');
+}
+
+// 필터 버튼
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = btn.dataset.cat;
+    render();
+  });
+});
+
+// 검색
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.trim();
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
