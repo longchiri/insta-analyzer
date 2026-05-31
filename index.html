@@ -123,6 +123,7 @@
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1 / -1; }
     label { font-size: 0.82rem; font-weight: 600; color: #666; }
+    .field-desc { font-size: 0.71rem; color: #bbb; line-height: 1.55; margin-top: -2px; }
     input, textarea, select {
       border: 1.5px solid #e5e5e5; border-radius: 10px;
       padding: 10px 12px; font-size: 0.95rem; outline: none;
@@ -877,7 +878,7 @@
         <option value="yes">활용 중 (공동 작성자 태그)</option>
         <option value="no" selected>미사용</option>
       </select>
-      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 일반 콜라보(태그)와 다르게, Collab 기능은 두 계정이 <b>공동 작성자</b>로 등록돼 양쪽 프로필 피드에 동시 노출돼요. 같은 콘텐츠로 도달이 2배가 되는 구조예요. 게시물 작성 → 사람 태그 → Collab 초대에서 설정할 수 있어요.</div>
+      <p class="field-desc">두 계정이 <b>공동 작성자</b>로 등록돼 양쪽 피드에 동시 노출 — 도달 2배 구조예요. 게시물 작성 → 사람 태그 → Collab 초대에서 설정해요.</p>
     </div>
     <div class="form-group">
       <label>이미지 Alt Text 작성 여부 <span class="hint">★ 검색 SEO</span></label>
@@ -886,7 +887,7 @@
         <option value="sometimes">가끔</option>
         <option value="never" selected>작성 안 함</option>
       </select>
-      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 게시물 업로드 시 <b>대체 텍스트(Alt Text)</b>를 직접 입력하면 Instagram 내부 검색 알고리즘이 콘텐츠를 더 정확하게 분류해요. 탐색탭 노출 SEO에 직접 영향을 줘요. 사진 업로드 → 접근성 → 대체 텍스트에서 설정 가능해요.</div>
+      <p class="field-desc"><b>대체 텍스트</b>를 직접 입력하면 탐색탭 검색 노출 SEO에 직접 영향줘요. 사진 업로드 → 접근성 → 대체 텍스트에서 설정해요.</p>
     </div>
     <div class="form-group">
       <label>포스팅 주요 시간대</label>
@@ -919,7 +920,7 @@
         <option value="sometimes">가끔 포함</option>
         <option value="never" selected>그냥 감성 문구로 시작</option>
       </select>
-      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 인스타그램 검색 알고리즘은 <b>캡션 첫 줄을 키워드로 크롤링</b>해요. "오늘 날씨가..." 같은 감성 문구 대신 "강남 독서 모임 | 이번 달 추천 책" 같이 핵심 키워드를 첫 줄에 배치하면 인스타 검색 노출이 올라가요.</div>
+      <p class="field-desc"><b>캡션 첫 줄을 키워드로 크롤링</b>해요. "강남 독서 모임 | 이번 달 추천 책"처럼 핵심 키워드를 첫 줄에 배치하면 인스타 검색 노출이 올라가요.</p>
     </div>
     <div class="form-group">
       <label>콘텐츠 토픽 일관성 <span class="hint">★ 2025.10 Your Algorithm 대응</span></label>
@@ -928,7 +929,7 @@
         <option value="moderate">3~4개 주제 혼합</option>
         <option value="scattered">5개 이상 주제 분산</option>
       </select>
-      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 2025년 10월 "Your Algorithm(내 알고리즘)" 기능 도입 이후 사용자가 관심 토픽을 직접 설정해요. 계정이 특정 주제에 집중될수록 관심사가 맞는 사람들에게 우선 추천돼요. <b>2026년 4월부터 Explore(탐색 탭)까지 확장</b>되어, 주제가 명확한 계정일수록 탐색 탭 추천 정확도도 함께 올라가요.</div>
+      <p class="field-desc">주제가 집중될수록 관심사 맞는 사람에게 우선 추천돼요. <b>2026년 4월부터 Explore(탐색 탭)까지 확장</b> — 토픽이 명확할수록 탐색 탭 추천 정확도도 함께 올라가요.</p>
     </div>
     <div class="form-group">
       <label>피드 게시물 비율 <span class="hint">★ 2025년 표준 변경</span></label>
@@ -938,7 +939,7 @@
         <option value="landscape">가로형</option>
         <option value="mixed">혼합</option>
       </select>
-      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 2025년부터 인스타가 4:5 세로형(1080×1350px)을 공식 권장 비율로 변경했어요. 정방형보다 화면을 33% 더 차지해 스크롤 체류 시간이 늘어나고 알고리즘 가산점이 붙어요.</div>
+      <p class="field-desc">4:5 세로형(1080×1350px)이 2025년 공식 권장 비율이에요. 정방형보다 화면을 33% 더 차지해 체류 시간이 늘고 알고리즘 가산점이 붙어요.</p>
     </div>
     <div class="form-group">
       <label>트라이얼 릴스 활용 여부 <span class="hint">★ 2026 Mosseri 추천</span></label>
@@ -947,7 +948,7 @@
         <option value="sometimes">가끔 사용 (월 1회 이하)</option>
         <option value="never" selected>사용 안 함</option>
       </select>
-      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 릴스를 팔로워에게 바로 공개하지 않고, 비팔로워 소수에게 먼저 테스트 노출하는 기능이에요. 반응이 좋으면 전체 배포 — 반응이 별로면 팔로워는 아예 모른 채 지나가요. 인스타 앱 → 릴스 공유 화면 → "트라이얼" 토글 ON으로 사용 가능해요.</div>
+      <p class="field-desc">비팔로워 소수에게 먼저 테스트 노출 후 반응 좋으면 전체 배포 — 반응 없으면 팔로워 모르게 지나가요. 릴스 공유 화면 → "트라이얼" 토글 ON.</p>
     </div>
     <div class="form-group">
       <label>카루셀 배경음악 추가 여부 <span class="hint">★ 릴스 탭 추가 노출</span></label>
@@ -956,7 +957,7 @@
         <option value="sometimes">가끔 추가</option>
         <option value="never" selected>추가 안 함</option>
       </select>
-      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">📌 카루셀(슬라이드) 게시물에 배경음악을 추가하면 릴스 탭에도 추가 노출돼요. 사진 게시물이지만 릴스 피드에서 새로운 비팔로워에게 발견될 수 있어요. 인스타 앱 → 게시물 작성 → 음악 추가로 설정 가능해요.</div>
+      <p class="field-desc">카루셀에 음악 추가 시 릴스 탭에도 함께 노출돼요. 사진 게시물이지만 릴스 피드에서 비팔로워에게 발견될 수 있어요.</p>
     </div>
   </div>
 </div>
