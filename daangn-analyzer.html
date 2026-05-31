@@ -318,8 +318,9 @@
         </span>
       </label>
       <select id="areaRange">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="narrow">우리 동네만 (1개 지역)</option>
-        <option value="medium" selected>인근 동네 포함 (2~3개 지역)</option>
+        <option value="medium">인근 동네 포함 (2~3개 지역)</option>
         <option value="wide">광역 (4개 이상 지역)</option>
       </select>
     </div>
@@ -365,8 +366,8 @@
         </span>
       </label>
       <div class="range-row">
-        <input type="range" id="attendRate" min="0" max="100" value="60" oninput="document.getElementById('attendRateVal').textContent=this.value+'%'"/>
-        <span class="range-val" id="attendRateVal">60%</span>
+        <input type="range" id="attendRate" min="0" max="100" value="0" oninput="document.getElementById('attendRateVal').textContent=this.value+'%'"/>
+        <span class="range-val" id="attendRateVal">0%</span>
       </div>
     </div>
     <div class="form-group">
@@ -402,8 +403,8 @@
         </span>
       </label>
       <div class="range-row">
-        <input type="range" id="mannerTemp" min="30" max="99" value="36.5" step="0.1" oninput="document.getElementById('mannerTempVal').textContent=parseFloat(this.value).toFixed(1)+'°C'"/>
-        <span class="range-val" id="mannerTempVal">36.5°C</span>
+        <input type="range" id="mannerTemp" min="30" max="99" value="30" step="0.1" oninput="document.getElementById('mannerTempVal').textContent=parseFloat(this.value).toFixed(1)+'°C'"/>
+        <span class="range-val" id="mannerTempVal">30.0°C</span>
       </div>
     </div>
     <div class="form-group">
@@ -414,9 +415,10 @@
         </span>
       </label>
       <select id="hostAge">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="1">1개월 미만</option>
         <option value="3">1~6개월</option>
-        <option value="6" selected>6개월~1년</option>
+        <option value="6">6개월~1년</option>
         <option value="12">1~2년</option>
         <option value="24">2년 이상</option>
       </select>
@@ -454,6 +456,7 @@
         </span>
       </label>
       <select id="tagSet">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="many">태그 3개 이상 (최적)</option>
         <option value="few">태그 1~2개</option>
         <option value="none">태그 없음</option>
@@ -467,6 +470,7 @@
         </span>
       </label>
       <select id="responseSpeed">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="fast">1시간 이내</option>
         <option value="same">당일 내</option>
         <option value="slow">1~2일</option>
@@ -481,6 +485,7 @@
         </span>
       </label>
       <select id="memberLimit">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="yes">설정함 (정원 제한 있음)</option>
         <option value="no">설정 안 함 (무제한)</option>
       </select>
@@ -502,6 +507,7 @@
         </span>
       </label>
       <select id="neighborPost">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="regular">정기적으로 올림 (주 1회+)</option>
         <option value="sometimes">가끔 올림 (월 1~3회)</option>
         <option value="never">올리지 않음</option>
@@ -515,6 +521,7 @@
         </span>
       </label>
       <select id="photoQuality">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="real">실제 활동 사진 (고퀄)</option>
         <option value="basic">기본 사진 있음</option>
         <option value="none">사진 없음 (기본 이미지)</option>
@@ -564,6 +571,7 @@
         </span>
       </label>
       <select id="externalLink">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="yes">연동 중 (카카오/카페 등)</option>
         <option value="no">연동 없음</option>
       </select>
@@ -577,6 +585,7 @@
         <span class="tip">★ 2026.01 신규 — 당근 자체 커뮤니티</span>
       </label>
       <select id="daangnCafe">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="yes">카페 운영 중 (모임과 연계)</option>
         <option value="no">카페 없음</option>
       </select>
@@ -590,6 +599,7 @@
         </span>
       </label>
       <select id="visibility">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="public">공개</option>
         <option value="private">비공개</option>
       </select>
@@ -619,6 +629,7 @@
         </span>
       </label>
       <select id="scheduleType">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="weekly">매주 정기 모임</option>
         <option value="biweekly">격주 정기 모임</option>
         <option value="monthly">매월 정기 모임</option>
@@ -634,6 +645,7 @@
         <span class="tip">★ AI 운영 이력 평가 신호</span>
       </label>
       <select id="activityConsistency">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="high">매우 일관됨 (같은 요일·시간 6개월+)</option>
         <option value="mid">보통 (불규칙하지만 꾸준히 활동)</option>
         <option value="low">불규칙 (자주 일정 변경·취소)</option>
@@ -649,6 +661,7 @@
         </span>
       </label>
       <select id="joinType">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="free">자유 가입 (즉시 승인)</option>
         <option value="approval">수락 필요 (호스트 승인)</option>
         <option value="question">가입 질문 있음</option>
@@ -663,8 +676,8 @@
         <span class="tip">3회 이상 참여자 기준</span>
       </label>
       <div class="range-row">
-        <input type="range" id="regularRate" min="0" max="100" value="30" oninput="document.getElementById('regularRateVal').textContent=this.value+'%'"/>
-        <span class="range-val" id="regularRateVal">30%</span>
+        <input type="range" id="regularRate" min="0" max="100" value="0" oninput="document.getElementById('regularRateVal').textContent=this.value+'%'"/>
+        <span class="range-val" id="regularRateVal">0%</span>
       </div>
     </div>
     <div class="form-group">
@@ -675,6 +688,7 @@
         </span>
       </label>
       <select id="meetingTime">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="evening">평일 저녁 (7시 이후)</option>
         <option value="weekend">주말</option>
         <option value="daytime">평일 낮</option>
@@ -689,6 +703,7 @@
         </span>
       </label>
       <select id="introLocation">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="yes">있음 (구체적 장소 명시)</option>
         <option value="no">없음</option>
       </select>
@@ -717,6 +732,7 @@
         </span>
       </label>
       <select id="kakaoMap">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="yes">등록됨</option>
         <option value="no">미등록</option>
       </select>
@@ -729,6 +745,7 @@
         </span>
       </label>
       <select id="snsPromo">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="both">인스타+블로그 모두</option>
         <option value="insta">인스타그램만</option>
         <option value="blog">블로그/카페만</option>
@@ -743,6 +760,7 @@
         </span>
       </label>
       <select id="crossPromo">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="active">활발히 활용 중</option>
         <option value="sometimes">가끔 활용</option>
         <option value="never">활용 안 함</option>
@@ -765,6 +783,7 @@
         </span>
       </label>
       <select id="naverSearch">
+        <option value="" disabled selected>— 선택 —</option>
         <option value="yes">등록됨 (블로그·카페 있음)</option>
         <option value="no">없음</option>
       </select>
@@ -940,8 +959,8 @@ function analyze() {
   const attendRate  = parseInt(document.getElementById('attendRate').value) || 0;
   const postCount   = parseInt(document.getElementById('postCount30').value) || 0;
   const commentAvg  = parseInt(document.getElementById('commentAvg').value) || 0;
-  const mannerTemp  = parseFloat(document.getElementById('mannerTemp').value) || 36.5;
-  const hostAge     = parseInt(document.getElementById('hostAge').value) || 6;
+  const mannerTemp  = parseFloat(document.getElementById('mannerTemp').value) || 30;
+  const hostAge     = parseInt(document.getElementById('hostAge').value) || 0;
   const reviewCount = parseInt(document.getElementById('reviewCount').value) || 0;
   const badgeCount  = parseInt(document.getElementById('badgeCount').value) || 0;
   const tagSet       = document.getElementById('tagSet').value;
@@ -1015,8 +1034,8 @@ function analyze() {
 
   // 3. 신뢰도 점수 (20%)
   let trust = 0;
-  if (mannerTemp >= 50) trust += 40; else if (mannerTemp >= 42) trust += 28; else if (mannerTemp >= 36.5) trust += 15;
-  if (hostAge >= 24) trust += 25; else if (hostAge >= 12) trust += 18; else if (hostAge >= 6) trust += 10; else trust += 4;
+  if (mannerTemp >= 50) trust += 40; else if (mannerTemp >= 42) trust += 28; else if (mannerTemp >= 38) trust += 12; else if (mannerTemp > 36.5) trust += 5;
+  if (hostAge >= 24) trust += 25; else if (hostAge >= 12) trust += 18; else if (hostAge >= 6) trust += 10; else if (hostAge > 0) trust += 4;
   if (reviewCount >= 20) trust += 25; else if (reviewCount >= 10) trust += 15; else if (reviewCount >= 3) trust += 8;
   if (badgeCount >= 3) trust += 10; else if (badgeCount >= 1) trust += 5;
   if (responseSpeed === 'fast') trust += 10; else if (responseSpeed === 'same') trust += 5;
@@ -1378,19 +1397,33 @@ function analyze() {
       `키워드 없는 제목은 당근 알고리즘이 분류를 못 해요. 사람들이 실제로 검색하는 단어를 넣는 게 핵심이에요.`,
     ])});
 
-  if (intro.length >= 100)
+  if (intro.length >= 200)
+    expChecks.push({ type:'ok', title:`소개글 최상급 (${intro.length}자)`, desc: pick([
+      `소개글이 ${intro.length}자로 매우 충실해요. 알고리즘이 모임 주제를 정확히 파악하고, 신규 멤버도 빠르게 결정할 수 있어요.`,
+      `200자 이상 소개글은 검색 키워드 밀도가 높아 노출 정확도가 올라가요. 지금 이 완성도를 유지하면서 6개월마다 최신 정보로 업데이트하세요.`,
+      `소개글 품질 최상급이에요. "이런 분 환영해요" + "모임 후 이런 경험을 드려요" 문구가 있으면 타겟 멤버 전환율이 추가로 올라가요.`,
+      `${intro.length}자 소개글은 경쟁 모임보다 키워드가 풍부해요. 소개글 첫 3줄에 가장 중요한 정보(활동·장소·빈도)를 모아두면 스크롤 없이도 가입 결정이 나와요.`,
+    ])});
+  else if (intro.length >= 100)
     expChecks.push({ type:'ok', title:'소개글 충실', desc: pick([
       '소개글이 100자 이상이에요. 알고리즘이 모임 주제를 잘 파악해요.',
       '소개글 길이가 좋아요. 일정·장소·분위기가 잘 담겨 있으면 더 효과적이에요.',
       '소개글이 충실하면 신규 멤버가 가입 여부를 빠르게 결정할 수 있어요. 전환율에 직접 영향을 줘요.',
       '좋아요! 소개글에 "이런 분을 환영해요" 문구까지 있으면 타겟 멤버 유입률이 더 높아져요.',
     ])});
-  else
-    expChecks.push({ type:'warn', title:'소개글 보강 필요', desc: pick([
-      '소개글을 100자 이상으로 늘리고 일정·장소·대상을 명확히 적으세요.',
-      `현재 소개글이 ${intro.length}자예요. 100자 이상으로 늘리면 알고리즘 파악력이 올라가요.`,
+  else if (intro.length >= 30)
+    expChecks.push({ type:'warn', title:`소개글 보강 필요 (${intro.length}자)`, desc: pick([
+      `소개글이 ${intro.length}자예요. 100자 이상으로 늘리고 일정·장소·대상을 명확히 적으세요.`,
       '소개글이 짧으면 신규 멤버가 모임 분위기를 파악 못 하고 이탈해요. ①모임 목적 ②참여 방법 ③환영하는 멤버 유형 3가지만 추가해도 100자는 금방 채워져요.',
-      `소개글 ${intro.length}자는 너무 짧아요. 검색 알고리즘도 소개글 키워드 밀도를 봐요. 지금 내용에서 구체적인 장소명·활동명·빈도를 추가하면 100자를 넘기면서 검색 정확도도 올라가요.`,
+      `소개글 ${intro.length}자는 검색 알고리즘이 모임을 제대로 분류하기에 부족해요. 구체적인 장소명·활동명·모임 빈도를 추가하면 키워드 밀도가 올라가요.`,
+      `지금 소개글에서 "어디서·언제·무엇을"만 각 한 줄씩 추가하면 100자가 돼요. 소개글 100자 이상이 되는 순간 검색 노출 정확도가 눈에 띄게 달라져요.`,
+    ])});
+  else
+    expChecks.push({ type:'bad', title:`소개글 거의 없음 (${intro.length}자)`, desc: pick([
+      `소개글이 ${intro.length}자밖에 없어요. 검색 알고리즘이 모임을 분류할 수가 없어요. 지금 바로 100자 이상으로 채우세요.`,
+      '소개글이 너무 짧으면 신규 멤버가 클릭 후 즉시 이탈해요. 모임 목적·장소·참여 방법을 최소 3문장으로 적어보세요.',
+      '거의 빈 소개글은 전환율 0%에 가까워요. "이 모임은 무엇을 하나요?" "어디서 만나요?" "누가 환영받나요?" 이 세 질문에 답하는 글을 지금 바로 써보세요.',
+      `소개글 ${intro.length}자는 당근 알고리즘이 모임 주제를 파악하기 불가능한 수준이에요. 경쟁 모임 대비 검색 노출이 크게 불리해요. 오늘 100자 채우기를 목표로 하세요.`,
     ])});
 
   // 활성도 → 노출
@@ -1511,16 +1544,21 @@ function analyze() {
       '같은 요일·시간으로 6개월 이상 꾸준히 운영하고 있어요. 당근 AI가 "안정적 모임"으로 분류해 노출 우선순위를 높여요.',
       '운영 일관성이 뛰어나요. 예측 가능한 패턴으로 운영된 모임은 AI 알고리즘 평가에서 높은 신뢰 점수를 받아요.',
       '6개월+ 일관된 운영 이력은 당근 알고리즘이 가장 좋아하는 신호예요. 이 패턴을 유지하면 장기적으로 상위 노출이 안정화돼요.',
+      '일관된 운영 패턴은 멤버 재참여율도 함께 올려요. "매주 토요일 오전"처럼 예측 가능한 일정은 멤버가 미리 계획을 세울 수 있어 출석률이 자연스럽게 올라가요.',
     ])});
   else if (activityConsistency === 'mid')
     opChecks.push({ type:'warn', title:'활동 일관성 보통 (AI 운영 이력)', desc: pick([
       '꾸준히 활동하고 있지만 일정이 불규칙해요. 같은 요일·시간으로 고정하면 AI 운영 이력 점수가 올라가요.',
       '활동은 있지만 패턴이 불규칙해요. 매주 또는 격주 같은 요일·시간을 정해두면 멤버 출석률과 알고리즘 점수가 모두 올라요.',
+      '일정 패턴이 있는 모임이 없는 모임보다 알고리즘 노출 배정이 20~30% 높아요. 지금부터 3개월만 고정 요일로 운영해보세요.',
+      '당근 AI는 운영 이력의 규칙성을 점수로 환산해요. 최근 3개월 일정을 동일 요일로 맞추면 "보통"에서 "높음"으로 점프할 수 있어요.',
     ])});
   else if (activityConsistency === 'low')
     opChecks.push({ type:'bad', title:'활동 일관성 부족 (잦은 일정 변경)', desc: pick([
       '일정 변경·취소가 잦으면 당근 AI가 "불안정 모임"으로 분류해 노출 순위가 낮아져요. 다음 모임부터는 최소 2주 전에 날짜를 확정해보세요.',
       '일관된 일정이 없으면 멤버도 알고리즘도 모임을 신뢰하지 않아요. 고정 요일·시간을 정하고 최소 3개월 이상 유지하면 운영 신뢰 점수가 올라가요.',
+      '일정 취소 1회는 멤버 이탈 + 알고리즘 패널티 이중 손해예요. 부득이하게 취소해야 할 때는 최소 3일 전 공지하고 바로 다음 일정을 올리는 게 피해를 줄여요.',
+      '활동 일관성 점수를 높이는 가장 빠른 방법은 연속 3회 일정 변경·취소 없이 진행하는 거예요. 작은 인원이라도 예정대로 진행하는 게 장기적으로 더 유리해요.',
     ])});
 
   // 외부 채널 → 노출 (유입 다변화 채널)
@@ -1604,6 +1642,13 @@ function analyze() {
       `전환율이 높아요. 지금 모임 페이지가 잘 최적화된 상태예요. 이 상태를 유지하면서 동네생활 홍보로 조회수를 늘려보세요.`,
       `전환율 ${Math.round(cvrRate)}%는 같은 조회수에서 다른 모임보다 더 많은 멤버를 확보한다는 뜻이에요. 태그와 동네생활 활동으로 조회수를 높이면 성장이 배가돼요.`,
       `높은 전환율은 소개글·사진·제목 삼박자가 맞다는 신호예요. 지금 페이지 구성을 그대로 유지하면서 유입량을 늘리는 데 집중하세요.`,
+    ])});
+  else if (lowCvr)
+    opChecks.push({ type:'warn', title:`전환율 ${Math.round(cvrRate)}% 저조 — 페이지 개선 필요`, desc: pick([
+      `조회 대비 신청 전환율이 ${Math.round(cvrRate)}%예요. 소개글 첫 3줄과 대표 사진을 지금 바로 교체해보세요. 이 두 가지가 전환율에 가장 크게 영향을 줘요.`,
+      `전환율이 낮아요. 조회는 되지만 신청이 없다는 건 "보고 떠난다"는 뜻이에요. 소개글에 ①모임 목적 ②일정·장소 ③참여 대상을 명확히 적어보세요.`,
+      `전환율 ${Math.round(cvrRate)}%는 100명이 봐도 ${Math.round(cvrRate)}명만 신청한다는 의미예요. 대표 사진 1장 교체만으로 전환율이 2~3% 올라가는 경우가 많아요.`,
+      `낮은 전환율은 제목이 아닌 소개 페이지 문제예요. 경쟁 모임 소개글을 참고해 "환영 문구 + 구체적 활동 설명 + 사진 3장 이상" 조합으로 업데이트해보세요.`,
     ])});
 
   // 성장률 → 노출
