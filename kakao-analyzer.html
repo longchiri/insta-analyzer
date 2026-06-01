@@ -44,6 +44,38 @@
     .form-group.full { grid-column:1/-1; }
     label { font-size:0.82rem; font-weight:700; color:#666; }
     label .tip { font-size:0.72rem; font-weight:400; color:#aaa; margin-left:6px; }
+/* ⓘ 인포 버튼 */
+.info-wrap { position:relative; display:inline-block; vertical-align:middle; margin-left:5px; }
+.info-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:16px; height:16px; background:#fff3b0; color:#c8a800;
+  border-radius:50%; font-size:0.62rem; font-weight:900;
+  cursor:pointer; border:1px solid #f0d800; font-family:serif;
+  transition:background 0.15s, color 0.15s; line-height:1;
+}
+.info-btn:hover, .info-btn.active { background:#FEE500; color:#3C1E1E; }
+.info-tooltip {
+  display:none; position:absolute; z-index:200;
+  background:#fff; border:1.5px solid #FEE500;
+  border-radius:12px; padding:10px 13px;
+  font-size:0.76rem; color:#444; line-height:1.65;
+  width:230px; left:50%; transform:translateX(-50%);
+  bottom:calc(100% + 8px);
+  box-shadow:0 6px 20px rgba(254,229,0,0.25);
+  pointer-events:none; font-weight:400;
+}
+.info-tooltip::after {
+  content:''; position:absolute; top:100%; left:50%;
+  transform:translateX(-50%);
+  border:6px solid transparent; border-top-color:#FEE500;
+}
+.info-wrap:hover .info-tooltip,
+.info-tooltip.active { display:block; }
+.tooltip-where {
+  margin-top:6px; padding:4px 8px;
+  background:#fffde7; border-radius:6px;
+  font-size:0.71rem; color:#c8a800; font-weight:600; display:block;
+}
     input, textarea, select {
       border:1.5px solid #e5e5e5; border-radius:10px;
       padding:10px 12px; font-size:0.93rem; outline:none;
@@ -207,15 +239,30 @@
   <h2>💬 방 기본 정보</h2>
   <div class="form-grid">
     <div class="form-group full">
-      <label>방 제목 <span class="tip">키워드가 가장 강력한 SEO 신호예요</span></label>
+      <label>방 제목 <span class="tip">키워드가 가장 강력한 SEO 신호예요</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 설정(⚙️) → 채팅방 이름</span></span>
+  </span>
+</label>
       <input type="text" id="roomTitle" placeholder="예: 대전 러닝 크루 | 초보 환영 | 매주 토요일"/>
     </div>
     <div class="form-group full">
-      <label>방 소개글 <span class="tip">키워드와 일정·특징을 명확히 포함하세요</span></label>
+      <label>방 소개글 <span class="tip">키워드와 일정·특징을 명확히 포함하세요</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 설정(⚙️) → 소개</span></span>
+  </span>
+</label>
       <textarea id="roomIntro" placeholder="예: 매주 토요일 오전 8시 대전 갑천 러닝 모임입니다. 초보자 대환영!&#10;#러닝 #대전러닝 #건강 #운동모임 #사회인러닝"></textarea>
     </div>
     <div class="form-group full">
-      <label>방 커버 이미지 <span class="tip">검색 목록에서 CTR에 직접 영향을 줘요</span></label>
+      <label>방 커버 이미지 <span class="tip">검색 목록에서 CTR에 직접 영향을 줘요</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 설정(⚙️) → 커버 사진</span></span>
+  </span>
+</label>
       <select id="coverImage">
         <option value="real">실제 활동/모임 사진</option>
         <option value="custom">커스텀 디자인 이미지</option>
@@ -224,11 +271,21 @@
       </select>
     </div>
     <div class="form-group full">
-      <label>현재 사용 중인 해시태그 <span class="tip">방 설정의 해시태그 전부 입력 (쉼표로 구분)</span></label>
+      <label>현재 사용 중인 해시태그 <span class="tip">방 설정의 해시태그 전부 입력 (쉼표로 구분)</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 설정(⚙️) → 태그 설정</span></span>
+  </span>
+</label>
       <input type="text" id="hashtags" placeholder="예: #러닝, #대전러닝, #건강, #운동모임, #사회인러닝"/>
     </div>
     <div class="form-group">
-      <label>카테고리</label>
+      <label>카테고리
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 설정(⚙️) → 카테고리</span></span>
+  </span>
+</label>
       <select id="category">
         <option value="독서">📚 독서/스터디</option>
         <option value="운동">🏃 운동/헬스</option>
@@ -259,7 +316,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>방 운영 기간</label>
+      <label>방 운영 기간
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 정보 → 개설일 확인</span></span>
+  </span>
+</label>
       <select id="roomAge">
         <option value="7">1주일 미만</option>
         <option value="30">1개월 미만</option>
@@ -276,11 +338,21 @@
   <h2>👥 인원 현황</h2>
   <div class="form-grid">
     <div class="form-group">
-      <label>현재 인원 수</label>
+      <label>현재 인원 수
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 멤버 목록 → 상단 인원 수</span></span>
+  </span>
+</label>
       <input type="number" id="currentMembers" placeholder="예: 234" min="1"/>
     </div>
     <div class="form-group">
-      <label>최대 정원</label>
+      <label>최대 정원
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 설정(⚙️) → 최대 인원</span></span>
+  </span>
+</label>
       <select id="maxMembers">
         <option value="50">50명</option>
         <option value="100">100명</option>
@@ -294,11 +366,21 @@
       </select>
     </div>
     <div class="form-group">
-      <label>최근 7일 신규 유입 <span class="tip">새로 들어온 사람 수</span></label>
+      <label>최근 7일 신규 유입 <span class="tip">새로 들어온 사람 수</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 설정 → 통계 (제공 시)</span></span>
+  </span>
+</label>
       <input type="number" id="newMembers7d" placeholder="예: 23" min="0"/>
     </div>
     <div class="form-group">
-      <label>이탈율 <span class="tip">% — 신규 입장 후 24시간 내 나간 비율</span></label>
+      <label>이탈율 <span class="tip">% — 신규 입장 후 24시간 내 나간 비율</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 신규 입장 후 24시간 내 퇴장 인원 ÷ 신규 유입 × 100 직접 계산</span></span>
+  </span>
+</label>
       <div class="range-row">
         <input type="range" id="exitRateRange" min="0" max="100" value="0" oninput="syncRange('exitRate','exitRateRange')"/>
         <input type="number" id="exitRate" min="0" max="100" value="0" style="width:64px;padding:6px 8px;font-size:0.9rem;" oninput="syncRange('exitRateRange','exitRate')"/>
@@ -313,19 +395,39 @@
   <h2>📊 활성도 지표</h2>
   <div class="form-grid">
     <div class="form-group">
-      <label>하루 평균 메시지 수</label>
+      <label>하루 평균 메시지 수
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅 내역 → 최근 7일 메시지 합산 ÷ 7</span></span>
+  </span>
+</label>
       <input type="number" id="dailyMsgs" placeholder="예: 48" min="0"/>
     </div>
     <div class="form-group">
-      <label>하루 평균 참여 고유 인원</label>
+      <label>하루 평균 참여 고유 인원
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅 내역 → 하루 중 실제 대화 참여자 수 평균</span></span>
+  </span>
+</label>
       <input type="number" id="dailyUniqueUsers" placeholder="예: 12" min="0"/>
     </div>
     <div class="form-group">
-      <label>방 하트(좋아요) 수</label>
+      <label>방 하트(좋아요) 수
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 정보 → 하트 수</span></span>
+  </span>
+</label>
       <input type="number" id="heartCount" placeholder="예: 47" min="0"/>
     </div>
     <div class="form-group">
-      <label>외부 공유 링크 유입 <span class="tip">블로그·카페 등 외부에서 들어온 인원 추정</span></label>
+      <label>외부 공유 링크 유입 <span class="tip">블로그·카페 등 외부에서 들어온 인원 추정</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 블로그·카페·SNS 등에 공유한 링크로 유입된 인원 추정</span></span>
+  </span>
+</label>
       <input type="number" id="externalTraffic" placeholder="예: 15" min="0"/>
     </div>
   </div>
@@ -337,7 +439,12 @@
   <div style="font-size:0.78rem;color:#888;margin-bottom:14px;line-height:1.6;">2025년 9월 카카오톡 대개편으로 오픈채팅이 <b>숏폼과 통합된 "지금" 탭</b>으로 이동했어요. 피드 노출·숏폼 활용도가 새로운 핵심 지표예요.</div>
   <div class="form-grid">
     <div class="form-group">
-      <label>오픈채팅 커뮤니티 피드 노출 <span class="tip">★ 지금탭 핵심 신호</span></label>
+      <label>오픈채팅 커뮤니티 피드 노출 <span class="tip">★ 지금탭 핵심 신호</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 피드 탭 → 내 채팅방 게시글 노출 여부</span></span>
+  </span>
+</label>
       <select id="feedExposure">
         <option value="no">미노출 (피드에 거의 안 보임)</option>
         <option value="sometimes">가끔 노출</option>
@@ -345,7 +452,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>숏폼 콘텐츠 방 내 공유 <span class="tip">지금탭 숏폼과 연동</span></label>
+      <label>숏폼 콘텐츠 방 내 공유 <span class="tip">지금탭 숏폼과 연동</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅방 내 영상 공유 내역 직접 확인</span></span>
+  </span>
+</label>
       <select id="shortformUsed">
         <option value="no">거의 없음</option>
         <option value="some">가끔 (주 1~2회)</option>
@@ -354,7 +466,12 @@
       <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">⚠️ 현재 카카오가 <b style="color:#888;">사전 초대한 크리에이터·채널 운영자만</b> 숏폼 업로드가 가능해요. 일반 방장은 직접 올릴 수 없으며, 카카오가 점차 일반 공개를 확대할 예정이에요.</div>
     </div>
     <div class="form-group">
-      <label>"지금 뜨는" 탭 진입 경험 <span class="tip">인기 채팅방 매일 자동 선정</span></label>
+      <label>"지금 뜨는" 탭 진입 경험 <span class="tip">인기 채팅방 매일 자동 선정</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 지금탭 → 내 채팅방 노출 여부 직접 확인</span></span>
+  </span>
+</label>
       <select id="trendingTab">
         <option value="never">없음</option>
         <option value="once">1~2회</option>
@@ -362,7 +479,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>AI 유해 콘텐츠 감지 경험 <span class="tip">머신러닝 자동 필터링 강화</span></label>
+      <label>AI 유해 콘텐츠 감지 경험 <span class="tip">머신러닝 자동 필터링 강화</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅방 운영 중 카카오 측 경고 알림 수신 여부</span></span>
+  </span>
+</label>
       <select id="mlPenalty">
         <option value="no">없음 (정상)</option>
         <option value="once">1회 경고/제한</option>
@@ -377,7 +499,12 @@
   <h2>🏆 방장 신뢰도</h2>
   <div class="form-grid">
     <div class="form-group">
-      <label>방장 활동 수준</label>
+      <label>방장 활동 수준
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 직접 판단 — 매일 접속·응답·공지 활동 기준</span></span>
+  </span>
+</label>
       <select id="ownerActivity">
         <option value="" disabled selected>— 선택 —</option>
         <option value="active">매일 활동 (열심히 관리)</option>
@@ -387,7 +514,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>신고/제재 이력</label>
+      <label>신고/제재 이력
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오 측 경고 메시지 또는 채팅방 제재 알림 수신 이력</span></span>
+  </span>
+</label>
       <select id="reportHistory">
         <option value="none" selected>없음 (깨끗)</option>
         <option value="minor">경미 (1~2건)</option>
@@ -395,7 +527,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>스팸·도배 링크 여부</label>
+      <label>스팸·도배 링크 여부
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅방 내 도배성 광고 링크 존재 여부 직접 확인</span></span>
+  </span>
+</label>
       <select id="hasSpam">
         <option value="no" selected>없음</option>
         <option value="some">가끔 있음</option>
@@ -403,7 +540,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>매크로·봇 의심 여부</label>
+      <label>매크로·봇 의심 여부
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅방 내 자동화된 반복 메시지 패턴 직접 확인</span></span>
+  </span>
+</label>
       <select id="hasBot">
         <option value="no" selected>없음</option>
         <option value="suspected">의심됨</option>
@@ -418,7 +560,12 @@
   <h2>💬 채팅방 운영 관리</h2>
   <div class="form-grid">
     <div class="form-group">
-      <label>공지 업데이트 빈도</label>
+      <label>공지 업데이트 빈도
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 공지 탭 → 날짜 확인</span></span>
+  </span>
+</label>
       <select id="noticeFreq">
         <option value="" disabled selected>— 선택 —</option>
         <option value="daily">매일</option>
@@ -428,7 +575,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>가장 활발한 시간대</label>
+      <label>가장 활발한 시간대
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅 내역에서 메시지 집중 시간대 직접 확인</span></span>
+  </span>
+</label>
       <select id="activeTime">
         <option value="" disabled selected>— 선택 —</option>
         <option value="evening">저녁 7~10시</option>
@@ -438,7 +590,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>관리자(부방장) 수</label>
+      <label>관리자(부방장) 수
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 멤버 목록 → 관리자 탭</span></span>
+  </span>
+</label>
       <select id="adminCount">
         <option value="" disabled selected>— 선택 —</option>
         <option value="many">3명 이상</option>
@@ -447,7 +604,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>이모티콘/짤 활용</label>
+      <label>이모티콘/짤 활용
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅방 내 이모티콘·짤 사용 빈도 직접 확인</span></span>
+  </span>
+</label>
       <select id="emojiUsage">
         <option value="" disabled selected>— 선택 —</option>
         <option value="often">자주</option>
@@ -456,7 +618,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>신규 멤버 환영 공지</label>
+      <label>신규 멤버 환영 공지
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 신규 멤버 입장 시 자동/수동 환영 메시지 여부 확인</span></span>
+  </span>
+</label>
       <select id="welcomeNotice">
         <option value="always">항상</option>
         <option value="sometimes">가끔</option>
@@ -464,14 +631,24 @@
       </select>
     </div>
     <div class="form-group">
-      <label>채팅방 규칙 공지</label>
+      <label>채팅방 규칙 공지
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 채팅방 → 공지 탭 → 규칙 공지 게시 여부</span></span>
+  </span>
+</label>
       <select id="ruleNotice">
         <option value="yes">있음</option>
         <option value="no">없음</option>
       </select>
     </div>
     <div class="form-group">
-      <label>커뮤니티 피드 게시물 평균 댓글 수 <span class="tip">★ 2026.01 신규 — 지금탭 노출 핵심 신호</span></label>
+      <label>커뮤니티 피드 게시물 평균 댓글 수 <span class="tip">★ 2026.01 신규 — 지금탭 노출 핵심 신호</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 오픈채팅 → 피드 → 게시물 댓글 수 평균</span></span>
+  </span>
+</label>
       <input type="number" id="communityComments" placeholder="예: 5" step="1" min="0"/>
     </div>
   </div>
@@ -482,7 +659,12 @@
   <h2>🚀 성장 &amp; 외부 유입</h2>
   <div class="form-grid">
     <div class="form-group">
-      <label>외부 SNS 홍보 <span class="tip">카카오스토리·인스타·카페 등</span></label>
+      <label>외부 SNS 홍보 <span class="tip">카카오스토리·인스타·카페 등</span>
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 인스타·카카오스토리·카페 등 외부 채널에서 채팅방 링크 홍보 여부</span></span>
+  </span>
+</label>
       <select id="snsPromo">
         <option value="" disabled selected>— 선택 —</option>
         <option value="active">활발</option>
@@ -491,14 +673,24 @@
       </select>
     </div>
     <div class="form-group">
-      <label>네이버 카페/블로그 연동</label>
+      <label>네이버 카페/블로그 연동
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 네이버 검색 → 채팅방 이름 검색 → 카페/블로그 노출 여부</span></span>
+  </span>
+</label>
       <select id="naverLink">
         <option value="yes">있음</option>
         <option value="no">없음</option>
       </select>
     </div>
     <div class="form-group">
-      <label>오픈채팅방 공유 링크 배포</label>
+      <label>오픈채팅방 공유 링크 배포
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅방 → 초대 링크 → 공유 활동 빈도 직접 판단</span></span>
+  </span>
+</label>
       <select id="linkShare">
         <option value="regular">정기 공유</option>
         <option value="sometimes">가끔</option>
@@ -506,11 +698,21 @@
       </select>
     </div>
     <div class="form-group">
-      <label>월 탈퇴 멤버 수</label>
+      <label>월 탈퇴 멤버 수
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅방 내 "OOO님이 나갔습니다" 메시지 최근 30일 합산</span></span>
+  </span>
+</label>
       <input type="number" id="churnKakao" placeholder="예: 5" min="0"/>
     </div>
     <div class="form-group">
-      <label>주제 관련 이벤트/챌린지 운영</label>
+      <label>주제 관련 이벤트/챌린지 운영
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 채팅방 내 이벤트 공지 이력 직접 확인</span></span>
+  </span>
+</label>
       <select id="eventFreq">
         <option value="" disabled selected>— 선택 —</option>
         <option value="monthly">월 1회 이상</option>
@@ -519,7 +721,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>오픈채팅 내 봇 활용 여부</label>
+      <label>오픈채팅 내 봇 활용 여부
+  <span class="info-wrap">
+    <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+    <span class="info-tooltip"><span class="tooltip-where">📍 카카오톡 → 채팅방 설정 → 봇 서비스 연동 여부</span></span>
+  </span>
+</label>
       <select id="botUsage">
         <option value="yes">환영봇 등 있음</option>
         <option value="no">없음</option>
@@ -633,6 +840,17 @@
 </footer>
 
 <script>
+function toggleTip(btn) {
+  const tip = btn.nextElementSibling;
+  document.querySelectorAll('.info-tooltip').forEach(t => { if(t !== tip) t.classList.remove('active'); });
+  tip.classList.toggle('active');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.info-wrap')) {
+    document.querySelectorAll('.info-tooltip').forEach(t => t.classList.remove('active'));
+  }
+});
+
 // ── 슬라이더 동기화 ──
 function syncRange(targetId, sourceId) {
   const v = parseFloat(document.getElementById(sourceId).value) || 0;

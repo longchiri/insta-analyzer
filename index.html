@@ -366,7 +366,7 @@
       border: 6px solid transparent; border-top-color: #d8b4fe;
     }
     .info-wrap:hover .info-tooltip,
-    .info-btn.active + .info-tooltip { display: block; }
+    .info-tooltip.active { display: block; }
     .tooltip-where {
       margin-top: 6px; padding: 4px 8px;
       background: #f5f0ff; border-radius: 6px;
@@ -660,11 +660,21 @@
     <h2>👤 기본 정보</h2>
     <div class="form-grid">
       <div class="form-group">
-        <label>계정명 (@ 제외)</label>
+        <label>계정명 (@ 제외)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인스타그램 앱 → 내 프로필 → 상단 @아이디</span></span>
+          </span>
+        </label>
         <input type="text" id="username" placeholder="예: my_account" />
       </div>
       <div class="form-group">
-        <label>계정 유형</label>
+        <label>계정 유형
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 설정 → 계정 → 계정 유형 전환에서 확인</span></span>
+          </span>
+        </label>
         <select id="accountType">
           <option value="creator">크리에이터</option>
           <option value="personal">개인</option>
@@ -672,19 +682,39 @@
         </select>
       </div>
       <div class="form-group">
-        <label>팔로워 수</label>
+        <label>팔로워 수
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인스타그램 앱 → 내 프로필 → "팔로워" 숫자</span></span>
+          </span>
+        </label>
         <input type="number" id="followers" placeholder="예: 467" />
       </div>
       <div class="form-group">
-        <label>팔로잉 수</label>
+        <label>팔로잉 수
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인스타그램 앱 → 내 프로필 → "팔로잉" 숫자</span></span>
+          </span>
+        </label>
         <input type="number" id="following" placeholder="예: 239" />
       </div>
       <div class="form-group">
-        <label>총 게시물 수</label>
+        <label>총 게시물 수
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인스타그램 앱 → 내 프로필 → 상단 게시물 수</span></span>
+          </span>
+        </label>
         <input type="number" id="posts" placeholder="예: 48" />
       </div>
       <div class="form-group">
-        <label>계정 운영 기간 (일)</label>
+        <label>계정 운영 기간 (일)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 설정 → 계정 → 계정 정보 → 계정 생성일</span></span>
+          </span>
+        </label>
         <input type="number" id="opDays" placeholder="예: 87" />
       </div>
     </div>
@@ -694,39 +724,84 @@
     <h2>📸 콘텐츠 정보</h2>
     <div class="form-grid">
       <div class="form-group">
-        <label>평균 좋아요 수 (게시물당)</label>
+        <label>평균 좋아요 수 (게시물당)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 게시물 → 각 게시물 → 좋아요 (최근 12개 평균)</span></span>
+          </span>
+        </label>
         <input type="number" id="avgLikes" placeholder="예: 34" />
       </div>
       <div class="form-group">
-        <label>평균 저장 수 (게시물당)</label>
+        <label>평균 저장 수 (게시물당)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 게시물 → 각 게시물 → 저장 (최근 12개 평균)</span></span>
+          </span>
+        </label>
         <input type="number" id="avgSaves" placeholder="예: 16" />
       </div>
       <div class="form-group">
-        <label>평균 공유 수 (게시물당)</label>
+        <label>평균 공유 수 (게시물당)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 게시물 → 각 게시물 → 공유 (최근 12개 평균)</span></span>
+          </span>
+        </label>
         <input type="number" id="avgShares" placeholder="예: 28" />
       </div>
       <div class="form-group">
-        <label>평균 노출(Reach) 수</label>
+        <label>평균 노출(Reach) 수
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 도달한 계정 → 최근 30일</span></span>
+          </span>
+        </label>
         <input type="number" id="avgReach" placeholder="예: 402" />
       </div>
       <div class="form-group">
-        <label>주 업로드 횟수</label>
+        <label>주 업로드 횟수
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 내 프로필 → 최근 1주일 게시물 수 직접 카운트</span></span>
+          </span>
+        </label>
         <input type="number" id="weeklyPosts" placeholder="예: 5" step="0.1" />
       </div>
       <div class="form-group">
-        <label>릴스 게시글 수</label>
+        <label>릴스 게시글 수
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 내 프로필 → 릴스 탭 → 최근 30일 개수</span></span>
+          </span>
+        </label>
         <input type="number" id="reelsPosts" placeholder="예: 2" />
       </div>
       <div class="form-group">
-        <label>스토리 수 (전체)</label>
+        <label>스토리 수 (전체)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 콘텐츠 유형 → 스토리</span></span>
+          </span>
+        </label>
         <input type="number" id="storyCount" placeholder="예: 23" />
       </div>
       <div class="form-group">
-        <label>평균 해시태그 수</label>
+        <label>평균 해시태그 수
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 내 게시물 캡션에서 # 개수 직접 확인</span></span>
+          </span>
+        </label>
         <input type="number" id="hashtagCount" placeholder="예: 12" max="30" />
       </div>
       <div class="form-group full">
-        <label>주요 콘텐츠 분야 (쉼표로 구분)</label>
+        <label>주요 콘텐츠 분야 (쉼표로 구분)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 내 게시물 주제 보고 직접 입력</span></span>
+          </span>
+        </label>
         <input type="text" id="niche" placeholder="예: 독서, 음악, 감성, 플레이리스트" />
       </div>
     </div>
@@ -736,35 +811,75 @@
     <h2>🎬 릴스 성과 지표 <span style="font-size:0.78rem;color:#999;font-weight:400">(알고 있으면 입력)</span></h2>
     <div class="form-grid">
       <div class="form-group">
-        <label>평균 완주율 (%)</label>
+        <label>평균 완주율 (%)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 릴스 → 각 릴스 → 평균 시청 비율</span></span>
+          </span>
+        </label>
         <input type="number" id="completionRate" placeholder="예: 65" max="100" step="0.1"/>
       </div>
       <div class="form-group">
-        <label>재시청율 (%)</label>
+        <label>재시청율 (%)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 릴스 → 재생 수 ÷ 도달 수 × 100</span></span>
+          </span>
+        </label>
         <input type="number" id="replayRate" placeholder="예: 12" step="0.1"/>
       </div>
       <div class="form-group">
-        <label>초반 이탈율 (%)</label>
+        <label>초반 이탈율 (%)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 릴스 → 이탈 타임라인 참고</span></span>
+          </span>
+        </label>
         <input type="number" id="earlyDropRate" placeholder="예: 25" step="0.1"/>
       </div>
       <div class="form-group">
-        <label>스토리 DM/답장 수 (주당)</label>
+        <label>스토리 DM/답장 수 (주당)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 스토리 → 각 스토리 → 답장 수</span></span>
+          </span>
+        </label>
         <input type="number" id="storyDM" placeholder="예: 20"/>
       </div>
       <div class="form-group">
-        <label>스토리 스티커 클릭 수 (주당)</label>
+        <label>스토리 스티커 클릭 수 (주당)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 스토리 → 각 스토리 → 스티커 탭</span></span>
+          </span>
+        </label>
         <input type="number" id="storyStickerClicks" placeholder="예: 35"/>
       </div>
       <div class="form-group">
-        <label>스토리 프로필 방문 수 (주당)</label>
+        <label>스토리 프로필 방문 수 (주당)
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 스토리 → 각 스토리 → 프로필 방문</span></span>
+          </span>
+        </label>
         <input type="number" id="storyProfileVisits" placeholder="예: 15"/>
       </div>
       <div class="form-group">
-        <label>릴스 평균 시청 유지율 (%) <span class="hint">★2025 #1 알고리즘 지표</span></label>
+        <label>릴스 평균 시청 유지율 (%) <span class="hint">★2025 #1 알고리즘 지표</span>
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 릴스 → 각 릴스 → 평균 시청 시간 ÷ 릴스 전체 시간 × 100</span></span>
+          </span>
+        </label>
         <input type="number" id="reelsWatchRate" placeholder="예: 55" step="0.1" max="100"/>
       </div>
       <div class="form-group">
-        <label>오리지널 콘텐츠 비율 (%) <span class="hint">★Dec 2025 업뎃 핵심</span></label>
+        <label>오리지널 콘텐츠 비율 (%) <span class="hint">★Dec 2025 업뎃 핵심</span>
+          <span class="info-wrap">
+            <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip"><span class="tooltip-where">📍 내 게시물에서 직접 제작 vs 리포스트 비율 직접 계산</span></span>
+          </span>
+        </label>
         <input type="number" id="originalRatio" placeholder="예: 90" step="1" max="100"/>
       </div>
       <div class="form-group">
@@ -849,7 +964,12 @@
   <h2>📱 콘텐츠 전략</h2>
   <div class="form-grid">
     <div class="form-group">
-      <label>주 포스팅 유형</label>
+      <label>주 포스팅 유형
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 내 게시물 구성 보고 직접 선택</span></span>
+        </span>
+      </label>
       <select id="s-contentType">
         <option value="reels">릴스 위주</option>
         <option value="feed">피드 위주</option>
@@ -857,7 +977,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>해시태그 전략</label>
+      <label>해시태그 전략
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 노출 → 해시태그 비율 참고</span></span>
+        </span>
+      </label>
       <select id="s-hashtagStrategy">
         <option value="optimized">30개 최적화</option>
         <option value="moderate" selected>적당히 사용</option>
@@ -865,7 +990,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>협업(콜라보) 계정 여부</label>
+      <label>협업(콜라보) 계정 여부
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 내 게시물 → 사람 태그 목록에서 확인</span></span>
+        </span>
+      </label>
       <select id="s-collabFreq">
         <option value="monthly">월 1회↑</option>
         <option value="sometimes">가끔</option>
@@ -873,24 +1003,37 @@
       </select>
     </div>
     <div class="form-group">
-      <label>Collab Post 기능 활용 <span class="hint">★ 2026 도달 2배</span></label>
+      <label>Collab Post 기능 활용 <span class="hint">★ 2026 도달 2배</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 게시물 작성 → 사람 태그 → Collab 초대에서 설정</span></span>
+        </span>
+      </label>
       <select id="s-collabPost">
         <option value="yes">활용 중 (공동 작성자 태그)</option>
         <option value="no" selected>미사용</option>
       </select>
-      <p class="field-desc">두 계정이 <b>공동 작성자</b>로 등록돼 양쪽 피드에 동시 노출 — 도달 2배 구조예요. 게시물 작성 → 사람 태그 → Collab 초대에서 설정해요.</p>
     </div>
     <div class="form-group">
-      <label>이미지 Alt Text 작성 여부 <span class="hint">★ 검색 SEO</span></label>
+      <label>이미지 Alt Text 작성 여부 <span class="hint">★ 검색 SEO</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 사진 업로드 → 고급 설정 → 접근성 → 대체 텍스트</span></span>
+        </span>
+      </label>
       <select id="s-altText">
         <option value="always">항상 작성</option>
         <option value="sometimes">가끔</option>
         <option value="never" selected>작성 안 함</option>
       </select>
-      <p class="field-desc"><b>대체 텍스트</b>를 직접 입력하면 탐색탭 검색 노출 SEO에 직접 영향줘요. 사진 업로드 → 접근성 → 대체 텍스트에서 설정해요.</p>
     </div>
     <div class="form-group">
-      <label>포스팅 주요 시간대</label>
+      <label>포스팅 주요 시간대
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 팔로워 → 가장 활발한 시간 확인</span></span>
+        </span>
+      </label>
       <select id="s-postingTime">
         <option value="golden">저녁 황금시간대</option>
         <option value="lunch">점심</option>
@@ -898,7 +1041,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>스토리 주 활용 방식</label>
+      <label>스토리 주 활용 방식
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 내 스토리 업로드 패턴 보고 직접 선택</span></span>
+        </span>
+      </label>
       <select id="s-storyUsage">
         <option value="daily">매일</option>
         <option value="event">이벤트시</option>
@@ -906,7 +1054,12 @@
       </select>
     </div>
     <div class="form-group">
-      <label>캡션 길이</label>
+      <label>캡션 길이
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 내 게시물 캡션 길이 보고 직접 선택</span></span>
+        </span>
+      </label>
       <select id="s-captionLength">
         <option value="long">긴 스토리텔링</option>
         <option value="medium" selected>중간</option>
@@ -914,26 +1067,39 @@
       </select>
     </div>
     <div class="form-group">
-      <label>캡션 첫 줄 키워드 SEO <span class="hint">★ 인스타 검색 노출</span></label>
+      <label>캡션 첫 줄 키워드 SEO <span class="hint">★ 인스타 검색 노출</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 내 게시물 캡션 첫 줄 패턴 보고 직접 선택</span></span>
+        </span>
+      </label>
       <select id="s-captionSEO">
         <option value="always">항상 첫 줄에 핵심 키워드 포함</option>
         <option value="sometimes">가끔 포함</option>
         <option value="never" selected>그냥 감성 문구로 시작</option>
       </select>
-      <p class="field-desc"><b>캡션 첫 줄을 키워드로 크롤링</b>해요. "강남 독서 모임 | 이번 달 추천 책"처럼 핵심 키워드를 첫 줄에 배치하면 인스타 검색 노출이 올라가요.</p>
     </div>
     <div class="form-group">
-      <label>콘텐츠 토픽 일관성 <span class="hint">★ 2025.10 Your Algorithm 대응</span></label>
+      <label>콘텐츠 토픽 일관성 <span class="hint">★ 2025.10 Your Algorithm 대응</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 내 게시물 주제 분포 보고 직접 선택</span></span>
+        </span>
+      </label>
       <select id="s-topicConsistency">
         <option value="" disabled selected>— 선택 —</option>
         <option value="focused">1~2개 주제 집중</option>
         <option value="moderate">3~4개 주제 혼합</option>
         <option value="scattered">5개 이상 주제 분산</option>
       </select>
-      <p class="field-desc">주제가 집중될수록 관심사 맞는 사람에게 우선 추천돼요. <b>2026년 4월부터 Explore(탐색 탭)까지 확장</b> — 토픽이 명확할수록 탐색 탭 추천 정확도도 함께 올라가요.</p>
     </div>
     <div class="form-group">
-      <label>피드 게시물 비율 <span class="hint">★ 2025년 표준 변경</span></label>
+      <label>피드 게시물 비율 <span class="hint">★ 2025년 표준 변경</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 내 프로필 → 게시물 그리드에서 비율 확인</span></span>
+        </span>
+      </label>
       <select id="s-feedRatio">
         <option value="" disabled selected>— 선택 —</option>
         <option value="vertical">4:5 세로형 (권장)</option>
@@ -941,25 +1107,32 @@
         <option value="landscape">가로형</option>
         <option value="mixed">혼합</option>
       </select>
-      <p class="field-desc">4:5 세로형(1080×1350px)이 2025년 공식 권장 비율이에요. 정방형보다 화면을 33% 더 차지해 체류 시간이 늘고 알고리즘 가산점이 붙어요.</p>
     </div>
     <div class="form-group">
-      <label>트라이얼 릴스 활용 여부 <span class="hint">★ 2026 Mosseri 추천</span></label>
+      <label>트라이얼 릴스 활용 여부 <span class="hint">★ 2026 Mosseri 추천</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 인스타그램 앱 → 릴스 공유 화면 → 트라이얼 토글 ON/OFF</span></span>
+        </span>
+      </label>
       <select id="s-trialReels">
         <option value="regular">정기적으로 사용 (월 2회+)</option>
         <option value="sometimes">가끔 사용 (월 1회 이하)</option>
         <option value="never" selected>사용 안 함</option>
       </select>
-      <p class="field-desc">비팔로워 소수에게 먼저 테스트 노출 후 반응 좋으면 전체 배포 — 반응 없으면 팔로워 모르게 지나가요. 릴스 공유 화면 → "트라이얼" 토글 ON.</p>
     </div>
     <div class="form-group">
-      <label>카루셀 배경음악 추가 여부 <span class="hint">★ 릴스 탭 추가 노출</span></label>
+      <label>카루셀 배경음악 추가 여부 <span class="hint">★ 릴스 탭 추가 노출</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 게시물 작성 → 슬라이드 추가 → 음악 추가</span></span>
+        </span>
+      </label>
       <select id="s-carouselMusic">
         <option value="always">항상 추가</option>
         <option value="sometimes">가끔 추가</option>
         <option value="never" selected>추가 안 함</option>
       </select>
-      <p class="field-desc">카루셀에 음악 추가 시 릴스 탭에도 함께 노출돼요. 사진 게시물이지만 릴스 피드에서 비팔로워에게 발견될 수 있어요.</p>
     </div>
   </div>
 </div>
@@ -1169,6 +1342,17 @@
 </footer>
 
 <script>
+function toggleTip(btn) {
+  const tip = btn.nextElementSibling;
+  document.querySelectorAll('.info-tooltip').forEach(t => { if(t !== tip) t.classList.remove('active'); });
+  tip.classList.toggle('active');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.info-wrap')) {
+    document.querySelectorAll('.info-tooltip').forEach(t => t.classList.remove('active'));
+  }
+});
+
 // ──────────────────────────────
 // 탭 전환
 // ──────────────────────────────
