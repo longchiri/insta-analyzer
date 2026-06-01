@@ -80,18 +80,7 @@
     }
 
     /* ── 헤더 ── */
-    header {
-      display:flex; align-items:center; justify-content:space-between;
-      gap:24px; margin-bottom:48px;
-      max-width:960px; margin-left:auto; margin-right:auto;
-    }
-    .header-left { text-align:left; }
-    .header-right { flex-shrink:0; }
-    @media(max-width:600px){
-      header { flex-direction:column; text-align:center; }
-      .header-left { text-align:center; }
-      .header-right { width:100%; }
-    }
+    header { text-align:center; margin-bottom:20px; }
     .logo {
       display:inline-flex; align-items:center; gap:10px;
       margin-bottom:8px;
@@ -253,44 +242,37 @@
 </script>
 
 <header>
-  <div class="header-left">
-    <div class="logo">
-      <div class="logo-icon">🧭</div>
-      <span class="logo-text">longchiri</span>
-    </div>
-    <p class="sub">SNS 분석도구</p>
-    <p style="margin-top:8px; font-size:0.78rem; color:#e53e3e; font-weight:600;">⚠️ 해당 결과 값은 <b>참고만</b> 부탁드립니다.</p>
+  <div class="logo">
+    <div class="logo-icon">🧭</div>
+    <span class="logo-text">longchiri</span>
   </div>
-
-  <!-- 용어백과 배너 -->
-  <div class="header-right">
-    <a href="glossary.html" style="
-      display:flex; align-items:center; justify-content:space-between;
-      background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);
-      border-radius:16px; padding:18px 22px; gap:16px;
-      text-decoration:none; color:#fff;
-      box-shadow:0 4px 20px rgba(26,26,46,0.22);
-      transition:transform 0.18s, box-shadow 0.18s;
-      min-width:280px;
-      " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(26,26,46,0.32)'"
-         onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(26,26,46,0.22)'">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <div style="font-size:2rem; line-height:1; flex-shrink:0;">📖</div>
-        <div>
-          <div style="font-size:0.68rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:2px;">SNS 알고리즘 용어백과</div>
-          <div style="font-size:0.92rem; font-weight:800; color:#fff; line-height:1.35;">릴스·CTR·Collab이<br>뭔지 모르겠다면?</div>
-          <div style="font-size:0.72rem; color:#8080b0; margin-top:3px;">핵심 용어 100개+ 한 번에 정리</div>
-        </div>
-      </div>
-      <div style="
-        background:linear-gradient(90deg,#833ab4,#fd1d1d);
-        border-radius:99px; padding:8px 14px;
-        font-size:0.75rem; font-weight:800; color:#fff;
-        flex-shrink:0; white-space:nowrap; align-self:center;
-      ">용어 보기 →</div>
-    </a>
-  </div>
+  <p class="sub">SNS 분석도구</p>
+  <p style="margin-top:8px; font-size:0.78rem; color:#e53e3e; font-weight:600;">⚠️ 해당 결과 값은 <b>참고만</b> 부탁드립니다.</p>
 </header>
+
+<!-- 용어백과 배너 (작은 크기) -->
+<div style="text-align:center; position:relative; z-index:1; margin-bottom:28px;">
+<a href="glossary.html" style="
+  display:inline-flex; align-items:center; gap:10px;
+  max-width:420px; width:100%;
+  background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);
+  border-radius:99px; padding:10px 18px 10px 14px;
+  text-decoration:none; color:#fff;
+  box-shadow:0 3px 14px rgba(26,26,46,0.18);
+  transition:transform 0.18s, box-shadow 0.18s;
+  position:relative; z-index:1;
+  " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 22px rgba(26,26,46,0.28)'"
+     onmouseout="this.style.transform='';this.style.boxShadow='0 3px 14px rgba(26,26,46,0.18)'">
+  <span style="font-size:1.15rem; line-height:1;">📖</span>
+  <span style="font-size:0.82rem; font-weight:700; color:#c0c0e8; flex:1;">SNS 알고리즘 용어백과</span>
+  <span style="
+    background:linear-gradient(90deg,#833ab4,#fd1d1d);
+    border-radius:99px; padding:5px 13px;
+    font-size:0.73rem; font-weight:800; color:#fff;
+    white-space:nowrap;
+  ">용어 100개+ 보기 →</span>
+</a>
+</div>
 
 <div class="grid">
 
