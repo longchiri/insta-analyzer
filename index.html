@@ -1134,6 +1134,28 @@
         <option value="never" selected>추가 안 함</option>
       </select>
     </div>
+    <div class="form-group">
+      <label>트렌딩 오디오 사용 여부 <span class="hint">★ 릴스 초기 배포 부스트</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 릴스 업로드 → 오디오 추가 → "인기" 탭에서 트렌딩 음원 선택</span></span>
+        </span>
+      </label>
+      <select id="s-trendAudio">
+        <option value="always">항상 트렌딩 음원 사용</option>
+        <option value="sometimes">가끔 사용</option>
+        <option value="never" selected>사용 안 함</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>댓글 답변율 (%) <span class="hint">★ 참여도 핵심 신호</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 게시물 댓글 목록에서 내 답글 비율 직접 계산 (답글 수 ÷ 전체 댓글 수 × 100)</span></span>
+        </span>
+      </label>
+      <input type="number" id="s-commentReply" placeholder="예: 70" step="1" max="100" min="0"/>
+    </div>
   </div>
 </div>
 
@@ -1205,6 +1227,12 @@
   </button>
 </div>
 
+  <!-- 용어 링크 -->
+  <div style="text-align:center;margin-bottom:14px;">
+    <a href="glossary.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;color:#833ab4;font-weight:700;text-decoration:none;background:#fdf5ff;padding:6px 14px;border-radius:99px;border:1.5px solid #e0b0ff;">
+      📖 결과에 모르는 용어가 있으면 용어백과사전에서 확인하세요 →
+    </a>
+  </div>
   <!-- 종합 점수 -->
   <div class="result-card">
     <h2>📊 종합 점수</h2>
@@ -2255,6 +2283,9 @@ function analyze() {
   const feedRatio          = document.getElementById('s-feedRatio')          ? document.getElementById('s-feedRatio').value          : 'mixed';
   const trialReels         = document.getElementById('s-trialReels')         ? document.getElementById('s-trialReels').value         : 'never';
   const carouselMusic      = document.getElementById('s-carouselMusic')      ? document.getElementById('s-carouselMusic').value      : 'never';
+  const trendAudio         = document.getElementById('s-trendAudio')         ? document.getElementById('s-trendAudio').value         : 'never';
+  const commentReplyRaw    = document.getElementById('s-commentReply')       ? parseFloat(document.getElementById('s-commentReply').value) : NaN;
+  const commentReply       = isNaN(commentReplyRaw) ? -1 : commentReplyRaw;
   const bioLink            = document.getElementById('s-bioLink')            ? document.getElementById('s-bioLink').value            : 'none';
   const extPlatform      = document.getElementById('s-extPlatform')      ? document.getElementById('s-extPlatform').value      : 'none';
   const crossPost        = document.getElementById('s-crossPost')        ? document.getElementById('s-crossPost').value        : 'none';
@@ -2331,7 +2362,11 @@ function analyze() {
   const trialBonus    = trialReels === 'regular' ? 3 : trialReels === 'sometimes' ? 1 : 0;
   // ★추가: 2026 카루셀 배경음악 → 릴스 탭 추가 노출 보너스
   const musicBonus    = carouselMusic === 'always' ? 2 : carouselMusic === 'sometimes' ? 1 : 0;
-  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + collabPostBonus + altTextBonus + captionSEOBonus + goldenBonus + bioBonus + crossBonus + topicBonus + ratioBonus + trialBonus + musicBonus;
+  // ★추가: 트렌딩 오디오 — Meta 공식, 초기 배포 범위 부스트
+  const trendAudioBonus = trendAudio === 'always' ? 3 : trendAudio === 'sometimes' ? 1 : 0;
+  // ★추가: 댓글 답변율 — 계정 참여도 신호 직접 반영
+  const commentReplyBonus = commentReply >= 70 ? 3 : commentReply >= 40 ? 2 : commentReply >= 10 ? 1 : 0;
+  const stratBonus    = reelsBonus + hashtagBonus + collabBonus + collabPostBonus + altTextBonus + captionSEOBonus + goldenBonus + bioBonus + crossBonus + topicBonus + ratioBonus + trialBonus + musicBonus + trendAudioBonus + commentReplyBonus;
 
   const total = Math.min(erScore + ssScore + grScore + conScore + watchBonus + origPenalty + carBonus + stratBonus, 100);
 
@@ -2775,6 +2810,23 @@ function analyze() {
     `공동 작성자 포스팅 잘 활용하고 있네요 — Collab 기능은 두 계정 팔로워에게 동시 노출되는 구조예요. 팔로워층이 겹치지 않는 계정과 Collab하면 신규 팔로워 유입 효율이 극대화돼요.`,
     `Collab 기능 사용 중이에요 — 같은 콘텐츠 하나로 두 계정의 피드에 노출되는 방식은 도달 2배 효과예요. 계속 Collab 대상을 발굴해서 활용하면 팔로워 성장 속도가 올라가요.`,
   ]) });
+  if (trendAudio === 'always') keeps.push({ icon:'🎵', txt: pick([
+    `트렌딩 오디오를 항상 사용하고 있어요 — Meta가 공식 확인한 릴스 초기 배포 부스트 요인이에요. 같은 퀄리티의 릴스라도 트렌딩 음원을 쓰면 초기 피드 배포 범위가 눈에 띄게 넓어져요.`,
+    `트렌딩 음원 릴스 잘 활용하고 있어요 — 인기 음원은 알고리즘이 해당 음원을 탐색하는 유저에게도 함께 노출해줘요. 도달 범위가 팔로워 외부까지 넓어지는 효과가 있어요.`,
+    `트렌딩 오디오 사용 중이에요 — Meta 공식 확인 신호로, 트렌딩 음원 릴스는 초기 배포 단계에서 더 많은 비팔로워에게 먼저 보여져요. 이 습관이 릴스 성과 전체를 받쳐주고 있어요.`,
+  ]) });
+  if (trendAudio === 'sometimes') keeps.push({ icon:'🎵', txt: pick([
+    `트렌딩 음원을 가끔 쓰고 있어요 — 릴스마다 트렌딩 오디오로 교체하면 초기 배포 부스트 효과를 매번 받을 수 있어요. 릴스 업로드 → 오디오 → 인기 탭에서 바로 확인해보세요.`,
+    `트렌딩 오디오를 가끔 활용하고 있어요 — 매 릴스마다 "인기" 탭 음원을 사용하면 Meta 알고리즘의 초기 배포 부스트를 꾸준히 받을 수 있어요.`,
+  ]) });
+  if (commentReply >= 70) keeps.push({ icon:'💬', txt: pick([
+    `댓글 답변율 <b>${commentReply}%</b> — 매우 높아요. 댓글에 적극 반응하면 계정 참여도 점수가 직접 올라가고, 알고리즘이 이 계정을 "팔로워와 교류하는 활성 계정"으로 분류해요.`,
+    `댓글 답변율 <b>${commentReply}%</b> 유지 중 — Meta가 직접 반영하는 참여도 신호예요. 댓글이 달리는 게시물일수록 더 많은 비팔로워에게 배포되는 구조예요. 이 습관이 계정 신뢰도를 만들어요.`,
+    `<b>${commentReply}%</b>의 댓글 답변율은 상위 수준이에요 — 댓글을 많이 받을수록 게시물이 더 오래 노출되고, 여기에 답글까지 달리면 재노출이 트리거돼요. 이 선순환이 계속되고 있어요.`,
+  ]) });
+  if (commentReply >= 40 && commentReply < 70) keeps.push({ icon:'💬', txt: pick([
+    `댓글 답변율 <b>${commentReply}%</b> — 적당한 수준이에요. 70% 이상으로 올리면 알고리즘 참여도 점수에 더 강하게 반영돼요. 최근 게시물 댓글부터 하나씩 답변해보세요.`,
+  ]) });
   if (altText === 'always') keeps.push({ icon:'🔍', txt: pick([
     `이미지 Alt Text를 항상 작성하고 있어요 — Instagram 내부 검색 알고리즘이 콘텐츠를 더 정확하게 분류해요. Explore 탭 추천 정확도가 올라가는 SEO 신호예요.`,
     `Alt Text를 항상 작성하는 습관이 있어요 — Instagram이 사진 내용을 더 정확하게 이해하고 관련 관심사 타깃에게 추천하는 데 직접 영향을 줘요. 탐색 탭 SEO를 착실히 챙기고 있어요.`,
@@ -2931,6 +2983,16 @@ function analyze() {
     `릴스 시청 유지율 ${watchRate}% — Mosseri가 #1 알고리즘 지표로 확인한 지표예요. 첫 3초 훅을 강화하고, 비팔로워 도달 최적 길이 <b>90초~3분</b>을 목표로 잡으세요.`,
     `릴스 시청 유지율이 ${watchRate}%로 낮아요 — 첫 3초에서 이탈자가 많다는 뜻이에요. 충격적 질문, 반전 예고, 궁금증 유발 등 강력한 훅으로 첫 화면을 바꿔보세요.`,
     `릴스 시청 유지율 ${watchRate}% — 개선이 필요해요. 알고리즘 #1 지표인 이 수치를 올리려면 첫 3초 훅을 바꾸고, 영상 중간 자막과 빠른 화면 전환으로 시선을 잡아야 해요. 목표는 50% 이상이에요.`,
+  ]) });
+  if (trendAudio === 'never') fixes.push({ icon:'🎵', txt: pick([
+    `트렌딩 오디오를 아직 사용하지 않고 있어요 — Meta가 공식 확인한 릴스 초기 배포 부스트 신호예요. 릴스 업로드 → 오디오 추가 → "인기" 탭에서 현재 트렌딩 음원을 선택하기만 하면 돼요. 같은 릴스라도 초기 배포 범위가 달라져요.`,
+    `트렌딩 오디오 사용이 없어요 — 릴스를 올릴 때마다 인기 음원을 쓰면 알고리즘이 해당 음원을 탐색하는 유저에게도 함께 노출해줘요. 오디오 추가 → 인기 탭에서 10초면 설정할 수 있어요.`,
+    `릴스에 트렌딩 오디오가 없어요 — 오디오 없는 릴스 대비 트렌딩 음원 릴스는 초기 배포 범위에서 차이가 나요. 인기 탭에서 분위기와 맞는 음원을 골라 추가해보세요.`,
+  ]) });
+  if (commentReply < 40 && commentReply >= 0) fixes.push({ icon:'💬', txt: pick([
+    `댓글 답변율 ${commentReply}% — 낮은 편이에요. 댓글에 답글을 달면 게시물 재노출이 트리거되고 계정 참여도 점수가 직접 올라가요. 최근 게시물 댓글에 하루 5개씩만 답해도 효과가 나타나요.`,
+    `댓글 답변율 ${commentReply}% — Meta가 참여도 신호로 직접 반영하는 지표예요. 댓글이 달렸을 때 1시간 내로 답글을 달면 게시물 노출 사이클이 다시 돌아가요.`,
+    `댓글 답변율 ${commentReply}%는 개선이 필요해요 — 댓글 하나당 답글 1개면 게시물에 인게이지먼트가 2배로 집계돼요. 알고리즘이 이 게시물을 "아직 활성 상태"로 인식해서 재배포를 트리거해요.`,
   ]) });
   if (carRatio > 0 && carRatio < 20) fixes.push({ icon:'🖼️', txt: pick([
     `카루셀 비율 ${carRatio}% — 카루셀은 2025년 평균 ER 10.15%로 단일 이미지 대비 3배 높아요. 정보성 콘텐츠는 카루셀로 제작해보세요.`,

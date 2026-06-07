@@ -397,6 +397,18 @@
       </div>
     </div>
     <div class="form-group">
+      <label>재참여율 (%) <span class="tip">★ 모임 신뢰도 핵심 신호</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 직전 모임 참석자 중 다음 모임에도 참여한 비율 직접 계산 (재참여 인원 ÷ 전체 참석 인원 × 100)</span></span>
+        </span>
+      </label>
+      <div class="range-row">
+        <input type="range" id="reattendRate" min="0" max="100" value="0" oninput="document.getElementById('reattendRateVal').textContent=this.value+'%'"/>
+        <span class="range-val" id="reattendRateVal">0%</span>
+      </div>
+    </div>
+    <div class="form-group">
       <label>모임 게시글 수 (최근 30일)
         <span class="info-wrap">
           <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
@@ -466,6 +478,19 @@
         </span>
       </label>
       <input type="number" id="badgeCount" placeholder="예: 2" min="0" max="10"/>
+    </div>
+    <div class="form-group">
+      <label>빠른응답 배지 취득 여부 <span class="tip">★ 검색 노출 우선순위</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 당근앱 → 모임 → 내 모임 → 호스트 배지 확인 (1시간 내 응답률 90% 이상 시 자동 부여)</span></span>
+        </span>
+      </label>
+      <select id="quickResponseBadge">
+        <option value="" disabled selected>— 선택 —</option>
+        <option value="yes">취득함 ✅</option>
+        <option value="no">없음</option>
+      </select>
     </div>
   </div>
 </div>
@@ -828,6 +853,12 @@
     </div>
   </div>
 
+  <!-- 용어 링크 -->
+  <div style="text-align:center;margin-bottom:14px;">
+    <a href="glossary.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;color:#FF6F0F;font-weight:700;text-decoration:none;background:#fff8f3;padding:6px 14px;border-radius:99px;border:1.5px solid #FFE0C8;">
+      📖 결과에 모르는 용어가 있으면 용어백과사전에서 확인하세요 →
+    </a>
+  </div>
   <!-- 종합 점수 -->
   <div class="result-card">
     <h2>🏆 당근 모임 노출 종합 점수</h2>
@@ -980,6 +1011,8 @@ function analyze() {
   const newMembers  = parseInt(document.getElementById('newMembers30').value) || 0;
   const meetingFreq = parseInt(document.getElementById('meetingFreq').value) || 0;
   const attendRate  = parseInt(document.getElementById('attendRate').value) || 0;
+  const reattendRate = parseInt(document.getElementById('reattendRate').value) || 0;
+  const quickResponseBadge = document.getElementById('quickResponseBadge').value;
   const postCount   = parseInt(document.getElementById('postCount30').value) || 0;
   const commentAvg  = parseInt(document.getElementById('commentAvg').value) || 0;
   const mannerTemp  = parseFloat(document.getElementById('mannerTemp').value) || 30;
@@ -1040,6 +1073,8 @@ function analyze() {
   let act = 0;
   if (meetingFreq >= 4) act += 22; else if (meetingFreq >= 2) act += 14; else if (meetingFreq >= 1) act += 6;
   if (attendRate >= 70) act += 20; else if (attendRate >= 50) act += 12; else if (attendRate >= 30) act += 6;
+  // ★추가: 재참여율 — 같은 멤버 재방문이 모임 신뢰도 핵심 신호
+  if (reattendRate >= 60) act += 15; else if (reattendRate >= 40) act += 9; else if (reattendRate >= 20) act += 4;
   if (postCount >= 20) act += 18; else if (postCount >= 8) act += 12; else if (postCount >= 2) act += 6;
   if (commentAvg >= 5) act += 15; else if (commentAvg >= 2) act += 8; else if (commentAvg >= 1) act += 4;
   // D-Day 보너스 (14일 이내 일정)
@@ -1062,6 +1097,8 @@ function analyze() {
   if (reviewCount >= 20) trust += 25; else if (reviewCount >= 10) trust += 15; else if (reviewCount >= 3) trust += 8;
   if (badgeCount >= 3) trust += 10; else if (badgeCount >= 1) trust += 5;
   if (responseSpeed === 'fast') trust += 10; else if (responseSpeed === 'same') trust += 5;
+  // ★추가: 빠른응답 배지 — 당근 공식 배지, 검색 노출 우선순위에 직접 영향
+  if (quickResponseBadge === 'yes') trust += 15;
   if (publicReview >= 10) trust += 10; else if (publicReview >= 5) trust += 6; else if (publicReview >= 1) trust += 3;
   trust = Math.min(100, trust);
 

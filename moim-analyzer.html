@@ -653,6 +653,12 @@
 
   <!-- 소모임 결과 -->
   <div id="moim-result" class="result-section">
+    <!-- 용어 링크 -->
+    <div style="text-align:center;margin-bottom:14px;">
+      <a href="glossary.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;color:#16A34A;font-weight:700;text-decoration:none;background:#f0fdf4;padding:6px 14px;border-radius:99px;border:1.5px solid #bbf7d0;">
+        📖 결과에 모르는 용어가 있으면 용어백과사전에서 확인하세요 →
+      </a>
+    </div>
     <div id="pdf-bar-moim" style="display:flex;">
       <span style="font-size:0.9rem; font-weight:700; color:#14532D;">📄 분석 결과 저장</span>
       <div style="display:flex; gap:8px;">
@@ -800,6 +806,21 @@
           <option value="screening">심사 후 선발 (큐레이션)</option>
           <option value="first">선착순</option>
           <option value="open">자유 가입</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>클럽 등급 <span class="tip">★ 문토 알고리즘 노출 순위 직접 반영</span>
+          <span class="info-wrap">
+            <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
+            <span class="info-tooltip munto-tt"><span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 클럽 등급 배지 확인 (활동량·후기·출석률 기반 자동 부여)</span></span>
+          </span>
+        </label>
+        <select id="t-clubLevel">
+          <option value="" disabled selected>— 선택 —</option>
+          <option value="gold">🥇 골드</option>
+          <option value="silver">🥈 실버</option>
+          <option value="bronze">🥉 브론즈</option>
+          <option value="none">등급 없음 (신규)</option>
         </select>
       </div>
     </div>
@@ -1657,6 +1678,7 @@ function analyzeMunto() {
   const intro    = (document.getElementById('t-intro').value || '').trim();
   const photo    = document.getElementById('t-photo').value;
   const recruit  = document.getElementById('t-recruit').value;
+  const clubLevel= document.getElementById('t-clubLevel').value;
   const members  = parseInt(document.getElementById('t-members').value) || 0;
   const newMem   = parseInt(document.getElementById('t-newmembers').value) || 0;
   const activity = parseInt(document.getElementById('t-activity').value) || 0;
@@ -1681,6 +1703,10 @@ function analyzeMunto() {
   if (hasKw) seo += 20;
   if (intro.length >= 120) seo += 30; else if (intro.length >= 50) seo += 15;
   if (photo === 'great') seo += 30; else if (photo === 'real') seo += 18; else if (photo === 'basic') seo += 8;
+  // ★추가: 클럽 등급 — 문토 자체 알고리즘 노출 순위에 직접 반영
+  if (clubLevel === 'gold') seo += 25;
+  else if (clubLevel === 'silver') seo += 15;
+  else if (clubLevel === 'bronze') seo += 8;
   seo = Math.min(100, seo);
 
   let act = 0;

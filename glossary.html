@@ -166,7 +166,22 @@
 <body>
 
 <header>
-  <a class="back-btn" href="hub.html">← 홈으로 돌아가기</a>
+  <a class="back-btn" id="backBtn" href="hub.html">← 홈으로 돌아가기</a>
+  <script>
+    (function(){
+      const ref = document.referrer;
+      const btn = document.getElementById('backBtn');
+      if (ref.includes('index.html') || ref.includes('instagram')) {
+        btn.href = 'index.html'; btn.textContent = '← 인스타 분석기로';
+      } else if (ref.includes('daangn')) {
+        btn.href = 'daangn-analyzer.html'; btn.textContent = '← 당근 분석기로';
+      } else if (ref.includes('moim')) {
+        btn.href = 'moim-analyzer.html'; btn.textContent = '← 소모임 분석기로';
+      } else if (ref.includes('kakao')) {
+        btn.href = 'kakao-analyzer.html'; btn.textContent = '← 카카오 분석기로';
+      }
+    })();
+  </script>
   <h1>📖 SNS 알고리즘 용어백과</h1>
   <p>인스타·당근·소모임·카카오 분석기에 나오는 핵심 용어 100개+를 한 번에 정리했어요</p>
 </header>
