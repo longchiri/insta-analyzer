@@ -1693,7 +1693,15 @@ function parsePostsHTML(html) {
     const likes    = parseInt(bkv['좋아요']    || '0') || 0;
     const impr     = parseInt(bkv['노출']      || '0') || 0;
     const reach    = parseInt(bkv['도달한 계정']|| '0') || 0;
-    if (!likes && !impr && !reach) return;
+    const plays    = parseInt(bkv['재생 수'] || bkv['동영상 조회수'] || bkv['Views'] || bkv['Video views'] || '0') || 0;
+    if (!likes && !impr && !reach && !plays) return;
+    // 날짜: 블록 내 날짜 텍스트 탐색
+    let ts = 0;
+    const allText = block.innerText || block.textContent || '';
+    const dateMatch = allText.match(/(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})/);
+    if (dateMatch) {
+      ts = Math.floor(new Date(`${dateMatch[1]}-${dateMatch[2].padStart(2,'0')}-${dateMatch[3].padStart(2,'0')}`).getTime()/1000);
+    }
     // 캡션: 미디어 썸네일 셀 안의 마지막 div 텍스트
     let caption = '';
     const thumbTd = [...block.querySelectorAll('td')].find(td =>
@@ -1711,7 +1719,8 @@ function parsePostsHTML(html) {
       shares:   parseInt(bkv['공유']  || '0') || 0,
       comments: parseInt(bkv['댓글'] || '0') || 0,
       impr,
-      ts: 0,
+      plays,
+      ts,
     });
   });
   return posts;
@@ -1941,6 +1950,7 @@ function parseInstagramZIP(jsons, allPaths) {
         }
         d.topPosts = [...htmlPosts].sort((a,b)=>(b.likes+b.saves+b.shares)-(a.likes+a.saves+a.shares)).slice(0,3);
         d.recentPosts = [...htmlPosts].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,3);
+        d.allInsightPosts = htmlPosts;  // 전체 보관 — 릴스별 매칭용
         // posts 카운트 보충
         if (!d.posts || d.posts < htmlPosts.length) d.posts = htmlPosts.length;
       }
@@ -1972,6 +1982,7 @@ function parseInstagramZIP(jsons, allPaths) {
         }
         d.topPosts = posts.sort((a,b)=>(b.likes+b.saves+b.shares)-(a.likes+a.saves+a.shares)).slice(0,3);
         d.recentPosts = [...posts].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,3);
+        d.allInsightPosts = posts;  // 전체 보관 — 릴스별 매칭용
       }
     }
   } catch(e) { console.warn('postsInsights 파싱 오류:', e); }
@@ -3724,6 +3735,22 @@ function analyze() {
     const showTimes    = showRaw.map(r => typeof r === 'string' ? 0  : (r.ts  || 0));
     const showAnalyses = showCaptions.map(analyzeCaption);
 
+    // 인사이트 데이터 매칭 (allInsightPosts가 있을 때)
+    const allPosts = D.allInsightPosts || [];
+    const matchInsight = (cap, ts) => {
+      if (!allPosts.length) return null;
+      // 1순위: 캡션 앞 20자 매칭
+      const capKey = cap.replace(/\s+/g,'').slice(0,20);
+      const byCaption = allPosts.find(p => p.caption && p.caption.replace(/\s+/g,'').includes(capKey) && capKey.length > 5);
+      if (byCaption) return byCaption;
+      // 2순위: 날짜 ±1일 매칭
+      if (ts > 0) {
+        const byDate = allPosts.find(p => p.ts > 0 && Math.abs(p.ts - ts) < 86400 * 2);
+        if (byDate) return byDate;
+      }
+      return null;
+    };
+
     document.getElementById('reelsCaptionSection').innerHTML = `
       <!-- 요약 통계 -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
@@ -3782,6 +3809,7 @@ function analyze() {
           const a = showAnalyses[i];
           const preview = cap.length > 90 ? cap.slice(0,90).replace(/\n/g,' ')+'…' : cap.replace(/\n/g,' ');
           const dateStr = showTimes[i] ? new Date(showTimes[i]*1000).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}) : '';
+          const ins = matchInsight(cap, showTimes[i]);
           const checks = [
             { ok: a.hasHashtag, label: `해시태그 ${a.tagCount}개` },
             { ok: a.hasCTAkw,   label: 'CTA 포함' },
@@ -3789,6 +3817,33 @@ function analyze() {
             { ok: a.lenOk,      label: `${a.len}자` },
             { ok: a.hook!=='none', label: hookName[a.hook] },
           ];
+          // 인사이트 지표 렌더
+          const insHtml = ins ? (() => {
+            const plays  = ins.plays  || 0;
+            const reach  = ins.reach  || 0;
+            const impr   = ins.impr   || 0;
+            const saves  = ins.saves  || 0;
+            const shares = ins.shares || 0;
+            const playReachRatio = reach > 0 && plays > 0 ? (plays/reach*100).toFixed(0)+'%' : '—';
+            const reachImprRatio = impr  > 0 ? (reach/impr*100).toFixed(0)+'%' : '—';
+            const metrics = [
+              plays  > 0 ? { label:'👁️ 조회수',   val: plays.toLocaleString(),  color:'#6d28d9' } : null,
+              reach  > 0 ? { label:'📡 도달',      val: reach.toLocaleString(),  color:'#1d4ed8' } : null,
+              impr   > 0 ? { label:'📢 노출',      val: impr.toLocaleString(),   color:'#0369a1' } : null,
+              saves  > 0 ? { label:'🔖 저장',      val: saves.toLocaleString(),  color:'#166534' } : null,
+              shares > 0 ? { label:'↗️ 공유',      val: shares.toLocaleString(), color:'#9a3412' } : null,
+              plays  > 0 && reach > 0 ? { label:'🔄 조회/도달', val: playReachRatio, color:'#7c3aed' } : null,
+              reach  > 0 && impr  > 0 ? { label:'📈 도달률',   val: reachImprRatio, color:'#1e40af' } : null,
+            ].filter(Boolean);
+            return metrics.length ? `
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;margin-top:8px;">
+              ${metrics.map(m=>`
+                <div style="background:white;border-radius:8px;padding:6px 8px;text-align:center;border:1px solid #e9d5ff;">
+                  <div style="font-size:0.68rem;color:#888;margin-bottom:2px;">${m.label}</div>
+                  <div style="font-size:0.85rem;font-weight:700;color:${m.color};">${m.val}</div>
+                </div>`).join('')}
+            </div>` : '';
+          })() : (allPosts.length > 0 ? '<div style="font-size:0.72rem;color:#bbb;margin-top:6px;">인사이트 매칭 안됨</div>' : '');
           return `
           <div style="background:${scoreBg(a.score)};border:1.5px solid ${scoreBorder(a.score)};border-radius:12px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;">
             <!-- 썸네일 -->
@@ -3807,6 +3862,7 @@ function analyze() {
                 ${checks.map(c=>`
                   <span style="padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}
               </div>
+              ${insHtml}
             </div>
           </div>`;
         }).join('')}
