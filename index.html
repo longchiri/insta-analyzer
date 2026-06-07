@@ -1336,6 +1336,12 @@
     <div id="captionSection"></div>
   </div>
 
+  <!-- 릴스 캡션 전체 분석 -->
+  <div class="result-card" id="reelsCaptionCard" style="display:none;">
+    <h2>🎬 릴스 캡션 전체 분석 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP에서 자동 추출</span></h2>
+    <div id="reelsCaptionSection"></div>
+  </div>
+
   <!-- 팔로워 획득 퍼널 -->
   <div class="result-card">
     <h2>🎯 팔로워 획득 퍼널 분석</h2>
@@ -1784,21 +1790,55 @@ function parseInstagramZIP(jsons, allPaths) {
   // ── DM 수
   d.dmCount = jsons._dmCount || 0;
 
-  // ── 릴스/스토리 수 — HTML ZIP에서는 media 폴더로 카운트
+  // ── 릴스/스토리 수 + 릴스 캡션·해시태그·타임스탬프 전량 파싱
   try {
     d.reelsPosts = allPaths.filter(p => p.includes('/reels/') && /\.(mp4|mov|webm)$/i.test(p)).length || null;
     d.storyCount = allPaths.filter(p => p.includes('/stories/') && /\.(mp4|mov|jpg|jpeg|webp|heic)$/i.test(p)).length || null;
-    if (!d.reelsPosts) {
-      const ra = getJSON('reels');
-      if (Array.isArray(ra)) d.reelsPosts = ra.length;
-      else if (ra?.ig_reels_media) d.reelsPosts = ra.ig_reels_media.length;
+
+    const ra = getJSON('reels');
+    // 릴스 배열 추출 — JSON 구조 다양하게 대응
+    const reelsArr = ra?.ig_reels_media || ra?.ig_reels || (Array.isArray(ra) ? ra : []);
+    if (!d.reelsPosts && reelsArr.length > 0) d.reelsPosts = reelsArr.length;
+
+    // ★핵심 추가: 릴스 캡션·해시태그·타임스탬프 전량 파싱
+    if (reelsArr.length > 0) {
+      const reelsTags = {};
+      const reelsTimestamps = [];
+      const reelsCaptions = [];
+
+      reelsArr.forEach(item => {
+        const mediaList = item.media || [item];
+        mediaList.forEach(m => {
+          const cap = fixStr(m.title || m.caption || '');
+          if (cap) {
+            reelsCaptions.push(cap);
+            (cap.match(/#[\S]+/g) || []).forEach(t => { reelsTags[t] = (reelsTags[t]||0)+1; });
+          }
+          if (m.creation_timestamp) reelsTimestamps.push(m.creation_timestamp);
+        });
+        if (item.creation_timestamp) reelsTimestamps.push(item.creation_timestamp);
+      });
+
+      // 해시태그 병합 (릴스 + 게시물 통합)
+      if (Object.keys(reelsTags).length > 0) {
+        const merged = {};
+        (d.topHashtags || []).forEach((t, i) => { merged[t] = (merged[t]||0) + (12 - i); }); // posts 기존 태그 우선
+        Object.entries(reelsTags).forEach(([t,n]) => { merged[t] = (merged[t]||0) + n; });
+        d.topHashtags = Object.entries(merged).sort((a,b)=>b[1]-a[1]).slice(0,12).map(e=>fixStr(e[0]));
+      }
+
+      // 릴스 타임스탬프 저장 (weeklyPosts/opDays 재계산에 활용)
+      d._reelsTimestamps = reelsTimestamps;
+      // 릴스 캡션 저장 (캡션 분석 섹션에 활용)
+      d._reelsCaptions   = reelsCaptions;
     }
+
     if (!d.storyCount) {
       const sa = getJSON('stories');
       if (Array.isArray(sa)) d.storyCount = sa.length;
       else if (sa?.ig_stories) d.storyCount = sa.ig_stories.length;
     }
-  } catch(e) {}
+  } catch(e) { console.warn('릴스 파싱 오류:', e); }
 
   // ── 게시물 미디어 수 (HTML ZIP은 media 폴더에서 카운트)
   try {
@@ -1829,11 +1869,13 @@ function parseInstagramZIP(jsons, allPaths) {
         d.avgComments = Math.round(totalComments / lcnt);
       }
       d.topHashtags = Object.entries(allTags).sort((a,b)=>b[1]-a[1]).slice(0,12).map(e=>fixStr(e[0]));
-      if (timestamps.length >= 2) {
-        const ts = timestamps.slice().sort((a,b)=>b-a);
+      // 릴스 타임스탬프 병합 → weeklyPosts/opDays 정확도 향상
+      const allTimestamps = timestamps.concat(d._reelsTimestamps || []);
+      if (allTimestamps.length >= 2) {
+        const ts = allTimestamps.slice().sort((a,b)=>b-a);
         const span = (ts[0]-ts[ts.length-1])/86400;
         d.opDays     = Math.round(span);
-        d.weeklyPosts= Math.round((timestamps.length/Math.max(span,1))*7*10)/10;
+        d.weeklyPosts= Math.round((allTimestamps.length/Math.max(span,1))*7*10)/10;
       }
     }
   } catch(e) {}
@@ -3619,6 +3661,155 @@ function analyze() {
       <b>5줄:</b> CTA — "저장해두세요" / "댓글로 의견 주세요" / "DM 주세요"<br/>
       <b>공백 1줄 후:</b> 해시태그 5~15개 (본문과 분리)
     </div>`;
+
+  // ── 릴스 캡션 전체 분석 (ZIP 자동 추출) ──
+  const reelsCaptions = D._reelsCaptions || [];
+  const reelsCaptionCard = document.getElementById('reelsCaptionCard');
+  if (reelsCaptions.length > 0) {
+    reelsCaptionCard.style.display = '';
+
+    // 개별 캡션 분석 헬퍼
+    const analyzeCaption = (cap) => {
+      const tags = (cap.match(/#[\S]+/g) || []);
+      const tagCount = tags.length;
+      const hasHashtag = tagCount > 0 && tagCount <= 20;
+      const hasCTAkw = /저장|공유|DM|디엠|팔로|링크|클릭|눌러|구경|댓글|알려|질문|추천|보러|확인/i.test(cap);
+      const hasEmoji = /\p{Emoji}/u.test(cap);
+      const hasLineBreak = cap.includes('\n');
+      const len = cap.replace(/#[\S]+/g,'').trim().length;
+      const lenOk = len >= 80 && len <= 600;
+      // 훅 탐지 (첫 30자 기준)
+      const first = cap.slice(0,30);
+      let hook = 'none';
+      if (/\?/.test(first)) hook = 'question';
+      else if (/몰랐|실화|대박|충격|놀라|진짜|헐/.test(first)) hook = 'shock';
+      else if (/우리|제가|저는|그때|어느날/.test(first)) hook = 'story';
+      else if (/[1-9]가지|[1-9]개|[1-9]번/.test(first)) hook = 'list';
+      const score = (hasHashtag?1:0) + (hasCTAkw?1:0) + (hasEmoji?1:0) + (hasLineBreak?1:0) + (lenOk?1:0) + (hook!=='none'?1:0);
+      return { tags, tagCount, hasHashtag, hasCTAkw, hasEmoji, hasLineBreak, len, lenOk, hook, score };
+    };
+
+    // 전체 통계
+    const analyses = reelsCaptions.map(analyzeCaption);
+    const total = analyses.length;
+    const withCTA = analyses.filter(a=>a.hasCTAkw).length;
+    const withEmoji = analyses.filter(a=>a.hasEmoji).length;
+    const withHashtag = analyses.filter(a=>a.hasHashtag).length;
+    const withHook = analyses.filter(a=>a.hook!=='none').length;
+    const avgScore = (analyses.reduce((s,a)=>s+a.score,0)/total).toFixed(1);
+    const avgLen = Math.round(analyses.reduce((s,a)=>s+a.len,0)/total);
+
+    // 전체 해시태그 빈도 (릴스 한정)
+    const reelsTagFreq = {};
+    analyses.forEach(a => a.tags.forEach(t => { reelsTagFreq[t] = (reelsTagFreq[t]||0)+1; }));
+    const topReelsTags = Object.entries(reelsTagFreq).sort((a,b)=>b[1]-a[1]).slice(0,10);
+
+    // 점수별 배경색
+    const scoreBg = (s) => s >= 5 ? '#f0fff4' : s >= 3 ? '#fffbeb' : '#fff5f5';
+    const scoreBorder = (s) => s >= 5 ? '#48bb78' : s >= 3 ? '#d69e2e' : '#fc8181';
+    const scoreLabel = (s) => s >= 5 ? '🏆 우수' : s >= 4 ? '✅ 양호' : s >= 3 ? '📈 보통' : '⚠️ 개선필요';
+    const hookEmoji = { question:'❓', shock:'⚡', story:'📖', list:'📋', none:'—' };
+    const hookName  = { question:'질문형', shock:'충격형', story:'스토리형', list:'리스트형', none:'훅 없음' };
+
+    // 최근 5개 캡션 카드 (마지막부터 역순으로 최신이 더 많을 것)
+    const showCaptions = reelsCaptions.slice(-8).reverse().slice(0,6);
+    const showAnalyses = showCaptions.map(analyzeCaption);
+
+    document.getElementById('reelsCaptionSection').innerHTML = `
+      <!-- 요약 통계 -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
+        ${[
+          { label:'추출된 릴스', val: total+'개', sub:'캡션 보유', color:'#833ab4' },
+          { label:'평균 캡션 점수', val: avgScore+'/6', sub: scoreLabel(+avgScore), color: +avgScore>=5?'#276749':+avgScore>=3?'#b7791f':'#c53030' },
+          { label:'평균 캡션 길이', val: avgLen+'자', sub: avgLen>=80&&avgLen<=600?'✅ 적정':'⚠️ '+(avgLen<80?'너무 짧음':'너무 길수도'), color: avgLen>=80&&avgLen<=600?'#276749':'#c53030' },
+        ].map(s=>`
+          <div style="background:#f5f0ff;border-radius:12px;padding:13px;text-align:center;">
+            <div style="font-size:0.72rem;color:#aaa;margin-bottom:4px;">${s.label}</div>
+            <div style="font-size:1.3rem;font-weight:900;color:${s.color};">${s.val}</div>
+            <div style="font-size:0.72rem;color:${s.color};margin-top:2px;">${s.sub}</div>
+          </div>`).join('')}
+      </div>
+
+      <!-- 품질 지표 바 -->
+      <div style="background:#fafafa;border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:12px;">📊 전체 릴스 캡션 품질 분포</div>
+        ${[
+          { label:'훅 보유', n: withHook, icon:'🎣' },
+          { label:'CTA 포함', n: withCTA,   icon:'📣' },
+          { label:'해시태그', n: withHashtag,icon:'#️⃣' },
+          { label:'이모지 활용', n: withEmoji,icon:'😊' },
+        ].map(item => {
+          const pct = Math.round(item.n / total * 100);
+          const barColor = pct >= 70 ? '#833ab4' : pct >= 40 ? '#d69e2e' : '#fc8181';
+          return `<div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:#555;margin-bottom:4px;">
+              <span>${item.icon} ${item.label}</span>
+              <span style="font-weight:700;color:${barColor};">${item.n}/${total} (${pct}%)</span>
+            </div>
+            <div style="height:6px;background:#eee;border-radius:99px;overflow:hidden;">
+              <div style="width:${pct}%;height:100%;background:${barColor};border-radius:99px;transition:width .4s;"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- 릴스 전용 해시태그 TOP 10 -->
+      ${topReelsTags.length > 0 ? `
+      <div style="background:#f9f5ff;border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#6b21a8;margin-bottom:10px;">#️⃣ 릴스에서 자주 쓴 해시태그</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+          ${topReelsTags.map(([tag, cnt]) => `
+            <span style="background:#ede9fe;color:#6d28d9;padding:4px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;">${tag} <span style="opacity:.65;font-size:.7rem;">${cnt}회</span></span>`).join('')}
+        </div>
+      </div>` : ''}
+
+      <!-- 최근 릴스 캡션 개별 분석 -->
+      <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:10px;">🔍 최근 릴스 캡션 개별 분석 (최대 6개)</div>
+      <div style="display:grid;gap:10px;">
+        ${showCaptions.map((cap, i) => {
+          const a = showAnalyses[i];
+          const preview = cap.length > 80 ? cap.slice(0,80).replace(/\n/g,' ')+'…' : cap.replace(/\n/g,' ');
+          const checks = [
+            { ok: a.hasHashtag, label: `해시태그 ${a.tagCount}개` },
+            { ok: a.hasCTAkw,   label: 'CTA 포함' },
+            { ok: a.hasEmoji,   label: '이모지' },
+            { ok: a.lenOk,      label: `${a.len}자` },
+            { ok: a.hook!=='none', label: hookName[a.hook] },
+          ];
+          return `
+          <div style="background:${scoreBg(a.score)};border:1.5px solid ${scoreBorder(a.score)};border-radius:12px;padding:13px 15px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <span style="font-size:0.72rem;color:#888;">릴스 #${i+1}</span>
+              <span style="font-size:0.78rem;font-weight:700;color:${scoreBorder(a.score)};">${scoreLabel(a.score)} (${a.score}/6)</span>
+            </div>
+            <div style="font-size:0.8rem;color:#555;background:white;border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.5;word-break:break-all;">${preview}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              ${checks.map(c=>`
+                <span style="padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- 개선 인사이트 -->
+      <div style="margin-top:16px;padding:14px 16px;background:#fff0f8;border-radius:10px;font-size:0.83rem;color:#555;line-height:1.8;">
+        💡 <b>릴스 캡션 개선 포인트</b><br/>
+        ${withCTA/total < 0.5 ? '• CTA가 없는 릴스가 많아요 — "저장해두세요", "링크 바이오에 있어요" 한 줄만 추가해도 저장율이 올라가요<br/>' : ''}
+        ${withHook/total < 0.5 ? '• 절반 이상 릴스에 훅이 없어요 — 첫 줄에 질문형이나 숫자형 훅을 넣으면 완주율이 높아져요<br/>' : ''}
+        ${withHashtag/total < 0.6 ? '• 해시태그가 빠진 릴스가 많아요 — 탐색 탭 유입을 위해 닉 키워드 3~10개를 꼭 추가하세요<br/>' : ''}
+        ${avgLen < 80 ? '• 평균 캡션이 너무 짧아요 — 80자 이상 작성하면 알고리즘이 콘텐츠 품질을 더 높게 평가해요<br/>' : ''}
+        ${avgScore >= 4.5 ? '🏆 캡션 완성도가 전반적으로 우수해요! 이 패턴을 유지하세요.' : ''}
+      </div>`;
+  } else if (currentTab === 'upload') {
+    reelsCaptionCard.style.display = '';
+    document.getElementById('reelsCaptionSection').innerHTML = `
+      <div class="missing-box">
+        <div class="missing-title">ℹ️ 릴스 캡션 데이터를 찾지 못했어요</div>
+        <div>ZIP 파일 안에 릴스 게시물이 없거나 캡션이 비어 있을 수 있어요. 릴스에 캡션을 입력 후 새로 ZIP을 내려받아 업로드해 주세요.</div>
+      </div>`;
+  } else {
+    reelsCaptionCard.style.display = 'none';
+  }
 
   // ── 팔로워 획득 퍼널 ──
   const hasFunnel = profileVisits > 0 || followClicks > 0;
