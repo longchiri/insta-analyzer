@@ -1392,6 +1392,7 @@ document.addEventListener('click', e => {
 // ──────────────────────────────
 let currentTab = 'upload';
 let parsedData = null;
+let _reelsZipRef = null;  // ZIP 참조 유지 — 릴스 썸네일 추출용
 
 function switchTab(tab) {
   currentTab = tab;
@@ -1558,6 +1559,7 @@ async function processZip(file) {
     jsons._dmCount = msgFolders.length;
 
     parsedData = parseInstagramZIP(jsons, allPaths);
+    _reelsZipRef = zip;  // 썸네일 추출을 위해 ZIP 참조 보관
     showParsedResult(file.name + ' (ZIP)', parsedData);
 
     const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
@@ -1810,8 +1812,10 @@ function parseInstagramZIP(jsons, allPaths) {
         const mediaList = item.media || [item];
         mediaList.forEach(m => {
           const cap = fixStr(m.title || m.caption || '');
+          const uri = m.uri || item.uri || '';
+          const ts  = m.creation_timestamp || item.creation_timestamp || 0;
           if (cap) {
-            reelsCaptions.push(cap);
+            reelsCaptions.push({ cap, uri, ts });   // ← 객체로 저장 (썸네일용 uri·ts 포함)
             (cap.match(/#[\S]+/g) || []).forEach(t => { reelsTags[t] = (reelsTags[t]||0)+1; });
           }
           if (m.creation_timestamp) reelsTimestamps.push(m.creation_timestamp);
@@ -3663,7 +3667,9 @@ function analyze() {
     </div>`;
 
   // ── 릴스 캡션 전체 분석 (ZIP 자동 추출) ──
-  const reelsCaptions = D._reelsCaptions || [];
+  // _reelsCaptions는 {cap,uri,ts} 객체 배열 (이전 버전은 string 배열 — 하위 호환)
+  const reelsRaw = D._reelsCaptions || [];
+  const reelsCaptions = reelsRaw.map(r => typeof r === 'string' ? r : (r.cap || ''));
   const reelsCaptionCard = document.getElementById('reelsCaptionCard');
   if (reelsCaptions.length > 0) {
     reelsCaptionCard.style.display = '';
@@ -3711,8 +3717,11 @@ function analyze() {
     const hookEmoji = { question:'❓', shock:'⚡', story:'📖', list:'📋', none:'—' };
     const hookName  = { question:'질문형', shock:'충격형', story:'스토리형', list:'리스트형', none:'훅 없음' };
 
-    // 최근 5개 캡션 카드 (마지막부터 역순으로 최신이 더 많을 것)
-    const showCaptions = reelsCaptions.slice(-8).reverse().slice(0,6);
+    // 전체 릴스 캡션 — 최신순 (역순)
+    const showRaw     = [...reelsRaw].reverse();
+    const showCaptions = showRaw.map(r => typeof r === 'string' ? r : (r.cap || ''));
+    const showUris     = showRaw.map(r => typeof r === 'string' ? '' : (r.uri || ''));
+    const showTimes    = showRaw.map(r => typeof r === 'string' ? 0  : (r.ts  || 0));
     const showAnalyses = showCaptions.map(analyzeCaption);
 
     document.getElementById('reelsCaptionSection').innerHTML = `
@@ -3763,12 +3772,16 @@ function analyze() {
         </div>
       </div>` : ''}
 
-      <!-- 최근 릴스 캡션 개별 분석 -->
-      <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:10px;">🔍 최근 릴스 캡션 개별 분석 (최대 6개)</div>
-      <div style="display:grid;gap:10px;">
+      <!-- 전체 릴스 캡션 개별 분석 (썸네일 포함) -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#444;">🔍 릴스 캡션 전체 개별 분석</div>
+        <div style="font-size:0.72rem;color:#888;">총 ${showCaptions.length}개 · 최신순</div>
+      </div>
+      <div id="reelsCardList" style="${showCaptions.length > 8 ? 'max-height:900px;overflow-y:auto;padding-right:4px;' : ''}display:grid;gap:10px;">
         ${showCaptions.map((cap, i) => {
           const a = showAnalyses[i];
-          const preview = cap.length > 80 ? cap.slice(0,80).replace(/\n/g,' ')+'…' : cap.replace(/\n/g,' ');
+          const preview = cap.length > 90 ? cap.slice(0,90).replace(/\n/g,' ')+'…' : cap.replace(/\n/g,' ');
+          const dateStr = showTimes[i] ? new Date(showTimes[i]*1000).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}) : '';
           const checks = [
             { ok: a.hasHashtag, label: `해시태그 ${a.tagCount}개` },
             { ok: a.hasCTAkw,   label: 'CTA 포함' },
@@ -3777,15 +3790,23 @@ function analyze() {
             { ok: a.hook!=='none', label: hookName[a.hook] },
           ];
           return `
-          <div style="background:${scoreBg(a.score)};border:1.5px solid ${scoreBorder(a.score)};border-radius:12px;padding:13px 15px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <span style="font-size:0.72rem;color:#888;">릴스 #${i+1}</span>
-              <span style="font-size:0.78rem;font-weight:700;color:${scoreBorder(a.score)};">${scoreLabel(a.score)} (${a.score}/6)</span>
+          <div style="background:${scoreBg(a.score)};border:1.5px solid ${scoreBorder(a.score)};border-radius:12px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;">
+            <!-- 썸네일 -->
+            <div id="reel-thumb-${i}" style="width:72px;height:128px;flex-shrink:0;border-radius:10px;background:#e8e0f5;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:4px;">
+              <span style="font-size:1.6rem;">🎬</span>
+              <span style="font-size:0.6rem;color:#888;">#${i+1}</span>
             </div>
-            <div style="font-size:0.8rem;color:#555;background:white;border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.5;word-break:break-all;">${preview}</div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;">
-              ${checks.map(c=>`
-                <span style="padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}
+            <!-- 내용 -->
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:0.72rem;color:#888;">${dateStr ? dateStr+' · ' : ''}릴스 ${i+1}번</span>
+                <span style="font-size:0.78rem;font-weight:700;color:${scoreBorder(a.score)};">${scoreLabel(a.score)} (${a.score}/6)</span>
+              </div>
+              <div style="font-size:0.8rem;color:#555;background:white;border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.5;word-break:break-all;">${preview}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                ${checks.map(c=>`
+                  <span style="padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}
+              </div>
             </div>
           </div>`;
         }).join('')}
@@ -3800,6 +3821,50 @@ function analyze() {
         ${avgLen < 80 ? '• 평균 캡션이 너무 짧아요 — 80자 이상 작성하면 알고리즘이 콘텐츠 품질을 더 높게 평가해요<br/>' : ''}
         ${avgScore >= 4.5 ? '🏆 캡션 완성도가 전반적으로 우수해요! 이 패턴을 유지하세요.' : ''}
       </div>`;
+    // ── 비동기 썸네일 로딩 (ZIP 참조가 있을 때만) ──
+    if (_reelsZipRef) {
+      showUris.forEach(async (uri, i) => {
+        if (!uri) return;
+        const thumbEl = document.getElementById(`reel-thumb-${i}`);
+        if (!thumbEl) return;
+        const zipFile = _reelsZipRef.files[uri];
+        if (!zipFile) return;
+        try {
+          const blob = await zipFile.async('blob');
+          const blobUrl = URL.createObjectURL(blob);
+          const ext = uri.split('.').pop().toLowerCase();
+          if (['jpg','jpeg','webp','png'].includes(ext)) {
+            // 이미지 커버
+            thumbEl.innerHTML = `<img src="${blobUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onload="URL.revokeObjectURL(this.src)"/>`;
+          } else {
+            // mp4 영상 — 첫 프레임 캡처
+            await new Promise(resolve => {
+              const video = document.createElement('video');
+              video.muted = true;
+              video.playsInline = true;
+              video.preload = 'metadata';
+              video.src = blobUrl;
+              const capture = () => {
+                try {
+                  const canvas = document.createElement('canvas');
+                  canvas.width = 72; canvas.height = 128;
+                  canvas.getContext('2d').drawImage(video, 0, 0, 72, 128);
+                  thumbEl.innerHTML = `<img src="${canvas.toDataURL('image/jpeg', 0.82)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"/>`;
+                } catch(e) {
+                  thumbEl.innerHTML = `<span style="font-size:1.5rem;">📹</span>`;
+                }
+                URL.revokeObjectURL(blobUrl);
+                resolve();
+              };
+              video.addEventListener('loadeddata', capture, { once: true });
+              video.addEventListener('error', () => { URL.revokeObjectURL(blobUrl); resolve(); }, { once: true });
+              video.load();
+            });
+          }
+        } catch(e) { /* 썸네일 로딩 실패 시 기본 아이콘 유지 */ }
+      });
+    }
+
   } else if (currentTab === 'upload') {
     reelsCaptionCard.style.display = '';
     document.getElementById('reelsCaptionSection').innerHTML = `
