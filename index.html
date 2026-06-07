@@ -1859,8 +1859,10 @@ function parseInstagramZIP(jsons, allPaths) {
           const cap = fixStr(m.title || m.caption || '');
           const uri = m.uri || item.uri || '';
           const ts  = m.creation_timestamp || item.creation_timestamp || 0;
+          const likes    = m.like_count    ?? item.like_count    ?? 0;
+          const comments = m.comment_count ?? item.comment_count ?? 0;
           if (cap) {
-            reelsCaptions.push({ cap, uri, ts });   // ← 객체로 저장 (썸네일용 uri·ts 포함)
+            reelsCaptions.push({ cap, uri, ts, likes, comments }); // 좋아요·댓글 포함
             (cap.match(/#[\S]+/g) || []).forEach(t => { reelsTags[t] = (reelsTags[t]||0)+1; });
           }
           if (m.creation_timestamp) reelsTimestamps.push(m.creation_timestamp);
@@ -1912,7 +1914,7 @@ function parseInstagramZIP(jsons, allPaths) {
           tags.forEach(t => { allTags[t] = (allTags[t]||0)+1; });
           if (m.creation_timestamp) timestamps.push(m.creation_timestamp);
           // uri + 캡션 + 타임스탬프 저장 (썸네일 매칭용)
-          if (m.uri) feedPostUris.push({ uri: m.uri, cap, ts: m.creation_timestamp || p.creation_timestamp || 0 });
+          if (m.uri) feedPostUris.push({ uri: m.uri, cap, ts: m.creation_timestamp || p.creation_timestamp || 0, likes: m.like_count ?? 0, comments: m.comment_count ?? 0 });
         });
         if (p.creation_timestamp) timestamps.push(p.creation_timestamp);
       });
@@ -3902,10 +3904,14 @@ function analyze() {
         };
 
         const renderReelCard = (i, isTopBadge) => {
+          const raw = showRaw[i];
           const cap = showCaptions[i], a = showAnalyses[i];
           const preview = cap.length>90?cap.slice(0,90).replace(/\n/g,' ')+'…':cap.replace(/\n/g,' ');
           const dateStr = showTimes[i]?new Date(showTimes[i]*1000).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}):'';
           const ins = matchInsight(cap, showTimes[i]);
+          // ZIP에서 직접 추출한 좋아요·댓글
+          const zipLikes    = typeof raw==='object' ? (raw.likes    || 0) : 0;
+          const zipComments = typeof raw==='object' ? (raw.comments || 0) : 0;
           const checks = [
             {ok:a.hasHashtag,label:`해시태그 ${a.tagCount}개`},
             {ok:a.hasCTAkw,label:'CTA 포함'},
@@ -3913,6 +3919,7 @@ function analyze() {
             {ok:a.lenOk,label:`${a.len}자`},
             {ok:a.hook!=='none',label:hookName[a.hook]},
           ];
+          // 인사이트 HTML 매칭 OR ZIP 좋아요·댓글 직접 표시
           const insHtml = ins ? (() => {
             const plays=ins.plays||0,reach=ins.reach||0,impr=ins.impr||0,saves=ins.saves||0,shares=ins.shares||0;
             const plR=reach>0&&plays>0?(plays/reach*100).toFixed(0)+'%':'—';
@@ -3927,7 +3934,16 @@ function analyze() {
               reach>0&&impr>0?{label:'도달률',val:drR,color:'#1e40af'}:null,
             ].filter(Boolean);
             return ms.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px;">${ms.map(m=>`<div style="background:white;border-radius:7px;padding:5px 7px;text-align:center;border:1px solid #e9d5ff;"><div style="font-size:0.65rem;color:#aaa;">${m.label}</div><div style="font-size:0.82rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`:'';
-          })():(allPosts.length>0?'<div style="font-size:0.7rem;color:#ccc;margin-top:5px;">인사이트 매칭 안됨</div>':'');
+          })() : (() => {
+            // 인사이트 없어도 ZIP 좋아요·댓글 표시
+            const ms = [
+              zipLikes>0?{label:'좋아요',val:zipLikes.toLocaleString(),color:'#be185d'}:null,
+              zipComments>0?{label:'댓글',val:zipComments.toLocaleString(),color:'#0f766e'}:null,
+            ].filter(Boolean);
+            return ms.length
+              ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px;">${ms.map(m=>`<div style="background:white;border-radius:7px;padding:5px 7px;text-align:center;border:1px solid #e9d5ff;"><div style="font-size:0.65rem;color:#aaa;">${m.label}</div><div style="font-size:0.82rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`
+              : '';
+          })();
           const rFb = fbHtml(getReelFb(a, ins));
           return `
           <div style="background:${scoreBg(a.score)};border:1.5px solid ${scoreBorder(a.score)};border-radius:12px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;">
