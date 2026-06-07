@@ -4105,14 +4105,14 @@ function analyze() {
       return {goods, bads, tips};
     };
 
-    const fbHtml = ({goods,bads,tips}) => {
+    function fbHtml({goods,bads,tips}) {
       if(!goods.length&&!bads.length&&!tips.length) return '';
       return `<div style="margin-top:9px;border-top:1px solid #e5e7eb;padding-top:9px;display:grid;gap:4px;">
         ${goods.map(g=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#166534;line-height:1.5;"><span style="flex-shrink:0;">✅</span><span>${g}</span></div>`).join('')}
         ${bads.map(b=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#b91c1c;line-height:1.5;"><span style="flex-shrink:0;">❌</span><span>${b}</span></div>`).join('')}
         ${tips.map(t=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#1d4ed8;line-height:1.5;"><span style="flex-shrink:0;">💡</span><span>${t}</span></div>`).join('')}
       </div>`;
-    };
+    }
 
     // 카드 렌더 함수
     const renderFeedCard = (i, isTopBadge) => {
