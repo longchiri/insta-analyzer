@@ -1218,6 +1218,36 @@
 <!-- ══════════════ 결과 ══════════════ -->
 <div id="result">
 
+<!-- 파트 네비게이션 -->
+<div id="partNav" style="display:none;position:sticky;top:0;z-index:100;background:#fff;padding:10px 0 0;margin-bottom:10px;border-bottom:1.5px solid #f0f0f0;">
+  <div style="max-width:720px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:0 4px 10px;">
+    <style>
+      .p-btn{display:inline-flex;align-items:center;gap:5px;border:1.5px solid #e5e7eb;background:#f9fafb;color:#555;border-radius:99px;padding:7px 15px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;margin-right:6px;white-space:nowrap;}
+      .p-btn.active{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff;border-color:transparent;}
+      .p-btn:hover:not(.active){background:#f3e8ff;border-color:#c4b5fd;color:#6d28d9;}
+    </style>
+    <button class="p-btn active" onclick="setPartFilter('all',this)">전체</button>
+    <button class="p-btn" onclick="setPartFilter('overview',this)">📊 종합</button>
+    <button class="p-btn" onclick="setPartFilter('reels',this)">🎬 릴스</button>
+    <button class="p-btn" onclick="setPartFilter('feed',this)">📸 피드</button>
+    <button class="p-btn" onclick="setPartFilter('caption',this)">✍️ 캡션</button>
+    <button class="p-btn" onclick="setPartFilter('audience',this)">👥 오디언스</button>
+    <button class="p-btn" onclick="setPartFilter('strategy',this)">💡 전략</button>
+  </div>
+</div>
+<script>
+function setPartFilter(part, btn) {
+  document.querySelectorAll('.p-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('#result .result-card, #result .part-section-header');
+  cards.forEach(c => {
+    if(part==='all') { c.style.display=''; return; }
+    const cp = c.getAttribute('data-part');
+    c.style.display = (cp===part||cp==='all') ? '' : 'none';
+  });
+}
+</script>
+
 <div id="pdf-export-bar" style="display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:0 4px 18px;max-width:720px;margin:0 auto;">
   <button id="pdf-share-btn" onclick="sharePDF()" style="background:#fff;border:1.5px solid #e0e0e0;border-radius:99px;padding:10px 20px;font-size:0.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:#555;transition:all 0.2s;font-family:inherit;">
     🔗 공유하기
@@ -1234,7 +1264,7 @@
     </a>
   </div>
   <!-- 종합 점수 -->
-  <div class="result-card">
+  <div class="result-card" data-part="overview">
     <h2>📊 종합 점수</h2>
     <div class="score-big-box">
       <div class="score-number" id="totalScore">0</div>
@@ -1246,122 +1276,122 @@
   </div>
 
   <!-- 채널별 점수 -->
-  <div class="result-card" id="channelScoreCard" style="display:none;">
+  <div class="result-card" id="channelScoreCard" data-part="overview" style="display:none;">
     <h2>📡 채널별 점수 <span style="font-size:0.78rem;color:#aaa;font-weight:400">(피드 · 릴스 · 스토리 별도 AI 기반)</span></h2>
     <div id="channelScoreGrid"></div>
   </div>
 
   <!-- 콘텐츠 성과 -->
-  <div class="result-card">
+  <div class="result-card" data-part="feed">
     <h2>📈 콘텐츠 성과 분석</h2>
     <div class="metric-grid" id="contentMetrics"></div>
     <div id="topPostsSection"></div>
   </div>
 
   <!-- 릴스 노출 진단 -->
-  <div class="result-card" id="reelsDiagCard" style="display:none">
+  <div class="result-card" id="reelsDiagCard" data-part="reels" style="display:none">
     <h2>🎬 릴스 노출 진단 TOP 3</h2>
     <p style="font-size:0.78rem;color:#999;margin-bottom:14px;">최근 게시물 기준 · 저장율·공유율로 알고리즘 배포 상태 진단</p>
     <div id="reelsDiagSection"></div>
   </div>
 
   <!-- 팔로워 오디언스 -->
-  <div class="result-card">
+  <div class="result-card" data-part="audience">
     <h2>👥 팔로워 오디언스 분석</h2>
     <div id="audienceSection"></div>
   </div>
 
   <!-- 최적 업로드 요일 -->
-  <div class="result-card">
+  <div class="result-card" data-part="audience">
     <h2>📅 최적 업로드 요일</h2>
     <div id="weekdaySection"></div>
   </div>
 
   <!-- 해시태그 전략 -->
-  <div class="result-card">
+  <div class="result-card" data-part="caption">
     <h2>#️⃣ 해시태그 전략</h2>
     <div id="hashtagSection"></div>
   </div>
 
   <!-- 유지·수정·추가 -->
-  <div class="result-card"><h2>✅ 잘 하고 있는 것</h2><div id="recoKeep"></div></div>
-  <div class="result-card"><h2>✏️ 개선할 것</h2><div id="recoFix"></div></div>
-  <div class="result-card"><h2>➕ 추가할 것</h2><div id="recoAdd"></div></div>
+  <div class="result-card" data-part="strategy"><h2>✅ 잘 하고 있는 것</h2><div id="recoKeep"></div></div>
+  <div class="result-card" data-part="strategy"><h2>✏️ 개선할 것</h2><div id="recoFix"></div></div>
+  <div class="result-card" data-part="strategy"><h2>➕ 추가할 것</h2><div id="recoAdd"></div></div>
 
   <!-- 이번 달 전략 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>💡 이번 달 집중 전략</h2>
     <div class="tip-box" id="tipBox"></div>
   </div>
 
   <!-- 릴스 떡상 지수 -->
-  <div class="result-card">
+  <div class="result-card" data-part="reels">
     <h2>🎬 릴스 떡상 지수 (2026 공식)</h2>
     <div id="reelsScoreSection"></div>
   </div>
 
   <!-- KPI 달성 현황 -->
-  <div class="result-card">
+  <div class="result-card" data-part="overview">
     <h2>📊 KPI 달성 현황 (목표 대비)</h2>
     <div id="kpiSection"></div>
   </div>
 
   <!-- 확산 단계 진단 -->
-  <div class="result-card">
+  <div class="result-card" data-part="overview">
     <h2>📡 확산 단계 진단</h2>
     <div id="diffusionStageSection"></div>
   </div>
 
   <!-- Hidden Score -->
-  <div class="result-card">
+  <div class="result-card" data-part="overview">
     <h2>🔒 계정 신뢰도 (Hidden Score)</h2>
     <div id="hiddenScoreSection"></div>
   </div>
 
   <!-- 30일 로드맵 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>🗓️ 30일 성장 로드맵</h2>
     <div id="roadmap30Section"></div>
   </div>
 
   <!-- 프로필 SEO 점수 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>📝 프로필 바이오 SEO 점수</h2>
     <div id="bioSeoSection"></div>
   </div>
 
   <!-- 캡션 분석기 -->
-  <div class="result-card">
+  <div class="result-card" data-part="caption">
     <h2>✍️ 캡션 & 훅 분석</h2>
     <div id="captionSection"></div>
   </div>
 
-  <!-- 릴스 캡션 전체 분석 -->
-  <div class="result-card" id="reelsCaptionCard" style="display:none;">
-    <h2>🎬 릴스 캡션 전체 분석 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP에서 자동 추출</span></h2>
+  <!-- 릴스 분석 -->
+  <div class="result-card" id="reelsCaptionCard" data-part="reels" style="display:none;">
+    <h2>🎬 릴스 분석 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP에서 자동 추출</span></h2>
     <div id="reelsCaptionSection"></div>
   </div>
 
-  <!-- 피드 게시물 개별 분석 -->
-  <div class="result-card" id="feedPostsCard" style="display:none;">
-    <h2>📸 피드 게시물 개별 분석 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP 인사이트 기준</span></h2>
+  <!-- 피드 분석 -->
+  <div class="result-card" id="feedPostsCard" data-part="feed" style="display:none;">
+    <h2>📸 피드 분석 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP 인사이트 기준</span></h2>
     <div id="feedPostsSection"></div>
   </div>
 
   <!-- 팔로워 획득 퍼널 -->
-  <div class="result-card">
+  <div class="result-card" data-part="audience">
     <h2>🎯 팔로워 획득 퍼널 분석</h2>
     <div id="followerFunnelSection"></div>
   </div>
 
   <!-- 릴스 최적화 체크리스트 -->
-  <div class="result-card">
+  <div class="result-card" data-part="reels">
     <h2>🎬 릴스 최적화 체크리스트</h2>
     <div id="reelsCheckSection"></div>
   </div>
 
   <!-- 이달의 콘텐츠 캘린더 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>📆 이달의 콘텐츠 캘린더</h2>
     <div id="instaCalendarSection"></div>
   </div>
@@ -4407,6 +4437,9 @@ function analyze() {
     </div>`;
 
   document.getElementById('result').style.display = 'block';
+  document.getElementById('partNav').style.display = 'block';
+  // 전체 버튼 활성화 초기화
+  document.querySelectorAll('.p-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
   renderSNSKitInsta();
 }
