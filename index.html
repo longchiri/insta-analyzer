@@ -1342,6 +1342,12 @@
     <div id="reelsCaptionSection"></div>
   </div>
 
+  <!-- 피드 게시물 개별 분석 -->
+  <div class="result-card" id="feedPostsCard" style="display:none;">
+    <h2>📸 피드 게시물 개별 분석 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP 인사이트 기준</span></h2>
+    <div id="feedPostsSection"></div>
+  </div>
+
   <!-- 팔로워 획득 퍼널 -->
   <div class="result-card">
     <h2>🎯 팔로워 획득 퍼널 분석</h2>
@@ -1865,6 +1871,7 @@ function parseInstagramZIP(jsons, allPaths) {
       let totalLikes = 0, totalComments = 0, lcnt = 0;
       let allTags = {};
       const timestamps = [];
+      const feedPostUris = [];  // 썸네일용 uri 저장
       postArr.forEach(p => {
         const media = p.media || [p];
         media.forEach(m => {
@@ -1874,9 +1881,12 @@ function parseInstagramZIP(jsons, allPaths) {
           const tags = cap.match(/#[\S]+/g) || [];
           tags.forEach(t => { allTags[t] = (allTags[t]||0)+1; });
           if (m.creation_timestamp) timestamps.push(m.creation_timestamp);
+          // uri + 캡션 + 타임스탬프 저장 (썸네일 매칭용)
+          if (m.uri) feedPostUris.push({ uri: m.uri, cap, ts: m.creation_timestamp || p.creation_timestamp || 0 });
         });
         if (p.creation_timestamp) timestamps.push(p.creation_timestamp);
       });
+      d._feedPostUris = feedPostUris;  // 피드 썸네일 매칭용
       if (lcnt > 0) {
         d.avgLikes    = Math.round(totalLikes    / lcnt);
         d.avgComments = Math.round(totalComments / lcnt);
@@ -3799,74 +3809,74 @@ function analyze() {
         </div>
       </div>` : ''}
 
-      <!-- 전체 릴스 캡션 개별 분석 (썸네일 포함) -->
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div style="font-size:0.82rem;font-weight:700;color:#444;">🔍 릴스 캡션 전체 개별 분석</div>
-        <div style="font-size:0.72rem;color:#888;">총 ${showCaptions.length}개 · 최신순</div>
-      </div>
-      <div id="reelsCardList" style="${showCaptions.length > 8 ? 'max-height:900px;overflow-y:auto;padding-right:4px;' : ''}display:grid;gap:10px;">
-        ${showCaptions.map((cap, i) => {
-          const a = showAnalyses[i];
-          const preview = cap.length > 90 ? cap.slice(0,90).replace(/\n/g,' ')+'…' : cap.replace(/\n/g,' ');
-          const dateStr = showTimes[i] ? new Date(showTimes[i]*1000).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}) : '';
+      <!-- 릴스 개별 분석 — 핀 + 펼치기 -->
+      ${(() => {
+        // 핀 결정: 최신 2개 + 최고 점수 1개
+        const reelsTopIdx = showAnalyses.reduce((bI,a,i,arr)=>a.score>arr[bI].score?i:bI,0);
+        const reelsPinnedSet = new Set([0,Math.min(1,showCaptions.length-1),reelsTopIdx].filter(i=>i<showCaptions.length));
+        const reelsPinnedArr = [...reelsPinnedSet];
+        const reelsRestArr   = showCaptions.map((_,i)=>i).filter(i=>!reelsPinnedSet.has(i));
+
+        const renderReelCard = (i, isTopBadge) => {
+          const cap = showCaptions[i], a = showAnalyses[i];
+          const preview = cap.length>90?cap.slice(0,90).replace(/\n/g,' ')+'…':cap.replace(/\n/g,' ');
+          const dateStr = showTimes[i]?new Date(showTimes[i]*1000).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}):'';
           const ins = matchInsight(cap, showTimes[i]);
           const checks = [
-            { ok: a.hasHashtag, label: `해시태그 ${a.tagCount}개` },
-            { ok: a.hasCTAkw,   label: 'CTA 포함' },
-            { ok: a.hasEmoji,   label: '이모지' },
-            { ok: a.lenOk,      label: `${a.len}자` },
-            { ok: a.hook!=='none', label: hookName[a.hook] },
+            {ok:a.hasHashtag,label:`해시태그 ${a.tagCount}개`},
+            {ok:a.hasCTAkw,label:'CTA 포함'},
+            {ok:a.hasEmoji,label:'이모지'},
+            {ok:a.lenOk,label:`${a.len}자`},
+            {ok:a.hook!=='none',label:hookName[a.hook]},
           ];
-          // 인사이트 지표 렌더
           const insHtml = ins ? (() => {
-            const plays  = ins.plays  || 0;
-            const reach  = ins.reach  || 0;
-            const impr   = ins.impr   || 0;
-            const saves  = ins.saves  || 0;
-            const shares = ins.shares || 0;
-            const playReachRatio = reach > 0 && plays > 0 ? (plays/reach*100).toFixed(0)+'%' : '—';
-            const reachImprRatio = impr  > 0 ? (reach/impr*100).toFixed(0)+'%' : '—';
-            const metrics = [
-              plays  > 0 ? { label:'👁️ 조회수',   val: plays.toLocaleString(),  color:'#6d28d9' } : null,
-              reach  > 0 ? { label:'📡 도달',      val: reach.toLocaleString(),  color:'#1d4ed8' } : null,
-              impr   > 0 ? { label:'📢 노출',      val: impr.toLocaleString(),   color:'#0369a1' } : null,
-              saves  > 0 ? { label:'🔖 저장',      val: saves.toLocaleString(),  color:'#166534' } : null,
-              shares > 0 ? { label:'↗️ 공유',      val: shares.toLocaleString(), color:'#9a3412' } : null,
-              plays  > 0 && reach > 0 ? { label:'🔄 조회/도달', val: playReachRatio, color:'#7c3aed' } : null,
-              reach  > 0 && impr  > 0 ? { label:'📈 도달률',   val: reachImprRatio, color:'#1e40af' } : null,
+            const plays=ins.plays||0,reach=ins.reach||0,impr=ins.impr||0,saves=ins.saves||0,shares=ins.shares||0;
+            const plR=reach>0&&plays>0?(plays/reach*100).toFixed(0)+'%':'—';
+            const drR=impr>0?(reach/impr*100).toFixed(0)+'%':'—';
+            const ms=[
+              plays>0?{label:'조회수',val:plays.toLocaleString(),color:'#6d28d9'}:null,
+              reach>0?{label:'도달',val:reach.toLocaleString(),color:'#1d4ed8'}:null,
+              impr>0?{label:'노출',val:impr.toLocaleString(),color:'#0369a1'}:null,
+              saves>0?{label:'저장',val:saves.toLocaleString(),color:'#166534'}:null,
+              shares>0?{label:'공유',val:shares.toLocaleString(),color:'#9a3412'}:null,
+              plays>0&&reach>0?{label:'조회/도달',val:plR,color:'#7c3aed'}:null,
+              reach>0&&impr>0?{label:'도달률',val:drR,color:'#1e40af'}:null,
             ].filter(Boolean);
-            return metrics.length ? `
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;margin-top:8px;">
-              ${metrics.map(m=>`
-                <div style="background:white;border-radius:8px;padding:6px 8px;text-align:center;border:1px solid #e9d5ff;">
-                  <div style="font-size:0.68rem;color:#888;margin-bottom:2px;">${m.label}</div>
-                  <div style="font-size:0.85rem;font-weight:700;color:${m.color};">${m.val}</div>
-                </div>`).join('')}
-            </div>` : '';
-          })() : (allPosts.length > 0 ? '<div style="font-size:0.72rem;color:#bbb;margin-top:6px;">인사이트 매칭 안됨</div>' : '');
+            return ms.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px;">${ms.map(m=>`<div style="background:white;border-radius:7px;padding:5px 7px;text-align:center;border:1px solid #e9d5ff;"><div style="font-size:0.65rem;color:#aaa;">${m.label}</div><div style="font-size:0.82rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`:'';
+          })():(allPosts.length>0?'<div style="font-size:0.7rem;color:#ccc;margin-top:5px;">인사이트 매칭 안됨</div>':'');
           return `
           <div style="background:${scoreBg(a.score)};border:1.5px solid ${scoreBorder(a.score)};border-radius:12px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;">
-            <!-- 썸네일 -->
-            <div id="reel-thumb-${i}" style="width:72px;height:128px;flex-shrink:0;border-radius:10px;background:#e8e0f5;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:4px;">
-              <span style="font-size:1.6rem;">🎬</span>
-              <span style="font-size:0.6rem;color:#888;">#${i+1}</span>
-            </div>
-            <!-- 내용 -->
+            <div id="reel-thumb-${i}" style="width:72px;height:128px;flex-shrink:0;border-radius:10px;background:#e8e0f5;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:4px;"><span style="font-size:1.6rem;">🎬</span><span style="font-size:0.6rem;color:#888;">#${i+1}</span></div>
             <div style="flex:1;min-width:0;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="font-size:0.72rem;color:#888;">${dateStr ? dateStr+' · ' : ''}릴스 ${i+1}번</span>
+                <span style="font-size:0.72rem;color:#888;">${dateStr?dateStr+' · ':''}릴스 ${i+1}번${isTopBadge?' <span style="background:#fbbf24;color:#78350f;font-size:0.65rem;padding:1px 6px;border-radius:20px;font-weight:700;">⭐ 최고 점수</span>':''}</span>
                 <span style="font-size:0.78rem;font-weight:700;color:${scoreBorder(a.score)};">${scoreLabel(a.score)} (${a.score}/6)</span>
               </div>
               <div style="font-size:0.8rem;color:#555;background:white;border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.5;word-break:break-all;">${preview}</div>
-              <div style="display:flex;flex-wrap:wrap;gap:5px;">
-                ${checks.map(c=>`
-                  <span style="padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}
-              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;">${checks.map(c=>`<span style="padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}</div>
               ${insHtml}
             </div>
           </div>`;
-        }).join('')}
-      </div>
+        };
+
+        return `
+        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">📌 주요 릴스</div>
+        <div style="display:grid;gap:10px;margin-bottom:${reelsRestArr.length?'10px':'0'};">
+          ${reelsPinnedArr.map(i=>renderReelCard(i, i===reelsTopIdx)).join('')}
+        </div>
+        ${reelsRestArr.length>0?`
+        <button onclick="
+          const col=document.getElementById('reels-collapse');
+          const open=col.style.display!=='none';
+          col.style.display=open?'none':'grid';
+          this.textContent=open?'전체 ${reelsRestArr.length}개 더 보기 ▼':'접기 ▲';
+        " style="width:100%;padding:10px;border:1.5px solid #c4b5fd;border-radius:10px;background:#faf5ff;color:#6d28d9;font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:8px;">
+          전체 ${reelsRestArr.length}개 더 보기 ▼
+        </button>
+        <div id="reels-collapse" style="display:none;grid-gap:10px;">
+          ${reelsRestArr.map(i=>renderReelCard(i,false)).join('')}
+        </div>`:''}`;
+      })()}
 
       <!-- 개선 인사이트 -->
       <div style="margin-top:16px;padding:14px 16px;background:#fff0f8;border-radius:10px;font-size:0.83rem;color:#555;line-height:1.8;">
@@ -3930,6 +3940,180 @@ function analyze() {
       </div>`;
   } else {
     reelsCaptionCard.style.display = 'none';
+  }
+
+  // ── 피드 게시물 개별 분석 ──
+  const feedPostsCard = document.getElementById('feedPostsCard');
+  const allIP = D.allInsightPosts || [];
+  const feedUriPool = D._feedPostUris || [];
+
+  // 피드 URI 매칭 함수 (캡션 앞부분 or 날짜)
+  const matchFeedUri = (cap, ts) => {
+    if (!feedUriPool.length) return null;
+    const key = (cap||'').replace(/\s+/g,'').slice(0,20);
+    if (key.length > 4) {
+      const byC = feedUriPool.find(f => f.cap && f.cap.replace(/\s+/g,'').startsWith(key));
+      if (byC) return byC.uri;
+    }
+    if (ts > 0) {
+      const byD = feedUriPool.find(f => f.ts > 0 && Math.abs(f.ts - ts) < 86400 * 2);
+      if (byD) return byD.uri;
+    }
+    return null;
+  };
+
+  if (allIP.length > 0) {
+    feedPostsCard.style.display = '';
+    // 최신순 정렬
+    const feedPosts = [...allIP].sort((a,b) => (b.ts||0) - (a.ts||0));
+    const fpTotal = feedPosts.length;
+
+    // 전체 평균 계산
+    const fpAvgReach = Math.round(feedPosts.reduce((s,p)=>s+(p.reach||0),0)/fpTotal);
+    const fpAvgEng   = feedPosts.reduce((s,p)=>{
+      const r=p.reach||0; return r>0?s+((p.likes+p.saves+p.shares+p.comments)/r*100):s;
+    },0)/feedPosts.filter(p=>p.reach>0).length;
+
+    // 성과 등급
+    const fpGrade = (p) => {
+      const r = p.reach || 0; if (r === 0) return { g:'—', c:'#aaa' };
+      const eng = (p.likes+p.saves+p.shares+(p.comments||0)) / r * 100;
+      const sv  = p.saves  / r * 100;
+      const sh  = p.shares / r * 100;
+      const score = (eng>=5?3:eng>=2?2:eng>=1?1:0) + (sv>=3?2:sv>=1?1:0) + (sh>=1?2:sh>=0.5?1:0);
+      return score>=6?{g:'🏆 최우수',c:'#6d28d9'}:score>=4?{g:'✅ 우수',c:'#166534'}:score>=2?{g:'📈 보통',c:'#b45309'}:{g:'⚠️ 부족',c:'#b91c1c'};
+    };
+
+    // 노출 분석 통계
+    const imprPosts = feedPosts.filter(p=>p.impr>0);
+    const fpAvgImpr = imprPosts.length ? Math.round(imprPosts.reduce((s,p)=>s+p.impr,0)/imprPosts.length) : 0;
+    const fpAvgDrR  = imprPosts.length ? imprPosts.reduce((s,p)=>s+(p.reach/p.impr*100),0)/imprPosts.length : 0;
+    const fpMaxImpr = imprPosts.length ? Math.max(...imprPosts.map(p=>p.impr)) : 0;
+
+    // 핀 카드 결정: 최신 2개 + 최고 인게이지먼트 1개
+    const feedTopIdx = feedPosts.reduce((bI,p,i)=>{
+      const engI = (p.reach||0)>0?(p.likes+p.saves+p.shares+(p.comments||0))/(p.reach||1):0;
+      const engB = (feedPosts[bI].reach||0)>0?(feedPosts[bI].likes+feedPosts[bI].saves+feedPosts[bI].shares+(feedPosts[bI].comments||0))/(feedPosts[bI].reach||1):0;
+      return engI>engB?i:bI;
+    },0);
+    const feedPinnedSet = new Set([0, Math.min(1,feedPosts.length-1), feedTopIdx].filter(i=>i<feedPosts.length));
+    const feedPinnedArr = [...feedPinnedSet];
+    const feedRestArr   = feedPosts.map((_,i)=>i).filter(i=>!feedPinnedSet.has(i));
+
+    // 카드 렌더 함수
+    const renderFeedCard = (i, isTopBadge) => {
+      const p = feedPosts[i];
+      const r = p.reach||0, impr = p.impr||0;
+      const eng = r>0?((p.likes+p.saves+p.shares+(p.comments||0))/r*100):0;
+      const svR = r>0?(p.saves/r*100):0, shR = r>0?(p.shares/r*100):0;
+      const lkR = r>0?(p.likes/r*100):0, drR = impr>0?(r/impr*100):0;
+      const plR = r>0&&p.plays>0?(p.plays/r*100):0;
+      const grade = fpGrade(p);
+      const dateStr = p.ts?new Date(p.ts*1000).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}):'';
+      const capPrev = p.caption?(p.caption.length>70?p.caption.slice(0,70)+'…':p.caption):'(캡션 없음)';
+      const imprBarW = fpMaxImpr>0?Math.round(impr/fpMaxImpr*100):0;
+      const metrics = [
+        r>0?{label:'도달',val:r.toLocaleString(),color:'#1d4ed8'}:null,
+        impr>0?{label:'노출',val:impr.toLocaleString(),color:'#0369a1'}:null,
+        p.likes>0?{label:'좋아요',val:p.likes.toLocaleString(),color:'#be185d'}:null,
+        p.saves>0?{label:'저장',val:p.saves.toLocaleString(),color:'#166534'}:null,
+        p.shares>0?{label:'공유',val:p.shares.toLocaleString(),color:'#9a3412'}:null,
+        p.comments>0?{label:'댓글',val:p.comments.toLocaleString(),color:'#0f766e'}:null,
+        p.plays>0?{label:'조회수',val:p.plays.toLocaleString(),color:'#7c3aed'}:null,
+      ].filter(Boolean);
+      const rates = [
+        eng>0?{label:'인게이지먼트',val:eng.toFixed(1)+'%',good:eng>=5,warn:eng<2}:null,
+        svR>0?{label:'저장율',val:svR.toFixed(1)+'%',good:svR>=3,warn:svR<1}:null,
+        shR>0?{label:'공유율',val:shR.toFixed(1)+'%',good:shR>=1,warn:shR<0.5}:null,
+        lkR>0?{label:'좋아요율',val:lkR.toFixed(1)+'%',good:lkR>=3,warn:lkR<1}:null,
+        drR>0?{label:'도달률',val:drR.toFixed(0)+'%',good:drR>=50,warn:drR<30}:null,
+        plR>0?{label:'조회/도달',val:plR.toFixed(0)+'%',good:plR>=150,warn:plR<80}:null,
+      ].filter(Boolean);
+      return `
+      <div style="border:1.5px solid ${r>fpAvgReach?'#c4b5fd':'#e5e7eb'};border-radius:12px;padding:12px 14px;background:${r>fpAvgReach?'#faf5ff':'#fafafa'};display:flex;gap:11px;align-items:flex-start;">
+        <div id="feed-thumb-${i}" style="width:70px;height:70px;flex-shrink:0;border-radius:10px;background:#e8e0f5;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:1.5rem;">📸</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+            <span style="font-size:0.72rem;color:#888;">${dateStr?dateStr+' · ':''}게시물 ${i+1}번${isTopBadge?' <span style="background:#fbbf24;color:#78350f;font-size:0.65rem;padding:1px 6px;border-radius:20px;font-weight:700;">⭐ 최고 성과</span>':''}</span>
+            <span style="font-size:0.78rem;font-weight:700;color:${grade.c};">${grade.g}</span>
+          </div>
+          <div style="font-size:0.79rem;color:#555;margin-bottom:7px;word-break:break-all;">${capPrev}</div>
+          ${impr>0?`<div style="margin-bottom:7px;"><div style="display:flex;justify-content:space-between;font-size:0.68rem;color:#888;margin-bottom:2px;"><span>📢 노출 ${impr.toLocaleString()}회</span><span>${imprBarW}%</span></div><div style="height:5px;background:#e5e7eb;border-radius:99px;overflow:hidden;"><div style="width:${imprBarW}%;height:100%;background:linear-gradient(90deg,#818cf8,#6d28d9);border-radius:99px;"></div></div></div>`:''}
+          ${metrics.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px;margin-bottom:6px;">${metrics.map(m=>`<div style="background:white;border-radius:7px;padding:4px 6px;text-align:center;border:1px solid #e5e7eb;"><div style="font-size:0.63rem;color:#aaa;">${m.label}</div><div style="font-size:0.8rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`:''}
+          ${rates.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;">${rates.map(rt=>`<span style="padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:600;background:${rt.good?'#ede9fe':rt.warn?'#fee2e2':'#fefce8'};color:${rt.good?'#6d28d9':rt.warn?'#b91c1c':'#854d0e'};">${rt.label} ${rt.val}</span>`).join('')}</div>`:''}
+        </div>
+      </div>`;
+    };
+
+    document.getElementById('feedPostsSection').innerHTML = `
+      <!-- 요약 통계 -->
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;">
+        ${[
+          {bg:'#f0f9ff',c:'#1d4ed8',label:'분석 게시물',val:fpTotal+'개'},
+          {bg:'#f0fdf4',c:'#166534',label:'평균 도달',val:fpAvgReach.toLocaleString()+'명'},
+          {bg:'#fdf4ff',c:'#7e22ce',label:'평균 인게이지먼트율',val:isNaN(fpAvgEng)?'—':fpAvgEng.toFixed(1)+'%'},
+          {bg:'#eff6ff',c:'#1e40af',label:'평균 노출',val:fpAvgImpr?fpAvgImpr.toLocaleString()+'회':'—'},
+        ].map(s=>`<div style="background:${s.bg};border-radius:12px;padding:11px;text-align:center;"><div style="font-size:0.7rem;color:#aaa;margin-bottom:3px;">${s.label}</div><div style="font-size:1.2rem;font-weight:900;color:${s.c};">${s.val}</div></div>`).join('')}
+      </div>
+
+      <!-- 노출 분석 요약 -->
+      ${fpAvgImpr>0?`
+      <div style="background:#f5f3ff;border-radius:12px;padding:13px 15px;margin-bottom:14px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#5b21b6;margin-bottom:10px;">📢 노출 분석</div>
+        ${[
+          {label:'노출→도달 효율 (도달률)',val:fpAvgDrR.toFixed(0)+'%',good:fpAvgDrR>=50,tip:'노출 중 실제 도달로 이어진 비율 — 50%+이면 알고리즘 친화적'},
+          {label:'최고 노출 게시물',val:fpMaxImpr.toLocaleString()+'회',good:true,tip:''},
+          {label:'평균 노출 대비 차이',val:(fpAvgImpr?(fpMaxImpr/fpAvgImpr).toFixed(1):0)+'배',good:true,tip:''},
+        ].map(item=>`
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <div>
+              <div style="font-size:0.78rem;color:#444;font-weight:600;">${item.label}</div>
+              ${item.tip?`<div style="font-size:0.68rem;color:#9ca3af;">${item.tip}</div>`:''}
+            </div>
+            <span style="font-size:0.9rem;font-weight:800;color:${item.good?'#5b21b6':'#b91c1c'};">${item.val}</span>
+          </div>`).join('')}
+      </div>`:''}
+
+      <!-- 핀 카드: 최신 2개 + 최고 성과 1개 -->
+      <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">📌 주요 게시물</div>
+      <div style="display:grid;gap:8px;margin-bottom:${feedRestArr.length?'10px':'0'};">
+        ${feedPinnedArr.map(i=>renderFeedCard(i, i===feedTopIdx && !feedPinnedArr.slice(0,2).includes(feedTopIdx) || feedPinnedArr.indexOf(i)===feedPinnedArr.length-1 && i===feedTopIdx)).join('')}
+      </div>
+
+      <!-- 펼치기 버튼 -->
+      ${feedRestArr.length>0?`
+      <button onclick="
+        const col=document.getElementById('feed-collapse');
+        const open=col.style.display!=='none';
+        col.style.display=open?'none':'grid';
+        this.textContent=open?'전체 ${feedRestArr.length}개 더 보기 ▼':'접기 ▲';
+      " style="width:100%;padding:10px;border:1.5px solid #c4b5fd;border-radius:10px;background:#faf5ff;color:#6d28d9;font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:8px;">
+        전체 ${feedRestArr.length}개 더 보기 ▼
+      </button>
+      <div id="feed-collapse" style="display:none;grid-gap:8px;">
+        ${feedRestArr.map(i=>renderFeedCard(i,false)).join('')}
+      </div>`:''}
+    `;
+
+    // ── 피드 썸네일 비동기 로딩 ──
+    if (_reelsZipRef) {
+      feedPosts.forEach(async (p, i) => {
+        const uri = matchFeedUri(p.caption, p.ts);
+        if (!uri) return;
+        const thumbEl = document.getElementById(`feed-thumb-${i}`);
+        if (!thumbEl) return;
+        const zipFile = _reelsZipRef.files[uri];
+        if (!zipFile) return;
+        try {
+          const blob = await zipFile.async('blob');
+          const blobUrl = URL.createObjectURL(blob);
+          thumbEl.innerHTML = `<img src="${blobUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onload="URL.revokeObjectURL(this.src)"/>`;
+        } catch(e) {}
+      });
+    }
+
+  } else {
+    feedPostsCard.style.display = 'none';
   }
 
   // ── 팔로워 획득 퍼널 ──
