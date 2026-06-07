@@ -4047,49 +4047,47 @@ function analyze() {
   // ── 피드 게시물 개별 분석 ──
   const feedPostsCard = document.getElementById('feedPostsCard');
   const allIP = D.allInsightPosts || [];
-  const feedUriPool = D._feedPostUris || [];
+  const feedUriPool = (D._feedPostUris || []).sort((a,b)=>(b.ts||0)-(a.ts||0));
 
-  // 피드 URI → 썸네일 사전 매칭 (중복 없이 1:1 매칭)
+  // 피드 데이터 소스 결정: 인사이트 HTML > ZIP JSON 직접
+  // ZIP 모드: feedUriPool 항목을 feedPosts 형식으로 변환 (uri 직접 포함)
+  const feedFromZip = allIP.length === 0 && feedUriPool.length > 0;
+  const rawFeedPosts = feedFromZip
+    ? feedUriPool.map(f => ({
+        caption: f.cap, ts: f.ts,
+        likes: f.likes||0, saves: 0, shares: 0, comments: f.comments||0,
+        reach: 0, impr: 0, plays: 0,
+        _uri: f.uri   // 썸네일 직접 URI
+      }))
+    : [...allIP].sort((a,b)=>(b.ts||0)-(a.ts||0));
+
+  // 인사이트 HTML 모드일 때만 썸네일 매칭 필요 (ZIP 모드는 _uri 직접 사용)
   const buildFeedThumbMap = (posts) => {
-    if (!feedUriPool.length) return new Map();
-    // 날짜 내림차순 정렬 (게시물과 같은 순서)
-    const pool = [...feedUriPool].sort((a,b)=>(b.ts||0)-(a.ts||0));
+    if (feedFromZip || !feedUriPool.length) return new Map(); // ZIP 모드는 스킵
+    const pool = [...feedUriPool];
     const used = new Set();
     const map = new Map();
-
     posts.forEach((p, i) => {
       const capKey = (p.caption||'').replace(/\s+/g,'').slice(0,20);
-
-      // 1순위: 캡션 앞부분 매칭
       if (capKey.length > 4) {
-        const idx = pool.findIndex((f,j) => !used.has(j) && f.cap &&
-          f.cap.replace(/\s+/g,'').includes(capKey));
+        const idx = pool.findIndex((f,j) => !used.has(j) && f.cap && f.cap.replace(/\s+/g,'').includes(capKey));
         if (idx >= 0) { used.add(idx); map.set(i, pool[idx].uri); return; }
       }
-
-      // 2순위: 가장 가까운 날짜 (48시간 이내, 중복 제외)
       if ((p.ts||0) > 0) {
         let bestJ=-1, bestD=Infinity;
-        pool.forEach((f,j) => {
-          if (!used.has(j) && (f.ts||0) > 0) {
-            const d = Math.abs(f.ts - p.ts);
-            if (d < bestD) { bestD=d; bestJ=j; }
-          }
-        });
+        pool.forEach((f,j) => { if (!used.has(j)&&(f.ts||0)>0){ const d=Math.abs(f.ts-p.ts); if(d<bestD){bestD=d;bestJ=j;}} });
         if (bestJ >= 0 && bestD < 86400*3) { used.add(bestJ); map.set(i, pool[bestJ].uri); return; }
       }
-
-      // 3순위: 순서 기반 폴백 (위 두 방법 모두 실패 시)
       const rem = pool.map((_,j)=>j).filter(j=>!used.has(j));
       if (rem.length > 0) { used.add(rem[0]); map.set(i, pool[rem[0]].uri); }
     });
     return map;
   };
 
-  if (allIP.length > 0) {
+  if (rawFeedPosts.length > 0) {
     feedPostsCard.style.display = '';
     // 최신순 정렬
-    const feedPosts = [...allIP].sort((a,b) => (b.ts||0) - (a.ts||0));
+    const feedPosts = rawFeedPosts;
     const fpTotal = feedPosts.length;
 
     // 전체 평균 계산
@@ -4260,11 +4258,12 @@ function analyze() {
       </div>`:''}
     `;
 
-    // ── 피드 썸네일 비동기 로딩 (릴스와 동일한 방식, 1:1 매칭) ──
+    // ── 피드 썸네일 비동기 로딩 ──
+    // ZIP 모드: _uri 직접 사용 / 인사이트 모드: 매칭 맵 사용
     if (_reelsZipRef) {
-      const feedThumbMap = buildFeedThumbMap(feedPosts);
+      const feedThumbMap = feedFromZip ? null : buildFeedThumbMap(feedPosts);
       feedPosts.forEach(async (p, i) => {
-        const uri = feedThumbMap.get(i);
+        const uri = feedFromZip ? (p._uri || '') : (feedThumbMap.get(i) || '');
         if (!uri) return;
         const thumbEl = document.getElementById(`feed-thumb-${i}`);
         if (!thumbEl) return;
