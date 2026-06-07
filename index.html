@@ -3717,6 +3717,16 @@ function analyze() {
       <b>공백 1줄 후:</b> 해시태그 5~15개 (본문과 분리)
     </div>`;
 
+  // ── 공통 피드백 렌더 유틸 (릴스·피드 모두 사용) ──
+  function fbHtml({goods,bads,tips}) {
+    if(!goods.length&&!bads.length&&!tips.length) return '';
+    return `<div style="margin-top:9px;border-top:1px solid #e5e7eb;padding-top:9px;display:grid;gap:4px;">
+      ${goods.map(g=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#166534;line-height:1.5;"><span style="flex-shrink:0;">✅</span><span>${g}</span></div>`).join('')}
+      ${bads.map(b=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#b91c1c;line-height:1.5;"><span style="flex-shrink:0;">❌</span><span>${b}</span></div>`).join('')}
+      ${tips.map(t=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#1d4ed8;line-height:1.5;"><span style="flex-shrink:0;">💡</span><span>${t}</span></div>`).join('')}
+    </div>`;
+  }
+
   // ── 릴스 캡션 전체 분석 (ZIP 자동 추출) ──
   // _reelsCaptions는 {cap,uri,ts} 객체 배열 (이전 버전은 string 배열 — 하위 호환)
   const reelsRaw = D._reelsCaptions || [];
@@ -4135,14 +4145,7 @@ function analyze() {
       return {goods, bads, tips};
     };
 
-    function fbHtml({goods,bads,tips}) {
-      if(!goods.length&&!bads.length&&!tips.length) return '';
-      return `<div style="margin-top:9px;border-top:1px solid #e5e7eb;padding-top:9px;display:grid;gap:4px;">
-        ${goods.map(g=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#166534;line-height:1.5;"><span style="flex-shrink:0;">✅</span><span>${g}</span></div>`).join('')}
-        ${bads.map(b=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#b91c1c;line-height:1.5;"><span style="flex-shrink:0;">❌</span><span>${b}</span></div>`).join('')}
-        ${tips.map(t=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#1d4ed8;line-height:1.5;"><span style="flex-shrink:0;">💡</span><span>${t}</span></div>`).join('')}
-      </div>`;
-    }
+    // fbHtml은 릴스 섹션 위에서 선언됨
 
     // 카드 렌더 함수
     const renderFeedCard = (i, isTopBadge) => {
