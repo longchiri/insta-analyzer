@@ -1395,6 +1395,12 @@ function setPartFilter(part, btn) {
     <h2>📆 이달의 콘텐츠 캘린더</h2>
     <div id="instaCalendarSection"></div>
   </div>
+
+  <!-- 콘텐츠 심층 인사이트 -->
+  <div class="result-card" id="contentInsightsCard" data-part="overview" style="display:none;">
+    <h2>🔬 콘텐츠 심층 인사이트 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP 데이터 기반</span></h2>
+    <div id="contentInsightsSection"></div>
+  </div>
 </div>
 
 <footer>
@@ -4465,6 +4471,127 @@ function analyze() {
       • 같은 주제로 3~5개 시리즈 만들면 탐색 탭에서 추천 확률 3배↑<br/>
       • <b>저장률이 1위 지표</b> — 모든 콘텐츠에서 저장 이유를 만들어야 해요
     </div>`;
+
+  // ── 콘텐츠 심층 인사이트 (패턴·추이·캡션·요일) ──
+  const ciCard = document.getElementById('contentInsightsCard');
+  const allItems = [
+    ...(reelsRaw||[]).map(r=>({
+      cap:typeof r==='string'?r:(r.cap||''), ts:typeof r==='string'?0:(r.ts||0),
+      likes:typeof r==='string'?0:(r.likes||0), comments:typeof r==='string'?0:(r.comments||0), type:'릴스'
+    })),
+    ...feedUriPool.map(f=>({cap:f.cap||'',ts:f.ts||0,likes:f.likes||0,comments:f.comments||0,type:'피드'}))
+  ].filter(x=>x.ts>0||x.likes>0).sort((a,b)=>a.ts-b.ts);
+
+  if (allItems.length >= 3) {
+    ciCard.style.display = '';
+
+    // ① 성장 추이 — 월별 평균 좋아요
+    const byMonth = {};
+    allItems.forEach(x=>{
+      if(!x.ts) return;
+      const key = new Date(x.ts*1000).toLocaleDateString('ko-KR',{year:'2-digit',month:'2-digit'});
+      if(!byMonth[key]) byMonth[key]={sum:0,cnt:0};
+      byMonth[key].sum+=x.likes; byMonth[key].cnt++;
+    });
+    const months = Object.keys(byMonth).slice(-8);
+    const mVals  = months.map(k=>byMonth[k].sum/byMonth[k].cnt);
+    const mMax   = Math.max(...mVals,1);
+    const trend  = mVals.length>=2 ? (mVals[mVals.length-1]>mVals[0]?'📈 성장 중':'📉 하락세') : '—';
+
+    // ② 요일별 평균 좋아요
+    const days = ['일','월','화','수','목','금','토'];
+    const byDay = Array(7).fill(null).map(()=>({sum:0,cnt:0}));
+    allItems.forEach(x=>{ if(x.ts){const d=new Date(x.ts*1000).getDay(); byDay[d].sum+=x.likes; byDay[d].cnt++;}});
+    const dayVals = byDay.map(d=>d.cnt?d.sum/d.cnt:0);
+    const dayMax  = Math.max(...dayVals,1);
+    const bestDay = days[dayVals.indexOf(Math.max(...dayVals))];
+
+    // ③ 콘텐츠 타입별 평균 좋아요
+    const typeKw = {
+      '정보형':/(방법|꿀팁|tip|가이드|알려드|설명|정리|법칙|공략|이유|차이)/i,
+      '공감형':/(나만|진짜|솔직|고백|ㅋㅋ|ㅠㅠ|공감|힘들|행복|감사|사랑)/i,
+      '홍보형':/(할인|구매|구입|링크|클릭|바이오|판매|세일|이벤트|출시)/i,
+      '질문형':/(.*\?.{0,15}$)/,
+      '일상형':/(오늘|어제|요즘|날씨|아침|저녁|일상|나의|우리)/i,
+    };
+    const typeStat = {};
+    allItems.forEach(x=>{
+      let matched='기타';
+      for(const [t,re] of Object.entries(typeKw)){if(re.test(x.cap)){matched=t;break;}}
+      if(!typeStat[matched]) typeStat[matched]={sum:0,cnt:0};
+      typeStat[matched].sum+=x.likes; typeStat[matched].cnt++;
+    });
+    const typeArr = Object.entries(typeStat).map(([t,v])=>({t,avg:v.cnt?Math.round(v.sum/v.cnt):0,cnt:v.cnt}))
+      .sort((a,b)=>b.avg-a.avg);
+    const typeMax = Math.max(...typeArr.map(x=>x.avg),1);
+
+    // ④ 캡션 길이 vs 좋아요 (구간별)
+    const lenBands = [{label:'~50자',min:0,max:50},{label:'51~150',min:51,max:150},{label:'151~300',min:151,max:300},{label:'301자+',min:301,max:9999}];
+    lenBands.forEach(b=>{
+      const items=allItems.filter(x=>x.cap.length>=b.min&&x.cap.length<=b.max);
+      b.avg=items.length?Math.round(items.reduce((s,x)=>s+x.likes,0)/items.length):0;
+      b.cnt=items.length;
+    });
+    const lenMax=Math.max(...lenBands.map(b=>b.avg),1);
+
+    const barSVG = (vals,labels,max,color='#818cf8',h=60) => {
+      const w=Math.floor(260/vals.length);
+      return `<svg viewBox="0 0 260 ${h+20}" style="width:100%;overflow:visible;">
+        ${vals.map((v,i)=>{
+          const bh=Math.max(4,Math.round(v/max*(h-4)));
+          return `<rect x="${i*w+2}" y="${h-bh}" width="${w-4}" height="${bh}" rx="4" fill="${color}" opacity="0.85"/>
+          <text x="${i*w+w/2}" y="${h+14}" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.6">${labels[i]}</text>
+          ${v>0?`<text x="${i*w+w/2}" y="${h-bh-3}" text-anchor="middle" font-size="8" fill="${color}">${Math.round(v)}</text>`:''}`;
+        }).join('')}
+      </svg>`;
+    };
+
+    document.getElementById('contentInsightsSection').innerHTML = `
+      <!-- 성장 추이 -->
+      <div style="margin-bottom:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:0.82rem;font-weight:700;color:#444;">📈 성장 추이 (월별 평균 좋아요)</span>
+          <span style="font-size:0.78rem;font-weight:700;color:#6d28d9;">${trend}</span>
+        </div>
+        ${months.length>=2 ? barSVG(mVals,months,mMax,'#818cf8',60) : '<div style="font-size:0.75rem;color:#ccc;">데이터 2개월 이상 필요</div>'}
+      </div>
+
+      <!-- 요일별 -->
+      <div style="margin-bottom:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:0.82rem;font-weight:700;color:#444;">📅 요일별 평균 좋아요</span>
+          <span style="font-size:0.75rem;background:#ede9fe;color:#6d28d9;padding:2px 8px;border-radius:20px;font-weight:700;">최고 ${bestDay}요일</span>
+        </div>
+        ${barSVG(dayVals,days,dayMax,'#34d399',50)}
+      </div>
+
+      <!-- 콘텐츠 타입 -->
+      <div style="margin-bottom:18px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">🎭 콘텐츠 타입별 평균 좋아요</div>
+        <div style="display:grid;gap:6px;">
+          ${typeArr.map(({t,avg,cnt})=>`
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:0.75rem;color:#666;width:48px;flex-shrink:0;">${t}</span>
+            <div style="flex:1;height:18px;background:#f3f4f6;border-radius:99px;overflow:hidden;">
+              <div style="width:${Math.round(avg/typeMax*100)}%;height:100%;background:linear-gradient(90deg,#f472b6,#a78bfa);border-radius:99px;"></div>
+            </div>
+            <span style="font-size:0.72rem;color:#888;width:60px;text-align:right;">${avg}❤️ ·${cnt}개</span>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- 캡션 길이 -->
+      <div>
+        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">✍️ 캡션 길이별 평균 좋아요</div>
+        ${barSVG(lenBands.map(b=>b.avg),lenBands.map(b=>b.label),lenMax,'#fb923c',50)}
+        <div style="font-size:0.72rem;color:#aaa;margin-top:4px;text-align:center;">
+          ${(()=>{const best=lenBands.slice().sort((a,b)=>b.avg-a.avg)[0]; return best.cnt>0?`💡 "${best.label}" 구간 캡션이 평균 ${best.avg}❤️로 가장 반응이 좋아요`:'';})()}
+        </div>
+      </div>
+    `;
+  } else {
+    ciCard.style.display = 'none';
+  }
 
   document.getElementById('result').style.display = 'block';
   document.getElementById('partNav').style.display = 'block';
