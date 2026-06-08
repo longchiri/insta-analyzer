@@ -1444,7 +1444,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.8.2</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.8.3</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -1634,10 +1634,10 @@ const IG_FILE_TARGETS = [
   // 팔로워/팔로잉 — pathHint로 threads 폴더 오매칭 방지
   { key: 'followers',       names: ['followers_1'],          pathHint: 'followers_and_following' },
   { key: 'following',       names: ['following'],            pathHint: 'followers_and_following' },
-  // 미디어
-  { key: 'posts',           names: ['posts_1'] },
-  { key: 'reels',           names: ['reels'] },
-  { key: 'stories',         names: ['stories'] },
+  // 미디어 — pathHint로 threads/스레드 폴더 오매칭 방지 (Instagram ZIP에 Threads 데이터 포함 가능)
+  { key: 'posts',           names: ['posts_1'],  pathHint: 'your_instagram_activity' },
+  { key: 'reels',           names: ['reels'],    pathHint: 'your_instagram_activity' },
+  { key: 'stories',         names: ['stories'],  pathHint: 'your_instagram_activity' },
   // 인사이트 — pathHint로 insight 경로만 탐색 (미디어 posts.html 오매칭 방지)
   { key: 'contentInsights', names: ['content_interactions'], pathHint: 'insight' },
   { key: 'audienceInsights',names: ['audience_insights'],    pathHint: 'insight' },
@@ -2630,6 +2630,9 @@ function analyze() {
   const noExtPlatform = extPlatform === 'none';
   const storyActive   = storyUsage !== 'never';
   const storyInactive = storyUsage === 'never';
+
+  // ── 이전 파트 필터 초기화 (재분석 시 숨겨진 카드 복원) — 렌더링 전에 실행
+  document.querySelectorAll('#result .result-card, #result .part-section-header').forEach(c => { c.style.display = ''; });
 
   // ────── 점수 계산 ──────
   const er        = D.engagementRate || 0;
@@ -4009,8 +4012,10 @@ function analyze() {
   const reelsRaw = D._reelsCaptions || [];
   const reelsCaptions = reelsRaw.map(r => typeof r === 'string' ? r : (r.cap || ''));
   const reelsCaptionCard = document.getElementById('reelsCaptionCard');
+  // 항상 카드 표시 (데이터 없어도 섹션 자체는 표시)
+  reelsCaptionCard.style.display = '';
   if (reelsCaptions.length > 0) {
-    reelsCaptionCard.style.display = '';
+  try {
 
     // 개별 캡션 분석 헬퍼
     const analyzeCaption = (cap) => {
@@ -4357,7 +4362,18 @@ function analyze() {
         if (!uri) return;
         const thumbEl = document.getElementById(`reel-thumb-${i}`);
         if (!thumbEl) return;
-        const zipFile = _reelsZipRef.files[uri];
+        let zipFile = _reelsZipRef.files[uri]
+          || _reelsZipRef.files['your_instagram_activity/' + uri]
+          || _reelsZipRef.files[uri.replace(/^media\//, 'your_instagram_activity/media/')];
+        if (!zipFile) {
+          const basename = uri.split('/').pop();
+          if (basename) {
+            const matched = Object.keys(_reelsZipRef.files).find(k =>
+              !_reelsZipRef.files[k].dir && k.endsWith('/' + basename)
+            );
+            if (matched) zipFile = _reelsZipRef.files[matched];
+          }
+        }
         if (!zipFile) return;
         try {
           const blob = await zipFile.async('blob');
@@ -4423,15 +4439,22 @@ function analyze() {
       });
     }
 
+  } catch(reelsRenderErr) {
+    console.error('릴스 렌더링 오류:', reelsRenderErr);
+    document.getElementById('reelsCaptionSection').innerHTML = `
+      <div class="missing-box">
+        <div class="missing-title">⚠️ 릴스 렌더링 오류</div>
+        <div style="font-size:0.8rem;color:#b91c1c;">${reelsRenderErr?.message || String(reelsRenderErr)}</div>
+      </div>`;
+  }
   } else if (currentTab === 'upload') {
-    reelsCaptionCard.style.display = '';
     document.getElementById('reelsCaptionSection').innerHTML = `
       <div class="missing-box">
         <div class="missing-title">ℹ️ 릴스 캡션 데이터를 찾지 못했어요</div>
         <div>ZIP 파일 안에 릴스 게시물이 없거나 캡션이 비어 있을 수 있어요. 릴스에 캡션을 입력 후 새로 ZIP을 내려받아 업로드해 주세요.</div>
       </div>`;
   } else {
-    reelsCaptionCard.style.display = 'none';
+    document.getElementById('reelsCaptionSection').innerHTML = '';
   }
 
   // ── 피드 게시물 개별 분석 ──
@@ -4710,13 +4733,19 @@ function analyze() {
         if (!uri) return;
         const thumbEl = document.getElementById(`feed-thumb-${i}`);
         if (!thumbEl) return;
-        // ZIP 경로 직접 조회 (경로 prefix 제거 시도 포함)
-        let zipFile = _reelsZipRef.files[uri];
+        // ZIP 경로 직접 조회 — 다양한 prefix 시도
+        let zipFile = _reelsZipRef.files[uri]
+          || _reelsZipRef.files['your_instagram_activity/' + uri]
+          || _reelsZipRef.files[uri.replace(/^media\//, 'your_instagram_activity/media/')];
         if (!zipFile) {
-          // 경우에 따라 앞에 'media/' 등이 붙어 있을 수 있어 파일명으로 재탐색
+          // 파일명(basename)으로 전체 탐색 (경로 구조 무관)
           const basename = uri.split('/').pop();
-          const matched = Object.keys(_reelsZipRef.files).find(k => k.endsWith(basename));
-          if (matched) zipFile = _reelsZipRef.files[matched];
+          if (basename) {
+            const matched = Object.keys(_reelsZipRef.files).find(k =>
+              !_reelsZipRef.files[k].dir && k.endsWith('/' + basename)
+            );
+            if (matched) zipFile = _reelsZipRef.files[matched];
+          }
         }
         if (!zipFile) return;
         try {
