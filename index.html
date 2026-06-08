@@ -4809,20 +4809,23 @@ function analyze() {
     });
     const lenMax=Math.max(...lenBands.map(b=>b.avg),1);
 
-    // 고정 높이 SVG 바 차트 — width:100% + height 고정으로 확대 방지
-    const barSVG = (vals, labels, max, color='#818cf8', barH=38) => {
+    // 고정 높이 SVG 바 차트 — topPad으로 값 라벨 짤림 방지
+    const barSVG = (vals, labels, max, color='#818cf8', barH=36) => {
       const n = vals.length;
       const slotW = Math.floor(220 / n);
       const vbW = n * slotW;
-      const vbH = barH + 14;
-      return `<svg viewBox="0 0 ${vbW} ${vbH}" style="display:block;width:100%;height:${vbH}px;" preserveAspectRatio="xMidYMax meet">
+      const topPad = 13; // 값 라벨 공간
+      const botPad = 13; // 축 라벨 공간
+      const vbH = topPad + barH + botPad;
+      return `<svg viewBox="0 0 ${vbW} ${vbH}" style="display:block;width:100%;height:${vbH}px;">
         ${vals.map((v,i)=>{
-          const bh = Math.max(3, Math.round(v / max * (barH - 2)));
+          const bh = Math.max(3, Math.round(v / max * barH));
           const cx = i * slotW + slotW / 2;
+          const barY = topPad + barH - bh; // 바 상단 y (topPad 아래에서 시작)
           return `
-            <rect x="${i*slotW+2}" y="${barH-bh}" width="${slotW-4}" height="${bh}" rx="3" fill="${color}" opacity="0.82"/>
-            <text x="${cx}" y="${vbH-1}" text-anchor="middle" font-size="8.5" fill="gray" opacity="0.65">${labels[i]}</text>
-            ${v>0 ? `<text x="${cx}" y="${barH-bh-3}" text-anchor="middle" font-size="8" fill="${color}" font-weight="600">${Math.round(v)}</text>` : ''}
+            <rect x="${i*slotW+2}" y="${barY}" width="${slotW-4}" height="${bh}" rx="3" fill="${color}" opacity="0.82"/>
+            <text x="${cx}" y="${topPad+barH+botPad-1}" text-anchor="middle" font-size="8.5" fill="gray" opacity="0.65">${labels[i]}</text>
+            ${v>0 ? `<text x="${cx}" y="${barY-2}" text-anchor="middle" font-size="8" fill="${color}" font-weight="600">${Math.round(v)}</text>` : ''}
           `;
         }).join('')}
       </svg>`;
