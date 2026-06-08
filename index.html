@@ -1444,7 +1444,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.8.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.8.1</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -2003,7 +2003,7 @@ function parseInstagramZIP(jsons, allPaths) {
       reelsArr.forEach(item => {
         const mediaList = item.media || [item];
         mediaList.forEach(m => {
-          const cap = fixStr(m.title || m.caption || '');
+          const cap = fixStr(m.title || m.caption || item.title || item.caption || '');
           const uri = m.uri || item.uri || '';
           const ts  = m.creation_timestamp || item.creation_timestamp || 0;
           const likes    = m.like_count    ?? item.like_count    ?? 0;
@@ -2056,7 +2056,7 @@ function parseInstagramZIP(jsons, allPaths) {
         media.forEach(m => {
           if (m.like_count    !== undefined) { totalLikes    += m.like_count; lcnt++; }
           if (m.comment_count !== undefined)   totalComments += m.comment_count;
-          const cap  = fixStr(m.title || m.caption || '');
+          const cap  = fixStr(m.title || m.caption || p.title || p.caption || '');
           const tags = cap.match(/#[\S]+/g) || [];
           tags.forEach(t => { allTags[t] = (allTags[t]||0)+1; });
           if (m.creation_timestamp) timestamps.push(m.creation_timestamp);
