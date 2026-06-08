@@ -1245,6 +1245,13 @@ function setPartFilter(part, btn) {
     const cp = c.getAttribute('data-part');
     c.style.display = (cp===part||cp==='all') ? '' : 'none';
   });
+  // 필터 적용 후 결과 맨 위로 스크롤 (partNav 바로 아래)
+  const resultEl = document.getElementById('result');
+  const navEl    = document.getElementById('partNav');
+  if (resultEl) {
+    const top = resultEl.getBoundingClientRect().top + window.scrollY - (navEl ? navEl.offsetHeight : 0);
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }
 }
 </script>
 
@@ -3856,8 +3863,12 @@ function analyze() {
     const hookEmoji = { question:'❓', shock:'⚡', story:'📖', list:'📋', none:'—' };
     const hookName  = { question:'질문형', shock:'충격형', story:'스토리형', list:'리스트형', none:'훅 없음' };
 
-    // 전체 릴스 캡션 — 최신순 (역순)
-    const showRaw     = [...reelsRaw].reverse();
+    // 전체 릴스 캡션 — ts 기준 최신순 정렬
+    const showRaw     = [...reelsRaw].sort((a,b)=>{
+      const ta = typeof a==='string' ? 0 : (a.ts||0);
+      const tb = typeof b==='string' ? 0 : (b.ts||0);
+      return tb - ta;
+    });
     const showCaptions = showRaw.map(r => typeof r === 'string' ? r : (r.cap || ''));
     const showUris     = showRaw.map(r => typeof r === 'string' ? '' : (r.uri || ''));
     const showTimes    = showRaw.map(r => typeof r === 'string' ? 0  : (r.ts  || 0));
@@ -4130,6 +4141,7 @@ function analyze() {
           const open=col.style.display!=='none';
           col.style.display=open?'none':'grid';
           this.textContent=open?'전체 ${reelsRestArr.length}개 더 보기 ▼':'접기 ▲';
+          if(open){const card=this.closest('.result-card');const nav=document.getElementById('partNav');if(card){const top=card.getBoundingClientRect().top+window.scrollY-(nav?nav.offsetHeight+8:0);window.scrollTo({top,behavior:'smooth'});}}
         " style="width:100%;padding:10px;border:1.5px solid #c4b5fd;border-radius:10px;background:#faf5ff;color:#6d28d9;font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:8px;">
           전체 ${reelsRestArr.length}개 더 보기 ▼
         </button>
@@ -4463,6 +4475,7 @@ function analyze() {
         const open=col.style.display!=='none';
         col.style.display=open?'none':'grid';
         this.textContent=open?'전체 ${feedRestArr.length}개 더 보기 ▼':'접기 ▲';
+        if(open){const card=this.closest('.result-card');const nav=document.getElementById('partNav');if(card){const top=card.getBoundingClientRect().top+window.scrollY-(nav?nav.offsetHeight+8:0);window.scrollTo({top,behavior:'smooth'});}}
       " style="width:100%;padding:10px;border:1.5px solid #c4b5fd;border-radius:10px;background:#faf5ff;color:#6d28d9;font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:8px;">
         전체 ${feedRestArr.length}개 더 보기 ▼
       </button>
