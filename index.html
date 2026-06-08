@@ -4169,19 +4169,41 @@ function analyze() {
         if (!zipFile) return;
         try {
           const blob = await zipFile.async('blob');
-          const blobUrl = URL.createObjectURL(blob);
           const ext = uri.split('.').pop().toLowerCase();
-          if (['jpg','jpeg','webp','png'].includes(ext)) {
-            // 이미지 커버 — img 요소 직접 생성 (인라인 onload 제거)
+          const isStdImg  = ['jpg','jpeg','webp','png'].includes(ext);
+          const isHeicImg = ['heic','heif','avif'].includes(ext);
+
+          if (isStdImg) {
+            // 일반 이미지 — 직접 표시
+            const blobUrl = URL.createObjectURL(blob);
             const img = document.createElement('img');
             img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:10px;';
             img.onload = () => URL.revokeObjectURL(img.src);
             img.onerror = () => URL.revokeObjectURL(img.src);
             img.src = blobUrl;
-            thumbEl.innerHTML = '';
-            thumbEl.appendChild(img);
+            thumbEl.innerHTML = ''; thumbEl.appendChild(img);
+          } else if (isHeicImg) {
+            // HEIC/HEIF — createImageBitmap으로 OS 네이티브 디코더 사용 (macOS/iOS)
+            try {
+              const bitmap = await createImageBitmap(blob);
+              const canvas = document.createElement('canvas');
+              canvas.width = 72; canvas.height = 72;
+              canvas.getContext('2d').drawImage(bitmap, 0, 0, 72, 72);
+              if (bitmap.close) bitmap.close();
+              thumbEl.innerHTML = `<img src="${canvas.toDataURL('image/jpeg', 0.85)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"/>`;
+            } catch(e2) {
+              // Windows 등 미지원 환경 — blobUrl로 재시도
+              const blobUrl = URL.createObjectURL(blob);
+              const img = document.createElement('img');
+              img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:10px;';
+              img.onload = () => URL.revokeObjectURL(img.src);
+              img.onerror = () => { URL.revokeObjectURL(img.src); thumbEl.innerHTML = '<span style="font-size:1.5rem;">📸</span>'; };
+              img.src = blobUrl;
+              thumbEl.innerHTML = ''; thumbEl.appendChild(img);
+            }
           } else {
             // mp4 영상 — 첫 프레임 캡처
+            const blobUrl = URL.createObjectURL(blob);
             await new Promise(resolve => {
               const video = document.createElement('video');
               video.muted = true;
@@ -4504,26 +4526,48 @@ function analyze() {
         if (!zipFile) return;
         try {
           const blob = await zipFile.async('blob');
-          const blobUrl = URL.createObjectURL(blob);
           const ext = uri.split('.').pop().toLowerCase();
-          if (['jpg','jpeg','webp','png'].includes(ext)) {
+          const isStdImg  = ['jpg','jpeg','webp','png'].includes(ext);
+          const isHeicImg = ['heic','heif','avif'].includes(ext);
+
+          if (isStdImg) {
+            // 일반 이미지
+            const blobUrl = URL.createObjectURL(blob);
             const img = document.createElement('img');
             img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:10px;';
             img.onload = () => URL.revokeObjectURL(img.src);
             img.onerror = () => URL.revokeObjectURL(img.src);
             img.src = blobUrl;
-            thumbEl.innerHTML = '';
-            thumbEl.appendChild(img);
+            thumbEl.innerHTML = ''; thumbEl.appendChild(img);
+          } else if (isHeicImg) {
+            // HEIC/HEIF — createImageBitmap (macOS/iOS OS 네이티브 디코더)
+            try {
+              const bitmap = await createImageBitmap(blob);
+              const canvas = document.createElement('canvas');
+              canvas.width = 70; canvas.height = 70;
+              canvas.getContext('2d').drawImage(bitmap, 0, 0, 70, 70);
+              if (bitmap.close) bitmap.close();
+              thumbEl.innerHTML = `<img src="${canvas.toDataURL('image/jpeg', 0.85)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"/>`;
+            } catch(e2) {
+              const blobUrl = URL.createObjectURL(blob);
+              const img = document.createElement('img');
+              img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:10px;';
+              img.onload = () => URL.revokeObjectURL(img.src);
+              img.onerror = () => { URL.revokeObjectURL(img.src); thumbEl.innerHTML = '<span style="font-size:1.5rem;">📸</span>'; };
+              img.src = blobUrl;
+              thumbEl.innerHTML = ''; thumbEl.appendChild(img);
+            }
           } else {
-            // mp4 등 — 첫 프레임 캡처 (릴스와 동일)
+            // mp4 등 영상 — 첫 프레임 캡처
+            const blobUrl = URL.createObjectURL(blob);
             await new Promise(resolve => {
               const video = document.createElement('video');
               video.muted=true; video.playsInline=true; video.preload='metadata'; video.src=blobUrl;
               const capture = () => {
                 try {
                   const canvas = document.createElement('canvas');
-                  canvas.width=72; canvas.height=72;
-                  canvas.getContext('2d').drawImage(video,0,0,72,72);
+                  canvas.width=70; canvas.height=70;
+                  canvas.getContext('2d').drawImage(video,0,0,70,70);
                   thumbEl.innerHTML=`<img src="${canvas.toDataURL('image/jpeg',0.82)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"/>`;
                 } catch(e){ thumbEl.innerHTML='<span style="font-size:1.5rem;">📸</span>'; }
                 URL.revokeObjectURL(blobUrl); resolve();
