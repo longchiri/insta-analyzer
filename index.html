@@ -1444,7 +1444,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.8.1</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.8.2</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -2231,12 +2231,11 @@ function parseInstagramZIP(jsons, allPaths) {
         if (merged.some(u=>u.reach>0)) d.avgReach = avg('reach');
         if (merged.some(u=>u.impr>0))  d.avgImpressions = avg('impr');
         d._mergedFromHtml = true; // 병합 완료 플래그
-        // topPosts / recentPosts 캡션 포함 재구성 (uriPool에 캡션 있음)
+        // topPosts / recentPosts만 캡션 포함으로 재구성 (uriPool에 캡션+impr 있음)
+        // allInsightPosts는 건드리지 않음 — 릴스 섹션이 allInsightPosts로 매칭하므로
         const toPost = u => ({caption:u.cap||'', reach:u.reach||0, likes:u.likes||0, saves:u.saves||0, shares:u.shares||0, comments:u.comments||0, impr:u.impr||0, ts:u.ts||0});
         d.topPosts    = [...merged].sort((a,b)=>(b.likes+b.saves+b.shares)-(a.likes+a.saves+a.shares)).slice(0,3).map(toPost);
         d.recentPosts = [...merged].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,3).map(toPost);
-        // allInsightPosts도 uriPool 기반으로 교체 (캡션 + impr 포함)
-        d.allInsightPosts = merged.map(toPost);
       }
     }
   } catch(e) { console.warn('ZIP↔HTML 매칭 오류:', e); }
