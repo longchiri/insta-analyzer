@@ -1444,7 +1444,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.8.3</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.8.4</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -4143,6 +4143,12 @@ function analyze() {
         const reelsPinnedArr = [...reelsPinnedSet];
         const reelsRestArr   = showCaptions.map((_,i)=>i).filter(i=>!reelsPinnedSet.has(i));
 
+        // 릴스 최고 노출 — 진행바 상대 기준 (피드 카드와 동일)
+        const rlMaxImpr = Math.max(0, ...showCaptions.map((_,i) => {
+          const _ins = matchInsight(showCaptions[i], showTimes[i]);
+          return _ins ? (_ins.impr || 0) : 0;
+        }));
+
         // 릴스 개별 피드백 생성
         const getReelFb = (a, ins, extra={}) => {
           const { cap='', ts=0, zipLikes=0, zipComments=0 } = extra;
@@ -4278,6 +4284,9 @@ function analyze() {
           // ZIP에서 직접 추출한 좋아요·댓글
           const zipLikes    = typeof raw==='object' ? (raw.likes    || 0) : 0;
           const zipComments = typeof raw==='object' ? (raw.comments || 0) : 0;
+          // 노출 진행바 (릴스 전체 최고 노출 대비 %)
+          const rlImpr    = ins ? (ins.impr || 0) : 0;
+          const rlImprBarW = rlMaxImpr > 0 ? Math.round(rlImpr / rlMaxImpr * 100) : 0;
           const checks = [
             {ok:a.hasHashtag,label:`해시태그 ${a.tagCount}개`},
             {ok:a.hasCTAkw,label:'CTA 포함'},
@@ -4320,6 +4329,7 @@ function analyze() {
                 <span style="font-size:0.78rem;font-weight:700;color:${scoreBorder(a.score)};">${scoreLabel(a.score)} (${a.score}/6)</span>
               </div>
               <div style="font-size:0.8rem;color:#555;background:white;border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.5;word-break:break-all;">${preview}</div>
+              ${rlImpr>0?`<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:0.68rem;color:#888;margin-bottom:2px;"><span>📢 노출 ${rlImpr.toLocaleString()}회</span><span>${rlImprBarW}%</span></div><div style="height:5px;background:#e5e7eb;border-radius:99px;overflow:hidden;"><div style="width:${rlImprBarW}%;height:100%;background:linear-gradient(90deg,#818cf8,#6d28d9);border-radius:99px;"></div></div></div>`:''}
               <div style="display:flex;flex-wrap:wrap;gap:5px;">${checks.map(c=>`<span style="padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}</div>
               ${insHtml}
               ${rFb}
