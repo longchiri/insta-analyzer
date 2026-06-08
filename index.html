@@ -1362,7 +1362,7 @@ function setPartFilter(part, btn) {
   <!-- ════════════ 👥 오디언스 ════════════ -->
   <!-- 팔로워 오디언스 -->
   <div class="result-card" data-part="audience">
-    <h2>👥 팔로워 오디언스 분석</h2>
+    <h2>📡 도달 · 오디언스 분석</h2>
     <div id="audienceSection"></div>
   </div>
 
@@ -2634,18 +2634,26 @@ function analyze() {
   }
 
   // ── 콘텐츠 성과 ──
+  const _nfrPctCm = D.nonFollowerReach || 0;
+  const _nfCntCm  = (_nfrPctCm > 0 && D.avgReach) ? Math.round(D.avgReach * _nfrPctCm / 100) : 0;
+  const _fCntCm   = D.avgReach ? D.avgReach - _nfCntCm : 0;
   const cMetrics = [
-    { label:'평균 노출',    val: D.avgReach    ? D.avgReach.toLocaleString()   : '—' },
-    { label:'평균 좋아요',  val: D.avgLikes    ? D.avgLikes                    : '—' },
-    { label:'평균 저장',    val: D.avgSaves    ? D.avgSaves                    : '—' },
-    { label:'평균 공유',    val: D.avgShares   ? D.avgShares                   : '—' },
-    { label:'팔로워',       val: D.followers   ? D.followers.toLocaleString()  : '—' },
-    { label:'팔로잉',       val: D.following   ? D.following.toLocaleString()  : '—' },
-    { label:'팔/팔 비율',   val: ffRatio ? ffRatio.toFixed(2)+'x'             : '—' },
-    { label:'DM 대화',      val: D.dmCount     ? D.dmCount+'개'                : '—' },
+    { label:'평균 도달',    val: D.avgReach    ? D.avgReach.toLocaleString()   : '—', sub:'총 도달 (팔+비팔)' },
+    { label:'비팔 도달',    val: _nfCntCm      ? _nfCntCm.toLocaleString()     : (_nfrPctCm ? _nfrPctCm+'%' : '—'), sub: _nfCntCm ? _nfrPctCm+'% · 비팔로워' : '비팔로워 도달' },
+    { label:'팔로워 도달',  val: _fCntCm && _nfCntCm ? _fCntCm.toLocaleString() : '—', sub: _nfrPctCm ? (100-_nfrPctCm)+'% · 팔로워' : '팔로워 도달' },
+    { label:'평균 좋아요',  val: D.avgLikes    ? D.avgLikes                    : '—', sub:'' },
+    { label:'평균 저장',    val: D.avgSaves    ? D.avgSaves                    : '—', sub: D.saveRate  ? '저장율 '+D.saveRate.toFixed(1)+'%' : '' },
+    { label:'평균 공유',    val: D.avgShares   ? D.avgShares                   : '—', sub: D.shareRate ? '공유율 '+D.shareRate.toFixed(1)+'%' : '' },
+    { label:'인게이지먼트율', val: D.engagementRate ? D.engagementRate.toFixed(2)+'%' : '—', sub:'팔로워 대비' },
+    { label:'팔로워',       val: D.followers   ? D.followers.toLocaleString()  : '—', sub: D.following ? '팔로잉 '+D.following.toLocaleString() : '' },
+    { label:'DM 대화',      val: D.dmCount     ? D.dmCount+'개'                : '—', sub:'' },
   ];
   document.getElementById('contentMetrics').innerHTML = cMetrics.map(m => `
-    <div class="metric-box"><div class="m-val">${m.val}</div><div class="m-label">${m.label}</div></div>`).join('');
+    <div class="metric-box">
+      <div class="m-val">${m.val}</div>
+      <div class="m-label">${m.label}</div>
+      ${m.sub ? `<div style="font-size:0.65rem;color:#aaa;margin-top:2px;">${m.sub}</div>` : ''}
+    </div>`).join('');
 
   // 탑 게시물
   let topHTML = '';
@@ -2732,6 +2740,62 @@ function analyze() {
 
   // ── 오디언스 ──
   let audHTML = '';
+
+  // ── 도달 분석 블록 (항상 맨 위에 추가) ──
+  if (D.avgReach > 0 || D.nonFollowerReach > 0) {
+    const nfrPct = D.nonFollowerReach
+      || (D.avgReach && D.followers ? Math.max(0, Math.round((1 - D.followers/D.avgReach)*100)) : 0);
+    const nfCnt  = D.avgReach ? Math.round(D.avgReach * nfrPct / 100) : 0;
+    const fCnt   = D.avgReach ? D.avgReach - nfCnt : 0;
+    const diagColor = nfrPct>=80 ? '#166534' : nfrPct>=50 ? '#92400e' : nfrPct>=20 ? '#b45309' : '#991b1b';
+    const diagBg    = nfrPct>=80 ? '#f0fdf4' : nfrPct>=50 ? '#fffbeb' : nfrPct>=20 ? '#fff7ed' : '#fef2f2';
+    const diagMsg   = nfrPct>=80
+      ? '🚀 알고리즘이 탐색·릴스 피드에 콘텐츠를 공격적으로 배포 중입니다. 신규 팔로워 유입 최적 상태예요.'
+      : nfrPct>=50
+      ? '📡 알고리즘 배포가 활발해요. 훅(첫 3초)·저장 유도 CTA를 강화하면 배포 범위가 더 넓어집니다.'
+      : nfrPct>=20
+      ? '⚠️ 기존 팔로워 위주로 노출되고 있어요. 릴스 비중을 늘리고 해시태그 전략을 재점검하세요.'
+      : nfrPct>0
+      ? '🔴 알고리즘 배포가 제한적입니다. 저장·공유 CTA와 릴스 최적화가 시급해요.'
+      : 'ℹ️ 비팔 도달 비율 데이터가 없어요. 수동 입력 탭에서 비팔로워 도달 비율(%)을 입력하면 상세 진단이 가능합니다.';
+
+    audHTML += `
+    <p class="tag-section-title">📡 도달 분석 <span style="font-size:0.7rem;color:#aaa;font-weight:400;">— 게시물 평균 기준</span></p>
+
+    <!-- 3분할 수치 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="text-align:center;background:#f5f3ff;border-radius:10px;padding:12px 4px;">
+        <div style="font-size:1.15rem;font-weight:800;color:#7c3aed;">${D.avgReach ? D.avgReach.toLocaleString() : '—'}</div>
+        <div style="font-size:0.7rem;color:#666;margin-top:2px;">총 도달</div>
+        <div style="font-size:0.62rem;color:#aaa;">팔+비팔 합산</div>
+      </div>
+      <div style="text-align:center;background:#f0fdf4;border-radius:10px;padding:12px 4px;">
+        <div style="font-size:1.15rem;font-weight:800;color:#16a34a;">${nfCnt ? nfCnt.toLocaleString() : (nfrPct?nfrPct+'%':'—')}</div>
+        <div style="font-size:0.7rem;color:#666;margin-top:2px;">비팔 도달</div>
+        <div style="font-size:0.62rem;color:#16a34a;font-weight:700;">${nfrPct ? nfrPct+'%' : ''}</div>
+      </div>
+      <div style="text-align:center;background:#eff6ff;border-radius:10px;padding:12px 4px;">
+        <div style="font-size:1.15rem;font-weight:800;color:#2563eb;">${fCnt && nfCnt ? fCnt.toLocaleString() : '—'}</div>
+        <div style="font-size:0.7rem;color:#666;margin-top:2px;">팔로워 도달</div>
+        <div style="font-size:0.62rem;color:#2563eb;font-weight:700;">${nfrPct ? (100-nfrPct)+'%' : ''}</div>
+      </div>
+    </div>
+
+    <!-- 비팔 비율 바 -->
+    ${nfrPct > 0 ? `
+    <div style="background:#f3f4f6;border-radius:99px;height:18px;overflow:hidden;position:relative;">
+      <div style="position:absolute;left:0;top:0;height:100%;width:${nfrPct}%;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:99px;transition:width 0.8s;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:0.68rem;color:#aaa;">
+      <span>비팔로워 ${nfrPct}%</span><span>팔로워 ${100-nfrPct}%</span>
+    </div>` : ''}
+
+    <!-- 진단 -->
+    <div style="margin-top:10px;padding:9px 12px;background:${diagBg};border-radius:8px;font-size:0.75rem;color:${diagColor};line-height:1.5;">
+      ${diagMsg}
+    </div>
+    <hr class="section-divider"/>`;
+  }
 
   // 성별
   const male   = D.gender?.male   || 0;
