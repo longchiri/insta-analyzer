@@ -4002,8 +4002,14 @@ function analyze() {
           const blobUrl = URL.createObjectURL(blob);
           const ext = uri.split('.').pop().toLowerCase();
           if (['jpg','jpeg','webp','png'].includes(ext)) {
-            // 이미지 커버
-            thumbEl.innerHTML = `<img src="${blobUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onload="URL.revokeObjectURL(this.src)"/>`;
+            // 이미지 커버 — img 요소 직접 생성 (인라인 onload 제거)
+            const img = document.createElement('img');
+            img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:10px;';
+            img.onload = () => URL.revokeObjectURL(img.src);
+            img.onerror = () => URL.revokeObjectURL(img.src);
+            img.src = blobUrl;
+            thumbEl.innerHTML = '';
+            thumbEl.appendChild(img);
           } else {
             // mp4 영상 — 첫 프레임 캡처
             await new Promise(resolve => {
@@ -4281,7 +4287,13 @@ function analyze() {
           const blobUrl = URL.createObjectURL(blob);
           const ext = uri.split('.').pop().toLowerCase();
           if (['jpg','jpeg','webp','png'].includes(ext)) {
-            thumbEl.innerHTML = `<img src="${blobUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onload="URL.revokeObjectURL(this.src)"/>`;
+            const img = document.createElement('img');
+            img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:10px;';
+            img.onload = () => URL.revokeObjectURL(img.src);
+            img.onerror = () => URL.revokeObjectURL(img.src);
+            img.src = blobUrl;
+            thumbEl.innerHTML = '';
+            thumbEl.appendChild(img);
           } else {
             // mp4 등 — 첫 프레임 캡처 (릴스와 동일)
             await new Promise(resolve => {
