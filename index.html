@@ -3936,44 +3936,126 @@ function analyze() {
         const reelsRestArr   = showCaptions.map((_,i)=>i).filter(i=>!reelsPinnedSet.has(i));
 
         // 릴스 개별 피드백 생성
-        const getReelFb = (a, ins) => {
+        const getReelFb = (a, ins, extra={}) => {
+          const { cap='', ts=0, zipLikes=0, zipComments=0 } = extra;
           const goods=[], bads=[], tips=[];
 
-          // 캡션 퀄리티 기반
-          if (a.score >= 5) goods.push('캡션 점수 우수 ('+a.score+'/6) — 훅·CTA·해시태그·이모지가 고루 갖춰져 있어요');
-          else if (a.score <= 2) { bads.push('캡션 점수가 낮아요 ('+a.score+'/6) — 여러 요소가 부족해요'); }
+          // ── ① 캡션 종합 점수 ──
+          const scoreTxt=['—','매우 부족','부족','보통','양호','우수','완벽'];
+          if (a.score >= 5) goods.push(`캡션 종합 ${a.score}/6 · ${scoreTxt[a.score]} — 훅·CTA·해시태그·이모지·길이가 고루 갖춰져 있어요`);
+          else if (a.score >= 3) tips.push(`캡션 점수 ${a.score}/6 · ${scoreTxt[a.score]} — 아래 항목 중 빠진 것을 채우면 점수가 올라요`);
+          else bads.push(`캡션 종합 점수 낮음 (${a.score}/6 · ${scoreTxt[a.score]}) — 기본 요소 여러 개가 빠져있어요`);
 
-          if (a.hook !== 'none') goods.push('훅 유형 "'+hookName[a.hook]+'"으로 시작 — 첫 줄이 시청을 유도해요');
-          else { bads.push('캡션 훅이 없어요 — 첫 줄이 밋밋해요'); tips.push('"혹시 이거 알고 계셨나요?" / "3가지만 알면 됩니다" 같은 질문·숫자·공감형 훅으로 시작해보세요'); }
+          // ── ② 훅 ──
+          if (a.hook !== 'none') {
+            goods.push(`"${hookName[a.hook]}" 훅 사용 — 첫 줄이 스크롤을 멈추게 해요`);
+          } else {
+            bads.push('첫 줄 훅이 없어요 — 스크롤을 멈출 이유가 없어요');
+            tips.push('훅 3공식: ① 질문형 "이거 알고 계셨나요?" ② 숫자형 "3가지만 알면 됩니다" ③ 공감형 "이런 경험 다들 있죠?"');
+          }
 
-          if (!a.hasCTAkw) { bads.push('CTA(행동 유도)가 없어요'); tips.push('"저장해두세요 📌" "팔로우하면 더 볼 수 있어요" 등 CTA를 캡션 끝에 넣어보세요'); }
+          // ── ③ CTA ──
+          if (!a.hasCTAkw) {
+            bads.push('CTA(행동 유도)가 없어요 — 시청 후 저장·팔로우·댓글로 이어지지 않아요');
+            tips.push('CTA 3종: "저장해두세요 📌" / "팔로우하면 더 볼 수 있어요" / "댓글로 의견 남겨주세요 👇"');
+          } else {
+            goods.push('CTA 포함 — 저장·팔로우·댓글 행동이 유도되고 있어요');
+          }
 
-          if (!a.hasHashtag) { bads.push('해시태그가 없어요 — 탐색·발견 노출이 줄어요'); tips.push('관련 해시태그 5~15개 (대형 1~2 + 중형 3~5 + 소형 3~5)를 추가하세요'); }
-          else if (a.tagCount >= 5) goods.push('해시태그 '+a.tagCount+'개 포함 — 탐색 노출 기회가 높아요');
+          // ── ④ 해시태그 ──
+          if (!a.hasHashtag) {
+            bads.push('해시태그 없음 — 탐색 피드 노출이 0이에요');
+            tips.push('황금 비율: 대형(100만+) 2개 + 중형(10~100만) 4개 + 소형(1만 이하) 5~6개 = 10~12개');
+          } else if (a.tagCount < 5) {
+            bads.push(`해시태그 ${a.tagCount}개 — 너무 적어요`);
+            tips.push(`10~15개로 늘리세요. 소형 해시태그(1만 이하) 위주로 보충하면 탐색 노출이 늘어요`);
+          } else if (a.tagCount >= 12) {
+            goods.push(`해시태그 ${a.tagCount}개 — 탐색 노출 범위가 넓어요`);
+          } else {
+            goods.push(`해시태그 ${a.tagCount}개 포함`);
+          }
 
-          if (!a.lenOk) { bads.push('캡션 길이가 너무 짧거나 길어요 ('+a.len+'자)'); tips.push('캡션은 150~400자 사이가 알고리즘 친화적이에요. 핵심 정보 + CTA + 해시태그 구성으로 맞춰보세요'); }
+          // ── ⑤ 캡션 길이·가독성 ──
+          if (a.len < 50) {
+            bads.push(`캡션이 너무 짧아요 (${a.len}자) — 정보량 부족 + 알고리즘 저평가`);
+            tips.push('구조: 훅(1~2줄) + 핵심 내용(3~5줄) + CTA(1줄) + 해시태그 → 150~350자 최적');
+          } else if (a.len >= 150 && a.len <= 400) {
+            goods.push(`캡션 길이 최적 (${a.len}자) — 알고리즘 친화 구간이에요`);
+          } else if (a.len > 500) {
+            tips.push(`캡션 길어요 (${a.len}자) — 앱에서 "더 보기"로 잘려요. 핵심 훅을 첫 125자 안에 압축하세요`);
+          }
+          if (!a.hasLineBreak && a.len > 80) tips.push('줄바꿈 없음 — 문단을 나누면 가독성↑ "더보기" 클릭↑이에요');
+          if (!a.hasEmoji && a.len > 30) tips.push('이모지 없음 — 훅 앞·CTA 앞에 이모지를 넣으면 클릭률이 올라가요');
 
-          // 인사이트 기반 (매칭된 경우만)
+          // ── ⑥ 콘텐츠 유형 분류 ──
+          let cType = null;
+          if (/(방법|꿀팁|tip|가이드|정리|알려드|설명|공략|법칙|이유|차이|원인)/i.test(cap)) cType = '정보형';
+          else if (/(나만|진짜|솔직|공감|힘들|행복|감사|사랑|일상)/i.test(cap)) cType = '공감형';
+          else if (/(할인|구매|구입|링크|판매|세일|이벤트|출시)/i.test(cap)) cType = '홍보형';
+          else if (/\?/.test(cap.slice(0,40))) cType = '질문형';
+          if (cType) {
+            const cMsg = {정보형:'저장율이 높아요. 체크리스트·가이드 형태를 유지하세요', 공감형:'댓글이 많이 달려요. 공감 질문 CTA를 마지막에 넣어보세요', 홍보형:'도달이 좁을 수 있어요. 가치 제공형 콘텐츠를 먼저 섞어야 알고리즘이 밀어줘요', 질문형:'댓글 반응 유도에 효과적이에요. 댓글이 늘면 배포가 확대돼요'}[cType];
+            goods.push(`콘텐츠 유형 "${cType}" — ${cMsg}`);
+          }
+
+          // ── ⑦ 인사이트 심층 분석 ──
           if (ins) {
-            const plays=ins.plays||0,reach=ins.reach||0,impr=ins.impr||0,saves=ins.saves||0,shares=ins.shares||0;
+            const plays=ins.plays||0, reach=ins.reach||0, impr=ins.impr||0;
+            const saves=ins.saves||0, shares=ins.shares||0;
+            const likes=ins.likes||zipLikes||0, comments=ins.comments||zipComments||0;
+
             if (plays>0&&reach>0) {
               const plR=plays/reach*100;
-              if (plR>=200) goods.push('조회/도달 비율 '+plR.toFixed(0)+'% — 한 명이 여러 번 볼 정도로 매력적인 영상이에요');
-              else if (plR<80) { bads.push('조회수 대비 도달이 낮아요 (조회/도달 '+plR.toFixed(0)+'%)'); tips.push('영상 첫 3초 훅을 강화하고 루프 포인트(끝에서 시작으로 이어지는 구성)를 만들어보세요'); }
+              if (plR>=300) goods.push(`조회/도달 ${plR.toFixed(0)}% — 평균 3회 이상 반복 시청! 루프 구성이 완벽해요`);
+              else if (plR>=150) goods.push(`조회/도달 ${plR.toFixed(0)}% — 반복 시청이 활발해요. 알고리즘 배포 신호가 강해요`);
+              else if (plR<80) { bads.push(`조회/도달 낮음 (${plR.toFixed(0)}%) — 한 번 보고 이탈이 많아요`); tips.push('영상 첫 1~3초 텍스트 훅 + 강렬한 오프닝, 끝에서 처음으로 이어지는 루프를 만들어보세요'); }
+            }
+            if (reach>0) {
+              const svR=saves/reach*100;
+              if (svR>=3) goods.push(`저장율 ${svR.toFixed(1)}% — 알고리즘 최강 신호. 이 형식을 계속 유지하세요`);
+              else if (svR>=1) goods.push(`저장율 ${svR.toFixed(1)}% — 저장이 꾸준히 발생해요`);
+              else if (reach>200) { bads.push(`저장율 낮음 (${svR.toFixed(1)}%)`); tips.push('"저장해두세요 📌" CTA + 정보형·체크리스트 콘텐츠로 저장 욕구를 만들어보세요'); }
+              if (shares>0) {
+                const shR=shares/reach*100;
+                if (shR>=1) goods.push(`공유율 ${shR.toFixed(1)}% — 바이럴 시작점이에요. 탁월해요`);
+                else if (shR>=0.3) goods.push(`공유율 ${shR.toFixed(1)}% — 공유가 발생하고 있어요`);
+              } else if (reach>300) {
+                tips.push('공유 0 — "주변에 공유해주세요 🔗" CTA + 공감형·정보형 콘텐츠를 섞어보세요');
+              }
+              if (likes>0&&saves>0) {
+                const lvs=likes/saves;
+                if (lvs<=3) goods.push(`좋아요:저장 ${lvs.toFixed(1)}:1 — 소비보다 저장이 많아요. 정보 가치가 높은 콘텐츠예요`);
+                else if (lvs>20) tips.push(`좋아요(${likes})는 많지만 저장(${saves})이 적어요 (${lvs.toFixed(0)}:1) — 오락성은 높지만 정보 가치 낮아요. 실용 팁을 추가해보세요`);
+              }
+              if (comments>0) {
+                const cmR=comments/reach*100;
+                if (cmR>=0.5) goods.push(`댓글율 ${cmR.toFixed(1)}% — 커뮤니티 반응 강해요. 알고리즘이 댓글 많은 콘텐츠를 좋아해요`);
+              } else if (reach>300) {
+                tips.push('댓글 0 — 캡션 끝에 "댓글로 알려주세요 👇" 또는 양자택일 질문을 넣으면 댓글이 폭발해요');
+              }
             }
             if (impr>0&&reach>0) {
               const drR=reach/impr*100;
-              if (drR<25) { bads.push('노출 대비 도달이 낮아요 ('+drR.toFixed(0)+'%) — 썸네일 클릭이 적어요'); tips.push('첫 프레임을 더 강렬하게 만들고, 자막·텍스트 오버레이로 궁금증을 유발해보세요'); }
+              if (drR<25) { bads.push(`노출→도달 전환 낮음 (${drR.toFixed(0)}%) — 썸네일·첫프레임 클릭이 적어요`); tips.push('첫 프레임에 텍스트 오버레이("이거 모르면 손해") + 강렬한 색상 대비를 추가해보세요'); }
+              else if (drR>=60) goods.push(`노출→도달 전환 우수 (${drR.toFixed(0)}%)`);
             }
-            if (saves>0&&reach>0) {
-              const svR=saves/reach*100;
-              if (svR>=2) goods.push('저장율 '+svR.toFixed(1)+'% — 릴스에서 저장은 알고리즘 최강 신호예요');
-              else if (svR<0.5) tips.push('릴스 캡션이나 영상 마지막에 "저장해두세요 📌" 유도를 넣어보세요');
+          } else if (zipLikes>0||zipComments>0) {
+            if (zipLikes>0&&zipComments>0) {
+              const lcR=zipComments/zipLikes*100;
+              if (lcR>=5) goods.push(`댓글/좋아요 비율 ${lcR.toFixed(0)}% — 커뮤니티 반응이 강한 콘텐츠예요`);
+              else if (lcR<1&&zipLikes>50) tips.push(`좋아요(${zipLikes}) 대비 댓글(${zipComments})이 적어요 — 캡션 끝 질문 CTA를 추가하면 댓글이 늘어요`);
             }
-            if (shares>0&&reach>0) {
-              const shR=shares/reach*100;
-              if (shR>=0.5) goods.push('공유율 '+shR.toFixed(1)+'% — 공유는 릴스 바이럴의 핵심 지표예요');
-            }
+            if (zipLikes>=200) goods.push(`좋아요 ${zipLikes.toLocaleString()}개 — 반응이 좋은 콘텐츠예요`);
+            else if (zipLikes>0&&zipLikes<30) tips.push(`좋아요가 적어요 (${zipLikes}개) — 훅·CTA·해시태그를 점검하고 팔로워 피크 시간에 업로드해보세요`);
+          }
+
+          // ── ⑧ 업로드 타이밍 ──
+          if (ts>0) {
+            const d=new Date(ts*1000), day=d.getDay(), hour=d.getHours();
+            const dayKr=['일','월','화','수','목','금','토'][day];
+            if (hour>=18&&hour<=21) goods.push(`업로드 타이밍 최적 (${dayKr}요일 ${hour}시) — 팔로워 활동 피크 구간이에요`);
+            else if (hour>=12&&hour<=14) goods.push(`업로드 타이밍 양호 (${dayKr}요일 ${hour}시) — 점심 피크 구간`);
+            else if (hour<7) tips.push(`업로드 시간 개선 필요 (현재 ${dayKr}요일 ${hour}시) — 저녁 18~21시 또는 점심 12~14시로 옮기면 초기 반응이 빨라져요`);
           }
 
           return {goods, bads, tips};
@@ -4020,7 +4102,7 @@ function analyze() {
               ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px;">${ms.map(m=>`<div style="background:white;border-radius:7px;padding:5px 7px;text-align:center;border:1px solid #e9d5ff;"><div style="font-size:0.65rem;color:#aaa;">${m.label}</div><div style="font-size:0.82rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`
               : '';
           })();
-          const rFb = fbHtml(getReelFb(a, ins));
+          const rFb = fbHtml(getReelFb(a, ins, { cap, ts: showTimes[i], zipLikes, zipComments }));
           return `
           <div style="background:${scoreBg(a.score)};border:1.5px solid ${scoreBorder(a.score)};border-radius:12px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;">
             <div id="reel-thumb-${i}" style="width:72px;height:128px;flex-shrink:0;border-radius:10px;background:#e8e0f5;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:4px;"><span style="font-size:1.6rem;">🎬</span><span style="font-size:0.6rem;color:#888;">#${i+1}</span></div>
@@ -4207,35 +4289,84 @@ function analyze() {
     // 피드백 생성 함수
     const getFeedFb = (p) => {
       const r=p.reach||0, impr=p.impr||0;
-      const eng=r>0?((p.likes+p.saves+p.shares+(p.comments||0))/r*100):0;
-      const svR=r>0?(p.saves/r*100):0, shR=r>0?(p.shares/r*100):0, drR=impr>0?(r/impr*100):0;
+      const eng=r>0?((p.likes+(p.saves||0)+(p.shares||0)+(p.comments||0))/r*100):0;
+      const svR=r>0?((p.saves||0)/r*100):0;
+      const shR=r>0?((p.shares||0)/r*100):0;
+      const lkR=r>0?((p.likes||0)/r*100):0;
+      const drR=impr>0?(r/impr*100):0;
       const goods=[], bads=[], tips=[];
 
-      // 도달
-      if(r>fpAvgReach*1.2) goods.push('평균보다 도달이 '+Math.round(r/fpAvgReach*100)+'% 높아요 — 알고리즘이 이 게시물을 적극 배포했어요');
-      else if(r>0&&r<fpAvgReach*0.7){bads.push('평균보다 도달이 낮아요 ('+r.toLocaleString()+'명)'); tips.push('해시태그를 대형(100만+)·중형(10만)·소형(1만 이하) 3단계로 섞고, 팔로워 활동 피크 시간대에 업로드해보세요');}
+      // ── ① 도달 (vs 채널 평균) ──
+      if(r>fpAvgReach*1.3) goods.push(`도달 ${r.toLocaleString()}명 — 채널 평균 대비 ${Math.round(r/fpAvgReach*100-100)}% 높아요. 알고리즘이 이 게시물을 적극 배포했어요`);
+      else if(r>0&&r<fpAvgReach*0.6){ bads.push(`도달이 평균보다 낮아요 (${r.toLocaleString()}명 vs 평균 ${fpAvgReach.toLocaleString()}명)`); tips.push('해시태그를 대형·중형·소형 3단계로 섞고, 팔로워 피크 시간(저녁 18~21시)에 업로드해보세요'); }
+      else if(r>0&&fpAvgReach>0) tips.push(`도달 ${r.toLocaleString()}명 — 채널 평균(${fpAvgReach.toLocaleString()}명)과 비슷해요`);
 
-      // 노출 효율
-      if(impr>0&&drR<30){bads.push('노출 대비 도달률이 낮아요 ('+drR.toFixed(0)+'%) — 많이 노출됐지만 클릭·시청이 적어요'); tips.push('커버 이미지나 영상 첫 프레임을 더 눈에 띄게, 캡션 첫 줄 훅을 강화하세요');}
-      else if(impr>0&&drR>=60) goods.push('노출→도달 전환율이 우수해요 ('+drR.toFixed(0)+'%) — 배포된 만큼 실제로 잘 도달하고 있어요');
+      // ── ② 노출 효율 ──
+      if(impr>0&&drR<30){ bads.push(`노출→도달 전환 낮음 (${drR.toFixed(0)}%) — 노출됐지만 클릭·참여가 적어요`); tips.push('커버 이미지를 더 눈에 띄게 개선하고, 캡션 첫 줄에 강한 훅을 넣어보세요'); }
+      else if(impr>0&&drR>=60) goods.push(`노출→도달 전환 우수 (${drR.toFixed(0)}%) — 노출 대비 실제 도달이 높아요`);
 
-      // 인게이지먼트
-      if(eng>=5) goods.push('인게이지먼트율 '+eng.toFixed(1)+'% — 팔로워 반응이 활발해요. 알고리즘이 이 콘텐츠를 좋아해요');
-      else if(eng>0&&eng<2){bads.push('인게이지먼트율이 낮아요 ('+eng.toFixed(1)+'%)'); tips.push('캡션 마지막에 "여러분은 어떻게 생각하세요?" 같은 질문 한 줄이나 "댓글로 알려주세요" CTA를 넣어보세요');}
+      // ── ③ 인게이지먼트율 ──
+      if(eng>=7) goods.push(`인게이지먼트율 ${eng.toFixed(1)}% — 탁월해요! 알고리즘이 계속 밀어줄 콘텐츠예요`);
+      else if(eng>=4) goods.push(`인게이지먼트율 ${eng.toFixed(1)}% — 팔로워 반응이 좋아요`);
+      else if(eng>=2) tips.push(`인게이지먼트율 ${eng.toFixed(1)}% — 더 높일 수 있어요. 캡션 끝 질문 CTA + 카드뉴스·정보형 포맷을 시도해보세요`);
+      else if(eng>0&&eng<2){ bads.push(`인게이지먼트율이 낮아요 (${eng.toFixed(1)}%)`); tips.push('캡션 마지막에 "여러분은 어떻게 생각하세요?" 질문 한 줄 + "댓글로 알려주세요 👇" CTA를 추가해보세요'); }
 
-      // 저장
-      if(svR>=3) goods.push('저장율 '+svR.toFixed(1)+'% — 정보 가치를 인정받고 있어요. 저장은 알고리즘 부스터예요');
-      else if(p.saves===0&&r>200){bads.push('저장이 0개예요 — 알고리즘 신호가 매우 약해요'); tips.push('체크리스트·꿀팁·비교 콘텐츠처럼 "나중에 다시 보고 싶은" 정보를 담고 "저장해두세요 📌" CTA를 캡션에 추가하세요');}
-      else if(svR>0&&svR<1){bads.push('저장율이 낮아요 ('+svR.toFixed(1)+'%)'); tips.push('"저장해두세요 📌" CTA를 캡션에 추가하고, 저장 욕구를 높이는 정보형·리스트형 콘텐츠로 전환해보세요');}
+      // ── ④ 저장 ──
+      if(svR>=3) goods.push(`저장율 ${svR.toFixed(1)}% — 알고리즘 부스터. 정보 가치를 인정받고 있어요`);
+      else if(svR>=1) goods.push(`저장율 ${svR.toFixed(1)}% — 저장이 발생하고 있어요`);
+      else if((p.saves||0)===0&&r>200){ bads.push('저장 0개 — 알고리즘 신호가 매우 약해요'); tips.push('체크리스트·꿀팁·비교표 콘텐츠는 저장율이 높아요. "저장해두세요 📌" CTA도 캡션에 꼭 추가하세요'); }
+      else if(svR>0&&svR<1) tips.push(`저장율 ${svR.toFixed(1)}% — "저장해두세요 📌" CTA + 정보형·리스트형 콘텐츠로 전환하면 저장율이 올라가요`);
 
-      // 공유
-      if(shR>=1) goods.push('공유율 '+shR.toFixed(1)+'% — 공유는 알고리즘에서 저장보다 강한 신호예요. 잘 하고 있어요');
-      else if(p.shares===0&&r>300){tips.push('공유 유도: "주변에 알려주세요" 한 줄 추가하거나, 카드뉴스·공감형 콘텐츠로 공유 욕구를 만들어보세요');}
+      // ── ⑤ 공유 ──
+      if(shR>=1) goods.push(`공유율 ${shR.toFixed(1)}% — 공유는 저장보다 강한 알고리즘 신호예요. 바이럴 잠재력이 있어요`);
+      else if(shR>=0.3) goods.push(`공유율 ${shR.toFixed(1)}% — 공유가 발생하고 있어요`);
+      else if((p.shares||0)===0&&r>300) tips.push('"주변 분들과 공유해주세요 🔗" CTA + 공감형·정보형 콘텐츠로 공유 욕구를 높이세요');
 
-      // 좋아요만 있고 저장·공유 없음
-      if(p.likes>0&&p.saves===0&&p.shares===0&&r>100){
+      // ── ⑥ 좋아요율 ──
+      if(lkR>=5) goods.push(`좋아요율 ${lkR.toFixed(1)}% — 콘텐츠에 대한 긍정 반응이 강해요`);
+      else if(lkR>0&&lkR<1&&r>200) tips.push(`좋아요율이 낮아요 (${lkR.toFixed(1)}%) — 공감형·감성형 콘텐츠로 전환하면 좋아요가 늘어요`);
+
+      // ── ⑦ 좋아요:저장 비율 ──
+      if((p.likes||0)>0&&(p.saves||0)>0){
+        const lvs=(p.likes||0)/(p.saves||0);
+        if(lvs<=3) goods.push(`좋아요:저장 비율 ${lvs.toFixed(1)}:1 — 저장이 매우 활발해요. 정보 가치가 높은 콘텐츠예요`);
+        else if(lvs>20) tips.push(`좋아요(${p.likes})는 많지만 저장(${p.saves})이 적어요 (${lvs.toFixed(0)}:1) — 오락성은 높지만 정보 가치가 낮아요. 실용 팁을 추가해보세요`);
+      } else if((p.likes||0)>0&&(p.saves||0)===0&&(p.shares||0)===0&&r>100){
         bads.push('좋아요는 있지만 저장·공유가 0이에요');
-        tips.push('좋아요보다 저장·공유가 알고리즘에 3~5배 강한 신호예요. 정보형·실용형 콘텐츠로 전환하면 저장율이 올라가요');
+        tips.push('저장·공유가 좋아요보다 알고리즘에 3~5배 강한 신호예요. 정보형·실용형 콘텐츠로 전환하면 저장율이 올라가요');
+      }
+
+      // ── ⑧ 댓글 비율 ──
+      if((p.comments||0)>0&&r>0){
+        const cmR=(p.comments||0)/r*100;
+        if(cmR>=0.5) goods.push(`댓글율 ${cmR.toFixed(1)}% — 커뮤니티 반응이 활발해요. 댓글은 강한 알고리즘 신호예요`);
+        else if(cmR<0.1&&r>500) tips.push('댓글율이 매우 낮아요 — 양자택일 질문("A or B? 댓글로 알려주세요")이 댓글 유도에 효과적이에요');
+      } else if(!(p.comments||0)&&r>500){
+        tips.push('댓글이 없어요 — "댓글로 알려주세요 👇" 또는 선택지 질문을 캡션 끝에 넣어보세요');
+      }
+
+      // ── ⑨ 캡션 품질 분석 ──
+      if(p.caption){
+        const capLen=p.caption.replace(/#[\S]+/g,'').trim().length;
+        const hasHash=/#[\S]+/.test(p.caption);
+        const hasCTA=/저장|공유|팔로|DM|댓글|알려|링크|클릭/i.test(p.caption);
+        const hasEmoji=/\p{Emoji}/u.test(p.caption);
+        const firstLine=p.caption.slice(0,50);
+        const hasHook=/\?|몰랐|대박|진짜|[1-9]가지|[1-9]개|우리|제가|솔직/.test(firstLine);
+        if(!hasHash) tips.push('피드 캡션에 해시태그 없음 — 대형 2 + 중형 3 + 소형 3 형태로 10개 내외 추가하세요');
+        if(!hasCTA) tips.push('피드 캡션 CTA 없음 — "저장해두세요 📌" "의견 댓글로 남겨주세요 👇"를 추가해보세요');
+        if(!hasHook&&capLen>20) tips.push('캡션 첫 줄 훅 없음 — "이거 알고 계셨나요?" 같은 훅으로 캡션 펼침율을 높이세요');
+        if(capLen>0&&capLen<50) tips.push(`피드 캡션이 너무 짧아요 (${capLen}자) — 스토리·정보·질문을 담아 150~300자로 늘려보세요`);
+        if(!hasEmoji&&capLen>30) tips.push('이모지 없음 — 캡션에 이모지를 추가하면 가독성이 올라가고 클릭률이 높아져요');
+      }
+
+      // ── ⑩ 업로드 타이밍 ──
+      if(p.ts>0){
+        const d=new Date(p.ts*1000), day=d.getDay(), hour=d.getHours();
+        const dayKr=['일','월','화','수','목','금','토'][day];
+        if(hour>=18&&hour<=21) goods.push(`업로드 타이밍 최적 (${dayKr}요일 ${hour}시) — 팔로워 활동 피크 구간`);
+        else if(hour>=12&&hour<=14) goods.push(`업로드 타이밍 양호 (${dayKr}요일 ${hour}시) — 점심 피크 구간`);
+        else if(hour<7) tips.push(`업로드 시간 개선 필요 (현재 ${dayKr}요일 ${hour}시) — 저녁 18~21시 또는 점심 12~14시에 업로드하면 초기 반응이 빨라져요`);
       }
 
       return {goods, bads, tips};
