@@ -4743,7 +4743,18 @@ function analyze() {
   if (allItems.length >= 3) {
     ciCard.style.display = '';
 
-    // ① 성장 추이 — 월별 평균 좋아요
+    // ZIP 전용 여부 판단 (좋아요 데이터가 전혀 없는 경우)
+    const hasLikes = allItems.some(x=>x.likes>0);
+    // 카드 헤더 서브타이틀 업데이트
+    const ciCardH2 = ciCard.querySelector('h2');
+    if(ciCardH2) ciCardH2.innerHTML = hasLikes
+      ? '🔬 콘텐츠 심층 인사이트 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">좋아요 기반 분석</span>'
+      : '🔬 콘텐츠 심층 인사이트 <span style="font-size:0.72rem;font-weight:400;color:#e58a00;">⚠️ 게시물 수 기준 (좋아요 없음)</span>';
+    // ZIP 전용 모드: 게시물 수 기준 차트, 좋아요 있으면 평균 좋아요 기준 차트
+    const metricLabel = hasLikes ? '평균 좋아요' : '게시물 수';
+    const metricUnit  = hasLikes ? '❤️' : '개';
+
+    // ① 성장 추이 — 월별 (평균 좋아요 or 게시물 수)
     const byMonth = {};
     allItems.forEach(x=>{
       if(!x.ts) return;
@@ -4752,19 +4763,24 @@ function analyze() {
       byMonth[key].sum+=x.likes; byMonth[key].cnt++;
     });
     const months = Object.keys(byMonth).slice(-8);
-    const mVals  = months.map(k=>byMonth[k].sum/byMonth[k].cnt);
+    const mVals  = months.map(k=> hasLikes ? byMonth[k].sum/byMonth[k].cnt : byMonth[k].cnt);
     const mMax   = Math.max(...mVals,1);
-    const trend  = mVals.length>=2 ? (mVals[mVals.length-1]>mVals[0]?'📈 성장 중':'📉 하락세') : '—';
+    const trend  = mVals.length>=2
+      ? (mVals[mVals.length-1]>mVals[0]
+          ? (hasLikes?'📈 성장 중':'📈 업로드 증가')
+          : (hasLikes?'📉 하락세':'📉 업로드 감소'))
+      : '—';
 
-    // ② 요일별 평균 좋아요
+    // ② 요일별 (평균 좋아요 or 게시물 수)
     const days = ['일','월','화','수','목','금','토'];
     const byDay = Array(7).fill(null).map(()=>({sum:0,cnt:0}));
     allItems.forEach(x=>{ if(x.ts){const d=new Date(x.ts*1000).getDay(); byDay[d].sum+=x.likes; byDay[d].cnt++;}});
-    const dayVals = byDay.map(d=>d.cnt?d.sum/d.cnt:0);
+    const dayVals = byDay.map(d=> d.cnt ? (hasLikes ? d.sum/d.cnt : d.cnt) : 0);
     const dayMax  = Math.max(...dayVals,1);
     const bestDay = days[dayVals.indexOf(Math.max(...dayVals))];
+    const bestDayLabel = hasLikes ? `최고 ${bestDay}요일` : `가장 많이 올린 ${bestDay}요일`;
 
-    // ③ 콘텐츠 타입별 평균 좋아요
+    // ③ 콘텐츠 타입별 (평균 좋아요 or 게시물 수)
     const typeKw = {
       '정보형':/(방법|꿀팁|tip|가이드|알려드|설명|정리|법칙|공략|이유|차이)/i,
       '공감형':/(나만|진짜|솔직|고백|ㅋㅋ|ㅠㅠ|공감|힘들|행복|감사|사랑)/i,
@@ -4779,15 +4795,16 @@ function analyze() {
       if(!typeStat[matched]) typeStat[matched]={sum:0,cnt:0};
       typeStat[matched].sum+=x.likes; typeStat[matched].cnt++;
     });
-    const typeArr = Object.entries(typeStat).map(([t,v])=>({t,avg:v.cnt?Math.round(v.sum/v.cnt):0,cnt:v.cnt}))
+    const typeArr = Object.entries(typeStat)
+      .map(([t,v])=>({t, avg: hasLikes ? (v.cnt?Math.round(v.sum/v.cnt):0) : v.cnt, cnt:v.cnt}))
       .sort((a,b)=>b.avg-a.avg);
     const typeMax = Math.max(...typeArr.map(x=>x.avg),1);
 
-    // ④ 캡션 길이 vs 좋아요 (구간별)
+    // ④ 캡션 길이 구간 (평균 좋아요 or 게시물 수)
     const lenBands = [{label:'~50자',min:0,max:50},{label:'51~150',min:51,max:150},{label:'151~300',min:151,max:300},{label:'301자+',min:301,max:9999}];
     lenBands.forEach(b=>{
       const items=allItems.filter(x=>x.cap.length>=b.min&&x.cap.length<=b.max);
-      b.avg=items.length?Math.round(items.reduce((s,x)=>s+x.likes,0)/items.length):0;
+      b.avg = items.length ? (hasLikes ? Math.round(items.reduce((s,x)=>s+x.likes,0)/items.length) : items.length) : 0;
       b.cnt=items.length;
     });
     const lenMax=Math.max(...lenBands.map(b=>b.avg),1);
@@ -4804,11 +4821,27 @@ function analyze() {
       </svg>`;
     };
 
+    // ZIP 전용일 때 안내 배너
+    const zipNoticeBanner = !hasLikes ? `
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:12px 14px;margin-bottom:16px;">
+        <span style="font-size:1.1rem;flex-shrink:0;">⚠️</span>
+        <div>
+          <div style="font-size:0.8rem;font-weight:700;color:#92400e;margin-bottom:3px;">좋아요 데이터 없음 — 게시물 수 기준으로 표시 중</div>
+          <div style="font-size:0.74rem;color:#a16207;line-height:1.6;">
+            ZIP 미디어 파일에는 좋아요·저장·댓글 수가 포함되어 있지 않아요.<br/>
+            좋아요 기준 차트를 보려면 인스타그램 <b>설정 → 내 활동 → 다운로드</b>에서<br/>
+            <b>인사이트(HTML 형식)</b>를 별도로 다운로드해 같이 업로드해 주세요.
+          </div>
+        </div>
+      </div>` : '';
+
     document.getElementById('contentInsightsSection').innerHTML = `
+      ${zipNoticeBanner}
+
       <!-- 성장 추이 -->
       <div style="margin-bottom:18px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:0.82rem;font-weight:700;color:#444;">📈 성장 추이 (월별 평균 좋아요)</span>
+          <span style="font-size:0.82rem;font-weight:700;color:#444;">📈 성장 추이 (월별 ${metricLabel})</span>
           <span style="font-size:0.78rem;font-weight:700;color:#6d28d9;">${trend}</span>
         </div>
         ${months.length>=2 ? barSVG(mVals,months,mMax,'#818cf8',60) : '<div style="font-size:0.75rem;color:#ccc;">데이터 2개월 이상 필요</div>'}
@@ -4817,15 +4850,15 @@ function analyze() {
       <!-- 요일별 -->
       <div style="margin-bottom:18px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:0.82rem;font-weight:700;color:#444;">📅 요일별 평균 좋아요</span>
-          <span style="font-size:0.75rem;background:#ede9fe;color:#6d28d9;padding:2px 8px;border-radius:20px;font-weight:700;">최고 ${bestDay}요일</span>
+          <span style="font-size:0.82rem;font-weight:700;color:#444;">📅 요일별 ${metricLabel}</span>
+          <span style="font-size:0.75rem;background:#ede9fe;color:#6d28d9;padding:2px 8px;border-radius:20px;font-weight:700;">${bestDayLabel}</span>
         </div>
         ${barSVG(dayVals,days,dayMax,'#34d399',50)}
       </div>
 
       <!-- 콘텐츠 타입 -->
       <div style="margin-bottom:18px;">
-        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">🎭 콘텐츠 타입별 평균 좋아요</div>
+        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">🎭 콘텐츠 타입별 ${metricLabel}</div>
         <div style="display:grid;gap:6px;">
           ${typeArr.map(({t,avg,cnt})=>`
           <div style="display:flex;align-items:center;gap:8px;">
@@ -4833,17 +4866,23 @@ function analyze() {
             <div style="flex:1;height:18px;background:#f3f4f6;border-radius:99px;overflow:hidden;">
               <div style="width:${Math.round(avg/typeMax*100)}%;height:100%;background:linear-gradient(90deg,#f472b6,#a78bfa);border-radius:99px;"></div>
             </div>
-            <span style="font-size:0.72rem;color:#888;width:60px;text-align:right;">${avg}❤️ ·${cnt}개</span>
+            <span style="font-size:0.72rem;color:#888;width:72px;text-align:right;">${avg}${metricUnit} ·${cnt}개</span>
           </div>`).join('')}
         </div>
       </div>
 
       <!-- 캡션 길이 -->
       <div>
-        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">✍️ 캡션 길이별 평균 좋아요</div>
+        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">✍️ 캡션 길이별 ${metricLabel}</div>
         ${barSVG(lenBands.map(b=>b.avg),lenBands.map(b=>b.label),lenMax,'#fb923c',50)}
         <div style="font-size:0.72rem;color:#aaa;margin-top:4px;text-align:center;">
-          ${(()=>{const best=lenBands.slice().sort((a,b)=>b.avg-a.avg)[0]; return best.cnt>0?`💡 "${best.label}" 구간 캡션이 평균 ${best.avg}❤️로 가장 반응이 좋아요`:'';})()}
+          ${(()=>{
+            const best=lenBands.slice().sort((a,b)=>b.avg-a.avg)[0];
+            if(!best.cnt) return '';
+            return hasLikes
+              ? `💡 "${best.label}" 구간 캡션이 평균 ${best.avg}❤️로 가장 반응이 좋아요`
+              : `💡 "${best.label}" 구간 캡션을 가장 많이 사용하고 있어요 (${best.avg}개)`;
+          })()}
         </div>
       </div>
     `;
