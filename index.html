@@ -4809,81 +4809,94 @@ function analyze() {
     });
     const lenMax=Math.max(...lenBands.map(b=>b.avg),1);
 
-    const barSVG = (vals,labels,max,color='#818cf8',h=60) => {
-      const w=Math.floor(260/vals.length);
-      return `<svg viewBox="0 0 260 ${h+20}" style="width:100%;overflow:visible;">
+    // 고정 높이 SVG 바 차트 — width:100% + height 고정으로 확대 방지
+    const barSVG = (vals, labels, max, color='#818cf8', barH=38) => {
+      const n = vals.length;
+      const slotW = Math.floor(220 / n);
+      const vbW = n * slotW;
+      const vbH = barH + 14;
+      return `<svg viewBox="0 0 ${vbW} ${vbH}" style="display:block;width:100%;height:${vbH}px;" preserveAspectRatio="xMidYMax meet">
         ${vals.map((v,i)=>{
-          const bh=Math.max(4,Math.round(v/max*(h-4)));
-          return `<rect x="${i*w+2}" y="${h-bh}" width="${w-4}" height="${bh}" rx="4" fill="${color}" opacity="0.85"/>
-          <text x="${i*w+w/2}" y="${h+14}" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.6">${labels[i]}</text>
-          ${v>0?`<text x="${i*w+w/2}" y="${h-bh-3}" text-anchor="middle" font-size="8" fill="${color}">${Math.round(v)}</text>`:''}`;
+          const bh = Math.max(3, Math.round(v / max * (barH - 2)));
+          const cx = i * slotW + slotW / 2;
+          return `
+            <rect x="${i*slotW+2}" y="${barH-bh}" width="${slotW-4}" height="${bh}" rx="3" fill="${color}" opacity="0.82"/>
+            <text x="${cx}" y="${vbH-1}" text-anchor="middle" font-size="8.5" fill="gray" opacity="0.65">${labels[i]}</text>
+            ${v>0 ? `<text x="${cx}" y="${barH-bh-3}" text-anchor="middle" font-size="8" fill="${color}" font-weight="600">${Math.round(v)}</text>` : ''}
+          `;
         }).join('')}
       </svg>`;
     };
 
     // ZIP 전용일 때 안내 배너
     const zipNoticeBanner = !hasLikes ? `
-      <div style="display:flex;align-items:flex-start;gap:10px;background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:12px 14px;margin-bottom:16px;">
-        <span style="font-size:1.1rem;flex-shrink:0;">⚠️</span>
+      <div style="display:flex;align-items:flex-start;gap:8px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:9px 12px;margin-bottom:14px;">
+        <span style="font-size:0.95rem;flex-shrink:0;margin-top:1px;">⚠️</span>
         <div>
-          <div style="font-size:0.8rem;font-weight:700;color:#92400e;margin-bottom:3px;">좋아요 데이터 없음 — 게시물 수 기준으로 표시 중</div>
-          <div style="font-size:0.74rem;color:#a16207;line-height:1.6;">
-            ZIP 미디어 파일에는 좋아요·저장·댓글 수가 포함되어 있지 않아요.<br/>
-            좋아요 기준 차트를 보려면 인스타그램 <b>설정 → 내 활동 → 다운로드</b>에서<br/>
-            <b>인사이트(HTML 형식)</b>를 별도로 다운로드해 같이 업로드해 주세요.
-          </div>
+          <div style="font-size:0.77rem;font-weight:700;color:#92400e;margin-bottom:2px;">좋아요 데이터 없음 — 게시물 수 기준 표시 중</div>
+          <div style="font-size:0.71rem;color:#a16207;line-height:1.55;">ZIP 파일에는 좋아요·저장·댓글 수가 없어요. 인스타그램 <b>설정 → 내 활동 → 다운로드</b>에서 <b>인사이트(HTML)</b>를 같이 올려주시면 좋아요 기준으로 분석해드려요.</div>
         </div>
       </div>` : '';
 
     document.getElementById('contentInsightsSection').innerHTML = `
       ${zipNoticeBanner}
 
-      <!-- 성장 추이 -->
-      <div style="margin-bottom:18px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:0.82rem;font-weight:700;color:#444;">📈 성장 추이 (월별 ${metricLabel})</span>
-          <span style="font-size:0.78rem;font-weight:700;color:#6d28d9;">${trend}</span>
+      <!-- 2열 그리드: 성장 추이 + 요일별 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+
+        <!-- 성장 추이 -->
+        <div style="background:#f9f9fb;border-radius:10px;padding:10px 10px 8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <span style="font-size:0.75rem;font-weight:700;color:#555;">📈 월별 ${metricLabel}</span>
+            <span style="font-size:0.68rem;font-weight:700;color:#6d28d9;">${trend}</span>
+          </div>
+          ${months.length>=2 ? barSVG(mVals,months,mMax,'#818cf8',36) : '<div style="font-size:0.72rem;color:#ccc;text-align:center;padding:10px 0;">2개월 이상 필요</div>'}
         </div>
-        ${months.length>=2 ? barSVG(mVals,months,mMax,'#818cf8',60) : '<div style="font-size:0.75rem;color:#ccc;">데이터 2개월 이상 필요</div>'}
+
+        <!-- 요일별 -->
+        <div style="background:#f9f9fb;border-radius:10px;padding:10px 10px 8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <span style="font-size:0.75rem;font-weight:700;color:#555;">📅 요일별 ${metricLabel}</span>
+            <span style="font-size:0.65rem;background:#d1fae5;color:#065f46;padding:1px 6px;border-radius:20px;font-weight:700;">${bestDay}요일↑</span>
+          </div>
+          ${barSVG(dayVals,days,dayMax,'#34d399',36)}
+        </div>
+
       </div>
 
-      <!-- 요일별 -->
-      <div style="margin-bottom:18px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:0.82rem;font-weight:700;color:#444;">📅 요일별 ${metricLabel}</span>
-          <span style="font-size:0.75rem;background:#ede9fe;color:#6d28d9;padding:2px 8px;border-radius:20px;font-weight:700;">${bestDayLabel}</span>
-        </div>
-        ${barSVG(dayVals,days,dayMax,'#34d399',50)}
-      </div>
+      <!-- 2열 그리드: 콘텐츠 타입 + 캡션 길이 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
 
-      <!-- 콘텐츠 타입 -->
-      <div style="margin-bottom:18px;">
-        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">🎭 콘텐츠 타입별 ${metricLabel}</div>
-        <div style="display:grid;gap:6px;">
-          ${typeArr.map(({t,avg,cnt})=>`
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:0.75rem;color:#666;width:48px;flex-shrink:0;">${t}</span>
-            <div style="flex:1;height:18px;background:#f3f4f6;border-radius:99px;overflow:hidden;">
-              <div style="width:${Math.round(avg/typeMax*100)}%;height:100%;background:linear-gradient(90deg,#f472b6,#a78bfa);border-radius:99px;"></div>
-            </div>
-            <span style="font-size:0.72rem;color:#888;width:72px;text-align:right;">${avg}${metricUnit} ·${cnt}개</span>
-          </div>`).join('')}
+        <!-- 콘텐츠 타입 -->
+        <div style="background:#f9f9fb;border-radius:10px;padding:10px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#555;margin-bottom:8px;">🎭 타입별 ${metricLabel}</div>
+          <div style="display:grid;gap:5px;">
+            ${typeArr.map(({t,avg,cnt})=>`
+            <div style="display:flex;align-items:center;gap:5px;">
+              <span style="font-size:0.68rem;color:#777;width:34px;flex-shrink:0;">${t}</span>
+              <div style="flex:1;height:12px;background:#ececec;border-radius:99px;overflow:hidden;">
+                <div style="width:${Math.round(avg/typeMax*100)}%;height:100%;background:linear-gradient(90deg,#f472b6,#a78bfa);border-radius:99px;transition:width 0.4s;"></div>
+              </div>
+              <span style="font-size:0.65rem;color:#999;width:32px;text-align:right;flex-shrink:0;">${avg}${metricUnit}</span>
+            </div>`).join('')}
+          </div>
         </div>
-      </div>
 
-      <!-- 캡션 길이 -->
-      <div>
-        <div style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:8px;">✍️ 캡션 길이별 ${metricLabel}</div>
-        ${barSVG(lenBands.map(b=>b.avg),lenBands.map(b=>b.label),lenMax,'#fb923c',50)}
-        <div style="font-size:0.72rem;color:#aaa;margin-top:4px;text-align:center;">
-          ${(()=>{
-            const best=lenBands.slice().sort((a,b)=>b.avg-a.avg)[0];
-            if(!best.cnt) return '';
-            return hasLikes
-              ? `💡 "${best.label}" 구간 캡션이 평균 ${best.avg}❤️로 가장 반응이 좋아요`
-              : `💡 "${best.label}" 구간 캡션을 가장 많이 사용하고 있어요 (${best.avg}개)`;
-          })()}
+        <!-- 캡션 길이 -->
+        <div style="background:#f9f9fb;border-radius:10px;padding:10px 10px 8px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#555;margin-bottom:7px;">✍️ 캡션 길이별 ${metricLabel}</div>
+          ${barSVG(lenBands.map(b=>b.avg),lenBands.map(b=>b.label),lenMax,'#fb923c',36)}
+          <div style="font-size:0.66rem;color:#bbb;margin-top:5px;text-align:center;line-height:1.4;">
+            ${(()=>{
+              const best=lenBands.slice().sort((a,b)=>b.avg-a.avg)[0];
+              if(!best.cnt) return '';
+              return hasLikes
+                ? `💡 ${best.label} 구간이 평균 ${best.avg}❤️ 최고`
+                : `💡 ${best.label} 구간 ${best.avg}개 가장 많음`;
+            })()}
+          </div>
         </div>
+
       </div>
     `;
   } else {
