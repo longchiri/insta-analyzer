@@ -1884,7 +1884,49 @@ function countIGLinks(html) {
   return doc.querySelectorAll('a[href*="instagram.com"]').length;
 }
 
-// 3) posts insights HTML: 개별 게시물 블록 파싱
+// 3-a) 콘텐츠 HTML 파서 — your_instagram_activity/media/ 파일 (메트릭 없음, 캡션+날짜만)
+function parseContentHTML(html) {
+  if (!html) return [];
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const items = [];
+  doc.querySelectorAll('div[class*="_a6-g"]').forEach(block => {
+    // 캡션: 미디어 썸네일 셀 안의 마지막 div 텍스트
+    let caption = '';
+    const thumbTd = [...block.querySelectorAll('td')].find(td => {
+      const firstNode = td.childNodes[0];
+      return firstNode?.nodeType === 3 && firstNode?.textContent?.trim() === '미디어 썸네일';
+    });
+    if (thumbTd) {
+      const divs = thumbTd.querySelectorAll(':scope > div > div > div');
+      if (divs.length) caption = divs[divs.length-1].textContent.trim();
+    }
+    // 날짜 텍스트 탐색 (htmlKV로 '날짜' 키 or 텍스트 패턴)
+    const kv = htmlKV(block.outerHTML);
+    const dateRaw = kv['날짜'] || kv['Date'] || '';
+    let ts = 0;
+    const dateStr = dateRaw || block.textContent || '';
+    const m = dateStr.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
+    if (m) ts = Math.floor(new Date(`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`).getTime()/1000);
+    if (caption || ts) items.push({ caption, ts });
+  });
+  // _a6-g 없으면 li > div 구조 시도
+  if (items.length === 0) {
+    doc.querySelectorAll('ul li, .pam').forEach(block => {
+      const divs = block.querySelectorAll('div');
+      let caption = '', ts = 0;
+      divs.forEach(d => {
+        const txt = d.textContent.trim();
+        if (txt && txt.length > 5 && !txt.match(/^\d/) && !caption) caption = txt;
+        const m = txt.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
+        if (m && !ts) ts = Math.floor(new Date(`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`).getTime()/1000);
+      });
+      if (caption || ts) items.push({ caption, ts });
+    });
+  }
+  return items;
+}
+
+// 3-b) posts insights HTML: 개별 게시물 블록 파싱
 function parsePostsHTML(html) {
   if (!html) return [];
   const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -2051,28 +2093,32 @@ function parseInstagramZIP(jsons, allPaths) {
       d._reelsCaptions   = reelsCaptions;
     }
 
-    // ★ HTML 인사이트 ZIP: reels.html(인사이트 파일)에서 릴스 메트릭 파싱
-    // JSON reels 파일이 없는 HTML format ZIP 처리 (eg. logged_information/.../reels.html)
+    // ★ HTML format ZIP: reels.html 파싱 (콘텐츠 or 인사이트 HTML 자동 판별)
     if (!d._reelsCaptions && jsons.reels?._html) {
       try {
-        const parsedReels = parsePostsHTML(jsons.reels._html);
-        const validReels  = parsedReels.filter(p => p.plays>0||p.impr>0||p.reach>0||p.likes>0);
-        if (validReels.length > 0) {
-          if (!d.reelsPosts) d.reelsPosts = validReels.length;
-          d._reelsCaptions = validReels.map(p => ({
-            cap:     p.caption || '',
-            uri:     '',
-            ts:      p.ts,
-            likes:   p.likes,
-            comments:p.comments,
-            plays:   p.plays,
-            impr:    p.impr,
-            reach:   p.reach,
-            saves:   p.saves,
-            shares:  p.shares,
+        // 1순위: 인사이트 HTML (재생수/노출 있는 경우) — parsePostsHTML
+        const insightReels = parsePostsHTML(jsons.reels._html);
+        const validInsight = insightReels.filter(p => p.plays>0||p.impr>0||p.reach>0||p.likes>0);
+        if (validInsight.length > 0) {
+          if (!d.reelsPosts) d.reelsPosts = validInsight.length;
+          d._reelsCaptions = validInsight.map(p => ({
+            cap:p.caption||'', uri:'', ts:p.ts,
+            likes:p.likes, comments:p.comments,
+            plays:p.plays, impr:p.impr, reach:p.reach, saves:p.saves, shares:p.shares,
           }));
-          d._reelsTimestamps = validReels.filter(p=>p.ts).map(p=>p.ts);
-          console.log('[릴스 디버그] HTML insight reels 파싱:', validReels.length, '개');
+          d._reelsTimestamps = validInsight.filter(p=>p.ts).map(p=>p.ts);
+          console.log('[릴스 디버그] HTML insight reels 파싱:', validInsight.length, '개');
+        } else {
+          // 2순위: 콘텐츠 HTML (캡션+날짜만 있는 경우) — parseContentHTML
+          const contentReels = parseContentHTML(jsons.reels._html);
+          if (contentReels.length > 0) {
+            if (!d.reelsPosts) d.reelsPosts = contentReels.length;
+            d._reelsCaptions = contentReels.map(p => ({
+              cap:p.caption||'', uri:'', ts:p.ts, likes:0, comments:0,
+            }));
+            d._reelsTimestamps = contentReels.filter(p=>p.ts).map(p=>p.ts);
+            console.log('[릴스 디버그] HTML content reels 파싱:', contentReels.length, '개');
+          }
         }
       } catch(e) { console.warn('릴스 HTML 파싱 오류:', e); }
     }
