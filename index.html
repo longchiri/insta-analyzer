@@ -1719,6 +1719,24 @@ async function processZip(file) {
     );
     await Promise.all(readTasks);
 
+    // ★ 릴스 파일 내용 검증 — pathHint로 못 막은 경우 ig_reels_media로 직접 확인
+    // Threads/기타 reels.json이 먼저 잡혔을 때 실제 Instagram reels.json으로 교체
+    if (!jsons.reels?.ig_reels_media && !jsons.reels?.ig_reels && !Array.isArray(jsons.reels)) {
+      const reelsCandidates = allPaths.filter(p => stemOf(p) === 'reels' && p !== matched.reels);
+      console.log('[릴스 디버그] reels 파일 재탐색:', reelsCandidates);
+      for (const rp of reelsCandidates) {
+        try {
+          const t = await zip.files[rp].async('text');
+          const d = JSON.parse(t);
+          if (d.ig_reels_media || d.ig_reels || Array.isArray(d)) {
+            jsons.reels = d;
+            console.log('[릴스 디버그] 올바른 reels 파일 발견:', rp, '→ ig_reels_media 수:', d.ig_reels_media?.length);
+            break;
+          }
+        } catch(e) {}
+      }
+    }
+
     // ★ 외부 인사이트 HTML 주입 — ZIP에 인사이트가 없고 별도 HTML이 업로드된 경우
     if (_extraInsightHtmls.length > 0 && !jsons['postsInsights']) {
       // 여러 HTML 중 게시물 인사이트 데이터가 가장 많은 파일 선택
