@@ -4087,6 +4087,9 @@ function analyze() {
       return null;
     };
 
+    // 릴스 최고 노출 — 진행바 상대 기준 (innerHTML 할당 전 미리 계산)
+    const rlMaxImpr = allPosts.length > 0 ? Math.max(0, ...allPosts.map(p => p.impr || 0)) : 0;
+
     document.getElementById('reelsCaptionSection').innerHTML = `
       <!-- 요약 통계 -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
@@ -4142,12 +4145,6 @@ function analyze() {
         const reelsPinnedSet = new Set([0,Math.min(1,showCaptions.length-1),reelsTopIdx].filter(i=>i<showCaptions.length));
         const reelsPinnedArr = [...reelsPinnedSet];
         const reelsRestArr   = showCaptions.map((_,i)=>i).filter(i=>!reelsPinnedSet.has(i));
-
-        // 릴스 최고 노출 — 진행바 상대 기준 (피드 카드와 동일)
-        const rlMaxImpr = Math.max(0, ...showCaptions.map((_,i) => {
-          const _ins = matchInsight(showCaptions[i], showTimes[i]);
-          return _ins ? (_ins.impr || 0) : 0;
-        }));
 
         // 릴스 개별 피드백 생성
         const getReelFb = (a, ins, extra={}) => {
