@@ -1701,6 +1701,7 @@ async function processZip(file) {
       const found = smartFind(allPaths, target.names, target.pathHint);
       if (found) matched[target.key] = found;
     }
+    console.log('[릴스 디버그] matched files:', JSON.stringify(matched));
 
     statusEl.textContent = `📄 ${Object.keys(matched).length}개 파일 병렬 파싱 중…`;
     await new Promise(r => setTimeout(r, 0));
@@ -1992,6 +1993,7 @@ function parseInstagramZIP(jsons, allPaths) {
     const ra = getJSON('reels');
     // 릴스 배열 추출 — JSON 구조 다양하게 대응
     const reelsArr = ra?.ig_reels_media || ra?.ig_reels || (Array.isArray(ra) ? ra : []);
+    console.log('[릴스 디버그] reels JSON 키:', ra ? Object.keys(ra).slice(0,5) : 'null', '| reelsArr.length:', reelsArr.length);
     if (!d.reelsPosts && reelsArr.length > 0) d.reelsPosts = reelsArr.length;
 
     // ★핵심 추가: 릴스 캡션·해시태그·타임스탬프 전량 파싱
@@ -4011,11 +4013,13 @@ function analyze() {
   // _reelsCaptions는 {cap,uri,ts} 객체 배열 (이전 버전은 string 배열 — 하위 호환)
   const reelsRaw = D._reelsCaptions || [];
   const reelsCaptions = reelsRaw.map(r => typeof r === 'string' ? r : (r.cap || ''));
+  console.log('[릴스 디버그] D._reelsCaptions:', D._reelsCaptions, '| reelsCaptions.length:', reelsCaptions.length, '| D.reelsPosts:', D.reelsPosts, '| currentTab:', currentTab);
   const reelsCaptionCard = document.getElementById('reelsCaptionCard');
   // 항상 카드 표시 (데이터 없어도 섹션 자체는 표시)
   reelsCaptionCard.style.display = '';
   if (reelsCaptions.length > 0) {
   try {
+    console.log('[릴스 디버그] 렌더링 진입 — reelsCaptions.length:', reelsCaptions.length);
 
     // 개별 캡션 분석 헬퍼
     const analyzeCaption = (cap) => {
@@ -4455,10 +4459,16 @@ function analyze() {
       </div>`;
   }
   } else if (currentTab === 'upload') {
+    // 디버그 정보 포함 — 원인 파악용
+    const _dbgRaw = D._reelsCaptions;
+    const _dbgReelsPosts = D.reelsPosts || 0;
     document.getElementById('reelsCaptionSection').innerHTML = `
       <div class="missing-box">
         <div class="missing-title">ℹ️ 릴스 캡션 데이터를 찾지 못했어요</div>
-        <div>ZIP 파일 안에 릴스 게시물이 없거나 캡션이 비어 있을 수 있어요. 릴스에 캡션을 입력 후 새로 ZIP을 내려받아 업로드해 주세요.</div>
+        <div style="margin-bottom:6px;">ZIP 파일 안에 릴스 게시물이 없거나 캡션이 비어 있을 수 있어요. 릴스에 캡션을 입력 후 새로 ZIP을 내려받아 업로드해 주세요.</div>
+        <div style="font-size:0.7rem;color:#999;background:#f9f9f9;border-radius:6px;padding:6px 10px;margin-top:6px;">
+          🔍 진단: 릴스 게시물 수=${_dbgReelsPosts} | _reelsCaptions=${Array.isArray(_dbgRaw) ? _dbgRaw.length+'개' : String(_dbgRaw)}
+        </div>
       </div>`;
   } else {
     document.getElementById('reelsCaptionSection').innerHTML = '';
