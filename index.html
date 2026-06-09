@@ -1444,7 +1444,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.9.2</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.9.3</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -4492,7 +4492,124 @@ function analyze() {
         ${withHashtag/total < 0.6 ? '• 해시태그가 빠진 릴스가 많아요 — 탐색 탭 유입을 위해 닉 키워드 3~10개를 꼭 추가하세요<br/>' : ''}
         ${avgLen < 80 ? '• 평균 캡션이 너무 짧아요 — 80자 이상 작성하면 알고리즘이 콘텐츠 품질을 더 높게 평가해요<br/>' : ''}
         ${avgScore >= 4.5 ? '🏆 캡션 완성도가 전반적으로 우수해요! 이 패턴을 유지하세요.' : ''}
-      </div>`;
+      </div>
+
+      <!-- ── 릴스 성과 차트 ── -->
+      ${(()=>{
+        // 차트 데이터 준비 — 조회수(plays) > 좋아요(likes) > 게시물수 우선순위
+        const rlItems = showRaw.map(r => ({
+          cap:  typeof r==='string' ? r : (r.cap||''),
+          ts:   typeof r==='string' ? 0  : (r.ts||0),
+          likes:typeof r==='string' ? 0  : (r.likes||0),
+          plays:typeof r==='string' ? 0  : (r.plays||0),
+        }));
+        const hasPlays = rlItems.some(x=>x.plays>0);
+        const hasLikes = rlItems.some(x=>x.likes>0);
+        const metric   = hasPlays ? 'plays' : hasLikes ? 'likes' : 'cnt';
+        const metricLabel = hasPlays ? '평균 조회수' : hasLikes ? '평균 좋아요' : '릴스 수';
+        const metricUnit  = hasPlays ? '▶' : hasLikes ? '❤️' : '개';
+        const metricVal   = x => metric==='cnt' ? 1 : (x[metric]||0);
+
+        // SVG 바 차트 유틸
+        const rBarSVG = (vals, labels, max, color='#818cf8', barH=32) => {
+          const n=vals.length, slotW=Math.floor(220/n), vbW=n*slotW;
+          const topPad=13, botPad=13, vbH=topPad+barH+botPad;
+          return `<svg viewBox="0 0 ${vbW} ${vbH}" style="display:block;width:100%;height:${vbH}px;">
+            ${vals.map((v,i)=>{
+              const bh=Math.max(3,Math.round(v/max*barH));
+              const cx=i*slotW+slotW/2, barY=topPad+barH-bh;
+              return `<rect x="${i*slotW+2}" y="${barY}" width="${slotW-4}" height="${bh}" rx="3" fill="${color}" opacity="0.82"/>
+                <text x="${cx}" y="${topPad+barH+botPad-1}" text-anchor="middle" font-size="8.5" fill="gray" opacity="0.65">${labels[i]}</text>
+                ${v>0?`<text x="${cx}" y="${barY-2}" text-anchor="middle" font-size="8" fill="${color}" font-weight="600">${Math.round(v)}</text>`:''}`;
+            }).join('')}</svg>`;
+        };
+
+        // ① 월별 릴스 수 (or 조회수/좋아요)
+        const byMonth={};
+        rlItems.forEach(x=>{ if(!x.ts) return;
+          const k=new Date(x.ts*1000).toLocaleDateString('ko-KR',{year:'2-digit',month:'2-digit'});
+          if(!byMonth[k]) byMonth[k]={sum:0,cnt:0};
+          byMonth[k].sum+=metricVal(x); byMonth[k].cnt++;
+        });
+        const months=Object.keys(byMonth).slice(-8);
+        const mVals=months.map(k=> metric==='cnt'?byMonth[k].cnt : byMonth[k].cnt?byMonth[k].sum/byMonth[k].cnt:0);
+        const mMax=Math.max(...mVals,1);
+        const trend=mVals.length>=2?(mVals[mVals.length-1]>=mVals[0]?'📈 상승':'📉 하락'):'—';
+
+        // ② 요일별
+        const days=['일','월','화','수','목','금','토'];
+        const byDay=Array(7).fill(null).map(()=>({sum:0,cnt:0}));
+        rlItems.forEach(x=>{ if(x.ts){const d=new Date(x.ts*1000).getDay(); byDay[d].sum+=metricVal(x); byDay[d].cnt++;}});
+        const dayVals=byDay.map(d=> d.cnt?(metric==='cnt'?d.cnt:d.sum/d.cnt):0);
+        const dayMax=Math.max(...dayVals,1);
+        const bestDay=days[dayVals.indexOf(Math.max(...dayVals))];
+
+        // ③ 콘텐츠 타입별
+        const typeKw={'정보형':/(방법|꿀팁|tip|가이드|알려드|설명|정리)/i,'공감형':/(나만|진짜|솔직|공감|힘들|행복|감사)/i,'홍보형':/(할인|구매|링크|판매|이벤트)/i,'질문형':/(.*\?.{0,15}$)/,'일상형':/(오늘|어제|요즘|일상|나의)/i};
+        const typeStat={};
+        rlItems.forEach(x=>{
+          let m='기타'; for(const[t,re] of Object.entries(typeKw)){if(re.test(x.cap)){m=t;break;}}
+          if(!typeStat[m]) typeStat[m]={sum:0,cnt:0};
+          typeStat[m].sum+=metricVal(x); typeStat[m].cnt++;
+        });
+        const typeArr=Object.entries(typeStat).map(([t,v])=>({t,avg:metric==='cnt'?v.cnt:(v.cnt?Math.round(v.sum/v.cnt):0),cnt:v.cnt})).sort((a,b)=>b.avg-a.avg);
+        const typeMax=Math.max(...typeArr.map(x=>x.avg),1);
+
+        // ④ 캡션 길이 구간별
+        const lenBands=[{label:'~50자',min:0,max:50},{label:'51~150',min:51,max:150},{label:'151~300',min:151,max:300},{label:'301자+',min:301,max:9999}];
+        lenBands.forEach(b=>{
+          const it=rlItems.filter(x=>x.cap.length>=b.min&&x.cap.length<=b.max);
+          b.avg=it.length?(metric==='cnt'?it.length:Math.round(it.reduce((s,x)=>s+metricVal(x),0)/it.length)):0; b.cnt=it.length;
+        });
+        const lenMax=Math.max(...lenBands.map(b=>b.avg),1);
+
+        if (rlItems.filter(x=>x.ts).length < 2) return '';  // 데이터 부족 시 차트 생략
+
+        return `
+        <div style="margin-top:18px;">
+          <div style="font-size:0.84rem;font-weight:700;color:#6d28d9;margin-bottom:10px;">📊 릴스 성과 분석</div>
+
+          <!-- 2열: 월별 + 요일별 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div style="background:#faf5ff;border-radius:10px;padding:10px 10px 9px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:0.73rem;font-weight:700;color:#555;">📈 월별 ${metricLabel}</span>
+                <span style="font-size:0.66rem;font-weight:700;color:#7c3aed;">${trend}</span>
+              </div>
+              ${months.length>=2 ? rBarSVG(mVals,months,mMax,'#a78bfa',32) : '<div style="font-size:0.72rem;color:#ccc;text-align:center;padding:10px 0;">2개월 이상 필요</div>'}
+            </div>
+            <div style="background:#faf5ff;border-radius:10px;padding:10px 10px 9px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:0.73rem;font-weight:700;color:#555;">📅 요일별 ${metricLabel}</span>
+                <span style="font-size:0.63rem;background:#ede9fe;color:#5b21b6;padding:1px 6px;border-radius:20px;font-weight:700;">${bestDay}요일↑</span>
+              </div>
+              ${rBarSVG(dayVals,days,dayMax,'#8b5cf6',32)}
+            </div>
+          </div>
+
+          <!-- 2열: 콘텐츠 타입 + 캡션 길이 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:#faf5ff;border-radius:10px;padding:10px;">
+              <div style="font-size:0.73rem;font-weight:700;color:#555;margin-bottom:8px;">🎭 타입별 ${metricLabel}</div>
+              <div style="display:grid;gap:5px;">
+                ${typeArr.map(({t,avg,cnt})=>`
+                <div style="display:flex;align-items:center;gap:5px;">
+                  <span style="font-size:0.66rem;color:#777;width:34px;flex-shrink:0;">${t}</span>
+                  <div style="flex:1;height:10px;background:#ede9fe;border-radius:99px;overflow:hidden;">
+                    <div style="width:${Math.round(avg/typeMax*100)}%;height:100%;background:linear-gradient(90deg,#c084fc,#7c3aed);border-radius:99px;"></div>
+                  </div>
+                  <span style="font-size:0.63rem;color:#999;width:32px;text-align:right;flex-shrink:0;">${avg}${metricUnit}</span>
+                </div>`).join('')}
+              </div>
+            </div>
+            <div style="background:#faf5ff;border-radius:10px;padding:10px 10px 9px;">
+              <div style="font-size:0.73rem;font-weight:700;color:#555;margin-bottom:6px;">✍️ 캡션 길이별 ${metricLabel}</div>
+              ${rBarSVG(lenBands.map(b=>b.avg),lenBands.map(b=>b.label),lenMax,'#c084fc',32)}
+            </div>
+          </div>
+        </div>`;
+      })()}
+      `;
     // ── 비동기 썸네일 로딩 (ZIP 참조가 있을 때만) ──
     if (_reelsZipRef) {
       showUris.forEach(async (uri, i) => {
