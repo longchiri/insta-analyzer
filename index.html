@@ -6001,7 +6001,6 @@ function _detectISKW(text){
 }
 
 function renderSNSKitInsta(){
-  // 기존 키트 제거 후 result 안 맨 아래에 다시 추가
   var old=document.getElementById('sns-kit-insta');
   if(old)old.remove();
   var resultEl=document.getElementById('result');
@@ -6024,50 +6023,193 @@ function renderSNSKitInsta(){
   var large=kwData?kwData.l.slice():['#'+kw,'#'+kw+'스타그램','#'+kw+'일상','#'+kw+'그램','#'+kw+'추천'];
   var medium=kwData?kwData.m.slice():['#'+kw+'인','#'+kw+'크루','#'+kw+'모임','#'+kw+'챌린지','#'+kw+'인증'];
   var niche=kwData?kwData.n.slice():['#'+kw+'초보','#'+kw+'후기','#'+kw+'배우기','#'+kw+'팁','#'+kw+'공유'];
-
-  var regionTags=region?['#'+region+kw,'#'+region+'일상']:[];
+  var regionTags=region?['#'+region+kw,'#'+region+'일상','#'+region]:[];
   var instaExtras=['#인스타그램','#팔로우','#소통','#일상그램','#좋아요반사'];
 
-  var seen={};var allTags=[];
-  var pool=large.slice(0,4).concat(medium.slice(0,4)).concat(niche.slice(0,3)).concat(regionTags.slice(0,2)).concat(instaExtras.slice(0,2));
-  for(var i=0;i<pool.length&&allTags.length<15;i++){if(!seen[pool[i]]){seen[pool[i]]=1;allTags.push(pool[i]);}}
+  // 해시태그 섹션별 분리
+  var largeFinal=large.slice(0,3);
+  var mediumFinal=medium.slice(0,4);
+  var nicheFinal=niche.slice(0,4);
+  var regionFinal=regionTags.slice(0,2);
+  var extraFinal=instaExtras.slice(0,2);
 
+  var seen={};var allTags=[];
+  var pool=largeFinal.concat(mediumFinal).concat(nicheFinal).concat(regionFinal).concat(extraFinal);
+  for(var i=0;i<pool.length;i++){if(!seen[pool[i]]){seen[pool[i]]=1;allTags.push(pool[i]);}}
   var tagsLine=allTags.join(' ');
+
   var hook=kwData?kwData.hook:kw+' 좋아하시는 분들 주목 ✨';
   var pain=kwData?kwData.pain:'원하는 콘텐츠 못 찾고 계신가요?';
   var benefit=kwData?kwData.benefit:'함께라면 더 빠르게 성장해요';
   var nameStr=handle?'@'+handle:kw+' 계정';
   var regionStr=region?region+' ':'';
-
-  var cap0=hook+'\n\n'+pain+'\n\n'+regionStr+nameStr+' 팔로우하면 매일 좋은 콘텐츠 올라와요!\n'+benefit+' 💫\n\n💾 저장해두면 나중에 찾기 편해요!\n📩 DM 환영합니다\n\n.\n.\n.\n'+tagsLine;
-  var cap1='📌 ['+regionStr+kw+' 계정 소개]\n\n'+benefit+'\n\n'+bio.slice(0,80)+(bio.length>80?'...':'')+'\n\n👉 프로필에서 더 많은 콘텐츠 확인하세요!\n💾 저장 + 공유 해주시면 큰 힘이 돼요 🙏\n\n.\n.\n.\n'+tagsLine;
-  var cap2='💡 '+kw+' 콘텐츠 찾는 분들!\n\n'+pain+'\n→ '+benefit+'\n\n매일 올라오는 콘텐츠 놓치지 마세요 🔔\n팔로우하고 알림 설정해두세요!\n\n.\n.\n.\n'+tagsLine;
-
+  var bioShort=bio.slice(0,70)+(bio.length>70?'...':'');
   var bc='#833ab4';
-  var capLabels=['✍️ 후킹형 캡션','📌 정보형 캡션','💬 공감형 캡션'];
-  var caps=[cap0,cap1,cap2];
 
-  // Store kit content for lazy reveal
+  // ── 캡션 6종 ──
+  var cap0=// 후킹형
+    hook+'\n\n'
+    +pain+'\n\n'
+    +regionStr+nameStr+' 팔로우하면 매일 좋은 콘텐츠가 올라와요!\n'
+    +benefit+' 💫\n\n'
+    +'💾 저장해두면 나중에 찾기 편해요\n'
+    +'📩 DM 언제든 환영합니다\n\n.\n.\n.\n'+tagsLine;
+
+  var cap1=// 정보형
+    '📌 ['+regionStr+kw+' 계정 소개]\n\n'
+    +'✅ '+benefit+'\n'
+    +(bioShort?'✅ '+bioShort+'\n':'')
+    +'✅ 매일 업데이트되는 '+kw+' 콘텐츠\n\n'
+    +'👉 프로필에서 더 많은 정보를 확인하세요!\n'
+    +'💾 저장하고 필요할 때 꺼내 쓰세요\n\n.\n.\n.\n'+tagsLine;
+
+  var cap2=// 공감형
+    '💡 '+kw+' 콘텐츠 찾고 계신가요?\n\n'
+    +pain+'\n'
+    +'→ '+benefit+'\n\n'
+    +'저도 같은 고민을 했었어요 🙋\n'
+    +'지금은 매일 '+kw+' 콘텐츠 올리며 소통하고 있어요!\n\n'
+    +'팔로우하고 알림 설정하면 놓치지 않아요 🔔\n\n.\n.\n.\n'+tagsLine;
+
+  var cap3=// 스토리형
+    '📖 솔직히 말할게요.\n\n'
+    +'저도 처음엔 '+pain.replace('?','')+' 고민했어요.\n\n'
+    +'근데 시작하고 보니 달랐어요.\n'
+    +benefit+'\n\n'
+    +'지금은 매일 이 계정을 통해 여러분과 소통하고 있어요 😊\n\n'
+    +'💾 이 글 저장해두면 나중에 또 볼 수 있어요\n'
+    +'댓글로 여러분 이야기도 들려주세요 👇\n\n.\n.\n.\n'+tagsLine;
+
+  var cap4=// 질문·참여형
+    '여러분은 어떻게 생각하세요? 👋\n\n'
+    +kw+' 하면서 가장 힘들었던 게 뭔가요?\n\n'
+    +'저는 → '+pain+'\n'
+    +'그래서 시작한 게 → '+benefit+'\n\n'
+    +'댓글로 여러분 경험 공유해주세요 💬\n'
+    +'공감 가면 좋아요 + 저장도 눌러주세요 📌\n\n.\n.\n.\n'+tagsLine;
+
+  var cap5=// 저장 유도형 (체크리스트)
+    '📌 '+kw+' 시작 전 꼭 알아야 할 것들\n\n'
+    +'✅ '+benefit+'\n'
+    +'✅ '+pain.replace('?','').replace('면?','면 해결됨')+'\n'
+    +'✅ 매일 새로운 콘텐츠 업데이트\n'
+    +'✅ 팔로워라면 DM 질문 환영 📩\n\n'
+    +'💾 나중에 다시 보려면 저장해두세요!\n'
+    +'궁금한 거 있으면 댓글로 남겨주세요 👇\n\n.\n.\n.\n'+tagsLine;
+
+  var capLabels=['✍️ 후킹형','📌 정보형','💬 공감형','📖 스토리형','❓ 질문·참여형','💾 저장 유도형'];
+  var capDescs=['스크롤 멈추는 첫 줄 훅으로 시작','리스트형 정보 제공으로 저장 유도','공감대 형성 후 CTA','나의 실제 이야기로 신뢰 형성','댓글 참여 유도 + 알고리즘 신호','체크리스트 형태로 저장율 극대화'];
+  var caps=[cap0,cap1,cap2,cap3,cap4,cap5];
+
+  // ── 릴스 훅 5종 ──
+  var reelsHooks=[
+    kw+' 모르면 평생 후회해요 🔥',
+    '이거 실화예요? '+kw+' 진짜 이렇게 됩니다',
+    '대부분이 모르는 '+kw+' 비법',
+    kw+' 시작 전 vs 1개월 후 (충격 주의)',
+    kwData?kwData.hook:kw+' 하나로 이렇게 달라졌어요 ✨',
+  ];
+
+  // ── 콘텐츠 아이디어 5가지 ──
+  var contentIdeas=[
+    kw+' 초보가 가장 많이 하는 실수 3가지',
+    '나만 알고 싶은 '+kw+' 꿀팁 모음',
+    regionStr+kw+' 추천 TOP 5',
+    kw+' 시작하기 전 꼭 알아야 할 것들',
+    kw+' 1개월 도전 기록 공유',
+  ];
+
+  // ── 스토리 아이디어 3가지 ──
+  var storyIdeas=[
+    '📸 오늘의 '+kw+' 일상 (비하인드 공개)',
+    '🗳️ Q&A: '+kw+'에 대한 궁금증 모아서 답변',
+    '✨ '+kw+' 시작 전후 변화 공유',
+  ];
+
+  // HTML 빌드
   var cHtml='';
-  for(var j=0;j<3;j++){
-    cHtml+='<div style="background:#f8f8f8;border-radius:10px;padding:14px;margin-bottom:12px;">'
-      +'<div style="font-weight:700;font-size:0.85rem;color:#555;margin-bottom:8px;">'+capLabels[j]+'</div>'
-      +'<pre id="isk-cap-'+j+'" style="white-space:pre-wrap;font-size:0.88rem;line-height:1.7;color:#333;margin:0;font-family:inherit;">'+caps[j]+'</pre>'
-      +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-cap-'+j+'\').innerText).then(function(){alert(\'캡션 복사됐어요!\');})" style="margin-top:8px;padding:5px 14px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.77rem;font-weight:700;cursor:pointer;">📋 복사</button>'
+  for(var j=0;j<6;j++){
+    cHtml+='<div style="background:#f8f8f8;border-radius:10px;padding:14px;margin-bottom:10px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">'
+      +'<div><span style="font-weight:800;font-size:0.85rem;color:'+bc+';">'+capLabels[j]+'</span>'
+      +'<span style="font-size:0.72rem;color:#999;margin-left:7px;">'+capDescs[j]+'</span></div>'
+      +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-cap-'+j+'\').innerText).then(function(){this.textContent=\'✅ 복사됨\';setTimeout(function(){document.querySelectorAll(\'.isk-copy-btn\')['+j+'].textContent=\'📋 복사\'},1500)}.bind(this))" class="isk-copy-btn" style="flex-shrink:0;padding:4px 12px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 복사</button>'
+      +'</div>'
+      +'<pre id="isk-cap-'+j+'" style="white-space:pre-wrap;font-size:0.84rem;line-height:1.7;color:#333;margin:0;font-family:inherit;background:#fff;border-radius:7px;padding:10px;">'+caps[j]+'</pre>'
       +'</div>';
   }
 
-  var kitHtml='<div style="border:2px solid '+bc+';border-radius:14px;padding:20px;background:#fff;">'
-    +'<h3 style="color:'+bc+';margin:0 0 14px;font-size:1.05rem;">📱 SNS 홍보 키트 — '+regionStr+nameStr+'</h3>'
-    +'<div style="background:#f8f8f8;border-radius:10px;padding:14px;margin-bottom:16px;">'
-    +'<div style="font-weight:700;font-size:0.85rem;color:#555;margin-bottom:8px;">🏷️ 추천 해시태그 ('+allTags.length+'개)</div>'
-    +'<div id="isk-tags-box" style="font-size:0.9rem;line-height:1.9;color:#333;word-break:break-all;">'+tagsLine+'</div>'
-    +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-tags-box\').innerText).then(function(){alert(\'태그 복사됐어요!\');})" style="margin-top:8px;padding:5px 14px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.77rem;font-weight:700;cursor:pointer;">📋 복사</button>'
-    +'</div>'+cHtml+'</div>';
+  // 해시태그 섹션
+  var tagsHtml='<div style="background:#f8f8f8;border-radius:10px;padding:14px;margin-bottom:16px;">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
+    +'<div style="font-weight:800;font-size:0.85rem;color:#555;">🏷️ 추천 해시태그 ('+allTags.length+'개)</div>'
+    +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-tags-box\').innerText).then(function(){alert(\'태그 '+allTags.length+'개 복사됐어요!\');})" style="padding:4px 12px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 전체 복사</button>'
+    +'</div>'
+    +(largeFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#fee2e2;color:#991b1b;padding:2px 7px;border-radius:20px;font-weight:700;">대형 (100만+)</span> <span style="font-size:0.82rem;color:#555;">'+largeFinal.join(' ')+'</span></div>':'')
+    +(mediumFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#fef9c3;color:#854d0e;padding:2px 7px;border-radius:20px;font-weight:700;">중형 (10~100만)</span> <span style="font-size:0.82rem;color:#555;">'+mediumFinal.join(' ')+'</span></div>':'')
+    +(nicheFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#dcfce7;color:#166534;padding:2px 7px;border-radius:20px;font-weight:700;">소형 (틈새)</span> <span style="font-size:0.82rem;color:#555;">'+nicheFinal.join(' ')+'</span></div>':'')
+    +(regionFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#dbeafe;color:#1d4ed8;padding:2px 7px;border-radius:20px;font-weight:700;">지역</span> <span style="font-size:0.82rem;color:#555;">'+regionFinal.join(' ')+'</span></div>':'')
+    +'<div id="isk-tags-box" style="display:none;">'+tagsLine+'</div>'
+    +'</div>';
+
+  // 릴스 훅 섹션
+  var hooksHtml='<div style="background:#fdf4ff;border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid #e9d5ff;">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
+    +'<div style="font-weight:800;font-size:0.85rem;color:#7c3aed;">🎬 릴스 훅 문구 5종</div>'
+    +'<span style="font-size:0.72rem;color:#aaa;">첫 1~3초에 사용</span>'
+    +'</div>'
+    +reelsHooks.map(function(h,idx){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:#fff;border-radius:8px;margin-bottom:6px;">'
+        +'<span style="font-size:0.83rem;color:#333;">'+h+'</span>'
+        +'<button onclick="navigator.clipboard.writeText(\''+h.replace(/'/g,"\\'")+'\')" style="flex-shrink:0;margin-left:8px;padding:3px 10px;background:#fff;color:#7c3aed;border:1.5px solid #7c3aed;border-radius:6px;font-size:0.72rem;font-weight:700;cursor:pointer;">복사</button>'
+        +'</div>';
+    }).join('')
+    +'</div>';
+
+  // 콘텐츠 아이디어 섹션
+  var ideasHtml='<div style="background:#f0fdf4;border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid #bbf7d0;">'
+    +'<div style="font-weight:800;font-size:0.85rem;color:#166534;margin-bottom:10px;">💡 콘텐츠 아이디어 5가지</div>'
+    +contentIdeas.map(function(idea,idx){
+      return '<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #dcfce7;">'
+        +'<span style="flex-shrink:0;font-weight:800;color:#16a34a;font-size:0.8rem;">'+(idx+1)+'.</span>'
+        +'<span style="font-size:0.83rem;color:#333;">'+idea+'</span>'
+        +'</div>';
+    }).join('')
+    +'</div>';
+
+  // 스토리 아이디어 섹션
+  var storyHtml='<div style="background:#eff6ff;border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid #bfdbfe;">'
+    +'<div style="font-weight:800;font-size:0.85rem;color:#1d4ed8;margin-bottom:10px;">📸 스토리 아이디어 3가지</div>'
+    +storyIdeas.map(function(s){
+      return '<div style="font-size:0.83rem;color:#333;padding:5px 0;border-bottom:1px solid #dbeafe;">'+s+'</div>';
+    }).join('')
+    +'</div>';
+
+  // 업로드 전략 팁
+  var strategyHtml='<div style="background:#fffbeb;border-radius:10px;padding:14px;border:1px solid #fde68a;">'
+    +'<div style="font-weight:800;font-size:0.85rem;color:#92400e;margin-bottom:10px;">⏰ 업로드 전략 팁</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.8rem;color:#555;">'
+    +'<div style="background:#fff;border-radius:8px;padding:9px;"><b>최적 요일</b><br>화·수·목 (평일 반응 ↑)</div>'
+    +'<div style="background:#fff;border-radius:8px;padding:9px;"><b>최적 시간</b><br>저녁 18~21시, 점심 12~13시</div>'
+    +'<div style="background:#fff;border-radius:8px;padding:9px;"><b>게시 직후</b><br>스토리에 게시물 공유 → 초기 반응↑</div>'
+    +'<div style="background:#fff;border-radius:8px;padding:9px;"><b>업로드 주기</b><br>피드 주 3회, 릴스 주 2~3회 권장</div>'
+    +'</div>'
+    +'</div>';
+
+  var kitHtml='<div style="border:2px solid '+bc+';border-radius:16px;padding:20px;background:#fff;">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">'
+    +'<h3 style="color:'+bc+';margin:0;font-size:1.05rem;">📱 SNS 홍보 키트</h3>'
+    +'<span style="font-size:0.78rem;color:#aaa;">'+regionStr+nameStr+'</span>'
+    +'</div>'
+    +tagsHtml
+    +'<div style="font-weight:800;font-size:0.85rem;color:#555;margin-bottom:10px;">✍️ 캡션 6종 (복사해서 바로 사용)</div>'
+    +cHtml
+    +hooksHtml+ideasHtml+storyHtml+strategyHtml
+    +'</div>';
 
   window._snsKitInsta=kitHtml;
   el.innerHTML='<div style="text-align:center;padding:20px;background:linear-gradient(135deg,#fdf4ff,#f0f4ff);border-radius:16px;border:2px dashed #c084fc;">'
-    +'<p style="font-size:0.85rem;color:#888;margin:0 0 14px;">📊 분석 결과를 기반으로 인스타 캡션과 해시태그를 생성해드려요</p>'
+    +'<p style="font-size:0.85rem;color:#888;margin:0 0 14px;">📊 분석 결과를 기반으로 캡션 6종 · 릴스 훅 · 콘텐츠 아이디어까지 한번에 생성해드려요</p>'
     +'<button onclick="document.getElementById(\'sns-kit-insta\').innerHTML=window._snsKitInsta" style="padding:13px 32px;background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(131,58,180,0.3);">📱 SNS 홍보 키트 생성하기</button>'
     +'</div>';
 }
