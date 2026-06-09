@@ -1444,7 +1444,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.9.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.9.2</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -1884,45 +1884,38 @@ function countIGLinks(html) {
   return doc.querySelectorAll('a[href*="instagram.com"]').length;
 }
 
-// 3-a) 콘텐츠 HTML 파서 — your_instagram_activity/media/ 파일 (메트릭 없음, 캡션+날짜만)
+// 3-a) 콘텐츠 HTML 파서 — your_instagram_activity/media/reels.html (캡션+날짜+URI)
+// 실제 구조: <h2 class="..._a6-h _a6-i">캡션</h2> + <video src="..."> + <div class="_3-94 _a6-o">날짜</div>
 function parseContentHTML(html) {
   if (!html) return [];
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const items = [];
   doc.querySelectorAll('div[class*="_a6-g"]').forEach(block => {
-    // 캡션: 미디어 썸네일 셀 안의 마지막 div 텍스트
-    let caption = '';
-    const thumbTd = [...block.querySelectorAll('td')].find(td => {
-      const firstNode = td.childNodes[0];
-      return firstNode?.nodeType === 3 && firstNode?.textContent?.trim() === '미디어 썸네일';
-    });
-    if (thumbTd) {
-      const divs = thumbTd.querySelectorAll(':scope > div > div > div');
-      if (divs.length) caption = divs[divs.length-1].textContent.trim();
-    }
-    // 날짜 텍스트 탐색 (htmlKV로 '날짜' 키 or 텍스트 패턴)
-    const kv = htmlKV(block.outerHTML);
-    const dateRaw = kv['날짜'] || kv['Date'] || '';
+    // ① 캡션: h2._a6-h 태그 텍스트
+    const h2 = block.querySelector('h2[class*="_a6-h"]');
+    const caption = h2 ? h2.textContent.trim() : '';
+
+    // ② URI: video src 또는 img src (첫 번째)
+    const video = block.querySelector('video[src]');
+    const img   = block.querySelector('img[src]');
+    const uri = (video ? video.getAttribute('src') : '') || (img ? img.getAttribute('src') : '');
+
+    // ③ 날짜: div._a6-o 또는 div._3-94 텍스트 (예: "6월 06, 2026 4:38 오전")
     let ts = 0;
-    const dateStr = dateRaw || block.textContent || '';
-    const m = dateStr.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
-    if (m) ts = Math.floor(new Date(`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`).getTime()/1000);
-    if (caption || ts) items.push({ caption, ts });
+    const dateEl = block.querySelector('div._a6-o, div[class*="_a6-o"]');
+    const dateStr = dateEl ? dateEl.textContent.trim() : '';
+    // 한국어 날짜: "M월 DD, YYYY" 패턴
+    const mKo = dateStr.match(/(\d{1,2})월\s*(\d{1,2}),?\s*(\d{4})/);
+    if (mKo) {
+      ts = Math.floor(new Date(`${mKo[3]}-${mKo[1].padStart(2,'0')}-${mKo[2].padStart(2,'0')}`).getTime()/1000);
+    } else {
+      // ISO / 숫자 날짜 fallback: "YYYY-MM-DD" or "YYYY.MM.DD"
+      const mIso = dateStr.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
+      if (mIso) ts = Math.floor(new Date(`${mIso[1]}-${mIso[2].padStart(2,'0')}-${mIso[3].padStart(2,'0')}`).getTime()/1000);
+    }
+
+    if (caption || uri || ts) items.push({ caption, uri, ts });
   });
-  // _a6-g 없으면 li > div 구조 시도
-  if (items.length === 0) {
-    doc.querySelectorAll('ul li, .pam').forEach(block => {
-      const divs = block.querySelectorAll('div');
-      let caption = '', ts = 0;
-      divs.forEach(d => {
-        const txt = d.textContent.trim();
-        if (txt && txt.length > 5 && !txt.match(/^\d/) && !caption) caption = txt;
-        const m = txt.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
-        if (m && !ts) ts = Math.floor(new Date(`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`).getTime()/1000);
-      });
-      if (caption || ts) items.push({ caption, ts });
-    });
-  }
   return items;
 }
 
@@ -2170,6 +2163,38 @@ function parseInstagramZIP(jsons, allPaths) {
         const span = (ts[0]-ts[ts.length-1])/86400;
         d.opDays     = Math.round(span);
         d.weeklyPosts= Math.round((allTimestamps.length/Math.max(span,1))*7*10)/10;
+      }
+    } else {
+      // ★ HTML format ZIP: posts_1.html에서 캡션+날짜+URI 파싱
+      // postsInsights HTML이 메트릭을 제공하므로 콘텐츠 HTML은 캡션+타임스탬프+URI만 추출
+      const postsHtml = getHTML('posts');
+      if (postsHtml) {
+        try {
+          const htmlPosts = parseContentHTML(postsHtml);
+          if (htmlPosts.length > 0) {
+            if (!d.posts) d.posts = htmlPosts.length;
+            const allTags = {};
+            const timestamps = [];
+            const feedPostUris = [];
+            htmlPosts.forEach(p => {
+              const cap = fixStr(p.caption || '');
+              (cap.match(/#[\S]+/g) || []).forEach(t => { allTags[t] = (allTags[t]||0)+1; });
+              if (p.ts) timestamps.push(p.ts);
+              feedPostUris.push({ uri: p.uri || '', cap, ts: p.ts || 0, likes: 0, comments: 0 });
+            });
+            if (!d._feedPostUris) d._feedPostUris = feedPostUris;
+            if (Object.keys(allTags).length > 0 && (!d.topHashtags || d.topHashtags.length === 0)) {
+              d.topHashtags = Object.entries(allTags).sort((a,b)=>b[1]-a[1]).slice(0,12).map(e=>fixStr(e[0]));
+            }
+            const allTimestamps = timestamps.concat(d._reelsTimestamps || []);
+            if (allTimestamps.length >= 2 && !d.opDays) {
+              const ts = allTimestamps.slice().sort((a,b)=>b-a);
+              const span = (ts[0]-ts[ts.length-1])/86400;
+              d.opDays     = Math.round(span);
+              d.weeklyPosts= Math.round((allTimestamps.length/Math.max(span,1))*7*10)/10;
+            }
+          }
+        } catch(e) { console.warn('posts HTML 파싱 오류:', e); }
       }
     }
   } catch(e) {}
