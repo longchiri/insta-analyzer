@@ -4212,6 +4212,37 @@ function analyze() {
     const rlMaxImprRaw = reelsRaw.reduce((mx, r) => Math.max(mx, typeof r==='object' ? (r.impr||0) : 0), 0);
     const rlMaxImprEff = rlMaxImpr || rlMaxImprRaw;
 
+    // ── 릴스 성과 집계 (인사이트 데이터 있을 때만) ──
+    const rlEffList = showRaw.map((raw, i) => {
+      const ins = matchInsight(showCaptions[i], showTimes[i]);
+      const rp = typeof raw==='object' ? raw : {};
+      const eff = ins || ((rp.plays||rp.impr||rp.reach||rp.saves) ? {
+        plays:rp.plays||0, impr:rp.impr||0, reach:rp.reach||0,
+        saves:rp.saves||0, shares:rp.shares||0,
+        likes:rp.likes||0, comments:rp.comments||0
+      } : null);
+      return eff;
+    });
+    const rlHasPerf = rlEffList.some(e => e && (e.reach>0||e.impr>0));
+    const rlReachList  = rlEffList.map(e => e?.reach||0).filter(v=>v>0);
+    const rlImprList   = rlEffList.map(e => e?.impr||0).filter(v=>v>0);
+    const rlEngList    = rlEffList.map((e,i)=>{
+      if(!e||!(e.reach>0)) return null;
+      return ((e.likes||0)+(e.saves||0)+(e.shares||0)+(e.comments||0)) / e.reach * 100;
+    }).filter(v=>v!==null);
+    const rlSvList = rlEffList.map(e=> e&&e.reach>0 ? (e.saves||0)/e.reach*100 : null).filter(v=>v!==null);
+    const rlAvgReach = rlReachList.length ? Math.round(rlReachList.reduce((s,v)=>s+v,0)/rlReachList.length) : 0;
+    const rlAvgImpr  = rlImprList.length  ? Math.round(rlImprList.reduce((s,v)=>s+v,0)/rlImprList.length)  : 0;
+    const rlAvgEng   = rlEngList.length   ? (rlEngList.reduce((s,v)=>s+v,0)/rlEngList.length).toFixed(1)   : null;
+    const rlAvgSvR   = rlSvList.length    ? (rlSvList.reduce((s,v)=>s+v,0)/rlSvList.length).toFixed(2)     : null;
+    const rlTopImpr  = rlImprList.length  ? Math.max(...rlImprList) : 0;
+    const rlTopImprMult = rlAvgImpr>0&&rlTopImpr>0 ? (rlTopImpr/rlAvgImpr).toFixed(1) : null;
+    const rlDrR = rlAvgImpr>0&&rlAvgReach>0 ? (rlAvgReach/rlAvgImpr*100).toFixed(0) : null;
+    const rlAvgPlays = (() => {
+      const pl = rlEffList.map(e=>e?.plays||0).filter(v=>v>0);
+      return pl.length ? Math.round(pl.reduce((s,v)=>s+v,0)/pl.length) : 0;
+    })();
+
     document.getElementById('reelsCaptionSection').innerHTML = `
       <!-- 요약 통계 -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
@@ -4259,6 +4290,60 @@ function analyze() {
             <span style="background:#ede9fe;color:#6d28d9;padding:4px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;">${tag} <span style="opacity:.65;font-size:.7rem;">${cnt}회</span></span>`).join('')}
         </div>
       </div>` : ''}
+
+      <!-- 릴스 성과 분석 (인사이트 데이터 있을 때) -->
+      ${rlHasPerf ? `
+      <div style="background:#fafafa;border-radius:14px;padding:16px;margin-bottom:18px;border:1px solid #ede9fe;">
+        <div style="font-size:0.85rem;font-weight:800;color:#6b21a8;margin-bottom:14px;">📊 릴스 성과 분석 <span style="font-size:0.72rem;font-weight:500;color:#999;">(ZIP 인사이트 기준)</span></div>
+
+        <!-- 상단 요약 카드 4종 -->
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;">
+          ${[
+            rlAvgReach>0 ? { label:'평균 도달', val: rlAvgReach.toLocaleString()+'명', color:'#276749', bg:'#f0fff4' } : null,
+            rlAvgImpr>0  ? { label:'평균 노출', val: rlAvgImpr.toLocaleString()+'회',  color:'#744210', bg:'#fffbeb' } : null,
+            rlAvgEng     ? { label:'평균 인게이지먼트율', val: rlAvgEng+'%', color: +rlAvgEng>=4?'#276749':+rlAvgEng>=2?'#744210':'#9b2c2c', bg: +rlAvgEng>=4?'#f0fff4':+rlAvgEng>=2?'#fffbeb':'#fff5f5' } : null,
+            rlAvgPlays>0 ? { label:'평균 재생수', val: rlAvgPlays.toLocaleString()+'회', color:'#1d4ed8', bg:'#eff6ff' } : null,
+          ].filter(Boolean).map(s => `
+            <div style="background:${s.bg};border-radius:10px;padding:11px;text-align:center;">
+              <div style="font-size:0.7rem;color:#aaa;margin-bottom:3px;">${s.label}</div>
+              <div style="font-size:1.2rem;font-weight:900;color:${s.color};">${s.val}</div>
+            </div>`).join('')}
+        </div>
+
+        <!-- 노출 분석 세부 항목 -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${rlDrR ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
+            <span style="color:#555;">
+              <span style="font-weight:700;">노출→도달 효율 (도달률)</span><br>
+              <span style="font-size:0.72rem;color:#999;">노출 중 실제 도달로 이어진 비율 — 50%+이면 알고리즘 친화적</span>
+            </span>
+            <span style="font-weight:900;color:${+rlDrR>=50?'#276749':+rlDrR>=30?'#744210':'#9b2c2c'};font-size:1rem;">${rlDrR}%</span>
+          </div>` : ''}
+          ${rlTopImpr>0 ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
+            <span style="color:#555;font-weight:700;">최고 노출 릴스</span>
+            <span style="font-weight:900;color:#6b21a8;font-size:1rem;">${rlTopImpr.toLocaleString()}회</span>
+          </div>` : ''}
+          ${rlTopImprMult ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
+            <span style="color:#555;font-weight:700;">평균 노출 대비 최고 차이</span>
+            <span style="font-weight:900;color:${+rlTopImprMult>=5?'#276749':'#744210'};font-size:1rem;">${rlTopImprMult}배</span>
+          </div>` : ''}
+          ${rlAvgSvR ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
+            <span style="color:#555;">
+              <span style="font-weight:700;">평균 저장율</span><br>
+              <span style="font-size:0.72rem;color:#999;">릴스 평균 1~2% 이상이면 우수</span>
+            </span>
+            <span style="font-weight:900;color:${+rlAvgSvR>=2?'#276749':+rlAvgSvR>=1?'#744210':'#9b2c2c'};font-size:1rem;">${rlAvgSvR}%</span>
+          </div>` : ''}
+        </div>
+      </div>` : `
+      <div style="background:#faf5ff;border-radius:12px;padding:13px 16px;margin-bottom:16px;border:1px dashed #d8b4fe;text-align:center;">
+        <div style="font-size:0.78rem;color:#7c3aed;font-weight:600;">📊 릴스 성과 데이터 없음</div>
+        <div style="font-size:0.72rem;color:#aaa;margin-top:4px;">인사이트 포함 ZIP을 업로드하면 도달·노출·인게이지먼트율을 볼 수 있어요</div>
+      </div>`}
 
       <!-- 릴스 개별 분석 — 핀 + 펼치기 -->
       ${(() => {
