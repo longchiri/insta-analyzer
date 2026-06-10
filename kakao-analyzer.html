@@ -992,7 +992,8 @@ function analyze() {
   if (tagCount >= 5) hashScore += 3;
   // 대형+세부 태그 혼합 체크
   const hasLargeTag = tags.some(t => /러닝|독서|맛집|게임|취미|모임|운동|건강|여행|카페/.test(t));
-  const hasSmallTag = tags.some(t => t.length > 6); // 세부 키워드는 길이가 길다
+  const detailTagKw = /강남|홍대|신촌|건대|판교|잠실|여의도|신림|종로|성수|합정|마포|용산|20대|30대|직장인|초보|입문|야간|오전|오후|주말|평일|정기|매주|무료|취미생|여성|남성|부부|싱글|학생/;
+  const hasSmallTag = tags.some(t => detailTagKw.test(t)); // 세부 태그: 지역·대상·시간 키워드 포함 여부
   if (hasLargeTag && hasSmallTag) hashScore += 3;
   hashScore = Math.min(10, hashScore);
 
