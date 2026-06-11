@@ -975,7 +975,7 @@ function analyze() {
   // ① 제목 키워드 점수 (최대 12점)
   const titleLen = title.length;
   const titleHasKeyword = /러닝|독서|맛집|게임|취미|모임|크루|스터디|직장|재테크|부업|연애|소개팅|운동|건강|여행/.test(title);
-  const titleHasLocation = /서울|부산|대구|인천|광주|대전|울산|경기|인천|강남|홍대|신촌|건대|이태원|여의도/.test(title);
+  const titleHasLocation = /서울|부산|대구|인천|광주|대전|울산|경기|강남|홍대|신촌|건대|이태원|여의도/.test(title);
   const titleHasTarget   = /초보|환영|누구나|자유|친목|모집/.test(title);
   const titleHasSchedule = /매주|매일|정기|주 \d|토요일|일요일|평일|주말/.test(title);
   let titleScore = 0;
@@ -1156,7 +1156,7 @@ function analyze() {
     { name:'SEO 노출',  val:seoScore,      max:30, desc:'30점' },
     { name:'활성도',    val:activityScore, max:35, desc:'35점' },
     { name:'소셜신뢰',  val:socialScore,   max:25, desc:'25점' },
-    { name:'지금탭 ⚡', val:nowTabScore,   max:10, desc:'10점' },
+    { name:'지금탭 ⚡', val:nowTabScore,   max:13, desc:'13점' },
   ].map(s => `
     <div class="sub-item">
       <div class="sv">${s.val}</div>

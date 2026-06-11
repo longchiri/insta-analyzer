@@ -1189,7 +1189,8 @@ function analyzeMoim() {
 
   // 점수 계산
   const keywords = ['모임','독서','러닝','요가','여행','스터디','크루','클럽','동아리','맛집'];
-  const hasKw = keywords.some(k => title.includes(k));
+  const onlineKw = ['온라인','비대면','화상','줌','zoom','원격','전국','재택'];
+  const hasKw = keywords.some(k => title.includes(k)) || (isOnline && onlineKw.some(k => title.toLowerCase().includes(k)));
 
   let seo = 0;
   if (title.length >= 10) seo += 25; else if (title.length >= 5) seo += 12;
@@ -1575,7 +1576,7 @@ function analyzeMoim() {
 
   const roads = [];
   // 기존 로드맵
-  if (!hasKw || title.length < 10) roads.push({ title:'① 제목 리뉴얼', action:'"지역 + 주제 + 대상" 구조로 제목을 재작성하세요', why:'검색 노출 즉시 개선' });
+  if (!hasKw || title.length < 10) roads.push({ title:'① 제목 리뉴얼', action: isOnline ? '"온라인/비대면 + 주제 + 대상" 구조로 제목을 재작성하세요 (예: "온라인 직장인 독서 스터디")' : '"지역 + 주제 + 대상" 구조로 제목을 재작성하세요', why:'검색 노출 즉시 개선' });
   if (intro.length < 100) roads.push({ title:'② 소개글 보강', action:'100자 이상 일정·장소·대상을 구체적으로 작성하세요', why:'CTR + 알고리즘 이해도 향상' });
   if (freq < 2) roads.push({ title:'③ 정기 일정 등록', action:'매주 고정 요일·시간으로 정기 일정을 등록하세요', why:'활성 모임 신호 강화' });
   if (flash === 0) roads.push({ title:'④ 번개모임 개설', action:'이번 주 안에 번개모임을 한 번 열어보세요', why:'활성도 점수 즉시 부스트' });
