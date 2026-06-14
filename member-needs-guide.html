@@ -183,61 +183,7 @@
     .step-text { font-size:0.86rem; color:#444; line-height:1.5; flex:1; }
     .step-text strong { color:#4f46e5; }
 
-    /* 2×2 매트릭스 */
-    .matrix-wrap { position:relative; margin:14px 0; }
-    .matrix-grid {
-      display:grid; grid-template-columns:1fr 1fr;
-      gap:8px;
-    }
-    .matrix-axis-h {
-      text-align:center; font-size:0.72rem; font-weight:800;
-      color:#7c3aed; margin-bottom:6px;
-      display:flex; justify-content:space-between; padding:0 4px;
-    }
-    .matrix-axis-v-wrap {
-      display:flex; align-items:stretch;
-    }
-    .matrix-axis-v {
-      writing-mode:vertical-rl; text-orientation:mixed;
-      transform:rotate(180deg);
-      font-size:0.68rem; font-weight:800; color:#7c3aed;
-      display:flex; align-items:center; justify-content:center;
-      width:18px; margin-right:8px; letter-spacing:0.06em;
-    }
-    .matrix-cell {
-      border-radius:12px; padding:14px 12px;
-      border:1.5px solid; min-height:110px;
-    }
-    .matrix-cell .cell-type {
-      font-size:0.72rem; font-weight:800; margin-bottom:5px;
-    }
-    .matrix-cell .cell-need {
-      font-size:0.78rem; font-weight:700; margin-bottom:6px;
-    }
-    .matrix-cell .cell-tip {
-      font-size:0.72rem; color:#666; line-height:1.5;
-    }
-    .mc1 { background:#ede9fe; border-color:#c4b5fd; }
-    .mc1 .cell-type { color:#6d28d9; }
-    .mc1 .cell-need { color:#4f46e5; }
-    .mc2 { background:#dbeafe; border-color:#bfdbfe; }
-    .mc2 .cell-type { color:#1e40af; }
-    .mc2 .cell-need { color:#1d4ed8; }
-    .mc3 { background:#fce7f3; border-color:#fbcfe8; }
-    .mc3 .cell-type { color:#9d174d; }
-    .mc3 .cell-need { color:#be185d; }
-    .mc4 { background:#dcfce7; border-color:#bbf7d0; }
-    .mc4 .cell-type { color:#166534; }
-    .mc4 .cell-need { color:#15803d; }
-    .matrix-center {
-      position:absolute; top:50%; left:50%;
-      transform:translate(-50%,-50%);
-      background:#7c3aed; color:#fff;
-      font-size:0.65rem; font-weight:800;
-      padding:4px 10px; border-radius:99px;
-      white-space:nowrap; pointer-events:none;
-      z-index:2;
-    }
+    /* 2×2 매트릭스 — 인라인 스타일로 대체됨 */
 
     /* 이탈 신호 */
     .signal-list { display:flex; flex-direction:column; gap:8px; margin:10px 0; }
@@ -564,52 +510,168 @@
     <div class="banner-arrow">▼</div>
   </div>
   <div class="banner-body">
-    <div class="body-section">
-      <div class="body-label">2×2 매트릭스</div>
-      <div class="matrix-axis-h">
-        <span>← 관계 중심</span>
-        <span>활동 중심 →</span>
-      </div>
-      <div class="matrix-axis-v-wrap">
-        <div class="matrix-axis-v">초보자 ↑ · ↓ 경험자</div>
-        <div style="flex:1; position:relative;">
-          <div class="matrix-grid">
-            <div class="matrix-cell mc3">
-              <div class="cell-type">🌱 초보 + 관계중심</div>
-              <div class="cell-need">심리적 안전감 필요</div>
-              <div class="cell-tip">처음 오는 거 부담스러워해요. 환영 문화와 편안한 분위기가 핵심이에요.</div>
-            </div>
-            <div class="matrix-cell mc1">
-              <div class="cell-type">🌱 초보 + 활동중심</div>
-              <div class="cell-need">기초 설명 & 안내 필요</div>
-              <div class="cell-tip">잘 못해도 괜찮다는 안심이 필요해요. 기초를 친절하게 설명해주세요.</div>
-            </div>
-            <div class="matrix-cell mc2">
-              <div class="cell-type">🌳 경험자 + 관계중심</div>
-              <div class="cell-need">깊은 대화 & 네트워킹</div>
-              <div class="cell-tip">활동보다 사람이 목적이에요. 자유 대화 시간과 소그룹 구성이 효과적이에요.</div>
-            </div>
-            <div class="matrix-cell mc4">
-              <div class="cell-type">🌳 경험자 + 활동중심</div>
-              <div class="cell-need">수준 높은 콘텐츠 & 도전</div>
-              <div class="cell-tip">심심해지면 이탈해요. 심화 주제나 프로젝트형 과제를 제공해야 해요.</div>
+
+    <!-- 축 레이블 -->
+    <div style="display:flex; align-items:center; gap:8px; margin:18px 0 14px; flex-wrap:wrap;">
+      <span style="font-size:0.72rem; font-weight:800; color:#be185d; background:#fce7f3; padding:5px 12px; border-radius:99px;">← 관계 중심</span>
+      <div style="flex:1; height:2px; background:linear-gradient(90deg,#f9a8d4,#c4b5fd,#93c5fd,#86efac); border-radius:99px; min-width:20px;"></div>
+      <span style="font-size:0.72rem; font-weight:800; color:#4f46e5; background:#ede9fe; padding:5px 12px; border-radius:99px;">활동 중심 →</span>
+    </div>
+
+    <!-- ── 초보자 행 ── -->
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+      <span style="font-size:0.68rem; font-weight:800; color:#d97706; background:#fef3c7; border:1.5px solid #fde68a; padding:4px 12px; border-radius:99px; white-space:nowrap;">🌱 초보자</span>
+      <div style="flex:1; height:1px; background:#fde68a;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+
+      <!-- A. 초보 × 관계중심 -->
+      <div style="background:#fff0f7; border:2px solid #f9a8d4; border-radius:16px; overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#fce7f3,#fdf2f8); padding:14px 14px 10px; border-bottom:1px solid #fbcfe8;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <span style="font-size:1.3rem;">🫂</span>
+            <div>
+              <div style="font-size:0.62rem; font-weight:800; color:#db2777; letter-spacing:0.06em;">TYPE A · 초보 × 관계중심</div>
+              <div style="font-size:0.95rem; font-weight:900; color:#9d174d; line-height:1.25;">환영받고 싶어요</div>
             </div>
           </div>
-          <div class="matrix-center">내 모임</div>
+          <div style="font-size:0.75rem; color:#be185d; line-height:1.6; font-style:italic;">"분위기가 좋으면 계속 올 것 같아요"</div>
+        </div>
+        <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
+          <div style="font-size:0.68rem; font-weight:800; color:#be185d; letter-spacing:0.05em; margin-bottom:2px;">🔍 이런 신호가 보여요</div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>👀</span> 조용히 앉아서 분위기 파악 먼저 해요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>😶</span> 말 걸어주길 기다리는 편이에요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>💬</span> 단톡방 첫 메시지를 절대 먼저 안 보내요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>🧍</span> 혼자 구석에 있거나 핸드폰 보는 시간이 길어요</div>
+          </div>
+          <div style="background:#fee2e2; border-radius:8px; padding:8px 10px; font-size:0.72rem; color:#b91c1c; line-height:1.5; margin-top:2px;">
+            <strong>⚠ 이탈 조건</strong> — 첫 모임에서 아무도 말 안 걸면 두 번 다시 안 와요
+          </div>
+          <div style="background:#fff; border:1.5px solid #f9a8d4; border-radius:8px; padding:9px 11px; font-size:0.73rem; color:#9d174d; line-height:1.6;">
+            <strong>✅ 운영 포인트</strong><br/>
+            도착하자마자 이름 불러주기 → 옆에 앉아 짧게 1:1 대화 → 자기소개 순서 사전 안내 → 모임 후 단톡방에 멘션해서 존재감 만들어주기
+          </div>
+        </div>
+      </div>
+
+      <!-- B. 초보 × 활동중심 -->
+      <div style="background:#f5f3ff; border:2px solid #c4b5fd; border-radius:16px; overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#ede9fe,#f5f3ff); padding:14px 14px 10px; border-bottom:1px solid #ddd6fe;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <span style="font-size:1.3rem;">📖</span>
+            <div>
+              <div style="font-size:0.62rem; font-weight:800; color:#6d28d9; letter-spacing:0.06em;">TYPE B · 초보 × 활동중심</div>
+              <div style="font-size:0.95rem; font-weight:900; color:#4f46e5; line-height:1.25;">잘할 수 있을지<br/>걱정돼요</div>
+            </div>
+          </div>
+          <div style="font-size:0.75rem; color:#6d28d9; line-height:1.6; font-style:italic;">"못 따라가면 어떡하지…"</div>
+        </div>
+        <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
+          <div style="font-size:0.68rem; font-weight:800; color:#6d28d9; letter-spacing:0.05em; margin-bottom:2px;">🔍 이런 신호가 보여요</div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>❓</span> 가입 전 준비물·난이도를 꼭 물어봐요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>😅</span> 다른 멤버 눈치 보며 뒤처질까봐 조마조마해요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>🌟</span> 작은 성취에도 리액션이 크고 열의가 넘쳐요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>📸</span> 자기 결과물 사진 찍어서 간직하고 싶어해요</div>
+          </div>
+          <div style="background:#fee2e2; border-radius:8px; padding:8px 10px; font-size:0.72rem; color:#b91c1c; line-height:1.5; margin-top:2px;">
+            <strong>⚠ 이탈 조건</strong> — "나 여기선 못 따라가겠다" 느끼는 순간 조용히 사라져요
+          </div>
+          <div style="background:#fff; border:1.5px solid #c4b5fd; border-radius:8px; padding:9px 11px; font-size:0.73rem; color:#4f46e5; line-height:1.6;">
+            <strong>✅ 운영 포인트</strong><br/>
+            "못해도 괜찮아요" 반복 언급 → 기초 설명 충분히 → 잘하는 사람 과도한 칭찬 자제 → 과정 중심 피드백으로 성취감 만들기
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="body-section">
-      <div class="body-label">실전 활용법</div>
-      <div class="action-box">
-        <strong>📌 Step 1.</strong> 현재 멤버 10명을 머릿속으로 2×2에 배치해보세요.<br/>
-        <strong>📌 Step 2.</strong> 가장 많이 몰린 칸이 모임의 메인 타겟이에요.<br/>
-        <strong>📌 Step 3.</strong> 그 타겟에 맞는 운영 요소를 강화하면 재참여율이 올라가요.<br/><br/>
-        <strong>⚠️ 주의</strong> — 타입이 너무 섞여 있으면 한 쪽을 만족시키면 다른 쪽이 불만이에요.<br/>
-        모집 단계에서 어떤 타입을 대상으로 할지 소개글에 명확히 적는 게 장기적으로 좋아요.
+    <!-- 중앙 구분선 -->
+    <div style="text-align:center; margin:4px 0 12px; position:relative;">
+      <div style="height:1px; background:linear-gradient(90deg,transparent,#e0e7ff,transparent); position:absolute; top:50%; left:0; right:0;"></div>
+      <span style="position:relative; background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; font-size:0.68rem; font-weight:800; padding:5px 14px; border-radius:99px; box-shadow:0 3px 10px rgba(79,70,229,0.3);">
+        ✦ 초보 ↕ 경험자 구분선
+      </span>
+    </div>
+
+    <!-- ── 경험자 행 ── -->
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+      <span style="font-size:0.68rem; font-weight:800; color:#0891b2; background:#ecfeff; border:1.5px solid #a5f3fc; padding:4px 12px; border-radius:99px; white-space:nowrap;">🌳 경험자</span>
+      <div style="flex:1; height:1px; background:#a5f3fc;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;">
+
+      <!-- C. 경험자 × 관계중심 -->
+      <div style="background:#eff6ff; border:2px solid #bfdbfe; border-radius:16px; overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#dbeafe,#eff6ff); padding:14px 14px 10px; border-bottom:1px solid #bfdbfe;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <span style="font-size:1.3rem;">🎙️</span>
+            <div>
+              <div style="font-size:0.62rem; font-weight:800; color:#1d4ed8; letter-spacing:0.06em;">TYPE C · 경험자 × 관계중심</div>
+              <div style="font-size:0.95rem; font-weight:900; color:#1e40af; line-height:1.25;">진짜 인연을<br/>만나고 싶어요</div>
+            </div>
+          </div>
+          <div style="font-size:0.75rem; color:#1d4ed8; line-height:1.6; font-style:italic;">"활동보다 사람이 더 기억에 남아요"</div>
+        </div>
+        <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
+          <div style="font-size:0.68rem; font-weight:800; color:#1d4ed8; letter-spacing:0.05em; margin-bottom:2px;">🔍 이런 신호가 보여요</div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>🗣️</span> 모임 끝나도 남아서 이야기를 계속 이어가요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>📱</span> 다른 멤버 인스타·연락처 자연스럽게 물어봐요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>☕</span> 2차·번개 제안에 제일 먼저 손 들어요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>🔁</span> 특정 멤버가 있을 때만 참여율이 올라가요</div>
+          </div>
+          <div style="background:#fee2e2; border-radius:8px; padding:8px 10px; font-size:0.72rem; color:#b91c1c; line-height:1.5; margin-top:2px;">
+            <strong>⚠ 이탈 조건</strong> — 친해진 멤버가 이탈하면 본인도 동반 이탈할 확률이 높아요
+          </div>
+          <div style="background:#fff; border:1.5px solid #bfdbfe; border-radius:8px; padding:9px 11px; font-size:0.73rem; color:#1e40af; line-height:1.6;">
+            <strong>✅ 운영 포인트</strong><br/>
+            소그룹 나누기 → 테이블 배치 바꾸기 → 자유 대화 타임 필수 확보 → 뒤풀이 장소 미리 잡아두기
+          </div>
+        </div>
+      </div>
+
+      <!-- D. 경험자 × 활동중심 -->
+      <div style="background:#f0fdf4; border:2px solid #86efac; border-radius:16px; overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#dcfce7,#f0fdf4); padding:14px 14px 10px; border-bottom:1px solid #bbf7d0;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <span style="font-size:1.3rem;">🚀</span>
+            <div>
+              <div style="font-size:0.62rem; font-weight:800; color:#15803d; letter-spacing:0.06em;">TYPE D · 경험자 × 활동중심</div>
+              <div style="font-size:0.95rem; font-weight:900; color:#166534; line-height:1.25;">심심하면<br/>바로 나가요</div>
+            </div>
+          </div>
+          <div style="font-size:0.75rem; color:#15803d; line-height:1.6; font-style:italic;">"이 정도면 굳이 나올 이유가 없는데…"</div>
+        </div>
+        <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
+          <div style="font-size:0.68rem; font-weight:800; color:#15803d; letter-spacing:0.05em; margin-bottom:2px;">🔍 이런 신호가 보여요</div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>💡</span> "다음엔 이런 것도 해봐요"라고 직접 제안해요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>🛠️</span> 기획·준비에 자발적으로 끼어들고 싶어해요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>😑</span> 반복 콘텐츠엔 반응이 차가워지고 말수가 줄어요</div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:0.75rem; color:#555; line-height:1.5;"><span>⭐</span> 모임 후기·게시글을 가장 잘 올려주는 타입이에요</div>
+          </div>
+          <div style="background:#fee2e2; border-radius:8px; padding:8px 10px; font-size:0.72rem; color:#b91c1c; line-height:1.5; margin-top:2px;">
+            <strong>⚠ 이탈 조건</strong> — "매번 똑같다"는 느낌이 3회 이상 쌓이면 조용히 탈퇴해요
+          </div>
+          <div style="background:#fff; border:1.5px solid #86efac; border-radius:8px; padding:9px 11px; font-size:0.73rem; color:#166534; line-height:1.6;">
+            <strong>✅ 운영 포인트</strong><br/>
+            심화 테마 회차 별도 기획 → 미니 발표·프로젝트 기회 제공 → 리더 역할 부여 → 새 멤버 온보딩 도우미로 활용
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- 활용법 -->
+    <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe); border-radius:12px; padding:16px; border-left:4px solid #7c3aed;">
+      <div style="font-size:0.75rem; font-weight:800; color:#4f46e5; margin-bottom:10px;">📌 지금 바로 해볼 수 있는 것</div>
+      <div style="display:flex; flex-direction:column; gap:7px;">
+        <div style="font-size:0.8rem; color:#3730a3; line-height:1.6;"><strong>Step 1.</strong> 내 모임 현재 멤버 10명을 A·B·C·D 중 어디 해당하는지 분류해보세요</div>
+        <div style="font-size:0.8rem; color:#3730a3; line-height:1.6;"><strong>Step 2.</strong> 가장 많이 몰린 타입이 메인 타겟 — 그 타입 운영 포인트를 우선 강화하세요</div>
+        <div style="font-size:0.8rem; color:#3730a3; line-height:1.6;"><strong>Step 3.</strong> 타입이 섞여 있으면 소개글에 "이런 분과 함께하고 싶어요" 한 줄 추가해 미리 필터링하세요</div>
+      </div>
+    </div>
+
   </div>
 </div>
 
