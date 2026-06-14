@@ -4,981 +4,762 @@
   <link rel="icon" href="logo.png" type="image/png"/>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>모임 소개글 작성 가이드 | 플랫폼별 템플릿</title>
+  <title>모임 소개글 생성기</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;
-      background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);
-      min-height:100vh; padding:30px 16px; color:#1a1a1a;
-    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;background:linear-gradient(135deg,#f0fdf4,#dcfce7 60%,#f0fdf4);min-height:100vh;padding:28px 16px 60px;color:#1a1a1a;}
 
-    /* ─── 헤더 ─── */
-    header { text-align:center; margin-bottom:36px; }
-    header .logo { font-size:2.8rem; margin-bottom:6px; }
-    header h1 {
-      font-size:1.9rem; font-weight:900;
-      background:linear-gradient(90deg,#16a34a,#059669);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    }
-    header p { color:#888; margin-top:6px; font-size:0.9rem; }
-    .badge {
-      display:inline-block; background:linear-gradient(90deg,#16a34a,#059669);
-      color:#fff; font-size:0.72rem; font-weight:800;
-      padding:3px 14px; border-radius:99px; margin-top:8px;
-    }
+    .back-wrap{max-width:760px;margin:0 auto 12px;}
+    .back-btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#888;font-size:0.82rem;font-weight:600;background:#fff;border:1.5px solid #e5e5e5;border-radius:99px;padding:7px 16px;}
 
-    /* ─── 뒤로가기 ─── */
-    .back-wrap { max-width:720px; margin:0 auto 12px; }
-    .back-btn {
-      display:inline-flex; align-items:center; gap:6px;
-      text-decoration:none; color:#888; font-size:0.82rem;
-      font-weight:600; background:#fff; border:1.5px solid #e5e5e5;
-      border-radius:99px; padding:7px 16px;
-    }
+    header{text-align:center;margin-bottom:28px;}
+    header .logo{font-size:2.6rem;margin-bottom:6px;}
+    header h1{font-size:1.8rem;font-weight:900;background:linear-gradient(90deg,#16a34a,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    header p{color:#888;margin-top:5px;font-size:0.88rem;}
+    .badge{display:inline-block;background:linear-gradient(90deg,#16a34a,#059669);color:#fff;font-size:0.72rem;font-weight:800;padding:3px 14px;border-radius:99px;margin-top:7px;}
 
-    /* ─── 인트로 박스 ─── */
-    .intro-box {
-      max-width:720px; margin:0 auto 24px;
-      background:#fff; border-radius:18px; padding:22px 24px;
-      border:1.5px solid #bbf7d0;
-      box-shadow:0 4px 20px rgba(22,163,74,0.08);
-    }
-    .intro-box .why {
-      font-size:0.88rem; color:#555; line-height:1.9;
-      border-left:4px solid #16a34a; padding-left:14px;
-    }
-    .intro-box .why strong { color:#16a34a; }
+    .step-box{max-width:760px;margin:0 auto 14px;background:#fff;border-radius:18px;padding:20px 22px;border:1.5px solid #bbf7d0;box-shadow:0 4px 18px rgba(22,163,74,0.07);}
+    .step-label{font-size:0.72rem;font-weight:800;letter-spacing:0.07em;margin-bottom:13px;display:flex;align-items:center;gap:8px;}
+    .step-num{width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.73rem;font-weight:900;color:#fff;flex-shrink:0;}
 
-    /* ─── 공식 박스 ─── */
-    .formula-box {
-      max-width:720px; margin:0 auto 28px;
-      background:linear-gradient(135deg,#f0fdf4,#dcfce7);
-      border-radius:18px; padding:22px 24px;
-      border:2px solid #86efac;
-    }
+    .name-input{width:100%;padding:13px 18px;border-radius:12px;border:2px solid #bbf7d0;background:#f0fdf4;font-size:1rem;font-weight:700;color:#14532d;outline:none;transition:border 0.2s;}
+    .name-input:focus{border-color:#16a34a;}
+    .name-input::placeholder{color:#a7f3d0;font-weight:500;}
 
-    /* ─── 섹션 타이틀 ─── */
-    .section-title {
-      max-width:720px; margin:0 auto 14px;
-      font-size:0.78rem; font-weight:800; color:#16a34a;
-      letter-spacing:0.08em; display:flex; align-items:center; gap:8px;
-    }
-    .section-title::after {
-      content:''; flex:1; height:1.5px;
-      background:linear-gradient(90deg,#86efac,transparent);
-    }
+    .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+    .cat-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 10px;border-radius:14px;border:2px solid #e5e7eb;background:#f9fafb;cursor:pointer;transition:all 0.15s;font-size:0.8rem;font-weight:700;color:#555;}
+    .cat-btn .cat-em{font-size:1.5rem;}
+    .cat-btn.selected{border-color:#16a34a;background:#f0fdf4;color:#15803d;}
 
-    /* ─── 배너 카드 ─── */
-    .banner-card {
-      max-width:720px; margin:0 auto 14px;
-      border-radius:16px; overflow:hidden;
-      box-shadow:0 4px 18px rgba(22,163,74,0.10);
-      border:1.5px solid #bbf7d0;
-    }
-    .banner-head {
-      display:flex; align-items:center; gap:14px;
-      padding:18px 22px; cursor:pointer;
-      background:#fff; transition:background 0.2s;
-      user-select:none;
-    }
-    .banner-head:hover { background:#f0fdf4; }
-    .banner-icon {
-      width:48px; height:48px; border-radius:14px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:1.5rem; flex-shrink:0;
-    }
-    .banner-text { flex:1; }
-    .banner-num {
-      font-size:0.7rem; font-weight:800; color:#16a34a;
-      letter-spacing:0.06em; margin-bottom:2px;
-    }
-    .banner-title { font-size:1rem; font-weight:800; color:#1a1a1a; }
-    .banner-sub { font-size:0.8rem; color:#888; margin-top:2px; }
-    .banner-arrow {
-      font-size:1.1rem; color:#86efac; transition:transform 0.25s;
-      flex-shrink:0;
-    }
-    .banner-card.open .banner-arrow { transform:rotate(180deg); }
-    .banner-card.open .banner-head { background:#f0fdf4; }
+    .sub-row{display:flex;flex-wrap:wrap;gap:8px;}
+    .sub-chip{padding:8px 16px;border-radius:99px;border:2px solid #e5e7eb;background:#f9fafb;font-size:0.8rem;font-weight:700;color:#555;cursor:pointer;transition:all 0.15s;}
+    .sub-chip.selected{background:#f0fdf4;border-color:#16a34a;color:#15803d;}
 
-    /* ─── 배너 바디 ─── */
-    .banner-body {
-      display:none; padding:0 22px 22px;
-      background:#fff; border-top:1.5px solid #bbf7d0;
-    }
-    .banner-card.open .banner-body { display:block; }
+    .platform-row{display:flex;flex-wrap:wrap;gap:9px;}
+    .p-chip{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:99px;border:2px solid #e5e7eb;background:#f9fafb;font-size:0.84rem;font-weight:700;color:#555;cursor:pointer;transition:all 0.15s;}
+    .p-chip.sel-daangn{background:#fff7ed;border-color:#FF6F0F;color:#FF6F0F;}
+    .p-chip.sel-somoim{background:#f0fdf4;border-color:#16a34a;color:#16a34a;}
+    .p-chip.sel-munto{background:#fdf4ff;border-color:#9333ea;color:#9333ea;}
+    .p-chip.sel-openchat{background:#fffbeb;border-color:#d97706;color:#d97706;}
+    .p-chip.sel-insta{background:#fdf2f8;border-color:#ec4899;color:#ec4899;}
+    .insta-hint{font-size:0.73rem;color:#9ca3af;margin-top:8px;line-height:1.5;}
 
-    /* ─── 템플릿 박스 ─── */
-    .tpl-wrap { display:flex; flex-direction:column; gap:14px; margin:18px 0; }
-    .tpl-block {
-      border-radius:14px; padding:16px 18px;
-      font-size:0.82rem; line-height:1.8;
-    }
-    .tpl-label {
-      font-size:0.68rem; font-weight:800; letter-spacing:0.06em;
-      margin-bottom:10px; display:flex; align-items:center; gap:7px;
-    }
-    .tpl-pre {
-      font-family:inherit; white-space:pre-wrap; color:#333;
-      font-size:0.8rem; line-height:1.85;
-    }
+    .gen-wrap{max-width:760px;margin:6px auto 20px;text-align:center;}
+    .gen-btn{display:inline-flex;align-items:center;gap:10px;padding:16px 48px;background:linear-gradient(135deg,#16a34a,#059669);color:#fff;font-size:1rem;font-weight:900;border:none;border-radius:99px;cursor:pointer;box-shadow:0 6px 24px rgba(22,163,74,0.3);transition:transform 0.15s;}
+    .gen-btn:hover{transform:translateY(-2px);}
+    .gen-btn:disabled{opacity:0.4;transform:none;cursor:not-allowed;}
 
-    /* ─── 제목 패턴 ─── */
-    .title-patterns { margin:16px 0; }
-    .tp-item {
-      background:#f0fdf4; border-radius:10px; padding:10px 14px;
-      margin-bottom:8px; border-left:3px solid #16a34a;
-      font-size:0.82rem; color:#1a1a1a;
-    }
-    .tp-item .tp-label { font-size:0.68rem; color:#16a34a; font-weight:800; margin-bottom:3px; }
+    #resultArea{max-width:760px;margin:0 auto 24px;display:none;}
+    .tab-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0;padding:0 2px;}
+    .tab-btn{padding:9px 18px;border-radius:12px 12px 0 0;border:1.5px solid #e5e7eb;border-bottom:none;background:#f3f4f6;font-size:0.8rem;font-weight:700;color:#888;cursor:pointer;transition:all 0.15s;}
+    .tab-btn.active{background:#fff;color:#14532d;border-color:#86efac;font-weight:900;}
+    .tab-content{background:#fff;border:1.5px solid #86efac;border-radius:0 14px 14px 14px;padding:22px;}
+    .tab-pane{display:none;}
+    .tab-pane.active{display:block;}
 
-    /* ─── 핵심/피해야할것 ─── */
-    .tip-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
-    .tip-good { background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:14px; }
-    .tip-bad  { background:#fff5f5; border:1.5px solid #fca5a5; border-radius:12px; padding:14px; }
-    .tip-head { font-size:0.72rem; font-weight:800; margin-bottom:8px; }
-    .tip-item { font-size:0.76rem; color:#444; line-height:1.6; margin-bottom:5px; display:flex; gap:6px; }
+    .section-h{font-size:0.7rem;font-weight:800;letter-spacing:0.06em;margin:16px 0 9px;display:flex;align-items:center;gap:8px;}
+    .section-h::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#86efac,transparent);}
 
-    /* ─── 요약 박스 ─── */
-    .summary-box {
-      max-width:720px; margin:28px auto 0;
-      background:linear-gradient(135deg,#f0fdf4,#d1fae5);
-      border-radius:20px; padding:28px 28px;
-      text-align:center;
-      box-shadow:0 8px 30px rgba(22,163,74,0.12);
-    }
-    .summary-box h3 { font-size:1.15rem; font-weight:900; color:#166534; margin-bottom:10px; }
-    .summary-box p { font-size:0.85rem; color:#555; line-height:1.9; }
-    .back-link { display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#16a34a; font-size:0.82rem; font-weight:700; background:#f0fdf4; padding:6px 14px; border-radius:99px; border:1.5px solid #86efac; margin-top:8px; }
+    .title-list{display:flex;flex-direction:column;gap:7px;}
+    .title-item{background:#f8faff;border-left:3px solid #6366f1;border-radius:0 10px 10px 0;padding:9px 13px;font-size:0.82rem;color:#1a1a1a;line-height:1.5;}
+    .title-item .ti-label{font-size:0.66rem;color:#6366f1;font-weight:800;margin-bottom:2px;}
 
-    /* ─── 스크롤 버튼 ─── */
-    .scroll-btns { position:fixed; bottom:20px; right:16px; display:flex; flex-direction:column; gap:6px; z-index:100; }
-    .scroll-btn { width:40px; height:40px; border-radius:50%; border:none; background:linear-gradient(135deg,#16a34a,#059669); color:#fff; font-size:1rem; cursor:pointer; box-shadow:0 4px 12px rgba(22,163,74,0.3); }
+    .tpl-area{position:relative;background:#f9fafb;border-radius:12px;padding:16px 18px;border:1.5px solid #e5e7eb;}
+    .tpl-pre{font-family:inherit;white-space:pre-wrap;font-size:0.79rem;line-height:1.95;color:#333;}
+    .copy-btn{position:absolute;top:10px;right:10px;padding:5px 13px;border-radius:99px;border:1.5px solid #86efac;background:#f0fdf4;color:#15803d;font-size:0.72rem;font-weight:800;cursor:pointer;}
+    .copy-btn:hover{background:#dcfce7;}
 
-    /* ─── 키워드 칩 ─── */
-    .kw-chip { display:inline-block; background:#f0fdf4; border:1.5px solid #86efac; border-radius:99px; padding:3px 12px; font-size:0.73rem; font-weight:700; color:#15803d; margin:3px; }
+    .tip-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+    .tip-good{background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:13px;}
+    .tip-bad{background:#fff5f5;border:1.5px solid #fca5a5;border-radius:12px;padding:13px;}
+    .tip-head{font-size:0.72rem;font-weight:800;margin-bottom:7px;}
+    .tip-li{font-size:0.75rem;color:#444;line-height:1.65;margin-bottom:4px;display:flex;gap:5px;}
 
-    @media(max-width:500px){
-      header h1 { font-size:1.5rem; }
-      .banner-head { padding:14px 16px; }
-      .banner-body { padding:0 16px 18px; }
-      .tip-row { grid-template-columns:1fr; }
-    }
+    .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+    .tag{padding:5px 12px;border-radius:99px;font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.12s;}
+    .tag-major{background:#dbeafe;color:#1e40af;border:1.5px solid #93c5fd;}
+    .tag-major:hover{background:#bfdbfe;}
+    .tag-minor{background:#f3e8ff;color:#6b21a8;border:1.5px solid #d8b4fe;}
+    .tag-minor:hover{background:#e9d5ff;}
+    .tag-head{font-size:0.7rem;font-weight:800;color:#6b7280;margin-bottom:7px;margin-top:12px;}
+    .tag-copy-all{font-size:0.72rem;color:#16a34a;font-weight:800;cursor:pointer;margin-left:8px;}
+
+    .scroll-btns{position:fixed;bottom:20px;right:16px;}
+    .scroll-btn{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,#16a34a,#059669);color:#fff;font-size:1rem;cursor:pointer;box-shadow:0 4px 12px rgba(22,163,74,0.3);}
+
+    .hidden{display:none;}
+    @media(max-width:500px){.cat-grid{grid-template-columns:repeat(3,1fr);}.tip-row{grid-template-columns:1fr;}.gen-btn{padding:14px 32px;font-size:0.92rem;}}
   </style>
 </head>
 <body>
 
-<div class="back-wrap">
-  <a href="hub.html" class="back-btn">← 홈으로</a>
-</div>
+<div class="back-wrap"><a href="hub.html" class="back-btn">← 홈으로</a></div>
 
 <header>
   <div class="logo">🖊️</div>
-  <h1>모임 소개글 작성 가이드</h1>
-  <p>카테고리별 · 플랫폼별 실제 템플릿</p>
-  <span class="badge">실제 데이터 기반 · 6개 카테고리</span>
+  <h1>소개글 생성기</h1>
+  <p>모임명 입력 → 카테고리 → 플랫폼 선택하면 소개글이 한번에!</p>
+  <span class="badge">4플랫폼 + 인스타캡션 + 해시태그 메이저·마이너</span>
 </header>
 
-<!-- 인트로 -->
-<div class="intro-box">
-  <p class="why">
-    소개글이 바뀌면 <strong>CVR(조회→신청 비율)이 최대 3배</strong> 달라져요.<br/>
-    같은 모임도 플랫폼마다 어조와 구조가 완전히 달라야 해요.<br/>
-    <strong>당근 = 동네 이웃 감성 · 소모임 = 조건 명시형 · 문토 = 감성 취향형</strong>으로 각각 써야 CTR이 올라요.
-  </p>
+<!-- STEP 1 -->
+<div class="step-box" id="step1">
+  <div class="step-label">
+    <div class="step-num" style="background:#16a34a;">1</div>
+    <span style="color:#16a34a;">우리 모임 이름을 입력해주세요</span>
+  </div>
+  <input class="name-input" id="nameInput" type="text" placeholder="예) 서울 월요 러닝크루, 직장인 재테크 스터디 …" oninput="onNameInput()"/>
 </div>
 
-<!-- 공통 구조 공식 -->
-<div class="formula-box">
-  <div style="font-size:0.72rem; font-weight:800; color:#15803d; letter-spacing:0.06em; margin-bottom:12px;">📐 잘 되는 소개글의 공통 구조 공식</div>
-  <div style="display:flex; flex-direction:column; gap:8px;">
-    <div style="display:flex; gap:10px; align-items:flex-start;">
-      <div style="background:#16a34a; color:#fff; font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:99px; flex-shrink:0; margin-top:1px;">제목</div>
-      <div style="font-size:0.82rem; color:#333; line-height:1.6;">이모지 + 모임명 + 핵심 키워드 1~2개 <span style="color:#888;">(지역·연령대·활동명 조합 최강)</span></div>
-    </div>
-    <div style="display:flex; gap:10px; align-items:flex-start;">
-      <div style="background:#16a34a; color:#fff; font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:99px; flex-shrink:0; margin-top:1px;">첫줄</div>
-      <div style="font-size:0.82rem; color:#333; line-height:1.6;">모임이 뭔지 한 줄 정의 or 공감 멘트로 시작</div>
-    </div>
-    <div style="display:flex; gap:10px; align-items:flex-start;">
-      <div style="background:#16a34a; color:#fff; font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:99px; flex-shrink:0; margin-top:1px;">본문</div>
-      <div style="font-size:0.82rem; color:#333; line-height:1.6;">대상 조건 → 주요 활동 → 운영 방식 (장소·일정·주기) 순서</div>
-    </div>
-    <div style="display:flex; gap:10px; align-items:flex-start;">
-      <div style="background:#16a34a; color:#fff; font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:99px; flex-shrink:0; margin-top:1px;">마무리</div>
-      <div style="font-size:0.82rem; color:#333; line-height:1.6;">가입 방법 or "함께해요" CTA로 마무리</div>
-    </div>
+<!-- STEP 2 -->
+<div class="step-box" id="step2">
+  <div class="step-label">
+    <div class="step-num" style="background:#6366f1;">2</div>
+    <span style="color:#6366f1;">어떤 카테고리 모임인가요? (대분류)</span>
   </div>
-  <div style="margin-top:14px; padding-top:12px; border-top:1px dashed #86efac; font-size:0.78rem; color:#555; line-height:1.8;">
-    <strong style="color:#15803d;">🔑 만능 키워드:</strong>
-    <span class="kw-chip">초보환영</span>
-    <span class="kw-chip">신입대환영</span>
-    <span class="kw-chip">텃세없음</span>
-    <span class="kw-chip">2030</span>
-    <span class="kw-chip">소수정예</span>
-    <span class="kw-chip">정기모임</span>
-    <span class="kw-chip">Since 20XX</span>
-    <span class="kw-chip">뒤풀이있음</span>
-  </div>
+  <div class="cat-grid" id="catGrid"></div>
 </div>
 
-<!-- 카테고리별 -->
-<div class="section-title">CATEGORY · 카테고리별 소개글 템플릿</div>
-
-<!-- ──────────── 러닝/운동 ──────────── -->
-<div class="banner-card" id="card1">
-  <div class="banner-head" onclick="toggle('card1')">
-    <div class="banner-icon" style="background:#fef3c7;">🏃</div>
-    <div class="banner-text">
-      <div class="banner-num" style="color:#d97706;">전 플랫폼 1위 카테고리</div>
-      <div class="banner-title">러닝 / 운동</div>
-      <div class="banner-sub">당근 전체 31% · 소모임 최다 멤버 · 문토 러닝 소셜링 급성장</div>
-    </div>
-    <div class="banner-arrow">▼</div>
+<!-- STEP 3 -->
+<div class="step-box hidden" id="step3">
+  <div class="step-label">
+    <div class="step-num" style="background:#9333ea;">3</div>
+    <span style="color:#9333ea;">구체적인 유형을 선택하세요 (소분류)</span>
   </div>
-  <div class="banner-body">
-    <div style="background:#fef3c7; border-radius:10px; padding:12px 14px; margin:16px 0 4px; font-size:0.8rem; color:#78350f; line-height:1.7; border-left:3px solid #f59e0b;">
-      배드민턴·러닝·등산이 3강이에요. <strong>반복성·지속성</strong>이 있어서 재참여율이 자연스럽게 올라가요. "초보환영"이 제목에 있으면 CVR이 눈에 띄게 높아져요.
-    </div>
-
-    <!-- 제목 패턴 -->
-    <div style="font-size:0.7rem; font-weight:800; color:#d97706; margin:16px 0 8px; display:flex; align-items:center; gap:8px;">
-      <span>📌 잘 되는 제목 패턴</span><div style="flex:1; height:1px; background:#fde68a;"></div>
-    </div>
-    <div class="title-patterns">
-      <div class="tp-item" style="border-color:#f59e0b; background:#fffbeb;">
-        <div class="tp-label" style="color:#d97706;">당근용 — 지역+활동+난이도</div>
-        🏃 [동네명] 러닝크루 | 초보환영 | 매주 [요일] 저녁
-      </div>
-      <div class="tp-item" style="border-color:#16a34a; background:#f0fdf4;">
-        <div class="tp-label" style="color:#16a34a;">소모임용 — 이모지+모임명+조건</div>
-        🏸 [지역] 배드민턴 | 2030 | 주 2회 정기 | 초보환영
-      </div>
-      <div class="tp-item" style="border-color:#9333ea; background:#fdf4ff;">
-        <div class="tp-label" style="color:#9333ea;">문토용 — 감성 캐치프레이즈</div>
-        몸보다 마음이 달리고 싶을 때 — [지역] 새벽 러닝 소셜링
-      </div>
-    </div>
-
-    <!-- 템플릿 -->
-    <div class="tpl-wrap">
-      <!-- 당근 -->
-      <div class="tpl-block" style="background:#fffbeb; border:1.5px solid #fde68a;">
-        <div class="tpl-label" style="color:#d97706;">🥕 당근모임 템플릿 — 짧고 친근하게</div>
-        <pre class="tpl-pre">안녕하세요 🙌 [동네명] 러닝크루입니다!
-
-혼자 달리기 심심하셨죠? 저희랑 같이 달려요 🏃
-
-📍 [공원명/장소] 집결
-⏰ 매주 [요일] 저녁 7시
-🎯 5~8km (페이스 무관, 걷기 구간 있어요)
-
-초보·왕초보 완전 환영이에요!
-달리고 나서 맛집도 자주 가요 😋
-
-가입 후 채팅 주시면 다음 일정 알려드려요!</pre>
-      </div>
-      <!-- 소모임 -->
-      <div class="tpl-block" style="background:#f0fdf4; border:1.5px solid #bbf7d0;">
-        <div class="tpl-label" style="color:#16a34a;">🤝 소모임 템플릿 — 조건 명시 + 활동 나열</div>
-        <pre class="tpl-pre">🏃 [지역] 러닝모임 | Since 2023 | 멤버 [N]명
-
-【 대상 】 20~40대 / 초보환영 / 페이스 관계없음
-【 장소 】 [장소명] 집결
-【 일정 】 매주 [요일] 저녁 7시 (월 4회 정기)
-【 코스 】 [공원] 일주 5km → 선택적 연장
-
-💪 함께하는 활동
-# 정기러닝  # 마라톤도전  # 점심런
-# 뒤풀이    # 러닝챌린지  # 번개런
-
-👤 멤버: 직장인 위주 / 텃세없음 / 결석 자유
-📝 가입: 자기소개 1줄 + 신청해주세요</pre>
-      </div>
-      <!-- 문토 -->
-      <div class="tpl-block" style="background:#fdf4ff; border:1.5px solid #e9d5ff;">
-        <div class="tpl-label" style="color:#9333ea;">🎭 문토 템플릿 — 감성 + 취향 중심</div>
-        <pre class="tpl-pre">달리는 게 목적이 아니에요.
-달리고 싶어지는 아침을 만들고 싶어요.
-
-[장소명]의 이른 아침, 도시가 깨어나기 전에
-조용히 발걸음을 맞추는 사람들이 모여요.
-
-빠르지 않아도 괜찮아요.
-같은 방향으로 달린다는 것, 그 자체로 충분해요.
-
-✔️ 대상: 새벽 러닝이 처음인 분도 환영
-✔️ 페이스: 6분 내외 (걷기 구간 있음)
-✔️ 이후: 근처 카페에서 간단한 브런치 ☕</pre>
-      </div>
-    </div>
-
-    <div class="tip-row">
-      <div class="tip-good">
-        <div class="tip-head" style="color:#15803d;">⚡ 이게 핵심이에요</div>
-        <div class="tip-item"><span>✅</span>"초보환영" 제목 포함 시 CVR 크게 상승</div>
-        <div class="tip-item"><span>✅</span>집결 장소 + 시간 + 코스 3가지 명확히</div>
-        <div class="tip-item"><span>✅</span>뒤풀이/맛집 언급이 참여 동기 자극</div>
-      </div>
-      <div class="tip-bad">
-        <div class="tip-head" style="color:#dc2626;">🚫 이러면 망해요</div>
-        <div class="tip-item"><span>❌</span>페이스 조건 엄격히 명시 (진입장벽)</div>
-        <div class="tip-item"><span>❌</span>장소가 "추후 공지" (신뢰 떨어짐)</div>
-        <div class="tip-item"><span>❌</span>운동 효과만 강조, 모임 분위기 언급 없음</div>
-      </div>
-    </div>
-  </div>
+  <div class="sub-row" id="subRow"></div>
 </div>
 
-<!-- ──────────── 독서 ──────────── -->
-<div class="banner-card" id="card2">
-  <div class="banner-head" onclick="toggle('card2')">
-    <div class="banner-icon" style="background:#eff6ff;">📚</div>
-    <div class="banner-text">
-      <div class="banner-num" style="color:#2563eb;">모든 플랫폼 안정적 인기</div>
-      <div class="banner-title">독서 모임</div>
-      <div class="banner-sub">주제를 구체화할수록 CTR이 2배 올라가요</div>
-    </div>
-    <div class="banner-arrow">▼</div>
+<!-- STEP 4 -->
+<div class="step-box hidden" id="step4">
+  <div class="step-label">
+    <div class="step-num" style="background:#d97706;">4</div>
+    <span style="color:#d97706;">올릴 플랫폼을 선택하세요 (복수 선택 가능)</span>
   </div>
-  <div class="banner-body">
-    <div style="background:#eff6ff; border-radius:10px; padding:12px 14px; margin:16px 0 4px; font-size:0.8rem; color:#1e3a8a; line-height:1.7; border-left:3px solid #3b82f6;">
-      "독서모임"보다 <strong>"재테크 독서모임"</strong>, 그보다 <strong>"30대 직장인 부자마인드 독서클럽"</strong>이 CTR이 훨씬 높아요. 구체화할수록 타겟이 "이건 나 얘기다" 느껴요.
-    </div>
-
-    <div style="font-size:0.7rem; font-weight:800; color:#2563eb; margin:16px 0 8px; display:flex; align-items:center; gap:8px;">
-      <span>📌 잘 되는 제목 패턴</span><div style="flex:1; height:1px; background:#bfdbfe;"></div>
-    </div>
-    <div class="title-patterns">
-      <div class="tp-item" style="border-color:#3b82f6; background:#eff6ff;">
-        <div class="tp-label" style="color:#2563eb;">당근용 — 동네+주제 강조</div>
-        📚 [동네명] 독서모임 | 매달 1권 | 누구나 환영
-      </div>
-      <div class="tp-item" style="border-color:#16a34a; background:#f0fdf4;">
-        <div class="tp-label" style="color:#16a34a;">소모임용 — 대상+주제 명시</div>
-        📖 2030 직장인 재테크 독서클럽 | [지역] | 월 2회
-      </div>
-      <div class="tp-item" style="border-color:#9333ea; background:#fdf4ff;">
-        <div class="tp-label" style="color:#9333ea;">문토용 — 지적 호기심 자극 질문형</div>
-        같은 책을 왜 우리는 다르게 읽었을까 — 주제형 독서 살롱
-      </div>
-    </div>
-
-    <div class="tpl-wrap">
-      <div class="tpl-block" style="background:#fffbeb; border:1.5px solid #fde68a;">
-        <div class="tpl-label" style="color:#d97706;">🥕 당근모임 템플릿</div>
-        <pre class="tpl-pre">안녕하세요 📚 [동네명] 독서모임입니다!
-
-매달 책 한 권씩, 이웃들과 같이 읽어요.
-책 잘 못 읽어도 괜찮아요. 함께 이야기 나누는 게 목적이에요 😊
-
-📍 [카페명 or 동네 장소]
-📅 매달 [N]째 [요일] 오후 [시간]
-📖 장르: [장르 / 자유 선정]
-
-책 다 못 읽어도 와도 돼요!
-부담없이 신청해주세요 🙌</pre>
-      </div>
-      <div class="tpl-block" style="background:#f0fdf4; border:1.5px solid #bbf7d0;">
-        <div class="tpl-label" style="color:#16a34a;">🤝 소모임 템플릿</div>
-        <pre class="tpl-pre">📚 [주제] 독서모임 | Since 2022 | 멤버 [N]명
-
-【 대상 】 [연령대] / [직군] / [특이 조건 없으면 누구나]
-【 책 선정 】 [방식: 투표 / 호스트 선정 / 번갈아가며]
-【 일정 】 월 2회 / [요일] 저녁 [시간]
-【 장소 】 [장소명 or 지역]
-
-📝 진행 방식
-# 책 읽고 오기  # 각자 인상 깊은 구절 공유
-# 주제 토론 (1시간)  # 자유 대화 + 다음 책 선정
-
-✅ 이런 분 환영: 혼자 읽기 심심하신 분 / 생각 나누고 싶은 분
-❌ 이런 분은 아직: 발표나 숙제처럼 하기 싫은 분 (저희는 자유로워요!)
-
-📩 가입: 간단한 자기소개 후 신청</pre>
-      </div>
-      <div class="tpl-block" style="background:#fdf4ff; border:1.5px solid #e9d5ff;">
-        <div class="tpl-label" style="color:#9333ea;">🎭 문토 템플릿</div>
-        <pre class="tpl-pre">책을 읽는다는 건 어쩌면
-내 안에 잠든 생각을 깨우는 일인지도 몰라요.
-
-이 살롱은 [주제] 책을 함께 읽고
-"나는 이렇게 생각했어요"를 나누는 시간이에요.
-
-정답이 없어도 괜찮아요.
-틀린 독해도 없어요.
-다른 사람의 읽기가 나의 읽기를 더 풍요롭게 해줄 거예요.
-
-✔️ 이번 책: [책 제목] (미리 읽어오시면 좋아요)
-✔️ 진행: 인상 깊은 문장 공유 → 자유 토론 → 다음 책 선정
-✔️ 인원: 소수정예 [N]명 (신청 후 승인)
-✔️ 이후: 근처 카페에서 자유 대화</pre>
-      </div>
-    </div>
-
-    <div class="tip-row">
-      <div class="tip-good">
-        <div class="tip-head" style="color:#15803d;">⚡ 이게 핵심이에요</div>
-        <div class="tip-item"><span>✅</span>"책 다 못 읽어도 OK" — 진입장벽 낮추는 문구가 신청률 올림</div>
-        <div class="tip-item"><span>✅</span>주제 구체화 (재테크·자기계발·특정작가)</div>
-        <div class="tip-item"><span>✅</span>진행 방식 명확히 (토론? 낭독? 자유?)</div>
-      </div>
-      <div class="tip-bad">
-        <div class="tip-head" style="color:#dc2626;">🚫 이러면 망해요</div>
-        <div class="tip-item"><span>❌</span>"독서모임"만 쓰고 장르·주제 미명시</div>
-        <div class="tip-item"><span>❌</span>"무조건 다 읽어와야 참여 가능" 조건</div>
-        <div class="tip-item"><span>❌</span>발표·숙제 느낌 주는 문구 (부담감)</div>
-      </div>
-    </div>
+  <div class="platform-row">
+    <button class="p-chip" id="chip-daangn"  onclick="togglePlatform('daangn',this)">🥕 당근모임</button>
+    <button class="p-chip" id="chip-somoim"  onclick="togglePlatform('somoim',this)">🤝 소모임</button>
+    <button class="p-chip" id="chip-munto"   onclick="togglePlatform('munto',this)">🎭 문토</button>
+    <button class="p-chip" id="chip-openchat"onclick="togglePlatform('openchat',this)">💬 오픈채팅</button>
+    <button class="p-chip" id="chip-insta"   onclick="togglePlatform('insta',this)">📸 인스타그램</button>
   </div>
+  <div class="insta-hint">📸 인스타그램 선택 시 캡션 + 해시태그(메이저·마이너)가 별도 탭으로 생성돼요</div>
 </div>
 
-<!-- ──────────── 요리/맛집 ──────────── -->
-<div class="banner-card" id="card3">
-  <div class="banner-head" onclick="toggle('card3')">
-    <div class="banner-icon" style="background:#fff7ed;">🍳</div>
-    <div class="banner-text">
-      <div class="banner-num" style="color:#ea580c;">소모임 300명 마감 케이스 다수</div>
-      <div class="banner-title">요리 / 맛집 탐방</div>
-      <div class="banner-sub">소셜쿠킹은 소모임 최강 카테고리 · 당근엔 맛집탐방이 강해요</div>
-    </div>
-    <div class="banner-arrow">▼</div>
-  </div>
-  <div class="banner-body">
-    <div style="background:#fff7ed; border-radius:10px; padding:12px 14px; margin:16px 0 4px; font-size:0.8rem; color:#7c2d12; line-height:1.7; border-left:3px solid #ea580c;">
-      소셜쿠킹(함께 요리)은 소모임에서 <strong>단발성 이벤트 형태로 300명 마감</strong> 케이스가 흔해요. 당근에선 맛집탐방·카페투어가 "동네친구 찾기"와 자연스럽게 연결돼요.
-    </div>
-
-    <div style="font-size:0.7rem; font-weight:800; color:#ea580c; margin:16px 0 8px; display:flex; align-items:center; gap:8px;">
-      <span>📌 잘 되는 제목 패턴</span><div style="flex:1; height:1px; background:#fed7aa;"></div>
-    </div>
-    <div class="title-patterns">
-      <div class="tp-item" style="border-color:#ea580c; background:#fff7ed;">
-        <div class="tp-label" style="color:#ea580c;">당근용 — 동네 감성</div>
-        🍜 [동네명] 맛집탐방 | 매주 [요일] 점심 | 같이 먹어요
-      </div>
-      <div class="tp-item" style="border-color:#16a34a; background:#f0fdf4;">
-        <div class="tp-label" style="color:#16a34a;">소모임용 — 형태 명시</div>
-        🍳 소셜쿠킹 클래스 | [지역] | 월 1회 | 요리+식사+대화
-      </div>
-      <div class="tp-item" style="border-color:#9333ea; background:#fdf4ff;">
-        <div class="tp-label" style="color:#9333ea;">문토용 — 경험 강조</div>
-        음식보다 대화가 맛있었던 저녁 — [지역] 소셜다이닝
-      </div>
-    </div>
-
-    <div class="tpl-wrap">
-      <div class="tpl-block" style="background:#fffbeb; border:1.5px solid #fde68a;">
-        <div class="tpl-label" style="color:#d97706;">🥕 당근모임 템플릿</div>
-        <pre class="tpl-pre">안녕하세요 🍜 [동네명] 맛집탐방 모임입니다!
-
-동네 맛집, 혼자 가기 아쉬웠죠?
-같이 먹으면 더 맛있잖아요 😋
-
-📍 [동네] 일대 맛집 순례
-📅 매주 [요일] 점심 12시
-💰 각자 계산 (1~2만원대)
-
-사진 찍고, 수다 떨고, 맛있게 먹어요.
-부담없이 오세요 🙌
-
-맛집 추천 있으신 분도 대환영이에요!</pre>
-      </div>
-      <div class="tpl-block" style="background:#f0fdf4; border:1.5px solid #bbf7d0;">
-        <div class="tpl-label" style="color:#16a34a;">🤝 소모임 템플릿</div>
-        <pre class="tpl-pre">🍳 [이름] 소셜쿠킹 클럽 | Since 2023
-
-요리 + 식사 + 대화를 한 번에!
-요리를 배우는 게 아니라, 함께 만들고 먹는 경험이에요.
-
-【 대상 】 2030 / 요리 못해도 OK / 남녀 무관
-【 장소 】 [공유주방 or 장소명] ([지역] 위치)
-【 일정 】 월 1회 / [요일] 오후 3시 (약 3시간)
-【 비용 】 재료비 포함 1만원대
-
-🍴 진행 방식
-# 간단한 자기소개 → 함께 요리 → 같이 식사 → 자유대화
-
-✅ 이런 분 환영: 새로운 사람 만나고 싶은 분
-📩 신청: 자기소개 남겨주세요</pre>
-      </div>
-      <div class="tpl-block" style="background:#fdf4ff; border:1.5px solid #e9d5ff;">
-        <div class="tpl-label" style="color:#9333ea;">🎭 문토 템플릿</div>
-        <pre class="tpl-pre">음식은 핑계예요.
-
-사실 우리가 원하는 건
-낯선 사람과 마주앉아 나누는 그 대화의 온기일 수도 있어요.
-
-이 소셜다이닝에서는
-각자 좋아하는 음식을 가져오거나, 함께 요리를 해요.
-먹으면서 이야기를 나눠요. 깊은 이야기도, 가벼운 이야기도.
-
-✔️ 형식: [소셜다이닝 or 소셜쿠킹] ([N]명 소수정예)
-✔️ 장소: [장소] ([지역])
-✔️ 비용: [금액] (재료비/식비 포함)
-✔️ 신청 후 승인 방식으로 진행돼요</pre>
-      </div>
-    </div>
-
-    <div class="tip-row">
-      <div class="tip-good">
-        <div class="tip-head" style="color:#15803d;">⚡ 이게 핵심이에요</div>
-        <div class="tip-item"><span>✅</span>비용 명시 필수 (불확실성 제거)</div>
-        <div class="tip-item"><span>✅</span>"요리 못해도 OK" — 진입장벽 낮추기</div>
-        <div class="tip-item"><span>✅</span>소수정예 인원 설정이 희소성 만듦</div>
-      </div>
-      <div class="tip-bad">
-        <div class="tip-head" style="color:#dc2626;">🚫 이러면 망해요</div>
-        <div class="tip-item"><span>❌</span>장소 미정/비용 미정 (불안감 유발)</div>
-        <div class="tip-item"><span>❌</span>"요리 잘 하는 분만" 조건 (대부분 이탈)</div>
-        <div class="tip-item"><span>❌</span>정원 20명 이상 (친밀감 없어 보임)</div>
-      </div>
-    </div>
-  </div>
+<!-- 생성 버튼 -->
+<div class="gen-wrap">
+  <button class="gen-btn" id="genBtn" disabled onclick="generateAll()">✨ 소개글 한번에 만들기</button>
 </div>
 
-<!-- ──────────── 언어교환 ──────────── -->
-<div class="banner-card" id="card4">
-  <div class="banner-head" onclick="toggle('card4')">
-    <div class="banner-icon" style="background:#f0f9ff;">🗣️</div>
-    <div class="banner-text">
-      <div class="banner-num" style="color:#0284c7;">소모임 영어 294명 · 꾸준한 인기</div>
-      <div class="banner-title">언어교환 / 회화 스터디</div>
-      <div class="banner-sub">레벨 명시가 핵심 — "원어민 수준"과 "초보"는 완전히 다른 모임이에요</div>
-    </div>
-    <div class="banner-arrow">▼</div>
-  </div>
-  <div class="banner-body">
-    <div style="background:#f0f9ff; border-radius:10px; padding:12px 14px; margin:16px 0 4px; font-size:0.8rem; color:#0c4a6e; line-height:1.7; border-left:3px solid #0284c7;">
-      영어회화 모임은 소모임에서 <strong>294명</strong>까지 멤버가 쌓인 케이스가 있어요. 핵심은 <strong>레벨 명시</strong>예요. "중급 이상"이라고 쓰면 초보가 안 들어오고, 기존 멤버 퀄리티가 유지돼요.
-    </div>
-
-    <div style="font-size:0.7rem; font-weight:800; color:#0284c7; margin:16px 0 8px; display:flex; align-items:center; gap:8px;">
-      <span>📌 잘 되는 제목 패턴</span><div style="flex:1; height:1px; background:#bae6fd;"></div>
-    </div>
-    <div class="title-patterns">
-      <div class="tp-item" style="border-color:#0284c7; background:#f0f9ff;">
-        <div class="tp-label" style="color:#0284c7;">당근용 — 동네+레벨 명시</div>
-        🗣️ [동네명] 영어회화 | 초급~중급 | 매주 [요일]
-      </div>
-      <div class="tp-item" style="border-color:#16a34a; background:#f0fdf4;">
-        <div class="tp-label" style="color:#16a34a;">소모임용 — 방식+레벨 조합</div>
-        🇺🇸 원어민 없는 영어회화 스터디 | 중급 이상 | [지역] 오프라인
-      </div>
-      <div class="tp-item" style="border-color:#9333ea; background:#fdf4ff;">
-        <div class="tp-label" style="color:#9333ea;">문토용 — 두려움 공감형</div>
-        영어가 두려운 게 아니었어요, 틀릴까봐 두려웠던 거예요
-      </div>
-    </div>
-
-    <div class="tpl-wrap">
-      <div class="tpl-block" style="background:#fffbeb; border:1.5px solid #fde68a;">
-        <div class="tpl-label" style="color:#d97706;">🥕 당근모임 템플릿</div>
-        <pre class="tpl-pre">안녕하세요 🗣️ [동네명] 영어 회화 모임이에요!
-
-문법보다 대화가 먼저예요.
-틀려도 괜찮아요, 같이 실력 늘려가는 게 목표예요 😊
-
-📍 [카페/장소명]
-⏰ 매주 [요일] 오후 [시간]
-📊 레벨: 초급~중급 (완전 초보도 OK)
-🗒️ 방식: 자유주제 영어 대화 + 간단한 표현 공유
-
-한국어와 영어 반반으로 진행해요.
-부담없이 와보세요 🙌</pre>
-      </div>
-      <div class="tpl-block" style="background:#f0fdf4; border:1.5px solid #bbf7d0;">
-        <div class="tpl-label" style="color:#16a34a;">🤝 소모임 템플릿</div>
-        <pre class="tpl-pre">🗣️ [모임명] 영어회화 스터디 | Since 2022 | [N]명
-
-원어민 없이, 우리끼리 영어로 대화해요.
-"완벽한 영어"가 아닌 "쓰는 영어"가 목표예요.
-
-【 레벨 】 중급 이상 (일상 대화 가능한 분)
-【 방식 】 주제토론 → 자유대화 → 표현 공유
-【 장소 】 [장소] ([지역])
-【 일정 】 매주 [요일] 저녁 [시간] (약 2시간)
-【 인원 】 회당 [N]명 소수정예
-
-📋 최근 주제 예시
-# 최근 본 넷플릭스  # 요즘 핫한 뉴스
-# 주말에 뭐했어요  # 인생 최고의 여행
-
-✅ 이런 분 환영: 영어 쓸 기회 원하는 분
-📩 신청: 영어 실력 레벨 + 간단 자기소개</pre>
-      </div>
-      <div class="tpl-block" style="background:#fdf4ff; border:1.5px solid #e9d5ff;">
-        <div class="tpl-label" style="color:#9333ea;">🎭 문토 템플릿</div>
-        <pre class="tpl-pre">영어를 못 하는 게 아니었어요.
-말할 기회가 없었던 거예요.
-
-이 소셜링은 영어를 잘 하는 사람들이 모이는 게 아니에요.
-영어로 말해보고 싶은 사람들이 모여요.
-
-틀려도 괜찮아요. 여기선 틀림이 배움이에요.
-
-✔️ 진행: 가벼운 영어 대화 → 주제 토론 → 새 표현 공유
-✔️ 레벨: 일상 영어 가능하면 충분해요
-✔️ 인원: [N]명 소수정예 (신청 후 승인)
-✔️ 이후: 카페에서 한국어로 자유 대화 😊</pre>
-      </div>
-    </div>
-
-    <div class="tip-row">
-      <div class="tip-good">
-        <div class="tip-head" style="color:#15803d;">⚡ 이게 핵심이에요</div>
-        <div class="tip-item"><span>✅</span>레벨 명시 필수 (초급/중급/고급 구분)</div>
-        <div class="tip-item"><span>✅</span>"틀려도 OK" 심리적 안전감 메시지</div>
-        <div class="tip-item"><span>✅</span>최근 토론 주제 예시 공개 (분위기 파악)</div>
-      </div>
-      <div class="tip-bad">
-        <div class="tip-head" style="color:#dc2626;">🚫 이러면 망해요</div>
-        <div class="tip-item"><span>❌</span>레벨 미명시 (고급자도 초보자도 불만)</div>
-        <div class="tip-item"><span>❌</span>"원어민 수준 이상만" (대부분 이탈)</div>
-        <div class="tip-item"><span>❌</span>진행 방식 불명확 (뭘 하는지 모름)</div>
-      </div>
-    </div>
-  </div>
+<!-- 결과 -->
+<div id="resultArea">
+  <div class="tab-bar" id="tabBar"></div>
+  <div class="tab-content" id="tabContent"></div>
 </div>
-
-<!-- ──────────── 전시/문화 ──────────── -->
-<div class="banner-card" id="card5">
-  <div class="banner-head" onclick="toggle('card5')">
-    <div class="banner-icon" style="background:#fdf4ff;">🎭</div>
-    <div class="banner-text">
-      <div class="banner-num" style="color:#9333ea;">문토 가장 특화된 카테고리</div>
-      <div class="banner-title">전시 / 문화 소셜링</div>
-      <div class="banner-sub">미술관·공연·갤러리 — 경험 자체가 콘텐츠예요</div>
-    </div>
-    <div class="banner-arrow">▼</div>
-  </div>
-  <div class="banner-body">
-    <div style="background:#fdf4ff; border-radius:10px; padding:12px 14px; margin:16px 0 4px; font-size:0.8rem; color:#581c87; line-height:1.7; border-left:3px solid #9333ea;">
-      전시 소셜링은 문토에서 <strong>가장 대표적인 카테고리</strong>예요. "같이 볼 사람 없어서 못 갔던 전시" 공감대가 강력한 참여 동기가 돼요. 당근에선 "동네 문화 나들이" 느낌으로 접근하면 잘 돼요.
-    </div>
-
-    <div style="font-size:0.7rem; font-weight:800; color:#9333ea; margin:16px 0 8px; display:flex; align-items:center; gap:8px;">
-      <span>📌 잘 되는 제목 패턴</span><div style="flex:1; height:1px; background:#e9d5ff;"></div>
-    </div>
-    <div class="title-patterns">
-      <div class="tp-item" style="border-color:#ea580c; background:#fff7ed;">
-        <div class="tp-label" style="color:#ea580c;">당근용 — 가볍고 친근하게</div>
-        🎨 [동네] 전시 같이 가요 | 주말 나들이 | 누구나 환영
-      </div>
-      <div class="tp-item" style="border-color:#16a34a; background:#f0fdf4;">
-        <div class="tp-label" style="color:#16a34a;">소모임용 — 구체 전시명 + 조건</div>
-        🖼️ 미술관 투어 클럽 | [지역] | 월 1회 | 관람 후 카페 대화
-      </div>
-      <div class="tp-item" style="border-color:#9333ea; background:#fdf4ff;">
-        <div class="tp-label" style="color:#9333ea;">문토용 — 공감 + 감성</div>
-        혼자 가기 아쉬운 전시가 있었어요 — 같이 볼 사람 찾아요
-      </div>
-    </div>
-
-    <div class="tpl-wrap">
-      <div class="tpl-block" style="background:#fffbeb; border:1.5px solid #fde68a;">
-        <div class="tpl-label" style="color:#d97706;">🥕 당근모임 템플릿</div>
-        <pre class="tpl-pre">안녕하세요 🎨 [동네] 문화 나들이 모임이에요!
-
-미술관, 전시, 공연... 혼자 가기 아쉬웠던 것들
-같이 가요 😊
-
-📍 [전시/공연 장소 or 지역 일대]
-📅 [날짜 or 정기 일정]
-💰 [입장료 or 각자 계산]
-
-보고 나서 근처 카페에서 수다도 떨어요!
-예술 잘 몰라도 괜찮아요, 그냥 같이 보는 거예요 🙌</pre>
-      </div>
-      <div class="tpl-block" style="background:#f0fdf4; border:1.5px solid #bbf7d0;">
-        <div class="tpl-label" style="color:#16a34a;">🤝 소모임 템플릿</div>
-        <pre class="tpl-pre">🖼️ [모임명] 미술관 투어 클럽 | Since 2023
-
-매달 전시 하나씩, 함께 봐요.
-관람 후 카페에서 "어땠어요?" 한 마디가 시작이에요.
-
-【 대상 】 [연령대] / 예술 지식 없어도 OK
-【 일정 】 월 1회 / [요일] 오후 [시간]
-【 비용 】 입장료 각자 부담 (카페비 포함 2~3만원대)
-【 인원 】 [N]명 소수정예
-
-🎨 최근 방문 전시
-# [전시명] @ [미술관]  # [전시명] @ [갤러리]
-
-✅ 이런 분 환영: 혼자 미술관 가기 어색한 분
-📩 신청: 간단한 자기소개 남겨주세요</pre>
-      </div>
-      <div class="tpl-block" style="background:#fdf4ff; border:1.5px solid #e9d5ff;">
-        <div class="tpl-label" style="color:#9333ea;">🎭 문토 템플릿 (문토 최강 카테고리)</div>
-        <pre class="tpl-pre">가고 싶었던 전시가 있었어요.
-그런데 같이 갈 사람이 없었어요.
-
-그게 이 소셜링의 시작이에요.
-
-우리는 [전시명]을 함께 보러 가요.
-작품 앞에 서서, 각자 느낀 것을 나눠요.
-정답이 없어서 오히려 더 재미있어요.
-
-✔️ 전시: [전시명] @ [미술관/갤러리명]
-✔️ 일정: [날짜] [시간] ([소요 시간] 예상)
-✔️ 비용: 입장료 [금액] (카페 별도)
-✔️ 이후: 근처 카페에서 자유 대화
-✔️ 인원: [N]명 (신청 후 승인)</pre>
-      </div>
-    </div>
-
-    <div class="tip-row">
-      <div class="tip-good">
-        <div class="tip-head" style="color:#15803d;">⚡ 이게 핵심이에요</div>
-        <div class="tip-item"><span>✅</span>"혼자 가기 아쉬웠던" 공감 문구가 강력</div>
-        <div class="tip-item"><span>✅</span>구체적인 전시명/날짜 명시 (단발 OK)</div>
-        <div class="tip-item"><span>✅</span>"예술 몰라도 OK" 심리적 진입장벽 제거</div>
-      </div>
-      <div class="tip-bad">
-        <div class="tip-head" style="color:#dc2626;">🚫 이러면 망해요</div>
-        <div class="tip-item"><span>❌</span>"전시 이름 추후 공지" (결정 못 함)</div>
-        <div class="tip-item"><span>❌</span>예술 지식 전제하는 전문 용어 남발</div>
-        <div class="tip-item"><span>❌</span>전시 후 계획 없음 (카페라도 넣어야)</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ──────────── 자기계발 ──────────── -->
-<div class="banner-card" id="card6">
-  <div class="banner-head" onclick="toggle('card6')">
-    <div class="banner-icon" style="background:#fefce8;">💰</div>
-    <div class="banner-text">
-      <div class="banner-num" style="color:#ca8a04;">갓생 트렌드 + 성장세 카테고리</div>
-      <div class="banner-title">자기계발 / 스터디</div>
-      <div class="banner-sub">재테크·부동산·AI — 실용적 주제일수록 신청률이 높아요</div>
-    </div>
-    <div class="banner-arrow">▼</div>
-  </div>
-  <div class="banner-body">
-    <div style="background:#fefce8; border-radius:10px; padding:12px 14px; margin:16px 0 4px; font-size:0.8rem; color:#713f12; line-height:1.7; border-left:3px solid #ca8a04;">
-      "갓생살기" 트렌드와 함께 자기계발 스터디가 급성장 중이에요. 재테크·부동산·AI·영어 4가지가 특히 강해요. <strong>스터디 방식(어떻게 공부하나)을 구체적으로 쓸수록</strong> 진지한 멤버가 들어와요.
-    </div>
-
-    <div style="font-size:0.7rem; font-weight:800; color:#ca8a04; margin:16px 0 8px; display:flex; align-items:center; gap:8px;">
-      <span>📌 잘 되는 제목 패턴</span><div style="flex:1; height:1px; background:#fef08a;"></div>
-    </div>
-    <div class="title-patterns">
-      <div class="tp-item" style="border-color:#ca8a04; background:#fefce8;">
-        <div class="tp-label" style="color:#ca8a04;">당근용 — 주제+대상+형태</div>
-        📈 [동네] 재테크 스터디 | 직장인 | 매주 [요일] 저녁
-      </div>
-      <div class="tp-item" style="border-color:#16a34a; background:#f0fdf4;">
-        <div class="tp-label" style="color:#16a34a;">소모임용 — 주제+방식 상세</div>
-        💡 직장인 AI 활용 스터디 | 월 3회 | 실습 위주 | [지역]
-      </div>
-      <div class="tp-item" style="border-color:#9333ea; background:#fdf4ff;">
-        <div class="tp-label" style="color:#9333ea;">문토용 — 성장 동기 자극</div>
-        갓생은 혼자 사는 게 아니에요 — 같이 성장하는 [주제] 살롱
-      </div>
-    </div>
-
-    <div class="tpl-wrap">
-      <div class="tpl-block" style="background:#fffbeb; border:1.5px solid #fde68a;">
-        <div class="tpl-label" style="color:#d97706;">🥕 당근모임 템플릿</div>
-        <pre class="tpl-pre">안녕하세요 📈 [동네명] 재테크 스터디예요!
-
-혼자 공부하면 작심삼일이잖아요.
-같이하면 달라요 💪
-
-📍 [카페/장소]
-⏰ 매주 [요일] 저녁 7시 (약 1.5시간)
-📚 주제: 재테크 기초 → 주식 → ETF → 부동산
-
-직장인 환영! 투자 막 시작한 분도 OK.
-각자 공부한 것 공유하는 방식이에요 🙌</pre>
-      </div>
-      <div class="tpl-block" style="background:#f0fdf4; border:1.5px solid #bbf7d0;">
-        <div class="tpl-label" style="color:#16a34a;">🤝 소모임 템플릿</div>
-        <pre class="tpl-pre">💡 [모임명] | [주제] 스터디 | Since 2023
-
-혼자 공부하면 3일 만에 포기하죠.
-저희는 같이 공부하고, 같이 성장해요.
-
-【 주제 】 [구체적 주제 — AI활용/재테크/부동산 등]
-【 대상 】 [연령대] / 직장인 위주 / 초보 환영
-【 방식 】 발표 1인 (15분) + 질문·토론 + 자유 네트워킹
-【 일정 】 월 [N]회 / [요일] 저녁 [시간]
-【 장소 】 [장소] ([지역])
-
-📋 최근 발표 주제 예시
-# [주제1]  # [주제2]  # [주제3]
-
-✅ 이런 분 환영: 꾸준히 공부하고 싶은 분
-📩 신청: 관심 분야 + 참여 목적 간단히</pre>
-      </div>
-      <div class="tpl-block" style="background:#fdf4ff; border:1.5px solid #e9d5ff;">
-        <div class="tpl-label" style="color:#9333ea;">🎭 문토 템플릿</div>
-        <pre class="tpl-pre">혼자 성장하는 건 힘들어요.
-가끔은 "나만 이렇게 열심히 사나" 싶기도 하고요.
-
-그래서 우리는 모여요.
-각자의 갓생을 보여주고, 서로에게 자극을 주고,
-"나도 해볼 수 있겠다"는 마음을 가져가는 시간이에요.
-
-이 살롱은 [주제]를 함께 공부하고 이야기 나눠요.
-발표 형식이 아니에요. 대화 형식이에요.
-
-✔️ 주제: [구체적 주제]
-✔️ 진행: 각자 인사이트 공유 → 자유 토론 (약 2시간)
-✔️ 인원: [N]명 소수정예 (신청 후 승인)
-✔️ 이후: 네트워킹 & 자유 대화</pre>
-      </div>
-    </div>
-
-    <div class="tip-row">
-      <div class="tip-good">
-        <div class="tip-head" style="color:#15803d;">⚡ 이게 핵심이에요</div>
-        <div class="tip-item"><span>✅</span>주제를 최대한 구체적으로 (재테크 < ETF 투자)</div>
-        <div class="tip-item"><span>✅</span>스터디 방식 상세 명시 (발표? 토론? 실습?)</div>
-        <div class="tip-item"><span>✅</span>"혼자면 3일 포기" 공감 문구 강력</div>
-      </div>
-      <div class="tip-bad">
-        <div class="tip-head" style="color:#dc2626;">🚫 이러면 망해요</div>
-        <div class="tip-item"><span>❌</span>주제 너무 넓음 ("자기계발 전반")</div>
-        <div class="tip-item"><span>❌</span>출석 강요 / 벌금제 언급 (부담감)</div>
-        <div class="tip-item"><span>❌</span>발표 의무화 명시 (진입장벽)</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ──────────── 동네친구/사교 ──────────── -->
-<div class="banner-card" id="card7">
-  <div class="banner-head" onclick="toggle('card7')">
-    <div class="banner-icon" style="background:#fff0f9;">🤝</div>
-    <div class="banner-text">
-      <div class="banner-num" style="color:#db2777;">당근 18% · 1인가구 증가로 급성장</div>
-      <div class="banner-title">동네친구 / 사교 모임</div>
-      <div class="banner-sub">당근 최강 카테고리 — "부담 없이" 가 핵심 키워드예요</div>
-    </div>
-    <div class="banner-arrow">▼</div>
-  </div>
-  <div class="banner-body">
-    <div style="background:#fff0f9; border-radius:10px; padding:12px 14px; margin:16px 0 4px; font-size:0.8rem; color:#831843; line-height:1.7; border-left:3px solid #db2777;">
-      1인 가구 증가와 함께 "소소한 일상을 함께할 동네 친구"에 대한 니즈가 폭발 중이에요. 당근이 이 카테고리에서 압도적으로 강해요. <strong>"거창하지 않아도 돼요"가 최강 공감 문구</strong>예요.
-    </div>
-
-    <div style="font-size:0.7rem; font-weight:800; color:#db2777; margin:16px 0 8px; display:flex; align-items:center; gap:8px;">
-      <span>📌 잘 되는 제목 패턴</span><div style="flex:1; height:1px; background:#fbcfe8;"></div>
-    </div>
-    <div class="title-patterns">
-      <div class="tp-item" style="border-color:#db2777; background:#fff0f9;">
-        <div class="tp-label" style="color:#db2777;">당근용 — 가장 강한 카테고리</div>
-        😊 [동네명] 동네친구 모집 | 산책·카페·밥 | 부담없이
-      </div>
-      <div class="tp-item" style="border-color:#16a34a; background:#f0fdf4;">
-        <div class="tp-label" style="color:#16a34a;">소모임용 — 연령대 + 분위기</div>
-        🌸 2030 [지역] 사교모임 | 맛집+카페+소소한 일상 공유
-      </div>
-      <div class="tp-item" style="border-color:#9333ea; background:#fdf4ff;">
-        <div class="tp-label" style="color:#9333ea;">문토용 — 1인 가구 공감</div>
-        서울에서 친구 사귀기가 이렇게 어려운가요 — 소셜링
-      </div>
-    </div>
-
-    <div class="tpl-wrap">
-      <div class="tpl-block" style="background:#fffbeb; border:1.5px solid #fde68a;">
-        <div class="tpl-label" style="color:#d97706;">🥕 당근모임 템플릿 (당근 최적화)</div>
-        <pre class="tpl-pre">안녕하세요! 😊 [동네명] 동네친구 모임이에요.
-
-거창한 거 없어요.
-산책하거나, 카페 가거나, 밥 먹거나.
-그냥 가볍게 같이 나가는 거예요.
-
-📍 [동네] 일대
-📅 주말 or 평일 저녁 (편한 때 같이 잡아요)
-👥 [연령대] 누구나 환영
-
-혼자서 어디 가기 심심하셨던 분들 모여요 😊
-연락처 공유하고 단톡방에서 번개처럼 만나요!</pre>
-      </div>
-      <div class="tpl-block" style="background:#f0fdf4; border:1.5px solid #bbf7d0;">
-        <div class="tpl-label" style="color:#16a34a;">🤝 소모임 템플릿</div>
-        <pre class="tpl-pre">🌸 [모임명] 사교모임 | Since 2023 | [N]명
-
-"어른이 되니까 친구 사귀기 너무 어렵다"
-그 공감 하나로 모인 모임이에요.
-
-【 대상 】 [연령대] / 성별 무관 / 누구나 환영
-【 활동 】 맛집 탐방 / 카페투어 / 산책 / 전시 / 번개
-【 빈도 】 월 2~4회 (번개 포함)
-【 분위기 】 텃세없음 / 부담없음 / 결석 자유
-
-🌟 이런 분들이 오세요
-# 이사 온 지 얼마 안 된 분  # 새 친구 사귀고 싶은 분
-# 주말에 같이 나갈 사람 원하는 분
-
-📩 신청: 자기소개 한 줄이면 충분해요!</pre>
-      </div>
-      <div class="tpl-block" style="background:#fdf4ff; border:1.5px solid #e9d5ff;">
-        <div class="tpl-label" style="color:#9333ea;">🎭 문토 템플릿</div>
-        <pre class="tpl-pre">서울에서 친구를 사귀기가
-이렇게 어려울 줄은 몰랐어요.
-
-다들 바쁘고, 연락은 끊기고,
-"다음에 보자"는 말이 인사말이 되어버린 나이.
-
-이 소셜링은 목적 없이 만나요.
-그냥 같이 걷거나, 카페에 앉아있거나,
-아무 말 없이도 괜찮은 그런 시간이에요.
-
-✔️ 활동: 산책 → 카페 → 자유 대화 (약 2시간)
-✔️ 장소: [장소] ([지역])
-✔️ 인원: [N]명 소수정예 (신청 후 승인)
-✔️ 분위기: 가볍게, 편하게, 진심으로</pre>
-      </div>
-    </div>
-
-    <div class="tip-row">
-      <div class="tip-good">
-        <div class="tip-head" style="color:#15803d;">⚡ 이게 핵심이에요</div>
-        <div class="tip-item"><span>✅</span>"거창하지 않아도 돼요" 부담 낮추기 필수</div>
-        <div class="tip-item"><span>✅</span>연령대 명시 (비슷한 또래 원함)</div>
-        <div class="tip-item"><span>✅</span>당근에선 단톡방 연결이 지속성 만들어요</div>
-      </div>
-      <div class="tip-bad">
-        <div class="tip-head" style="color:#dc2626;">🚫 이러면 망해요</div>
-        <div class="tip-item"><span>❌</span>연령 제한 너무 좁음 (91~95년생만 등)</div>
-        <div class="tip-item"><span>❌</span>MBTI 필수 기재 요구 (요즘 호불호 강함)</div>
-        <div class="tip-item"><span>❌</span>가입비/보증금 설정 (즉시 이탈)</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 하단 요약 -->
-<div class="summary-box">
-  <h3>🎯 플랫폼별 소개글 핵심 한 줄</h3>
-  <p>
-    <strong style="color:#d97706;">당근</strong> — 짧고 친근하게. 동네 이웃한테 말하듯 써요.<br/>
-    <strong style="color:#16a34a;">소모임</strong> — 조건·활동·일정을 명확하게. 신뢰가 CVR이에요.<br/>
-    <strong style="color:#9333ea;">문토</strong> — 감성과 취향으로. 공감 첫 줄이 클릭을 만들어요.
-  </p>
-  <br/>
-  <a href="hub.html" class="back-link">← 분석 도구로 돌아가기</a>
-</div>
-
-<footer style="text-align:center; margin-top:28px; color:#aaa; font-size:0.78rem;">롱치리 모임 운영 가이드 · 모임 소개글 작성 가이드 · 실제 데이터 기반</footer>
 
 <div class="scroll-btns">
   <button class="scroll-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 </div>
 
 <script>
-  const CARDS = ['card1','card2','card3','card4','card5','card6','card7'];
-  function toggle(id) {
-    const isOpen = document.getElementById(id).classList.contains('open');
-    CARDS.forEach(c => document.getElementById(c).classList.remove('open'));
-    if (!isOpen) document.getElementById(id).classList.add('open');
-  }
-  document.getElementById('card1').classList.add('open');
+const PLATFORMS={
+  daangn:{label:'🥕 당근모임',color:'#FF6F0F',bg:'#fff7ed',border:'#FF6F0F',sel:'sel-daangn'},
+  somoim:{label:'🤝 소모임',color:'#16a34a',bg:'#f0fdf4',border:'#16a34a',sel:'sel-somoim'},
+  munto:{label:'🎭 문토',color:'#9333ea',bg:'#fdf4ff',border:'#9333ea',sel:'sel-munto'},
+  openchat:{label:'💬 오픈채팅',color:'#d97706',bg:'#fffbeb',border:'#d97706',sel:'sel-openchat'},
+  insta:{label:'📸 인스타그램',color:'#ec4899',bg:'#fdf2f8',border:'#ec4899',sel:'sel-insta'},
+};
+const CATS=[
+  {id:'sports',emoji:'🏃',label:'운동/스포츠'},
+  {id:'reading',emoji:'📚',label:'독서/인문'},
+  {id:'food',emoji:'🍳',label:'요리/맛집'},
+  {id:'language',emoji:'🗣️',label:'언어/스터디'},
+  {id:'culture',emoji:'🎭',label:'문화/예술'},
+  {id:'selfdev',emoji:'💰',label:'자기계발'},
+  {id:'social',emoji:'🤝',label:'사교/친목'},
+];
+const SUBS={
+  sports:['러닝크루','배드민턴','등산·트레킹','클라이밍','테니스·골프','헬스·요가'],
+  reading:['자유독서','재테크독서','고전·철학','글쓰기클럽','특정작가'],
+  food:['소셜쿠킹','맛집탐방','카페투어','베이킹·제과'],
+  language:['영어회화','원서읽기','일본어','언어교환'],
+  culture:['전시·미술관','영화·드라마','공연·연극','사진'],
+  selfdev:['재테크·주식','부동산임장','AI활용','창업·사이드'],
+  social:['동네친구','2030친목','직장인친목','반려동물'],
+};
+const SUB_CUSTOM={
+  '러닝크루':{extra:'📍 코스: [공원] 일주 5~8km\n⚡ 페이스: 무관 (걷기구간 있어요)\n🍜 달리고 맛집 뒤풀이 있어요!',tip:'페이스 무관 + 뒤풀이 언급이 핵심',avoid:'페이스 조건 엄격 설정'},
+  '배드민턴':{extra:'🏸 코트: [체육관명] ([지역])\n💡 라켓 없어도 OK (빌려드려요)\n👥 2인1조 복식 위주',tip:'라켓 빌려드린다 명시 → 초보 유입',avoid:'코트 비용 불명확 (이탈 원인 1위)'},
+  '등산·트레킹':{extra:'⛰️ 코스: [산 이름] ([난이도])\n🚌 집결: [지하철역] [시간]\n🍱 하산 후 뒤풀이 있어요',tip:'난이도 + 집결지 명확히 = 신청률 상승',avoid:'난이도 없이 "아무나 OK"'},
+  '클라이밍':{extra:'🧗 센터: [클라이밍장명] ([지역])\n💪 레벨: [V0~V3 / 입문자]\n👟 암벽화 없어도 대여 가능',tip:'레벨 명시 + 암벽화 대여 안내 필수',avoid:'레벨 미명시'},
+  '테니스·골프':{extra:'🎾 장소: [테니스장/골프장] ([지역])\n💰 비용: [회당 금액]\n📊 레벨: [초급/중급]',tip:'비용 + 레벨 두 가지는 반드시 명시',avoid:'비용 "협의"'},
+  '헬스·요가':{extra:'💪 장소: [헬스장/스튜디오명]\n⏰ 시간: [요일] [시간대]\n🧘 레벨: [입문/초급/전체]',tip:'강사 유무 + 레벨 명시가 신뢰 만듦',avoid:'강사 수준 불명확'},
+  '자유독서':{extra:'📖 선정: [투표/호스트/번갈아]\n🗒️ 진행: 인상 깊은 구절 → 자유 토론\n☕ 이후: 근처 카페 자유 대화',tip:'"책 다 못 읽어도 OK" 문구가 신청률 올림',avoid:'매회 발표 의무화 명시'},
+  '재테크독서':{extra:'📈 장르: 재테크·경제·투자 관련 도서\n🗒️ 진행: 인사이트 공유 → 토론\n💡 매월 투표로 책 선정',tip:'주제 구체화 (재테크) = CTR 2배',avoid:'"독서모임"만 쓰고 장르 미명시'},
+  '고전·철학':{extra:'📚 장르: 고전문학·철학·인문 도서\n🗒️ 진행: 사전 자료 공유 → 심화 토론\n🎓 깊이 있는 대화 좋아하는 분 환영',tip:'문토에서 특히 강한 카테고리',avoid:'너무 학술적 어조'},
+  '글쓰기클럽':{extra:'✍️ 활동: 주제 글쓰기 → 상호 피드백\n📝 분량: A4 1장 내외\n💬 비판 없이 응원하는 분위기',tip:'결과물 공유 방식 명확히',avoid:'글쓰기 실력 조건 명시'},
+  '특정작가':{extra:'📚 이번 작가: [작가명]\n📖 이번 책: [책 제목]\n🗒️ 다음 모임 후 다음 책 선정',tip:'작가명을 제목에 넣으면 팬 유입',avoid:'작가 명시 없이 "독서모임"만'},
+  '소셜쿠킹':{extra:'🍳 장소: [공유주방명] ([지역])\n💰 비용: 재료비 포함 [N]만원\n👥 인원: [N]명 소수정예',tip:'비용 명시 + 소수정예 = 희소성',avoid:'정원 15명 이상'},
+  '맛집탐방':{extra:'📍 지역: [지역] 일대\n💰 예산: 1인 [N]만원대\n📸 사진 찍고 수다 떠는 게 목적이에요',tip:'예산대 명시가 가장 중요한 신뢰 요소',avoid:'매번 다른 지역 (정체성 없음)'},
+  '카페투어':{extra:'☕ 지역: [지역] 감성 카페 탐방\n💰 예산: 1인 1~2만원\n📸 카페 사진 찍기 좋아하는 분 환영',tip:'"사진 찍기 좋아하는 분" 타겟 명시',avoid:'카페만 가고 대화/활동 없음'},
+  '베이킹·제과':{extra:'🧁 장소: [공방명 or 공유주방]\n💰 비용: 재료+수업 포함 [N]만원\n🎁 만든 것 포장해서 가져가요',tip:'"만든 거 포장 가져감" 문구가 매력',avoid:'도구·재료 직접 준비 요구'},
+  '영어회화':{extra:'📊 레벨: [초급/중급/고급]\n🗒️ 방식: 주제 토론 → 자유 대화\n🌍 원어민 없이, 우리끼리 영어로',tip:'레벨 명시 + "틀려도 OK" 심리 안전감',avoid:'레벨 미명시'},
+  '원서읽기':{extra:'📖 이번 책: [원서 제목] ([난이도])\n🗒️ 방식: 챕터 읽고 → 영어 토론\n💡 한국어 보충 설명 있어요',tip:'"한국어 보충 설명" 명시 = 초보 유입',avoid:'고급 수준만 가능한 책 선정 후 "누구나"'},
+  '일본어':{extra:'🇯🇵 레벨: [N3~N5 / 여행 일본어]\n🗒️ 방식: 회화 연습 → 문화 이야기\n🎌 드라마/애니 좋아하는 분 환영',tip:'드라마/애니 연결 = 문화 동기 자극',avoid:'문법 위주 딱딱한 진행'},
+  '언어교환':{extra:'🌏 참가자: 한국어↔[외국어] 교환\n⏰ 방식: 30분 한국어 + 30분 외국어\n🤝 레벨 관계없이 환영',tip:'시간 배분 방식 명시가 공정성 보여줌',avoid:'한쪽 언어만 계속 쓰는 구조 방치'},
+  '전시·미술관':{extra:'🖼️ 이번 전시: [전시명] @ [미술관]\n💰 입장료: [금액] (각자 부담)\n☕ 관람 후 카페에서 자유 대화',tip:'"혼자 가기 아쉬웠던" 공감 문구 강력',avoid:'전시명 없이 "추후 공지"'},
+  '영화·드라마':{extra:'🎬 이번 작품: [제목] ([장르])\n🍿 방식: 각자 보고 → 함께 이야기\n💬 스포 상관없는 분 환영',tip:'장르 명시 + "스포 OK" 로 팬층 유입',avoid:'영화 안 보고 와도 되는지 불명확'},
+  '공연·연극':{extra:'🎭 이번 공연: [공연명] @ [극장]\n🎟️ 티켓: 각자 구매 / 공동구매 진행\n☕ 공연 후 카페 소감 나눔',tip:'공동구매 안내가 참여 장벽 낮춤',avoid:'티켓 가격 없이 "알아서"'},
+  '사진':{extra:'📸 장비: 스마트폰도 OK\n📍 촬영지: [지역/장소]\n🖼️ 촬영 후 사진 공유 & 피드백',tip:'"스마트폰도 OK" = 진입장벽 제거 핵심',avoid:'카메라 필수 조건'},
+  '재테크·주식':{extra:'📈 주제: 주식/ETF/재테크 기초~중급\n🗒️ 방식: 발표 1인 → 질문·토론\n💡 초보도 환영, 천천히 배워요',tip:'주제 구체화 (ETF투자 > 재테크 전반)',avoid:'"전문가급만" 조건'},
+  '부동산임장':{extra:'🏠 지역: [임장 지역]\n🗒️ 방식: 현장 임장 → 카페 분석 회의\n💰 비용: 교통비 + 카페비 자부담',tip:'임장 지역 미리 공개 = 진지한 멤버 유입',avoid:'비용 미정'},
+  'AI활용':{extra:'💡 주제: ChatGPT/업무자동화/AI툴\n🗒️ 방식: 실습 위주 (강의 아님)\n💻 노트북 지참 권장',tip:'실습 위주 명시 = 실용 지향자 유입',avoid:'"노트북 필수" 강제'},
+  '창업·사이드':{extra:'💡 주제: 사이드프로젝트/창업 아이디어\n🗒️ 방식: 각자 근황 공유 → 피드백\n🤝 네트워킹 중심',tip:'"피드백" 명시 = 진지한 멤버 유입',avoid:'경쟁/비교 분위기 조성'},
+  '동네친구':{extra:'📍 지역: [동네] 일대\n🎯 활동: 산책·카페·밥·번개\n😊 결석 자유, 부담없는 모임이에요',tip:'"거창하지 않아도 돼요" 공감 문구 강력',avoid:'MBTI 필수 기재 요구'},
+  '2030친목':{extra:'👥 대상: [90년대생 / 20대 / 30대]\n🎯 활동: 맛집·카페·여행·번개 다양\n😊 텃세없고 분위기 편해요',tip:'연령대 구체 명시가 동질감 만듦',avoid:'연령 범위 너무 좁음'},
+  '직장인친목':{extra:'💼 대상: 직장인 (업종 무관)\n⏰ 주로 퇴근 후 / 주말 모임\n😊 업무 이야기 NO, 일상 수다 OK',tip:'"업무 이야기 NO" 명시 = 힐링 니즈 충족',avoid:'특정 직군/회사만 모집 조건'},
+  '반려동물':{extra:'🐾 반려동물: [강아지/고양이/소동물]\n📍 산책 코스: [공원명]\n🐕 반려동물 없어도 함께해요!',tip:'"반려동물 없어도 OK" = 애호가도 유입',avoid:'특정 견종/묘종만 허용 조건'},
+};
+
+const HASHTAGS={
+  sports:{major:['#운동모임','#운동크루','#피트니스','#건강한라이프','#운동스타그램','#러닝크루','#운동하는사람들'],minor:['#서울운동모임','#직장인운동','#주말운동','#운동친구구함','#갓생살기','#건강관리','#다이어트모임']},
+  reading:{major:['#독서모임','#책읽기','#독서클럽','#북클럽','#독서스타그램','#책스타그램','#인문학'],minor:['#직장인독서모임','#서울독서모임','#북살롱','#독서감상','#책추천','#읽어볼만한책','#독서기록']},
+  food:{major:['#맛집탐방','#먹스타그램','#소셜다이닝','#요리모임','#맛집','#맛집스타그램','#카페투어'],minor:['#서울맛집','#직장인점심','#주말맛집','#맛집추천','#혼밥탈출','#소셜쿠킹','#카페스타그램']},
+  language:{major:['#영어회화','#영어스터디','#언어교환','#어학스터디','#영어공부','#외국어공부','#영어모임'],minor:['#서울영어모임','#직장인영어','#영어회화모임','#원어민없는영어','#영어스피킹','#일본어모임','#외국어교환']},
+  culture:{major:['#전시회','#미술관','#문화생활','#문화모임','#전시스타그램','#서울전시','#공연관람'],minor:['#혼자가기아쉬운전시','#전시후기','#미술관투어','#전시소셜링','#영화토론','#공연후기','#문화소셜링']},
+  selfdev:{major:['#자기계발','#갓생','#공부모임','#스터디','#재테크','#주식공부','#자기계발모임'],minor:['#직장인자기계발','#갓생살기','#부동산스터디','#AI공부','#재테크모임','#사이드프로젝트','#창업모임']},
+  social:{major:['#친목모임','#동네친구','#사교모임','#모임','#친구만들기','#사람만나기','#서울모임'],minor:['#2030친목','#직장인친목','#동네친목','#번개모임','#새친구사귀기','#외향인모임','#텃세없는모임']},
+};
+const SUB_HASHTAGS={
+  '러닝크루':['#러닝','#런닝크루','#마라톤','#조깅','#새벽러닝'],
+  '배드민턴':['#배드민턴','#배드민턴모임','#배드민턴동호회'],
+  '등산·트레킹':['#등산','#트레킹','#등산모임','#산행','#하이킹'],
+  '클라이밍':['#클라이밍','#볼더링','#암벽등반','#클라이밍모임'],
+  '테니스·골프':['#테니스','#골프','#테니스모임','#골프모임'],
+  '헬스·요가':['#헬스','#요가','#필라테스','#PT모임'],
+  '자유독서':['#자유독서','#자유책선정','#독서기록'],
+  '재테크독서':['#재테크독서','#경제책','#투자공부'],
+  '고전·철학':['#고전문학','#철학','#인문학독서','#북살롱'],
+  '글쓰기클럽':['#글쓰기','#작가모임','#글쓰기피드백'],
+  '특정작가':['#작가','#북클럽','#작가팬모임'],
+  '소셜쿠킹':['#소셜쿠킹','#쿠킹클래스','#요리교실'],
+  '맛집탐방':['#맛집탐방','#맛스타그램','#맛집여행'],
+  '카페투어':['#카페투어','#카페스타그램','#감성카페'],
+  '베이킹·제과':['#베이킹','#홈베이킹','#제과','#쿠키모임'],
+  '영어회화':['#영어회화','#스피킹','#영어토론'],
+  '원서읽기':['#원서읽기','#영어원서','#영어독서'],
+  '일본어':['#일본어','#일본어회화','#일본어공부'],
+  '언어교환':['#언어교환','#LanguageExchange','#탄뎀'],
+  '전시·미술관':['#전시','#미술관','#아트','#현대미술'],
+  '영화·드라마':['#영화토론','#드라마모임','#영화모임'],
+  '공연·연극':['#공연','#연극','#뮤지컬','#공연관람'],
+  '사진':['#사진모임','#포토클럽','#사진스타그램'],
+  '재테크·주식':['#재테크','#주식','#ETF','#투자'],
+  '부동산임장':['#부동산','#임장','#부동산공부'],
+  'AI활용':['#AI','#ChatGPT','#AI공부','#업무자동화'],
+  '창업·사이드':['#창업','#사이드프로젝트','#스타트업'],
+  '동네친구':['#동네친구','#이웃','#동네모임'],
+  '2030친목':['#2030모임','#20대30대','#청년모임'],
+  '직장인친목':['#직장인모임','#퇴근후','#직장인친목'],
+  '반려동물':['#반려동물','#댕댕이모임','#고양이모임','#펫모임'],
+};
+
+const BASE={
+  'daangn-sports':{titles:[{label:'동네+활동+조건',text:'[이모지] [동네명] [소분류] | 초보환영 | 매주 [요일] [시간]'},{label:'이모지+모임명',text:'[이모지] [모임명] | [연령대] | 부담없이'},{label:'감성 초대형',text:'같이 [소분류] 해요! [동네명] | 텃세없는 모임 🙌'}],template:`안녕하세요 [이모지] [모임명]이에요!
+
+혼자 [소분류] 하기 심심하셨죠?
+저희랑 같이 해요, 즐거워요 😊
+
+📍 [장소명]
+⏰ 매주 [요일] [시간]
+🎯 초보·왕초보 완전 환영
+[extra1]
+[extra2]
+
+가입 후 채팅 주시면 다음 일정 알려드려요!`,tips:['초보환영 제목에 포함 시 CVR 크게 상승','장소+시간+조건 3가지 명확히','뒤풀이/맛집 언급이 참여 동기 자극'],avoid:['레벨 조건 엄격 설정','장소 "추후 공지"','활동만 강조 분위기 없음'],note:{bg:'#fff7ed',color:'#7c2d12',border:'#FF6F0F',text:'당근 핵심 — 제목에 동네명+활동명 조합이 SEO의 전부예요. 소개글은 짧을수록 좋아요 (300자 이내).'}},
+  'daangn-reading':{titles:[{label:'동네+장르',text:'📚 [동네명] [모임명] | [소분류] | 매달 1권'},{label:'대상+활동',text:'📖 [동네명] [소분류] 독서 | [연령대] 환영 | 부담없이'},{label:'공감형',text:'책 읽고 싶은 분 모여요 🙌 [동네명] | 매달 [요일]'}],template:`안녕하세요 📚 [모임명]이에요!
+
+매달 책 한 권씩, 이웃들과 같이 읽어요.
+책 잘 못 읽어도 괜찮아요 — 이야기 나누는 게 목적이에요 😊
+
+📍 [카페명 or 동네 장소]
+📅 매달 [N]째 [요일] 오후 [시간]
+📖 [소분류] 중심
+[extra1]
+[extra2]
+
+책 다 못 읽어도 와도 돼요!
+부담없이 신청해주세요 🙌`,tips:['"책 다 못 읽어도 OK" 진입장벽 낮추기','주제 구체화 (재테크독서 > 독서모임)','진행 방식 간단히 명시'],avoid:['"무조건 다 읽어와야" 조건','장르/주제 미명시','발표 의무화 문구'],note:{bg:'#fff7ed',color:'#7c2d12',border:'#FF6F0F',text:'당근 독서모임은 "동네 이웃과 가볍게"가 핵심이에요. 커피+책 소통 분위기를 강조하세요.'}},
+  'daangn-food':{titles:[{label:'동네+음식+일정',text:'🍜 [동네명] [소분류] | 매주 [요일] [시간] | 같이 가요'},{label:'공감+초대',text:'😋 [모임명] | [동네] | [요일] 모임'},{label:'느낌+활동',text:'[이모지] [모임명] | 부담없이 | [연령대]'}],template:`안녕하세요 [이모지] [모임명]이에요!
+
+[소분류], 혼자 하기 아쉬웠죠?
+같이 하면 더 즐거워요 😋
+
+📍 [동네/장소] 일대
+📅 [일정]
+💰 [비용 — 각자 계산 or 공동 부담]
+[extra1]
+[extra2]
+
+사진 찍고, 수다 떨고, 맛있게 먹어요 😊
+부담없이 오세요!`,tips:['비용 명시가 가장 중요한 신뢰 요소','사진+수다 언급 = 소소한 즐거움 강조','소수정예 인원이 친밀감 보장'],avoid:['비용 "협의" or 미정','장소 매번 달라서 정체성 없음','정원 15명 이상'],note:{bg:'#fff7ed',color:'#7c2d12',border:'#FF6F0F',text:'당근 맛집/요리 모임은 예산대를 명확히 쓰면 신청률이 바로 올라가요.'}},
+  'daangn-language':{titles:[{label:'동네+언어+레벨',text:'🗣️ [동네명] [소분류] | [레벨] | 매주 [요일]'},{label:'공감형',text:'[소분류] 쓸 기회 없으셨죠? [동네] 스터디 | 초보환영'},{label:'활동 명시',text:'🌍 [모임명] | [동네] | [연령대] | 부담없이'}],template:`안녕하세요 🗣️ [모임명]이에요!
+
+문법보다 대화가 먼저예요.
+틀려도 괜찮아요, 같이 실력 키워요 😊
+
+📍 [카페/장소명]
+⏰ 매주 [요일] [시간]
+📊 레벨: [초급~중급 / 왕초보도 OK]
+[extra1]
+[extra2]
+
+부담없이 와보세요 🙌`,tips:['레벨 명시 필수','"틀려도 OK" 심리적 안전감 메시지','최근 대화 주제 예시 공개'],avoid:['레벨 미명시','원어민 수준 이상만 조건','진행 방식 불명확'],note:{bg:'#fff7ed',color:'#7c2d12',border:'#FF6F0F',text:'당근 언어 모임은 가까운 동네 카페에서 편하게 만나는 느낌이 핵심이에요.'}},
+  'daangn-culture':{titles:[{label:'동네+활동',text:'[이모지] [동네] [소분류] 같이 가요 | 주말 나들이'},{label:'공감형',text:'혼자 가기 아쉬운 [소분류] | [동네명] | 누구나 환영'},{label:'느낌형',text:'[이모지] [모임명] | [소분류] + 카페 수다'}],template:`안녕하세요 [이모지] [모임명]이에요!
+
+[소분류], 혼자 가기 아쉬웠죠?
+같이 가요, 보고 나서 수다도 떨어요 😊
+
+📍 [장소/전시/공연 위치]
+📅 [날짜 or 정기 일정]
+💰 [비용 — 각자 부담]
+[extra1]
+[extra2]
+
+예술 잘 몰라도 괜찮아요. 그냥 같이 보는 거예요 🙌`,tips:['"혼자 가기 아쉬웠던" 공감 문구 강력','비용 명시 필수','활동 후 카페 계획 포함'],avoid:['활동명 없이 "추후 공지"','예술 지식 전제하는 문구','활동 후 계획 없음'],note:{bg:'#fff7ed',color:'#7c2d12',border:'#FF6F0F',text:'당근 문화 모임은 "거창하지 않게, 가볍게 같이"가 핵심이에요.'}},
+  'daangn-selfdev':{titles:[{label:'동네+주제+대상',text:'📈 [동네명] [소분류] 스터디 | 직장인 | 매주 [요일] 저녁'},{label:'공감형',text:'혼자 공부하면 3일이죠 🙌 [동네] [소분류] | 초보OK'},{label:'구체 주제형',text:'💡 [모임명] | [동네명] | 주 [N]회'}],template:`안녕하세요 📈 [모임명]이에요!
+
+혼자 공부하면 작심삼일이잖아요.
+같이하면 달라요 💪
+
+📍 [카페/장소]
+⏰ 매주 [요일] 저녁 [시간]
+📚 주제: [소분류]
+[extra1]
+[extra2]
+
+직장인 환영! 막 시작한 분도 OK.
+각자 인사이트 공유하는 방식이에요 🙌`,tips:['주제 최대한 구체적으로','스터디 방식 명확히','혼자면 3일 공감 문구가 강력'],avoid:['주제 너무 넓음','출석 강요/벌금제 언급','발표 의무화 강조'],note:{bg:'#fff7ed',color:'#7c2d12',border:'#FF6F0F',text:'당근 스터디는 동네 카페에서 부담 없이 만나는 이미지가 핵심이에요.'}},
+  'daangn-social':{titles:[{label:'동네+목적+분위기',text:'😊 [동네명] 동네친구 모집 | [소분류] | 부담없이'},{label:'대상+활동',text:'[이모지] [모임명] | 텃세없음 | [동네명] | [요일] 정기'},{label:'공감 초대형',text:'이사왔어요! [동네] 친구 찾아요 😊 | 번개 자주'}],template:`안녕하세요! 😊 [모임명]이에요.
+
+거창한 거 없어요.
+산책하거나, 카페 가거나, 밥 먹거나.
+그냥 가볍게 같이 나가는 거예요.
+
+📍 [동네] 일대
+📅 주말 or 평일 저녁
+👥 [연령대] 누구나 환영
+[extra1]
+[extra2]
+
+연락처 공유하고 단톡방에서 번개처럼 만나요! 😊`,tips:['"거창하지 않아도 돼요" 부담 낮추기','연령대 명시','단톡방 연결이 지속성 만듦'],avoid:['연령 범위 너무 좁음','MBTI 필수 기재','가입비/보증금 설정'],note:{bg:'#fff7ed',color:'#7c2d12',border:'#FF6F0F',text:'당근 사교 모임은 "동네 이웃끼리 가볍게"가 가장 큰 강점이에요.'}},
+
+  'somoim-sports':{titles:[{label:'이모지+모임명+조건',text:'[이모지] [모임명] | [연령대] | 주 [N]회 정기 | 초보환영'},{label:'Since+인원',text:'[이모지] [모임명] | Since 202X | 멤버 [N]명 | [소분류]'},{label:'특징 강조형',text:'[이모지] [소분류]모임 | 텃세없음 | [지역] | [요일] 정기'}],template:`[이모지] [모임명] | Since 202X | 멤버 [N]명
+
+【 대상 】 [연령대] / 초보환영
+【 장소 】 [장소명] ([지역])
+【 일정 】 매주 [요일] [시간] (월 [N]회)
+【 활동 】 [소분류]
+
+💪 함께하는 활동
+[extra1]
+[extra2]
+# [해시태그1]  # [해시태그2]  # [해시태그3]
+
+👤 멤버: 텃세없음 / 결석 자유
+📩 가입: 간단한 자기소개 + 신청`,tips:['호스트 프로필 완성도가 신뢰 결정','후기 5개 이상 = 전환율 급상승','조건 명시할수록 진지한 멤버 유입'],avoid:['소개글 5줄 이하 (신뢰 하락)','후기 방치 (신규 유입 차단)','멤버 정원 너무 많이 설정'],note:{bg:'#f0fdf4',color:'#14532d',border:'#16a34a',text:'소모임 핵심 — 호스트 신뢰도가 CVR을 결정해요. 사진+운영이력+후기 3가지가 없으면 신청률이 크게 떨어져요.'}},
+  'somoim-reading':{titles:[{label:'주제+대상+지역',text:'📚 [소분류] 독서모임 | [연령대] | [지역] | 월 [N]회'},{label:'Since+이모지',text:'📖 [모임명] | Since 202X | [N]명 | [소분류]'},{label:'감성 타이틀',text:'👑 [모임명] | [소분류] 중심 | [지역]'}],template:`📚 [모임명] | Since 202X | 멤버 [N]명
+
+【 대상 】 [연령대] / [소분류] 관심자 / 누구나
+【 책 선정 】 [방식: 투표 / 호스트 선정 / 번갈아]
+【 일정 】 월 [N]회 / [요일] [시간]
+【 장소 】 [장소명] ([지역])
+
+📝 진행 방식
+[extra1]
+[extra2]
+# 책읽기  # 토론  # 인사이트공유
+
+✅ 이런 분 환영: 혼자 읽기 심심하신 분
+📩 가입: 자기소개 한 줄 + 신청`,tips:['주제 구체화 (재테크 독서 > 독서모임)','진행 방식 명확히','시리즈 기획으로 LTV 높이기'],avoid:['책 장르/주제 미명시','발표 의무화 강조','모집 인원 너무 많음'],note:{bg:'#f0fdf4',color:'#14532d',border:'#16a34a',text:'소모임 독서 모임은 "어떤 주제"를 구체적으로 쓸수록 클릭률이 2배 올라가요.'}},
+  'somoim-food':{titles:[{label:'활동+지역+인원',text:'🍳 [모임명] | [지역] | 월 [N]회 | [N]명 소수정예'},{label:'Since+컨셉',text:'[이모지] [모임명] | 소셜다이닝 | Since 202X | [N]명'},{label:'구체 활동형',text:'[이모지] [소분류] 모임 | [지역] | [소분류]+식사+대화'}],template:`[이모지] [모임명] | [소분류] 클럽 | Since 202X
+
+요리+식사+대화를 한 번에!
+
+【 대상 】 [연령대] / [레벨 조건]
+【 장소 】 [장소명] ([지역])
+【 일정 】 월 [N]회 / [요일] [시간]
+【 비용 】 [비용 내역 포함 금액]
+
+[extra1]
+[extra2]
+# [해시태그1]  # [해시태그2]  # [소분류]
+
+✅ 이런 분 환영: 새로운 사람 만나고 싶은 분
+📩 신청: 자기소개 남겨주세요`,tips:['비용 명확히 명시 (불확실성 제거)','소수정예 설정으로 희소성 만들기','활동 후 자유 네트워킹 포함'],avoid:['비용 "협의" or 미정','정원 15명 이상','장소 "추후 공지"'],note:{bg:'#f0fdf4',color:'#14532d',border:'#16a34a',text:'소모임 요리/맛집 모임은 비용 명시와 소수정예가 핵심이에요.'}},
+  'somoim-language':{titles:[{label:'언어+방식+지역',text:'🗣️ [소분류] 스터디 | [지역] 오프라인 | [레벨]'},{label:'특징 강조형',text:'[이모지] [모임명] | [지역] | 주 [N]회'},{label:'Since+인원',text:'🌍 [모임명] | Since 202X | [N]명'}],template:`🗣️ [모임명] | Since 202X | [N]명
+
+[한 줄 컨셉]
+
+【 레벨 】 [초급/중급/고급]
+【 방식 】 [진행 방식 상세]
+【 장소 】 [장소명] ([지역])
+【 일정 】 매주 [요일] [시간]
+
+[extra1]
+[extra2]
+
+📋 최근 대화 주제: [주제1] / [주제2]
+
+✅ 이런 분 환영: [소분류] 쓸 기회 원하는 분
+📩 신청: 레벨 + 간단 자기소개`,tips:['레벨 명시 필수','대화 주제 예시 공개가 분위기 보여줌','최소 인원 보장 명시로 신뢰 확보'],avoid:['레벨 미명시','원어민 수준 조건','진행 방식 불명확'],note:{bg:'#f0fdf4',color:'#14532d',border:'#16a34a',text:'소모임 언어 스터디는 레벨 명시가 핵심이에요.'}},
+  'somoim-culture':{titles:[{label:'활동+지역+특징',text:'[이모지] [모임명] | [지역] | 월 [N]회 | 관람+대화'},{label:'Since+인원',text:'[이모지] [모임명] | [소분류] 투어 | Since 202X | [N]명'},{label:'구체 활동',text:'[이모지] [소분류] 모임 | [연령대] | [지역] | 소수정예'}],template:`[이모지] [모임명] | Since 202X | [N]명
+
+[한 줄 컨셉]
+
+【 대상 】 [연령대] / 관심만 있으면 OK
+【 일정 】 월 [N]회 / [요일] [시간]
+【 비용 】 [비용 내역] (각자 부담)
+【 인원 】 [N]명 소수정예
+
+[extra1]
+[extra2]
+
+📋 최근 방문/관람: [최근 활동1] / [최근 활동2]
+
+✅ 이런 분 환영: 혼자 가기 아쉬우셨던 분
+📩 신청: 간단한 자기소개`,tips:['"혼자 가기 아쉬운" 공감 문구 강력','구체적 활동명+날짜 명시','소수정예 인원 설정'],avoid:['활동명 없이 "추후 공지"','비용 불명확','예술 지식 전제 문구'],note:{bg:'#f0fdf4',color:'#14532d',border:'#16a34a',text:'소모임 문화 모임은 "자주 방문한 기록"이 신뢰를 만들어요.'}},
+  'somoim-selfdev':{titles:[{label:'주제+방식+대상',text:'💡 [소분류] 스터디 | 직장인 | [지역] | 월 [N]회 실습위주'},{label:'Since+인원',text:'📈 [모임명] | Since 202X | [N]명'},{label:'특징 강조형',text:'[이모지] [소분류] 스터디 | 발표+토론 | [지역] 오프라인'}],template:`💡 [모임명] | Since 202X | [N]명
+
+혼자 공부하면 포기하죠. 저희는 같이 성장해요.
+
+【 주제 】 [소분류]
+【 대상 】 [연령대] / 직장인 위주 / 초보 환영
+【 방식 】 발표 1인(N분) + 질문·토론
+【 일정 】 월 [N]회 / [요일] 저녁 [시간]
+【 장소 】 [장소명] ([지역])
+
+[extra1]
+[extra2]
+
+📋 최근 발표 주제: [주제1] / [주제2] / [주제3]
+
+📩 신청: 관심 분야 + 참여 목적 간단히`,tips:['주제 최대한 구체적으로','스터디 방식 상세 명시','최근 발표 주제 공개가 분위기 보여줌'],avoid:['주제 너무 넓음','출석 강요/벌금제','발표 의무화 강조'],note:{bg:'#f0fdf4',color:'#14532d',border:'#16a34a',text:'소모임 자기계발 스터디는 최근 발표 주제 예시가 가장 중요해요.'}},
+  'somoim-social':{titles:[{label:'대상+활동+지역',text:'🌸 [연령대] [지역] 친목모임 | 맛집+카페+소소한 일상'},{label:'Since+인원',text:'😊 [모임명] | Since 202X | [N]명 | [지역]'},{label:'공감형',text:'[이모지] [연령대] 친구 사귀기 | [지역] | 텃세없음'}],template:`🌸 [모임명] | Since 202X | [N]명
+
+"어른이 되니까 친구 사귀기 너무 어렵다"
+그 공감 하나로 모인 모임이에요.
+
+【 대상 】 [연령대] / 성별 무관
+【 활동 】 맛집 / 카페 / 산책 / 전시 / 번개
+【 빈도 】 월 [N]회 (번개 포함)
+【 분위기 】 텃세없음 / 부담없음 / 결석 자유
+
+[extra1]
+[extra2]
+
+🌟 이런 분 환영
+# 이사 온 지 얼마 안 된 분  # 새 친구 사귀고 싶은 분
+
+📩 신청: 자기소개 한 줄이면 충분해요!`,tips:['공감 첫 문장이 가장 강력한 훅','연령대 구체 명시','결석 자유 명시 = 심리적 부담 제거'],avoid:['연령 범위 너무 좁음','MBTI 필수 기재','가입비/보증금'],note:{bg:'#f0fdf4',color:'#14532d',border:'#16a34a',text:'소모임 친목 모임은 "이런 분들이 있어요" 분위기 묘사가 중요해요.'}},
+
+  'munto-sports':{titles:[{label:'감성 캐치프레이즈',text:'몸보다 마음이 [소분류]하고 싶을 때 — [지역] 소셜링'},{label:'공감+초대',text:'[소분류]이 목적이 아니에요, 함께라서 좋은 거예요'},{label:'시간+감성',text:'도시가 깨어나기 전 — [시간대] [지역] [소분류] 소셜링'}],template:`[소분류]이 목적이 아니에요.
+[소분류]하고 싶어지는 순간을 만들고 싶어요.
+
+[모임명]은 기록보다 경험이 먼저예요.
+[extra1]
+[extra2]
+✔️ 이후: 카페에서 가볍게 소감 나눠요`,tips:['감성 첫 줄이 클릭을 만들어요','부담 없다는 메시지 반드시 포함','활동 후 카페/식사 계획으로 소속감'],avoid:['기록/실력 강조 (문토 유저는 경험 원함)','전문 용어 남발','딱딱한 조건 나열'],note:{bg:'#fdf4ff',color:'#581c87',border:'#9333ea',text:'문토 핵심 — "목적이 아니라 경험"이에요. 첫 문장이 공감을 얻어야 클릭돼요.'}},
+  'munto-reading':{titles:[{label:'지적 호기심 자극',text:'같은 책을 왜 우리는 다르게 읽었을까 — 주제형 독서 살롱'},{label:'질문형',text:'[소분류]을 읽고 나서 무슨 생각이 드셨나요?'},{label:'감성 컨셉형',text:'[소분류] 책과 대화하는 저녁 — [모임명] 북살롱'}],template:`책을 읽는다는 건 어쩌면
+내 안에 잠든 생각을 깨우는 일인지도 몰라요.
+
+[모임명]은 [소분류] 책을 함께 읽고
+"나는 이렇게 생각했어요"를 나누는 시간이에요.
+
+정답이 없어도 괜찮아요.
+다른 사람의 읽기가 나의 읽기를 풍요롭게 해줄 거예요.
+
+[extra1]
+[extra2]
+✔️ 이후: 근처 카페에서 자유 대화`,tips:['지적 호기심 자극하는 제목 (질문형 강력)','사전 자료/과제 제공으로 준비된 느낌','소수정예 + 승인제로 퀄리티 유지'],avoid:['"누구나 환영" (문토 유저는 타겟 원함)','기대 수준보다 낮은 진행','발표 느낌 주는 구조'],note:{bg:'#fdf4ff',color:'#581c87',border:'#9333ea',text:'문토 독서는 "주제의 깊이"가 결정이에요. 제목이 지적 호기심을 자극하지 않으면 클릭이 없어요.'}},
+  'munto-food':{titles:[{label:'감성 핵심',text:'음식보다 대화가 맛있었던 저녁 — [지역] 소셜다이닝'},{label:'경험 강조',text:'낯선 사람과 마주앉아 먹는다는 것 — [모임명] 소셜링'},{label:'컨셉형',text:'[이모지] [모임명] — 먹고, 말하고, 연결되는 저녁'}],template:`[소분류]은 핑계예요.
+
+사실 우리가 원하는 건
+낯선 사람과 마주앉아 나누는 그 대화의 온기일 수도 있어요.
+
+[모임명]에서는 함께 먹으면서 이야기를 나눠요.
+깊은 이야기도, 가벼운 이야기도.
+
+[extra1]
+[extra2]
+✔️ 인원: [N]명 소수정예 (신청 후 승인)`,tips:['음식이 주목적이 아니라 "연결"이 목적임을 강조','소수정예 인원으로 깊은 대화 보장','승인제로 분위기 큐레이션'],avoid:['요리 실력 언급 (문토는 경험 중심)','대규모 인원','딱딱한 조건 나열'],note:{bg:'#fdf4ff',color:'#581c87',border:'#9333ea',text:'문토 요리/맛집은 "연결과 대화"를 전면에 내세워야 해요.'}},
+  'munto-language':{titles:[{label:'감성 공감형',text:'[소분류]이 두려운 게 아니었어요, 틀릴까봐 두려웠던 거예요'},{label:'경험 강조',text:'[소분류]로 대화해본 적 있으세요? — 용기있는 분들의 소셜링'},{label:'컨셉형',text:'말하는 게 아니라 연결되는 [모임명] 소셜링'}],template:`[소분류]을 못 하는 게 아니었어요.
+말할 기회가 없었던 거예요.
+
+[모임명]은 잘 하는 사람들이 모이는 게 아니에요.
+[소분류]를 해보고 싶은 사람들이 모여요.
+
+틀려도 괜찮아요. 여기선 틀림이 배움이에요.
+
+[extra1]
+[extra2]
+✔️ 인원: [N]명 소수정예 (신청 후 승인)
+✔️ 이후: 카페에서 한국어로 자유 대화 😊`,tips:['두려움 공감 첫 줄이 가장 강력','레벨 관계없이 환영 메시지','활동 후 카페 자유 대화로 부담 해소'],avoid:['레벨 조건 엄격','원어민처럼 해야 한다는 압박','딱딱한 문법 수업 느낌'],note:{bg:'#fdf4ff',color:'#581c87',border:'#9333ea',text:'문토 언어 모임은 "실력"보다 "용기"를 강조하세요.'}},
+  'munto-culture':{titles:[{label:'공감 최강',text:'혼자 가기 아쉬운 [소분류]이 있었어요 — 같이 볼 사람 찾아요'},{label:'감성 컨셉형',text:'[소분류] 앞에 서서, 각자의 감상을 나눠요 — [모임명]'},{label:'경험 강조',text:'보는 게 아니라 느끼는 [모임명] 소셜링 — [지역]'}],template:`가고 싶었던 [소분류]이 있었어요.
+그런데 같이 갈 사람이 없었어요.
+
+그게 [모임명]의 시작이에요.
+
+우리는 [소분류]을 함께 경험해요.
+그 앞에 서서, 각자 느낀 것을 나눠요.
+정답이 없어서 오히려 더 재미있어요.
+
+[extra1]
+[extra2]
+✔️ 인원: [N]명 (신청 후 승인)`,tips:['"혼자 가기 아쉬웠던" 공감이 가장 강력한 훅','구체적 작품/전시명 포함 필수','활동 후 카페 대화 계획 포함'],avoid:['예술 지식 전제 문구','전시명 없이 "추후 공지"','너무 분석적인 어조'],note:{bg:'#fdf4ff',color:'#581c87',border:'#9333ea',text:'문토 문화 소셜링은 가장 인기 카테고리예요. "혼자 가기 아쉬웠던" 공감 문구 하나로 클릭이 만들어져요.'}},
+  'munto-selfdev':{titles:[{label:'갓생 공감형',text:'갓생은 혼자 사는 게 아니에요 — 같이 성장하는 [소분류] 살롱'},{label:'성장 동기형',text:'"나만 이렇게 열심히 사나" 싶을 때 오세요 — [모임명]'},{label:'컨셉형',text:'각자의 갓생을 나누는 [소분류] 살롱 — [지역]'}],template:`혼자 성장하는 건 힘들어요.
+"나만 이렇게 열심히 사나" 싶기도 하고요.
+
+그래서 [모임명]을 만들었어요.
+각자의 [소분류] 이야기를 나누고,
+서로에게 자극을 주는 시간이에요.
+
+이 살롱은 발표 형식이 아니에요. 대화 형식이에요.
+
+[extra1]
+[extra2]
+✔️ 인원: [N]명 소수정예 (신청 후 승인)`,tips:['갓생 공감 문구가 MZ 유저에게 강력','발표 아닌 대화 형식 강조','실질적 인사이트 공유 구조'],avoid:['경쟁/비교 분위기 조성','너무 학구적 강의 느낌','딱딱한 조건 나열'],note:{bg:'#fdf4ff',color:'#581c87',border:'#9333ea',text:'문토 자기계발은 "갓생" 공감대가 핵심이에요.'}},
+  'munto-social':{titles:[{label:'1인가구 공감',text:'서울에서 친구 사귀기가 이렇게 어려운가요 — 소셜링'},{label:'관계 공감형',text:'"다음에 보자"가 인사말이 된 나이 — [모임명] 소셜링'},{label:'감성 초대형',text:'아무 말 없이도 괜찮은 그런 시간 — [지역] 소셜링'}],template:`서울에서 친구를 사귀기가
+이렇게 어려울 줄은 몰랐어요.
+
+"다음에 보자"는 말이 인사말이 되어버린 나이.
+
+[모임명]은 목적 없이 만나요.
+그냥 같이 걷거나, 카페에 앉아있거나,
+아무 말 없이도 괜찮은 그런 시간이에요.
+
+[extra1]
+[extra2]
+✔️ 인원: [N]명 소수정예 (신청 후 승인)`,tips:['1인가구/관계 공감 문구가 가장 강력','목적 없이 만난다는 편안함 강조','소수정예로 깊은 연결 보장'],avoid:['MBTI 필수 기재','너무 활동 나열식','가입 조건 복잡'],note:{bg:'#fdf4ff',color:'#581c87',border:'#9333ea',text:'문토 사교 모임은 관계에 대한 공감이 핵심이에요.'}},
+
+  'openchat-sports':{titles:[{label:'SEO 최강',text:'[카테고리] | [지역] [소분류] 모임 | [연령대] | 매주 [요일]'},{label:'키워드 조합',text:'[소분류] [지역] 직장인 | 주 [N]회 | [특징]'},{label:'활동+요일형',text:'[이모지] [모임명] 정기모임 | [지역] | [요일]마다 | 초보OK'}],template:`[카테고리] | [지역] [소분류] 정기 채팅방
+
+📋 채팅방 소개 — [모임명]
+• 대상: [연령대] / [레벨 조건]
+• 장소: [장소명] ([지역])
+• 일정: 매주 [요일] [시간]
+• 활동: [소분류] 정기 모임
+
+[extra1]
+[extra2]
+
+📌 공지 / 일정은 채팅방에서 확인하세요
+💬 가입 후 자기소개 한 줄 부탁드려요!`,tips:['제목 앞에 카테고리+지역 키워드 배치','활성 시간대 집중 운영','신규 멤버 환영 루틴 만들기'],avoid:['제목에 키워드 없이 감성 이름만','관리자 혼자 말하는 채팅방','비활성 기간 2주 이상'],note:{bg:'#fffbeb',color:'#78350f',border:'#d97706',text:'오픈채팅 핵심 — 제목 SEO가 전부예요. [카테고리] | [지역] [활동명] 조합이 핵심이에요.'}},
+  'openchat-reading':{titles:[{label:'SEO 키워드형',text:'독서 | [지역] [소분류] 독서모임 | [연령대] | 월 [N]회'},{label:'주제+대상형',text:'[소분류]독서 직장인 | [지역] | 월[N]회 | 채팅+오프라인'},{label:'활동 명시형',text:'📚[모임명] | [지역] | 책추천+인사이트공유'}],template:`독서/인문 | [지역] [소분류] 독서 채팅방 — [모임명]
+
+📋 채팅방 소개
+• 대상: [연령대] / [소분류] 관심자
+• 방식: 온라인 인사이트 공유 + 월 N회 오프라인
+• 오프라인: [요일] [시간] / [장소]
+
+[extra1]
+[extra2]
+
+📌 매주 [요일] "이번 주 인상 깊은 문장" 공유해요
+💬 가입 후 읽고 있는 책 알려주세요!`,tips:['제목에 주제 키워드 필수','주간 루틴 만들기','온오프 연계로 LTV 높이기'],avoid:['주제 미명시','공지만 올리는 채팅방','비활성 방치'],note:{bg:'#fffbeb',color:'#78350f',border:'#d97706',text:'오픈채팅 독서는 매주 정기 콘텐츠로 활성도를 유지하는 게 핵심이에요.'}},
+  'openchat-food':{titles:[{label:'SEO형',text:'맛집 | [지역] [소분류] 모임 | [연령대] | 주말 정기'},{label:'활동+지역',text:'[지역][소분류] 정기모임 | 직장인 | 주 [N]회'},{label:'키워드 조합',text:'[이모지][모임명] [지역] | [연령대] | [요일]정기'}],template:`맛집/요리 | [지역] [소분류] 채팅방 — [모임명]
+
+📋 채팅방 소개
+• 대상: [연령대] / [레벨 조건]
+• 활동: [소분류] 정기 모임
+• 일정: [빈도] / [요일] [시간]
+• 비용: [금액대]
+
+[extra1]
+[extra2]
+
+📌 맛집 추천은 채팅방에서 자유롭게!
+💬 가입 후 최애 맛집 하나 공유해주세요 😋`,tips:['제목 앞에 "맛집" 카테고리 키워드','맛집 추천 채팅으로 상시 활성도 유지','오프라인 정기 모집 채팅에서 진행'],avoid:['비용 미정/불명확','오프라인 없이 채팅만','활동 사진 없는 채팅방'],note:{bg:'#fffbeb',color:'#78350f',border:'#d97706',text:'오픈채팅 맛집 모임은 채팅방 자체가 맛집 정보 공유 채널이 되도록 운영하면 활성도가 올라가요.'}},
+  'openchat-language':{titles:[{label:'SEO 최강형',text:'외국어 | [지역] [소분류] 스터디 | [레벨] | 오프라인+온라인'},{label:'방식+대상형',text:'[소분류] 직장인 | [지역] | 주[N]회 | [레벨]'},{label:'키워드형',text:'[이모지][모임명] | [지역] | [레벨] | 매주[요일]'}],template:`외국어/언어 | [지역] [소분류] 채팅방 — [모임명]
+
+📋 채팅방 소개
+• 레벨: [초급/중급/고급]
+• 방식: 채팅방 일상 대화 + 주N회 오프라인
+• 오프라인: [요일] [시간] / [장소]
+
+[extra1]
+[extra2]
+
+📌 매일 [소분류] 한 문장 채팅방에 올려요!
+💬 가입 후 레벨 + 자기소개 남겨주세요`,tips:['제목에 언어명+레벨 필수','매일 언어 루틴 만들기','채팅방 언어 사용 비율 규칙 명시'],avoid:['레벨 미명시','채팅방에서 한국어만 사용','비활성 기간 방치'],note:{bg:'#fffbeb',color:'#78350f',border:'#d97706',text:'오픈채팅 언어 스터디는 채팅방 자체를 언어 연습 공간으로 만드는 게 핵심이에요.'}},
+  'openchat-culture':{titles:[{label:'SEO형',text:'문화 | [지역] [소분류] 소셜링 | [연령대] | 월[N]회'},{label:'활동+키워드',text:'[소분류] [지역] 정기모임 | [연령대] | [요일]정기'},{label:'키워드 조합',text:'[이모지][모임명] [지역] | 관람+카페 | [연령대]'}],template:`문화/예술 | [지역] [소분류] 채팅방 — [모임명]
+
+📋 채팅방 소개
+• 대상: [연령대] / 관심자 환영
+• 활동: 오프라인 [소분류] + 채팅방 정보 공유
+• 일정: 월 [N]회 / [요일] [시간]
+• 비용: [금액대]
+
+[extra1]
+[extra2]
+
+📌 채팅방에서 전시/공연 정보 공유해요!
+💬 가입 후 최근 인상 깊었던 작품 알려주세요`,tips:['채팅방을 문화 정보 공유 허브로 만들기','구체적 활동명+날짜 채팅에서 공지','오프라인 전후 채팅 활성도 유지'],avoid:['채팅방 활동 없이 모집만','전시명 없이 추후 공지','비활성 기간 방치'],note:{bg:'#fffbeb',color:'#78350f',border:'#d97706',text:'오픈채팅 문화 채팅방은 전시/공연 정보 허브가 되어야 해요.'}},
+  'openchat-selfdev':{titles:[{label:'SEO 최강형',text:'자기계발 | [지역] [소분류] 스터디 | 직장인 | 주[N]회'},{label:'주제+방식형',text:'[소분류]스터디 [지역] | 실습위주 | 직장인 | [요일]정기'},{label:'키워드형',text:'[이모지][모임명] [지역] | [연령대] | 주[N]회'}],template:`자기계발 | [지역] [소분류] 스터디 채팅방 — [모임명]
+
+📋 채팅방 소개
+• 대상: [연령대] / 직장인 위주
+• 방식: 채팅방 일상 공유 + 오프라인 스터디
+• 오프라인: [요일] [시간] / [장소]
+
+[extra1]
+[extra2]
+
+📌 매주 [요일] "[소분류] 인사이트" 공유해요!
+💬 가입 후 현재 공부 중인 것 알려주세요`,tips:['매주 인사이트 공유 루틴으로 활성도 유지','채팅방을 정보 허브로 포지셔닝','오프라인 스터디와 채팅방 연계'],avoid:['채팅방 공지만 (대화 없음)','주제 미명시','비활성 2주 이상'],note:{bg:'#fffbeb',color:'#78350f',border:'#d97706',text:'오픈채팅 자기계발은 채팅방 자체가 인사이트 공유 채널이 되어야 해요.'}},
+  'openchat-social':{titles:[{label:'SEO 키워드형',text:'친목 | [지역] [연령대] 친목모임 | 맛집+번개 | 상시모집'},{label:'지역+대상형',text:'[지역][연령대] 직장인친목 | 퇴근후번개 | 주말나들이'},{label:'활동 열거형',text:'[이모지][모임명] [지역] | [연령대] | 맛집카페산책여행'}],template:`친목/사교 | [지역] [연령대] 친목 채팅방 — [모임명]
+
+📋 채팅방 소개
+• 대상: [연령대] / [지역] 거주·직장인
+• 활동: 맛집 / 카페 / 산책 / 번개 / 여행
+• 방식: 채팅방에서 번개 모집
+
+[extra1]
+[extra2]
+
+📌 번개 모집은 채팅방에서 자유롭게!
+💬 가입 후 자기소개 한 줄 + 사는 동네 알려주세요!`,tips:['제목에 지역+연령대 키워드 필수','번개 모집을 채팅방에서 자유롭게','신규 멤버 환영 루틴 만들기'],avoid:['가입 조건 너무 까다롭게','채팅방 활동 없이 공지만','비활성 기간 방치'],note:{bg:'#fffbeb',color:'#78350f',border:'#d97706',text:'오픈채팅 친목 채팅방은 번개 모집이 자연스럽게 이뤄지는 활성 공간이 되어야 해요.'}},
+};
+
+function makeInstaCap(moim,catId,sub){
+  const c=CATS.find(x=>x.id===catId);
+  const t={
+    sports:`${c.emoji} ${moim} 멤버 모집 중이에요!\n\n${sub}하며 새로운 사람들과 연결되는 시간 ✨\n\n혼자가 아닌, 함께라서 더 즐거운 운동이에요.\n처음이어도 괜찮아요 — 저희가 같이 해요 💪\n\n📍 [장소] | ⏰ [요일] [시간]\n👉 프로필 링크 또는 DM으로 신청해주세요!`,
+    reading:`📚 ${moim} 모집 중!\n\n${sub}을 함께 읽고 이야기 나눠요.\n책 다 못 읽어도 환영이에요 😊\n\n"혼자 읽으면 내 생각만 보이고,\n같이 읽으면 세상이 보여요"\n\n👉 참여 문의 DM 주세요!`,
+    food:`${c.emoji} ${moim} 같이 해요!\n\n${sub}, 혼자 하기 아쉬웠다면?\n저희랑 함께해요 😋\n\n맛있고, 즐겁고, 새로운 인연도 만날 수 있어요.\n\n📍 [장소/지역] | 💰 [예산대]\n👉 DM 또는 프로필 링크로 신청!`,
+    language:`🗣️ ${moim} 함께해요!\n\n${sub}을 자신있게 말하고 싶은 분들 모집 중이에요.\n틀려도 괜찮아요, 여기선 모두가 배우는 중이에요 🌍\n\n📊 레벨: [초급~중급]\n📍 [장소] | ⏰ [요일] [시간]\n👉 DM으로 신청해주세요!`,
+    culture:`${c.emoji} ${moim} 함께해요!\n\n${sub}, 혼자 가기 아쉬우셨죠?\n같이 보고, 같이 이야기 나눠요 ✨\n\n예술에 대한 지식보다\n함께 느끼고 싶은 마음이면 충분해요.\n\n📍 [장소] | 💰 [비용]\n👉 DM이나 프로필 링크로 신청해주세요!`,
+    selfdev:`💡 ${moim} 모집 중!\n\n${sub}에 관심 있는 분들 모여요.\n혼자 공부하면 3일인 거 우리 다 알잖아요? 😅\n\n같이 성장하는 사람들이 있으면 달라요.\n\n📍 [장소] | ⏰ [요일] 저녁\n👉 DM 또는 링크로 신청해주세요!`,
+    social:`🤝 ${moim} 함께해요!\n\n어른이 되니까 친구 사귀기가 이렇게 어렵더라고요.\n그 공감 하나로 모인 모임이에요 😊\n\n거창하지 않아요. 그냥 같이 나가는 거예요.\n\n📍 [동네] 일대 | 👥 [연령대] 누구나\n👉 DM 주시면 링크 드려요!`,
+  };
+  return t[catId]||`${c.emoji} ${moim} 멤버 모집 중이에요!\n\n${sub}을 함께 즐길 분들을 찾아요.\n\n👉 DM 또는 프로필 링크로 신청해주세요!`;
+}
+
+let selCat=null,selSub=null,selPlatforms=new Set();
+
+function onNameInput(){updateBtn();}
+function renderCats(){
+  const g=document.getElementById('catGrid');
+  if(g.childElementCount>0)return;
+  g.innerHTML=CATS.map(c=>`<button class="cat-btn" onclick="selectCat('${c.id}',this)"><span class="cat-em">${c.emoji}</span><span>${c.label}</span></button>`).join('');
+}
+function selectCat(cid,el){
+  selCat=cid;selSub=null;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  renderSubs();show('step3');hide('step4');hideResult();updateBtn();
+}
+function renderSubs(){
+  document.getElementById('subRow').innerHTML=SUBS[selCat].map(s=>`<button class="sub-chip" onclick="selectSub('${s}',this)">${s}</button>`).join('');
+}
+function selectSub(s,el){
+  selSub=s;
+  document.querySelectorAll('.sub-chip').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  show('step4');hideResult();updateBtn();
+}
+function togglePlatform(pid,el){
+  if(selPlatforms.has(pid)){selPlatforms.delete(pid);el.className='p-chip';}
+  else{selPlatforms.add(pid);el.className='p-chip sel-'+pid;}
+  updateBtn();
+}
+function updateBtn(){
+  const name=document.getElementById('nameInput').value.trim();
+  document.getElementById('genBtn').disabled=!(name&&selCat&&selSub&&selPlatforms.size>0);
+}
+function hideResult(){document.getElementById('resultArea').style.display='none';}
+
+function generateAll(){
+  const moim=document.getElementById('nameInput').value.trim();
+  const catObj=CATS.find(c=>c.id===selCat);
+  const sub=selSub;
+  const cd=SUB_CUSTOM[sub]||{};
+  const el=((cd.extra||'').split('\n'));
+  const e1=el[0]||`🔹 [${sub} 관련 장소/조건 추가]`;
+  const e2=el[1]||`🔹 [${sub} 관련 특이사항 추가]`;
+
+  const tabBar=document.getElementById('tabBar');
+  const tabContent=document.getElementById('tabContent');
+  tabBar.innerHTML='';tabContent.innerHTML='';
+
+  [...selPlatforms].forEach((pid,i)=>{
+    const p=PLATFORMS[pid];
+    const isFirst=i===0;
+    const btn=document.createElement('button');
+    btn.className='tab-btn'+(isFirst?' active':'');
+    btn.textContent=p.label;
+    btn.onclick=()=>switchTab(pid);
+    btn.id='tab-btn-'+pid;
+    tabBar.appendChild(btn);
+
+    const pane=document.createElement('div');
+    pane.className='tab-pane'+(isFirst?' active':'');
+    pane.id='tab-pane-'+pid;
+
+    if(pid==='insta'){pane.innerHTML=buildInstaPane(moim,catObj,sub,cd);}
+    else{
+      const key=`${pid}-${selCat}`;
+      const base=BASE[key];
+      if(!base){pane.innerHTML=`<p style="color:#888;padding:20px;text-align:center;">해당 조합의 템플릿을 준비 중이에요.</p>`;}
+      else{pane.innerHTML=buildPane(pid,base,moim,catObj,sub,e1,e2,cd);}
+    }
+    tabContent.appendChild(pane);
+  });
+
+  document.getElementById('resultArea').style.display='block';
+  setTimeout(()=>document.getElementById('resultArea').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function buildPane(pid,base,moim,catObj,sub,e1,e2,cd){
+  const p=PLATFORMS[pid];
+  let tpl=base.template.replace(/\[모임명\]/g,moim).replace(/\[이모지\]/g,catObj.emoji).replace(/\[소분류\]/g,sub).replace('[extra1]',e1).replace('[extra2]',e2);
+  const titlesHtml=base.titles.map(t=>`<div class="title-item"><div class="ti-label">${t.label}</div>${t.text.replace(/\[모임명\]/g,moim).replace(/\[이모지\]/g,catObj.emoji).replace(/\[소분류\]/g,sub)}</div>`).join('');
+  const tipsHtml=[...base.tips,...(cd.tip?[cd.tip]:[])].map(t=>`<div class="tip-li"><span>✅</span>${t}</div>`).join('');
+  const avoidHtml=[...base.avoid,...(cd.avoid?[cd.avoid]:[])].map(a=>`<div class="tip-li"><span>❌</span>${a}</div>`).join('');
+  const n=base.note;
+  return `<div class="section-h" style="color:#6366f1;">📌 잘 되는 제목 패턴</div><div class="title-list">${titlesHtml}</div><div class="section-h" style="color:#16a34a;margin-top:18px;">📝 소개글 템플릿</div><div class="tpl-area"><button class="copy-btn" onclick="copyTpl(this)">복사 📋</button><pre class="tpl-pre">${escHtml(tpl)}</pre></div><div class="tip-row"><div class="tip-good"><div class="tip-head" style="color:#15803d;">⚡ 이게 핵심이에요</div>${tipsHtml}</div><div class="tip-bad"><div class="tip-head" style="color:#dc2626;">🚫 이러면 망해요</div>${avoidHtml}</div></div><div style="background:${n.bg};border-left:4px solid ${n.border};color:${n.color};border-radius:10px;padding:11px 14px;margin-top:14px;font-size:0.77rem;line-height:1.7;"><strong>${p.label} 핵심 포인트</strong><br/>${n.text}</div>`;
+}
+
+function buildInstaPane(moim,catObj,sub,cd){
+  const cap=makeInstaCap(moim,catObj.id,sub);
+  const catHash=HASHTAGS[catObj.id]||{major:[],minor:[]};
+  const subHash=SUB_HASHTAGS[sub]||[];
+  const majorAll=[...catHash.major,...subHash].slice(0,12);
+  const minorAll=catHash.minor.slice(0,10);
+  const majorHtml=majorAll.map(t=>`<span class="tag tag-major" onclick="copyTag(this,'${t}')">${t}</span>`).join('');
+  const minorHtml=minorAll.map(t=>`<span class="tag tag-minor" onclick="copyTag(this,'${t}')">${t}</span>`).join('');
+  const allTags=[...majorAll,...minorAll].join(' ');
+  return `<div class="section-h" style="color:#ec4899;">✍️ 인스타그램 캡션</div><div class="tpl-area"><button class="copy-btn" style="border-color:#fbcfe8;background:#fdf2f8;color:#be185d;" onclick="copyTpl(this)">복사 📋</button><pre class="tpl-pre">${escHtml(cap)}</pre></div><div class="section-h" style="color:#1e40af;margin-top:18px;">🔵 메이저 해시태그 <span class="tag-copy-all" onclick="copyStr('${escAttr(majorAll.join(' '))}')">전체 복사</span></div><div class="tag-head">검색량 높은 인기 태그 — 노출이 넓어요</div><div class="tag-row">${majorHtml}</div><div class="section-h" style="color:#6b21a8;margin-top:6px;">🟣 마이너 해시태그 <span class="tag-copy-all" onclick="copyStr('${escAttr(minorAll.join(' '))}')">전체 복사</span></div><div class="tag-head">니치 + 관심도 높은 태그 — 저장·팔로우 전환에 유리해요</div><div class="tag-row">${minorHtml}</div><div style="margin-top:14px;"><button class="copy-btn" style="position:static;display:inline-block;background:#f3f4f6;border-color:#d1d5db;color:#374151;" onclick="copyStr('${escAttr(allTags)}')">📋 해시태그 전체 복사 (${majorAll.length+minorAll.length}개)</button></div><div style="background:#fdf2f8;border-left:4px solid #ec4899;color:#9d174d;border-radius:10px;padding:11px 14px;margin-top:14px;font-size:0.77rem;line-height:1.7;"><strong>인스타그램 핵심 포인트</strong><br/>메이저 5~7개 + 마이너 8~10개 조합이 최적이에요. 태그는 캡션 맨 끝이나 댓글에 넣고, 저장수를 높이는 정보성 캡션이 도달을 늘려요.</div>`;
+}
+
+function switchTab(pid){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  const b=document.getElementById('tab-btn-'+pid);
+  const p=document.getElementById('tab-pane-'+pid);
+  if(b)b.classList.add('active');
+  if(p)p.classList.add('active');
+}
+function copyTpl(btn){
+  const pre=btn.nextElementSibling;
+  navigator.clipboard.writeText(pre.textContent).then(()=>{const o=btn.textContent;btn.textContent='복사됨 ✅';setTimeout(()=>btn.textContent=o,2000);});
+}
+function copyTag(el,tag){navigator.clipboard.writeText(tag).then(()=>{const o=el.textContent;el.textContent='✅';setTimeout(()=>el.textContent=o,1500);});}
+function copyStr(s){navigator.clipboard.writeText(s.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#39;/g,"'"));}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escAttr(s){return s.replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
+function show(id){document.getElementById(id).style.display='';document.getElementById(id).classList.remove('hidden');}
+function hide(id){document.getElementById(id).style.display='none';}
+renderCats();
 </script>
 </body>
 </html>
