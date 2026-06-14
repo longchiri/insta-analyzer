@@ -9,102 +9,94 @@
     body{font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f8f6f3;min-height:100vh;color:#1a1a2e;word-break:keep-all;overflow-wrap:break-word;-webkit-text-size-adjust:100%;}
     a{text-decoration:none;color:inherit;}
 
-    /* Header */
-    .page-header{background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);padding:20px 16px 24px;color:#fff;text-align:center;}
-    .back-btn{display:inline-flex;align-items:center;gap:5px;color:#c0c0e8;font-size:0.78rem;margin-bottom:10px;}
-    .page-title{font-size:1.35rem;font-weight:800;margin-bottom:5px;}
-    .page-sub{font-size:0.78rem;color:#a5b4fc;}
+    .page-header{background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);padding:18px 16px 22px;color:#fff;text-align:center;}
+    .back-btn{display:inline-flex;align-items:center;gap:5px;color:#c0c0e8;font-size:.78rem;margin-bottom:9px;}
+    .page-title{font-size:1.3rem;font-weight:800;margin-bottom:4px;}
+    .page-sub{font-size:.76rem;color:#a5b4fc;}
 
-    /* Platform pills */
-    .pill-wrap{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 12px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-    .pill-wrap::-webkit-scrollbar{display:none;}
-    .pill{display:inline-flex;align-items:center;gap:4px;padding:7px 13px;border-radius:99px;border:2px solid #e5e7eb;background:#fff;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s;flex-shrink:0;}
-    .pill[data-p="all"].active{border-color:#1a1a2e;background:#1a1a2e;color:#fff;}
-    .pill[data-p="daangn"].active{border-color:#FF6F0F;background:#FF6F0F;color:#fff;}
-    .pill[data-p="somoim"].active{border-color:#16a34a;background:#16a34a;color:#fff;}
-    .pill[data-p="munto"].active{border-color:#9333ea;background:#9333ea;color:#fff;}
-    .pill[data-p="openchat"].active{border-color:#ca8a04;background:#ca8a04;color:#fff;}
-    .pill[data-p="insta"].active{border-color:#ec4899;background:#ec4899;color:#fff;}
+    .content{max-width:700px;margin:0 auto;padding:20px 14px 64px;}
 
-    /* Content */
-    .content{max-width:760px;margin:0 auto;padding:20px 12px 64px;}
+    /* Step cards */
+    .step-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .step-label{font-size:.68rem;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+    .step-badge{background:#1a1a2e;color:#fff;border-radius:99px;padding:2px 8px;font-size:.65rem;font-weight:800;}
 
-    /* Platform Section */
-    .platform-sec{margin-bottom:36px;}
-    .platform-sec.hidden{display:none;}
+    /* Category grid */
+    .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+    .cat-btn{background:#f9fafb;border:2px solid #e5e7eb;border-radius:10px;padding:10px 6px;cursor:pointer;text-align:center;transition:all .18s;user-select:none;}
+    .cat-btn:hover{border-color:#c4b5fd;background:#faf5ff;}
+    .cat-btn.active{border-color:#7c3aed;background:#ede9fe;}
+    .cat-btn .ce{font-size:1.3rem;display:block;margin-bottom:3px;}
+    .cat-btn .cl{font-size:.67rem;font-weight:700;color:#374151;line-height:1.3;}
+    .cat-btn.active .cl{color:#6d28d9;}
 
-    /* Platform Header */
-    .ph{border-radius:14px 14px 0 0;padding:18px 20px;color:#fff;display:flex;align-items:center;gap:12px;}
-    .ph-icon{font-size:1.7rem;flex-shrink:0;}
-    .ph-name{font-size:1.05rem;font-weight:800;}
-    .ph-sub{font-size:0.73rem;opacity:.85;margin-top:2px;}
+    /* Platform grid */
+    .plt-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;}
+    .plt-btn{border:2px solid #e5e7eb;border-radius:10px;padding:9px 4px;cursor:pointer;text-align:center;transition:all .18s;background:#fff;user-select:none;}
+    .plt-btn .pe{font-size:1.2rem;display:block;margin-bottom:2px;}
+    .plt-btn .pl{font-size:.62rem;font-weight:700;color:#374151;line-height:1.3;}
 
-    /* Stage Flow */
-    .stage-wrap{background:#fff;padding:18px 14px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb;}
-    .stage-label{font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
-    .stages{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
-    .stages::-webkit-scrollbar{display:none;}
-    .stage{flex-shrink:0;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:10px;padding:10px 11px;min-width:136px;position:relative;}
-    .stage::after{content:'→';position:absolute;right:-13px;top:50%;transform:translateY(-50%);font-size:.85rem;color:#d1d5db;}
-    .stage:last-child::after{display:none;}
-    .snum{font-size:.62rem;font-weight:700;color:#9ca3af;margin-bottom:1px;}
-    .sname{font-size:.78rem;font-weight:800;color:#111827;margin-bottom:1px;}
-    .srange{font-size:.67rem;color:#6b7280;margin-bottom:5px;}
-    .sacts{list-style:none;}
-    .sacts li{font-size:.66rem;color:#374151;padding:1.5px 0;display:flex;gap:4px;}
-    .sacts li::before{content:'✓';font-weight:800;flex-shrink:0;}
+    /* Generate button */
+    .gen-wrap{text-align:center;margin:6px 0 4px;}
+    .gen-btn{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:99px;padding:13px 32px;font-size:.9rem;font-weight:800;cursor:pointer;transition:all .18s;opacity:.4;pointer-events:none;}
+    .gen-btn.ready{opacity:1;pointer-events:all;}
+    .gen-btn.ready:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(99,102,241,.35);}
 
-    /* Accordions */
-    .accord-list{border:1px solid #e5e7eb;border-top:none;border-radius:0 0 14px 14px;overflow:hidden;}
-    .accord{border-top:1px solid #f0f0f0;}
-    .accord:first-child{border-top:none;}
-    .accord-head{display:flex;align-items:center;gap:9px;padding:13px 15px;cursor:pointer;background:#fff;user-select:none;transition:background .15s;}
-    .accord-head:hover{background:#fafafa;}
-    .a-icon{font-size:1rem;flex-shrink:0;}
-    .a-title{font-size:.86rem;font-weight:700;flex:1;color:#111827;}
-    .a-arr{font-size:.9rem;color:#9ca3af;transition:transform .2s;flex-shrink:0;}
-    .accord.open .a-arr{transform:rotate(90deg);}
-    .accord-body{display:none;background:#f9fbff;padding:4px 15px 15px;}
-    .accord.open .accord-body{display:block;}
+    /* Result section */
+    #result{display:none;}
+    .result-head{border-radius:14px;padding:16px 18px;color:#fff;margin-bottom:2px;display:flex;align-items:center;gap:12px;}
+    .rh-icon{font-size:1.6rem;flex-shrink:0;}
+    .rh-name{font-size:1rem;font-weight:800;}
+    .rh-sub{font-size:.72rem;opacity:.85;margin-top:2px;}
 
-    /* Check list */
+    /* Section accordion */
+    .sec-list{border:1px solid #e5e7eb;border-top:none;border-radius:0 0 14px 14px;overflow:hidden;margin-bottom:18px;}
+    .sec{border-top:1px solid #f0f0f0;}
+    .sec:first-child{border-top:none;}
+    .sec-head{display:flex;align-items:center;gap:9px;padding:13px 15px;cursor:pointer;background:#fff;user-select:none;transition:background .15s;}
+    .sec-head:hover{background:#fafafa;}
+    .s-icon{font-size:1rem;flex-shrink:0;}
+    .s-title{font-size:.86rem;font-weight:700;flex:1;color:#111827;}
+    .s-arr{font-size:.9rem;color:#9ca3af;transition:transform .2s;flex-shrink:0;}
+    .sec.open .s-arr{transform:rotate(90deg);}
+    .sec-body{display:none;background:#f9fbff;padding:4px 15px 15px;}
+    .sec.open .sec-body{display:block;}
+
+    /* Content inside */
     .ck-list{list-style:none;margin-top:8px;}
     .ck-list li{display:flex;gap:8px;padding:6px 0;font-size:.8rem;color:#374151;border-bottom:1px solid #f0f0f0;line-height:1.55;}
     .ck-list li:last-child{border-bottom:none;}
     .ck-num{flex-shrink:0;width:19px;height:19px;border-radius:50%;font-size:.62rem;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;margin-top:1px;}
 
-    /* Bullet list */
     .bl{list-style:none;margin-top:8px;}
     .bl li{display:flex;gap:8px;padding:5px 0;font-size:.8rem;color:#374151;border-bottom:1px solid #f0f0f0;line-height:1.55;}
     .bl li:last-child{border-bottom:none;}
     .bl li::before{content:'•';font-weight:900;flex-shrink:0;margin-top:1px;}
 
-    /* Weekly grid */
     .wk-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px;}
     .wk-card{background:#fff;border:1.5px solid #e5e7eb;border-radius:9px;padding:10px 11px;}
     .wk-day{font-size:.7rem;font-weight:800;margin-bottom:3px;}
     .wk-txt{font-size:.74rem;color:#374151;line-height:1.5;}
 
-    /* Crisis grid */
     .cr-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px;}
     .cr-card{background:#fff;border:1.5px solid #fee2e2;border-radius:9px;padding:10px 11px;}
     .cr-title{font-size:.72rem;font-weight:700;color:#ef4444;margin-bottom:3px;}
     .cr-body{font-size:.74rem;color:#374151;line-height:1.5;}
 
-    /* Algo boxes */
     .alg{background:#fff;border:1.5px solid #e5e7eb;border-radius:9px;padding:10px 12px;margin-top:8px;}
     .alg-title{font-size:.73rem;font-weight:700;margin-bottom:4px;}
     .alg-body{font-size:.74rem;color:#374151;line-height:1.6;}
 
-    /* Content type label */
-    .ct-label{font-size:.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px;}
+    .tip-box{border-radius:10px;padding:10px 12px;margin-top:8px;border:1.5px solid;}
+    .tip-box-title{font-size:.73rem;font-weight:800;margin-bottom:4px;}
+    .tip-box-body{font-size:.74rem;line-height:1.6;}
 
     @media(max-width:480px){
-      .wk-grid{grid-template-columns:1fr;}
-      .cr-grid{grid-template-columns:1fr;}
-      .page-title{font-size:1.15rem;}
-      .ph-name{font-size:.95rem;}
-      .ck-list li,.bl li,.wk-txt,.cr-body,.alg-body{font-size:.78rem;}
+      .cat-grid{grid-template-columns:repeat(4,1fr);}
+      .plt-grid{grid-template-columns:repeat(5,1fr);}
+      .plt-btn .pl{display:none;}
+      .wk-grid,.cr-grid{grid-template-columns:1fr;}
+      .ck-list li,.bl li,.wk-txt,.cr-body,.alg-body,.tip-box-body{font-size:.78rem;}
     }
   </style>
 </head>
@@ -113,784 +105,566 @@
 <div class="page-header">
   <a href="hub.html" class="back-btn">← 허브로 돌아가기</a>
   <div class="page-title">🗓️ 모임 운영 가이드</div>
-  <div class="page-sub">단계별 성장 전략 + 플랫폼별 실전 운영 매뉴얼</div>
-</div>
-
-<div class="pill-wrap">
-  <button class="pill active" data-p="all">🌐 전체</button>
-  <button class="pill" data-p="daangn">🥕 당근모임</button>
-  <button class="pill" data-p="somoim">🤝 소모임</button>
-  <button class="pill" data-p="munto">🎭 문토</button>
-  <button class="pill" data-p="openchat">💬 오픈채팅</button>
-  <button class="pill" data-p="insta">📸 인스타그램</button>
+  <div class="page-sub">모임 종류 + 플랫폼별 맞춤 운영 전략</div>
 </div>
 
 <div class="content">
 
-<!-- ════════════════════ 당근모임 ════════════════════ -->
-<div class="platform-sec" data-p="daangn">
-  <div class="ph" style="background:linear-gradient(135deg,#FF6F0F,#e55900);">
-    <div class="ph-icon">🥕</div>
-    <div><div class="ph-name">당근모임</div><div class="ph-sub">지역 기반 최강 모임 플랫폼 | 동네생활 연계 전략</div></div>
+  <!-- Step 1 -->
+  <div class="step-card">
+    <div class="step-label"><span class="step-badge">STEP 1</span>모임 카테고리</div>
+    <div class="cat-grid" id="catGrid"></div>
   </div>
 
-  <div class="stage-wrap">
-    <div class="stage-label">📈 성장 단계 로드맵</div>
-    <div class="stages">
-      <div class="stage">
-        <div class="snum">STEP 1</div><div class="sname">씨앗기</div><div class="srange">0 ~ 10명</div>
-        <ul class="sacts" style="--sc:#FF6F0F;">
-          <li style="color:#FF6F0F;">지인 3명+ 즉시 초대</li>
-          <li style="color:#FF6F0F;">동네생활 주 2회 게시</li>
-          <li style="color:#FF6F0F;">첫 모임 날짜 확정</li>
-          <li style="color:#FF6F0F;">프로필 완성도 100%</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 2</div><div class="sname">새싹기</div><div class="srange">10 ~ 30명</div>
-        <ul class="sacts">
-          <li>정기 일정 고정 (격주+)</li>
-          <li>후기 사진 업로드</li>
-          <li>리뷰어 1명 지정</li>
-          <li>가입 질문 최적화</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 3</div><div class="sname">성장기</div><div class="srange">30 ~ 100명</div>
-        <ul class="sacts">
-          <li>부운영자 1~2명 선발</li>
-          <li>소분류 파생 모임</li>
-          <li>인근 모임 콜라보</li>
-          <li>분기 대형 행사</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 4</div><div class="sname">성숙기</div><div class="srange">100 ~ 300명</div>
-        <ul class="sacts">
-          <li>브랜드 굿즈/단체티</li>
-          <li>운영 시스템화</li>
-          <li>분기 대형 행사</li>
-          <li>수익화 모델 검토</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 5</div><div class="sname">브랜드기</div><div class="srange">300명+</div>
-        <ul class="sacts">
-          <li>오프라인 채널 확장</li>
-          <li>기업 스폰서십</li>
-          <li>유료 프로그램 도입</li>
-          <li>SNS 계정 개설</li>
-        </ul>
-      </div>
-    </div>
+  <!-- Step 2 -->
+  <div class="step-card">
+    <div class="step-label"><span class="step-badge">STEP 2</span>운영 플랫폼</div>
+    <div class="plt-grid" id="pltGrid"></div>
   </div>
 
-  <div class="accord-list">
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📋</span><span class="a-title">창설 체크리스트</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="ck-list">
-          <li><span class="ck-num" style="background:#FF6F0F;">1</span>모임명에 지역명 포함 (예: "서울 러닝크루 🏃") — 검색 노출 대폭↑</li>
-          <li><span class="ck-num" style="background:#FF6F0F;">2</span>대표 사진 3장 이상 — 밝고 활동적인 실제 현장 장면, 1:1 비율 권장</li>
-          <li><span class="ck-num" style="background:#FF6F0F;">3</span>소개글: 활동 내용 + 모집 대상 + 정기 일정 + 참가비 3줄 이내로 명시</li>
-          <li><span class="ck-num" style="background:#FF6F0F;">4</span>가입 질문 1~2개 설정 (필터링 목적: "거주 동네", "참여 가능 요일")</li>
-          <li><span class="ck-num" style="background:#FF6F0F;">5</span>첫 모임 날짜 창설 즉시 확정 → 당근 일정에 바로 등록</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📅</span><span class="a-title">주간 운영 루틴</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="wk-grid">
-          <div class="wk-card"><div class="wk-day" style="color:#FF6F0F;">🗓 월요일</div><div class="wk-txt">이번 주 일정 공지<br>모임 채팅 + 동네생활 동시 게시</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#FF6F0F;">📝 수요일</div><div class="wk-txt">정보글 or 활동 관련 콘텐츠<br>댓글 참여 유도 형식 추천</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#FF6F0F;">⚡ 금요일</div><div class="wk-txt">주말 활동 최종 리마인드<br>"잔여 OO석!" 마감 임박 공지</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#FF6F0F;">✉️ 활동 D-1</div><div class="wk-txt">참석자 개인 확인 메시지<br>장소·준비물 상세 안내</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#FF6F0F;">📸 활동 D+1</div><div class="wk-txt">후기 사진 48시간 내 업로드<br>다음 모임 예고 + 리뷰 유도</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">👥</span><span class="a-title">멤버 관리 매뉴얼</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl" style="--bc:#FF6F0F;">
-          <li style="--bc:#FF6F0F;">신규 가입 <b>24시간 내</b> 환영 DM 발송 — 자기소개 유도로 첫 유대감 형성</li>
-          <li>3회 이상 참여자 → 운영진 제안 (능동적 멤버 우선, 역할 명확히)</li>
-          <li>장기 미참여 (2개월+) → 가벼운 DM ("이번 달 특별 이벤트 있어요!")</li>
-          <li>월 1회 멤버 현황 파악 (활성/비활성 분류, 비활성 멤버 재활성화 시도)</li>
-          <li>활동 후 참여자 태그 게시글로 소속감 강화 (동의 받은 멤버만)</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">💊</span><span class="a-title">이탈 방지 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>첫 참여 후 <b>1:1 DM 후기 확인</b> ("오늘 어떠셨어요?") — 재참여율 최고 상관 지표</li>
-          <li>2회 연속 불참 멤버에게 맞춤 일정 추천 DM 발송</li>
-          <li>계절별 특별 이벤트 기획 (여름 MT, 연말 파티, 봄 나들이 등)</li>
-          <li>참여자 의견 설문 분기 1회 → 반영 결과 공지로 신뢰↑</li>
-          <li>단체 사진 아카이브 공유 (카카오앨범 등) → 추억 기반 소속감↑</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🔍</span><span class="a-title">알고리즘 & 노출 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="alg"><div class="alg-title" style="color:#FF6F0F;">🥕 동네생활 게시글 전략</div><div class="alg-body">무기한 노출 효과! 주 1~2회 꾸준히. 지역 태그 + 모임명 + 활동 사진 세트로 올리기. 게시 최적 시간: 저녁 7~9시 (당근 활동 피크).</div></div>
-        <div class="alg"><div class="alg-title" style="color:#FF6F0F;">⏱ 후기 업로드 타이밍</div><div class="alg-body">활동 후 48시간 내 후기 사진 업로드 → 최신순 노출에 유리. 참여자 태그 허용 시 자연 확산 효과 추가.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#FF6F0F;">🎯 모임명 키워드 최적화</div><div class="alg-body">활동명 + 지역명 + 대상 조합 (예: "서울 북쪽 직장인 러닝크루"). 가입 승인 24시간 내 처리 → 전환율↑. 일정 등록 자주 할수록 모임 피드 상단 노출.</div></div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🚨</span><span class="a-title">위기 대응 SOP</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="cr-grid">
-          <div class="cr-card"><div class="cr-title">⚡ 노쇼 대응</div><div class="cr-body">D-1 확인 메시지 필수. 소정의 예약금 or 선납 정책 도입. 2회+ 노쇼 멤버 경고 후 탈퇴 조치.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 부정 리뷰</div><div class="cr-body">공개 답변 (사실 기반, 개선 의지 포함). 동시에 개인 DM 사과. 감정적 대응 절대 금지.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 운영진 갈등</div><div class="cr-body">역할 분담 문서화. 1:1 중재 먼저. 해결 안 되면 역할 재조정. 멤버 앞 갈등 노출 금지.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 모임 침체</div><div class="cr-body">특별 테마 모임 + 외부 강사/게스트 초청. 원데이 이벤트로 새 멤버 유입 시도.</div></div>
-        </div>
-      </div>
-    </div>
+  <!-- Generate -->
+  <div class="gen-wrap">
+    <button class="gen-btn" id="genBtn" onclick="buildGuide()">🗓️ 운영 전략 생성하기</button>
   </div>
+
+  <!-- Result -->
+  <div id="result"></div>
+
 </div>
-
-<!-- ════════════════════ 소모임 ════════════════════ -->
-<div class="platform-sec" data-p="somoim">
-  <div class="ph" style="background:linear-gradient(135deg,#16a34a,#14532d);">
-    <div class="ph-icon">🤝</div>
-    <div><div class="ph-name">소모임</div><div class="ph-sub">취미 기반 커뮤니티 플랫폼 | 리뷰 수가 핵심 노출 지표</div></div>
-  </div>
-
-  <div class="stage-wrap">
-    <div class="stage-label">📈 성장 단계 로드맵</div>
-    <div class="stages">
-      <div class="stage">
-        <div class="snum">STEP 1</div><div class="sname">리뷰 0기</div><div class="srange">0 ~ 20명</div>
-        <ul class="sacts">
-          <li>리뷰 5개 달성 최우선</li>
-          <li>지인 5명+ 참여 요청</li>
-          <li>창설 즉시 소셜링 등록</li>
-          <li>카테고리 정확 선택</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 2</div><div class="sname">노출 시작</div><div class="srange">20 ~ 50명</div>
-        <ul class="sacts">
-          <li>카테고리 검색 상위 목표</li>
-          <li>소셜링 격주 1회+ 유지</li>
-          <li>첫 사진 밝은 컬러로 교체</li>
-          <li>소개 영상 업로드</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 3</div><div class="sname">브랜딩</div><div class="srange">50 ~ 200명</div>
-        <ul class="sacts">
-          <li>고유 모임 분위기 구축</li>
-          <li>정기 멤버십 도입 검토</li>
-          <li>운영진 역할 세분화</li>
-          <li>파트너 모임 협력</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 4</div><div class="sname">커뮤니티화</div><div class="srange">200 ~ 500명</div>
-        <ul class="sacts">
-          <li>주제별 소그룹 운영</li>
-          <li>대형 행사 반기 1회</li>
-          <li>운영진 팀 체계화</li>
-          <li>굿즈 제작</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 5</div><div class="sname">파트너</div><div class="srange">500명+</div>
-        <ul class="sacts">
-          <li>소모임 파트너십 신청</li>
-          <li>유료 클래스 도입</li>
-          <li>외부 협찬/스폰서</li>
-          <li>독립 커뮤니티 구축</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="accord-list">
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📋</span><span class="a-title">창설 체크리스트</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="ck-list">
-          <li><span class="ck-num" style="background:#16a34a;">1</span>카테고리 정확히 선택 — SEO 노출 직결, 틈새 카테고리 노리기</li>
-          <li><span class="ck-num" style="background:#16a34a;">2</span>활동 사진 최소 5장 — 다양한 앵글, 실제 활동 장면 (밝은 컬러 사진 CTR↑)</li>
-          <li><span class="ck-num" style="background:#16a34a;">3</span>소개 영상 업로드 — 30초~1분, CTR 최대 40% 향상 효과</li>
-          <li><span class="ck-num" style="background:#16a34a;">4</span>가입 절차: 초기엔 '자유 가입' 설정 (성장 속도↑, 나중에 승인제 전환)</li>
-          <li><span class="ck-num" style="background:#16a34a;">5</span>창설 즉시 첫 소셜링 일정 등록 — 2주 내 날짜로 설정</li>
-          <li><span class="ck-num" style="background:#16a34a;">6</span>운영자 직접 대표 후기 작성 (리뷰 0개 상태 조기 탈출)</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📅</span><span class="a-title">주간 운영 루틴</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="wk-grid">
-          <div class="wk-card"><div class="wk-day" style="color:#16a34a;">🗓 화요일</div><div class="wk-txt">다음 소셜링 모집 오픈<br>(화~목 전환율 최고)</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#16a34a;">⚡ 목요일</div><div class="wk-txt">마감 임박 리마인드<br>"잔여 2석!" 등 희소성 강조</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#16a34a;">✉️ 소셜링 D-1</div><div class="wk-txt">참석자 최종 확인<br>장소 상세 + 준비물 안내</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#16a34a;">📸 소셜링 당일</div><div class="wk-txt">현장 사진 업로드<br>스토리/피드 실시간 공유</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#16a34a;">🌟 소셜링 D+1</div><div class="wk-txt">감사 메시지 + 리뷰 요청<br>다음 일정 예고 포함</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#16a34a;">💌 격주 목요일</div><div class="wk-txt">리뷰 독려 DM 발송<br>최근 참여자 3명 대상</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">👥</span><span class="a-title">멤버 관리 매뉴얼</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>3회 이상 참여 → 정회원 뱃지 or 운영진 후보로 별도 관리</li>
-          <li>1회 참여 멤버 → 다음 소셜링 직접 추천 DM ("00님 취향에 딱 맞는 일정 나왔어요!")</li>
-          <li>활발한 리뷰 작성자 → 다음 참가비 10~20% 할인 제공</li>
-          <li>월 1회 "이달의 멤버" 공개 감사 게시글로 소속감 강화</li>
-          <li>신규 가입자 웰컴 메시지 + 소모임 내 채팅 채널 안내</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">💊</span><span class="a-title">이탈 방지 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>3개월 미참여 멤버 → "오랜만에 안녕" DM + 특별 혜택 제안으로 재활성화</li>
-          <li>시즌 특별 소셜링 기획 (크리스마스, 여름 MT, 봄나들이 등)</li>
-          <li>단체 사진 아카이브 제공 (카카오앨범 등) → 추억 기반 소속감↑</li>
-          <li>참여자 의견 반영 설문 → 다음 소셜링 주제 결정에 반영 + 결과 공지</li>
-          <li>졸업 멤버도 오픈채팅 채널에 초대해 느슨한 연결 유지</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🔍</span><span class="a-title">알고리즘 & 노출 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="alg"><div class="alg-title" style="color:#16a34a;">⭐ 리뷰 수 = 핵심 노출 지표</div><div class="alg-body">리뷰 3개부터 검색 상위 노출 시작, 10개 이상이면 카테고리 상단 안착. 모든 소셜링 후 참가자에게 리뷰 요청 DM 필수.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#16a34a;">🗓 일정 등록 빈도</div><div class="alg-body">소셜링 일정 주 1회 이상 등록 유지. 일정이 자주 열릴수록 플랫폼 내 활성 모임으로 인식돼 상단 노출 유리.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#16a34a;">📸 첫 번째 사진 최적화</div><div class="alg-body">밝은 컬러 or 사람 얼굴 포함 시 CTR 최대 30% 상승. 썸네일 첫 컷이 검색 결과에서 첫 노출. 계절감 있는 사진 주기적 교체.</div></div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🚨</span><span class="a-title">위기 대응 SOP</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="cr-grid">
-          <div class="cr-card"><div class="cr-title">⚡ 리뷰 테러</div><div class="cr-body">침착하게 사실 기반 공개 답변. 반복 발생 시 소모임 고객센터 신고. 감정적 반응 금지.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 장소 취소</div><div class="cr-body">예비 장소 2곳 항상 사전 확보. 취소 시 참가자 즉시 공지 + 환불 or 일정 변경.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 환불 분쟁</div><div class="cr-body">환불 정책 가입 시 명문화 필수. 예외적 상황엔 케이스별 판단, 온라인 리뷰 반영 고려.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 운영진 이탈</div><div class="cr-body">공동 운영 2인 이상 체제 유지. 인수인계 문서 항상 최신화. 단독 운영 절대 피하기.</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════════ 문토 ════════════════════ -->
-<div class="platform-sec" data-p="munto">
-  <div class="ph" style="background:linear-gradient(135deg,#9333ea,#6b21a8);">
-    <div class="ph-icon">🎭</div>
-    <div><div class="ph-name">문토</div><div class="ph-sub">감성 소셜링 플랫폼 | 테마 콘셉트와 리뷰가 핵심</div></div>
-  </div>
-
-  <div class="stage-wrap">
-    <div class="stage-label">📈 성장 단계 로드맵</div>
-    <div class="stages">
-      <div class="stage">
-        <div class="snum">STEP 1</div><div class="sname">데뷔</div><div class="srange">0 ~ 10명</div>
-        <ul class="sacts">
-          <li>뚜렷한 테마 소셜링</li>
-          <li>감성 대표 이미지 설정</li>
-          <li>에디터 노출 도전</li>
-          <li>리뷰 3개 달성 목표</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 2</div><div class="sname">팬덤 형성</div><div class="srange">10 ~ 30명</div>
-        <ul class="sacts">
-          <li>시리즈 소셜링 (1화~3화)</li>
-          <li>연속성 확보</li>
-          <li>리뷰 독려 시스템화</li>
-          <li>SNS 채널 연동</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 3</div><div class="sname">커뮤니티화</div><div class="srange">30 ~ 100명</div>
-        <ul class="sacts">
-          <li>참가자 창작 소셜링</li>
-          <li>고정 멤버 채널 운영</li>
-          <li>시즌제 운영</li>
-          <li>감성 굿즈 제공</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 4</div><div class="sname">파트너 클럽</div><div class="srange">100명+</div>
-        <ul class="sacts">
-          <li>문토 공식 파트너 신청</li>
-          <li>피쳐링 노출 획득</li>
-          <li>유료 클래스 도입</li>
-          <li>타 플랫폼 병행 확장</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 5</div><div class="sname">미디어 브랜드</div><div class="srange">200명+</div>
-        <ul class="sacts">
-          <li>자체 IP 콘텐츠 시리즈</li>
-          <li>외부 협찬/스폰서</li>
-          <li>굿즈 판매</li>
-          <li>오프라인 공간 연계</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="accord-list">
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📋</span><span class="a-title">창설 체크리스트</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="ck-list">
-          <li><span class="ck-num" style="background:#9333ea;">1</span>크루/클럽 프로필 완성도 100% — 소개글 + 사진 + 대표 이미지 모두 채우기</li>
-          <li><span class="ck-num" style="background:#9333ea;">2</span>대표 이미지 감성적으로 — 필름/빈티지/따뜻한 톤 (CTR 체감 차이 큼)</li>
-          <li><span class="ck-num" style="background:#9333ea;">3</span>첫 소셜링 콘셉트 명확히 — 테마 기반 제목 (예: "조용한 저녁 독서 모임 시즌1")</li>
-          <li><span class="ck-num" style="background:#9333ea;">4</span>참가비 책정 — 초기엔 낮게 시작 (무료 or 실비 수준), 리뷰 쌓이면 인상</li>
-          <li><span class="ck-num" style="background:#9333ea;">5</span>크루 소개 영상 or 감성 후기 이미지 1장 이상 업로드 — 첫 인상 결정</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📅</span><span class="a-title">주간 운영 루틴</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="wk-grid">
-          <div class="wk-card"><div class="wk-day" style="color:#9333ea;">🗓 화요일</div><div class="wk-txt">다음 소셜링 상세 페이지 오픈<br>(화~목 마감률 최고)</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#9333ea;">⚡ 목요일</div><div class="wk-txt">마감 임박 알림 게시<br>"마지막 1석!" 스토리 업로드</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#9333ea;">📸 소셜링 당일</div><div class="wk-txt">현장 분위기 실시간 업로드<br>인스타 스토리 연동 적극 활용</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#9333ea;">🌟 소셜링 D+1</div><div class="wk-txt">감사 메시지 + 리뷰 부탁<br>다음 시즌 예고 포함</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#9333ea;">💡 격주 목요일</div><div class="wk-txt">멤버 근황 글 or<br>소셜링 아이디어 공모</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">👥</span><span class="a-title">멤버 관리 매뉴얼</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>소셜링 후 단체·개인 사진 공유 (구글포토/카카오앨범) — 추억 아카이브 역할</li>
-          <li>리뷰 작성자 → 다음 참가비 10~20% 할인으로 리뷰 선순환 유도</li>
-          <li>3회 이상 참여 "고정 멤버" → 별도 채팅방 or 네이버 밴드로 깊은 커뮤니티 운영</li>
-          <li>소셜링 기획 참여 기회 제공 (주제 투표, 아이디어 제안 반영)</li>
-          <li>운영자가 먼저 개인 사진 DM으로 전달 — 특별한 경험 선사</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">💊</span><span class="a-title">이탈 방지 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>시즌제 운영 (봄/여름/가을/겨울 각 시리즈) — 연속성이 재참여 핵심 동기</li>
-          <li>참가자 의견 반영 설문 → 다음 주제 결정 공개 → 참여감 극대화</li>
-          <li>감성 굿즈 제공 (스티커, 엽서, 책갈피 등) — 물리적 소속감 기념품</li>
-          <li>온라인 채널 유지 (인스타 팔로우 + 오픈채팅) — 소셜링 없는 기간도 연결</li>
-          <li>졸업 멤버 "명예 멤버" 채널로 느슨하게 유지</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🔍</span><span class="a-title">알고리즘 & 노출 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="alg"><div class="alg-title" style="color:#9333ea;">✨ 감성 키워드 제목 전략</div><div class="alg-body">소셜링 제목에 감성 키워드 포함 — "함께", "처음", "따뜻한", "조용한", "낯선" 등 감성 단어가 클릭률 높음. "독서 모임" 대신 "조용한 저녁, 책 한 권과 낯선 사람"처럼.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#9333ea;">⭐ 리뷰 수 = 검색 노출 핵심</div><div class="alg-body">리뷰 3개 이상부터 상위 노출 가능. 모든 소셜링 후 참가자에게 리뷰 요청 DM. 리뷰 할인 혜택 연동 시 작성률↑.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#9333ea;">🗓 정기 오픈 주기</div><div class="alg-body">소셜링 월 2회 이상 정기 오픈 유지. 문토 피쳐링 노출 조건: 특색 있는 콘셉트 + 사진 퀄리티 + 리뷰 수. 시리즈 연속 오픈이 단발 행사보다 노출 유리.</div></div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🚨</span><span class="a-title">위기 대응 SOP</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="cr-grid">
-          <div class="cr-card"><div class="cr-title">⚡ 참가자 불만</div><div class="cr-body">현장 즉시 해결 시도. 해결 못하면 다음 참가비 크레딧 제공. 1:1 사과 DM 필수.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 노쇼</div><div class="cr-body">D-1 확인 메시지 필수. 환불 불가 정책 구매 시 명시. 반복 노쇼 멤버 블랙리스트.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 날씨/장소 이슈</div><div class="cr-body">실내 대안 장소 항상 사전 확보. 기상 악화 시 D-1에 빠른 공지 + 대안 안내.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 리뷰 분쟁</div><div class="cr-body">사실 기반 정중한 공개 답변. 개인 DM 해결 우선 시도. 허위 리뷰 신고 활용.</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════════ 오픈채팅 ════════════════════ -->
-<div class="platform-sec" data-p="openchat">
-  <div class="ph" style="background:linear-gradient(135deg,#ca8a04,#92400e);">
-    <div class="ph-icon">💬</div>
-    <div><div class="ph-name">카카오 오픈채팅</div><div class="ph-sub">실시간 소통 채널 | 활성도 유지가 노출 핵심</div></div>
-  </div>
-
-  <div class="stage-wrap">
-    <div class="stage-label">📈 성장 단계 로드맵</div>
-    <div class="stages">
-      <div class="stage">
-        <div class="snum">STEP 1</div><div class="sname">초창기</div><div class="srange">0 ~ 50명</div>
-        <ul class="sacts">
-          <li>타 플랫폼 링크 공유</li>
-          <li>초대 코드 적극 활용</li>
-          <li>지인 동원</li>
-          <li>고정 공지 작성</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 2</div><div class="sname">활성화</div><div class="srange">50 ~ 200명</div>
-        <ul class="sacts">
-          <li>검색 키워드 최적화</li>
-          <li>정보성 콘텐츠 주 1회</li>
-          <li>투표/퀴즈 이벤트</li>
-          <li>부방장 1~2명 선발</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 3</div><div class="sname">커뮤니티</div><div class="srange">200 ~ 500명</div>
-        <ul class="sacts">
-          <li>소분류 채팅방 개설</li>
-          <li>부방장 팀 체계화</li>
-          <li>월간 대형 이벤트</li>
-          <li>외부 채널 연동</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 4</div><div class="sname">미디어화</div><div class="srange">500 ~ 1000명</div>
-        <ul class="sacts">
-          <li>공지 채널 분리 운영</li>
-          <li>정기 뉴스레터 발행</li>
-          <li>대형 오프라인 행사</li>
-          <li>스폰서십 타진</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 5</div><div class="sname">플랫폼 전환</div><div class="srange">1000명+</div>
-        <ul class="sacts">
-          <li>네이버 밴드/카페 전환</li>
-          <li>독립 앱 or 사이트</li>
-          <li>정례 오프라인 행사</li>
-          <li>유료 멤버십 도입</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="accord-list">
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📋</span><span class="a-title">창설 체크리스트</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="ck-list">
-          <li><span class="ck-num" style="background:#ca8a04;">1</span>채팅방 이름에 키워드 포함 (예: "서울 러닝크루 | 주말 달리기 🏃") — 검색 직결</li>
-          <li><span class="ck-num" style="background:#ca8a04;">2</span>링크 URL 영문 키워드 포함 설정 (예: open.kakao.com/o/gSeoulRun)</li>
-          <li><span class="ck-num" style="background:#ca8a04;">3</span>대표 이미지 + 배경 전문적으로 설정 — 첫 인상 신뢰도 결정</li>
-          <li><span class="ck-num" style="background:#ca8a04;">4</span>고정 공지 작성 — 룰 3~5개 + 정기 일정 + 운영자 연락처</li>
-          <li><span class="ck-num" style="background:#ca8a04;">5</span>입장 환영 메시지 자동 설정 + 자기소개 스레드 안내</li>
-          <li><span class="ck-num" style="background:#ca8a04;">6</span>관리자 2인 이상 설정 — 운영자 부재 시 대비 필수</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📅</span><span class="a-title">주간 운영 루틴</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="wk-grid">
-          <div class="wk-card"><div class="wk-day" style="color:#ca8a04;">📢 월요일 09:00</div><div class="wk-txt">주간 일정 전체 공지<br>"📢 이번 주 일정 안내" 포맷</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ca8a04;">💬 수요일</div><div class="wk-txt">자유 토론 주제 던지기<br>예: "이번 주 러닝 몇 km?"</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ca8a04;">⚡ 금요일</div><div class="wk-txt">주말 활동 최종 안내<br>👍👎 투표로 참석 확인</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ca8a04;">📸 활동 후</div><div class="wk-txt">현장 사진 공유<br>다음 모집 안내 함께</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ca8a04;">🧹 월 1회</div><div class="wk-txt">비활성 멤버 정리<br>사전 공지 후 진행 필수</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">👥</span><span class="a-title">멤버 관리 매뉴얼</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>입장 시 자기소개 스레드 유도 ("번호표: 닉네임 / 지역 / 한 줄 소개")</li>
-          <li>활발한 멤버 → 부방장 제안 — 권한 부여로 책임감과 소속감 동시 형성</li>
-          <li>장기 잠수 (3개월+) → 월 1회 정리, 사전 공지 후 진행</li>
-          <li>신규 입장자에게 기존 멤버 멘토 연결 → 정착률↑</li>
-          <li>채팅 활성도 높은 멤버 공개 칭찬으로 참여 독려</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">💊</span><span class="a-title">이탈 방지 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>정보성 콘텐츠 주 1회 공유 — 단순 모임 공지 외 가치 제공이 채널 잔류 핵심</li>
-          <li>멤버 성과/자랑 게시판 운영 (러닝 기록, 독서 완료, 목표 달성 인증)</li>
-          <li>시즌 이벤트 (새해 다짐, 추석 특집, OX 퀴즈 등) — 간단한 상호작용으로 활성화</li>
-          <li>투표/설문 주 1회 — 가볍게 참여할 수 있는 장치로 채널 존재감 유지</li>
-          <li>오랜 기간 대화 없을 때 운영자가 먼저 흥미로운 주제 투척</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🔍</span><span class="a-title">알고리즘 & 노출 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="alg"><div class="alg-title" style="color:#ca8a04;">🔑 채팅방 제목 키워드 최적화</div><div class="alg-body">제목에 핵심 키워드 포함 (지역 + 활동명 + 대상). 예: "서울 | 러닝 | 주말 | 2030". 오픈채팅 검색은 제목+소개글 키워드 일치도 기반.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#ca8a04;">💬 활성도 유지 = 검색 유지</div><div class="alg-body">하루 최소 1개 의미 있는 메시지 유지 목표. 장기간 침묵 채널은 검색 노출 하락. 운영자가 먼저 대화 시작하는 습관 필수.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#ca8a04;">📲 링크 공유 전략</div><div class="alg-body">다른 플랫폼에 공유 시 짧은 소개 문구 + 이미지 함께. 당근·소모임·인스타 프로필 링크에 오픈채팅 링크 연결.</div></div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🚨</span><span class="a-title">위기 대응 SOP</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="cr-grid">
-          <div class="cr-card"><div class="cr-title">⚡ 도배/광고</div><div class="cr-body">즉시 삭제 + 경고 메시지 공지. 반복 시 강퇴 + 신고. 입장 코드 변경 검토.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 멤버 간 갈등</div><div class="cr-body">개인 DM으로 양측 중재. 해결 불가 시 한쪽 퇴장. 전체 채팅에서 갈등 공론화 금지.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 채팅방 침체</div><div class="cr-body">운영자가 먼저 흥미 주제 던지기. 이벤트 기획. 새 멤버 유입으로 분위기 환기.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 채팅방 해킹/사칭</div><div class="cr-body">즉시 전체 공지. 기존 링크 비활성화 + 새 링크 생성. 공식 채널 인증 방법 안내.</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════════ 인스타그램 ════════════════════ -->
-<div class="platform-sec" data-p="insta">
-  <div class="ph" style="background:linear-gradient(135deg,#ec4899,#9333ea,#f97316);">
-    <div class="ph-icon">📸</div>
-    <div><div class="ph-name">인스타그램</div><div class="ph-sub">비주얼 SNS 플랫폼 | 릴스와 저장 수가 알고리즘 핵심</div></div>
-  </div>
-
-  <div class="stage-wrap">
-    <div class="stage-label">📈 성장 단계 로드맵</div>
-    <div class="stages">
-      <div class="stage">
-        <div class="snum">STEP 1</div><div class="sname">씨드기</div><div class="srange">팔로워 0~100</div>
-        <ul class="sacts">
-          <li>릴스 주 2회 집중</li>
-          <li>해시태그 15~20개</li>
-          <li>첫 9장 피드 완성</li>
-          <li>하이라이트 3개 설정</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 2</div><div class="sname">성장기</div><div class="srange">팔로워 100~500</div>
-        <ul class="sacts">
-          <li>저장·공유 유도 콘텐츠</li>
-          <li>스토리 Q&amp;A 주 2회</li>
-          <li>팔로워 태그 허용</li>
-          <li>댓글 100% 답변</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 3</div><div class="sname">커뮤니티</div><div class="srange">팔로워 500~2000</div>
-        <ul class="sacts">
-          <li>콜라보 계정 태그</li>
-          <li>위치 태그 적극 활용</li>
-          <li>멤버 인터뷰 시리즈</li>
-          <li>리그램 이벤트</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 4</div><div class="sname">인플루언서</div><div class="srange">팔로워 2000~1만</div>
-        <ul class="sacts">
-          <li>브랜디드 콘텐츠 가능</li>
-          <li>협찬/스폰서 문의 시작</li>
-          <li>독자 콘텐츠 IP 구축</li>
-          <li>오프라인 팬미팅</li>
-        </ul>
-      </div>
-      <div class="stage">
-        <div class="snum">STEP 5</div><div class="sname">미디어 브랜드</div><div class="srange">팔로워 1만+</div>
-        <ul class="sacts">
-          <li>자체 IP 콘텐츠 시리즈</li>
-          <li>굿즈 판매</li>
-          <li>독립 플랫폼 확장</li>
-          <li>온·오프라인 통합</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="accord-list">
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📋</span><span class="a-title">창설 체크리스트</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="ck-list">
-          <li><span class="ck-num" style="background:#ec4899;">1</span>계정명: @모임명_지역 형식 (예: @seoul_running_crew) — 검색 최적화</li>
-          <li><span class="ck-num" style="background:#ec4899;">2</span>프로필 사진: 로고 or 밝은 단체 사진 (정사각형 크롭 시 잘리지 않게)</li>
-          <li><span class="ck-num" style="background:#ec4899;">3</span>바이오: 모임 소개 1줄 + 활동 지역 + 링크 (링크트리 or 소모임 링크)</li>
-          <li><span class="ck-num" style="background:#ec4899;">4</span>하이라이트 3개 이상: "모임 소개" / "이전 활동" / "가입 방법"</li>
-          <li><span class="ck-num" style="background:#ec4899;">5</span>첫 9장 피드 미리 구성 (소개 + 활동 사진 — 첫 방문자 첫 인상 결정)</li>
-          <li><span class="ck-num" style="background:#ec4899;">6</span>비즈니스 계정 전환 — 인사이트 분석 도구 사용을 위해 필수</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">📅</span><span class="a-title">주간 운영 루틴 + 콘텐츠 믹스</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="wk-grid">
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">📱 월/화</div><div class="wk-txt">릴스 or 카드뉴스<br>정보성·도움 되는 콘텐츠</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">📊 수요일</div><div class="wk-txt">스토리 Q&amp;A or 설문<br>팔로워 참여 유도</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">⚡ 금요일</div><div class="wk-txt">주말 활동 예고 스토리<br>참여 링크 포함</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">📸 토/일</div><div class="wk-txt">현장 스토리 실시간 업로드<br>라이브 분위기 공유</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">🌟 활동 후</div><div class="wk-txt">피드 업로드 (감성 편집)<br>슬라이드 3~5장</div></div>
-        </div>
-        <div class="ct-label">콘텐츠 구성 비율</div>
-        <div class="wk-grid">
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">🎬 릴스 40%</div><div class="wk-txt">15~30초, 빠른 편집<br>유행 음악 적극 활용</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">📋 카드뉴스 30%</div><div class="wk-txt">정보성 + 저장 유도<br>체크리스트·꿀팁 형식</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">📖 스토리 20%</div><div class="wk-txt">일상·뒷이야기·Q&amp;A<br>소속감 및 친밀감 형성</div></div>
-          <div class="wk-card"><div class="wk-day" style="color:#ec4899;">🖼 피드 10%</div><div class="wk-txt">정제된 아카이브<br>브랜드 이미지 관리</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">👥</span><span class="a-title">멤버 관리 매뉴얼</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>멤버 태그 사전 동의 받기 — 동의한 멤버 게시물이 자연 확산 효과 최대</li>
-          <li>DM 응답 24시간 내 목표 — 인스타 반응성이 알고리즘에도 반영</li>
-          <li>멤버가 업로드한 게시물 → 스토리 리그램 or 피드 공유로 소속감↑</li>
-          <li>팔로워 댓글 질문에 100% 답변 — 초기 200명까지는 필수</li>
-          <li>멤버 인터뷰 콘텐츠 시리즈 운영 ("이번 달의 멤버") — 주인공 효과로 충성도↑</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">💊</span><span class="a-title">이탈 방지 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <ul class="bl">
-          <li>스토리 투표·설문 주 1회 이상 — 가볍게 참여할 수 있는 장치로 팔로워 온도 유지</li>
-          <li>비하인드 스토리 공개 ("멤버만 알 수 있는 뒷이야기") — 팔로우 유지 동기↑</li>
-          <li>리그램 이벤트 (팔로워가 직접 확산) — 참여와 신규 유입 동시 달성</li>
-          <li>클로즈 프렌즈 스토리로 핵심 팬에게 특별 콘텐츠 제공 — VIP 소속감 형성</li>
-          <li>비정기 DM 이벤트 ("댓글 남겨주신 분 중 추첨") — 간단하지만 효과적</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🔍</span><span class="a-title">알고리즘 & 노출 전략</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="alg"><div class="alg-title" style="color:#ec4899;">⏱ 첫 1시간이 결정한다</div><div class="alg-body">게시 후 첫 1시간 내 좋아요·댓글·공유 수가 초기 노출 범위 결정. 게시 직후 활발한 팔로워에게 먼저 스토리로 공유해 초기 반응 유도.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#ec4899;">💾 저장(Save)이 왕</div><div class="alg-body">저장 수가 조회수보다 알고리즘 가중치 높음. "저장해두면 유용한" 체크리스트·꿀팁·비교 카드뉴스 형식이 저장 유도에 최적.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#ec4899;">#️⃣ 해시태그 3단 전략</div><div class="alg-body">메가 태그 (#러닝 · 1억+) + 미드 태그 (#서울러닝 · 10만~100만) + 마이크로 태그 (#서울러닝크루 · 1만 미만) 혼합. 총 15~20개, 게시글과 관련성 있는 것만.</div></div>
-        <div class="alg"><div class="alg-title" style="color:#ec4899;">🕐 최적 게시 시간</div><div class="alg-body">인스타 인사이트에서 팔로워 활동 시간 확인 후 그 시간에 게시. 일반적으로 평일 저녁 7~9시, 주말 오전 10~12시가 높음. 같은 시간대 정기 게시 루틴 만들기.</div></div>
-      </div>
-    </div>
-
-    <div class="accord">
-      <div class="accord-head" onclick="tog(this)">
-        <span class="a-icon">🚨</span><span class="a-title">위기 대응 SOP</span><span class="a-arr">›</span>
-      </div>
-      <div class="accord-body">
-        <div class="cr-grid">
-          <div class="cr-card"><div class="cr-title">⚡ 네거티브 댓글</div><div class="cr-body">24시간 내 정중한 공개 답변. 명백한 악플은 숨기기 or 삭제. 감정적 반응 절대 금지.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 팔로워 급감</div><div class="cr-body">알고리즘 변화 인지 + 콘텐츠 형식 실험. 릴스 집중 전환 or 게시 빈도 조정 시도.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ DM 스팸</div><div class="cr-body">메시지 필터 설정. 팔로워 아닌 계정 DM 제한 옵션 활성화. 반복 스팸 계정 차단.</div></div>
-          <div class="cr-card"><div class="cr-title">⚡ 계정 해킹</div><div class="cr-body">이중 인증 사전 설정 필수. 백업 이메일/번호 등록. 해킹 시 즉시 메타 고객센터 신고.</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div><!-- /content -->
 
 <script>
-function tog(head){
-  const acc = head.parentElement;
-  acc.classList.toggle('open');
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
+
+const CATS = [
+  {id:'sports', emoji:'🏃', label:'운동·스포츠'},
+  {id:'reading', emoji:'📚', label:'독서·인문'},
+  {id:'food', emoji:'🍳', label:'요리·맛집'},
+  {id:'language', emoji:'🗣️', label:'언어·스터디'},
+  {id:'culture', emoji:'🎭', label:'문화·예술'},
+  {id:'selfdev', emoji:'💰', label:'자기계발'},
+  {id:'social', emoji:'🤝', label:'사교·친목'},
+];
+
+const PLTS = [
+  {id:'daangn', emoji:'🥕', label:'당근모임', color:'#FF6F0F', bg:'linear-gradient(135deg,#FF6F0F,#e55900)', tc:'#fff3e0'},
+  {id:'somoim', emoji:'🤝', label:'소모임',   color:'#16a34a', bg:'linear-gradient(135deg,#16a34a,#14532d)', tc:'#dcfce7'},
+  {id:'munto',  emoji:'🎭', label:'문토',     color:'#9333ea', bg:'linear-gradient(135deg,#9333ea,#6b21a8)', tc:'#ede9fe'},
+  {id:'openchat',emoji:'💬',label:'오픈채팅', color:'#ca8a04', bg:'linear-gradient(135deg,#ca8a04,#92400e)', tc:'#fef9c3'},
+  {id:'insta',  emoji:'📸', label:'인스타',   color:'#ec4899', bg:'linear-gradient(135deg,#ec4899,#9333ea)', tc:'#fce7f3'},
+];
+
+/* ─── 카테고리별 운영 데이터 ─── */
+const CAT_DATA = {
+  sports: {
+    checklist_specific: [
+      '레벨 구분 기준 공지 — 초급/중급/고급 기준 사전 명시',
+      '날씨 B플랜 필수 설정 — 우천·폭염 시 실내 대안 or 취소 기준',
+      '안전 규칙 + 응급 연락처 공지 (부상 대비)',
+      '준비물 체크리스트 배포 (복장, 장비, 음료, 보험 등)',
+      '활동 시작·종료 시간 엄수 (스트레칭 시간 포함 여부 결정)',
+    ],
+    routine: [
+      {t:'활동 D-2', c:'날씨 예보 확인 → 취소 기준 공지 (예: "강수 30%+ 시 취소")'},
+      {t:'활동 D-1', c:'준비물 체크리스트 발송 + 집합 장소·시간 최종 안내'},
+      {t:'활동 당일', c:'몸 상태 체크인 → 레벨별 그룹 배치 → 워밍업 진행'},
+      {t:'활동 직후', c:'스트레칭 타임 + 부상 여부 확인 + 간단한 소감 나누기'},
+      {t:'활동 D+1', c:'기록/사진 공유 + 다음 코스 투표 + 부상 멤버 안부 확인'},
+    ],
+    members: [
+      '실력별 페이스 그룹 분리 — 초보자가 뒤처지지 않게 최소 2그룹 운영',
+      '초보자 ↔ 베테랑 1:1 버디 시스템으로 조기 적응 유도',
+      '부상 이력 파악 → 해당 멤버 맞춤 배려 (코스 조정 등)',
+      '3회+ 참여 장기 멤버에게 페이스 리더·가이드 역할 부여',
+      '기록 향상 시 공개 인정 (PR 달성 축하 → 강력한 동기부여)',
+    ],
+    retention: [
+      '시즌별 특별 코스 도전 (한강 야경 러닝, 북한산 일출 등산 등)',
+      '개인 기록 향상 인증 이벤트 (1km PR, 10kg 감량, 100회 참여 등)',
+      '단체 대회/행사 참가 기획 (마라톤, 등산 대회, 클라이밍 대회)',
+      '날씨 나쁜 시즌엔 실내 대안 제공 (헬스장, 필라테스, 볼링 등)',
+      '비시즌 온라인 챌린지 (매일 스쿼트 30개, 만보 걷기 등)',
+    ],
+    crisis: [
+      {t:'날씨 취소', b:'전날 20시 이전 결정 + 즉시 공지. 실내 대안 항상 사전 확보. 잦은 취소 시 날씨 무관한 실내 정기 세션 추가.'},
+      {t:'부상 발생', b:'현장 응급처치 → 심각 시 즉시 병원 이송. 사후 안부 DM 필수. 재발 방지 안전 규칙 재공지.'},
+      {t:'레벨 갈등', b:'그룹 분리 공지 (차별 없이 공정하게). 초보자 전용 입문 세션 별도 추가. 운영자가 먼저 다양한 레벨과 어울리는 모습 보여주기.'},
+      {t:'반복 노쇼·지각', b:'출발 5분 전 메시지. 집합 시간 엄수 규칙 공지. 반복 지각 멤버 다음 그룹 이동 권유.'},
+    ],
+    tip: {bg:'#fff7ed', border:'#fed7aa', color:'#c2410c', title:'🏃 운동·스포츠 모임 핵심 원칙', body:'초보자가 눈치 보지 않는 분위기가 장기 생존의 핵심. "느려도 함께 달린다" 문화를 처음부터 만들어야 해요. 실력 차이가 클수록 그룹 분리보다 "각자 목표" 프레임이 효과적.'},
+  },
+
+  reading: {
+    checklist_specific: [
+      '도서 선정 방식 결정 — 운영자 큐레이션 vs 멤버 투표 (초기엔 큐레이션 추천)',
+      '발제자 순서표 제작 및 공유 (공정한 로테이션)',
+      '토론 진행 규칙 설정 (발언 시간, 스포일러 규칙, 반론 방식)',
+      '모임 전 완독 기준 공지 — 미완독 참여 허용 여부 결정',
+      '독서 기록 아카이브 형식 결정 (구글 시트, 노션, 밴드 등)',
+    ],
+    routine: [
+      {t:'모임 3주 전', c:'다음 달 도서 투표 or 공지 (구매 시간 확보)'},
+      {t:'모임 2주 전', c:'도서 최종 발표 + 구매 안내 (전자책/종이책 모두 안내)'},
+      {t:'모임 1주 전', c:'발제자 확인 + 발제 자료 양식 공유 (5~10분 분량)'},
+      {t:'모임 전날', c:'참가자 완독 여부 체크 + 장소·시간 최종 안내'},
+      {t:'모임 D+1', c:'핵심 토론 내용 요약 공유 + 다음 책 후보 공지'},
+    ],
+    members: [
+      '완독 여부보다 토론 참여 의지 중시 — 부담 없는 분위기 형성',
+      '발제 기회 고르게 배분 — 잘 말하는 사람만 독점하지 않게',
+      '처음 발제하는 멤버에게 사전 가이드 + 리허설 기회 제공',
+      '취향이 다른 책 선정 시 갈등 예방을 위한 근거 투명하게 공유',
+      '3회+ 참여 멤버에게 "이달의 발제자" 역할 우선권 부여',
+    ],
+    retention: [
+      '연간 독서 챌린지 (12권 완독, 장르별 1권씩 등)',
+      '작가 만남 이벤트 or 출판사 견학 기획',
+      '베스트 토론 내용 모음집 제작 (분기 1회)',
+      '분야 확장 이벤트 (SF소설 달, 시집 달, 고전 달 등 테마)',
+      '독서 기록 공유 — 연말 "올해의 책" 투표 이벤트',
+    ],
+    crisis: [
+      {t:'미완독 멤버 多', b:'3회 연속 미완독 시 1:1 상담. 무독서 참여는 허용하되 발제 면제. "짧은 책 선정 달" 추가로 부담 조절.'},
+      {t:'토론 주제 논쟁', b:'"정답 없음, 다양한 관점 환영" 규칙 재공지. 운영자가 중립 조율. 감정적 갈등 시 해당 주제 마무리하고 전환.'},
+      {t:'특정 멤버 발언 독점', b:'타이머 도입 (인당 발언 3분 제한). 모든 참가자 한 마디씩 규칙. 운영자가 조용한 멤버에게 먼저 발언 유도.'},
+      {t:'참여자 급감', b:'도서 난이도 재조정. 짧은 책·에세이로 부담 낮추기. 온라인 병행 모임 추가로 접근성↑.'},
+    ],
+    tip: {bg:'#f0fdf4', border:'#bbf7d0', color:'#15803d', title:'📚 독서 모임 핵심 원칙', body:'"완독보다 대화"가 독서 모임의 생명. 책이 수단이 되어 사람들을 연결하는 것이 목표. 어려운 책 고집하다 사람 잃는 것보다 쉬운 책으로 분위기 만드는 게 먼저.'},
+  },
+
+  food: {
+    checklist_specific: [
+      '알레르기·식이 제한 사전 조사 (채식, 견과류, 갑각류 등 필수 확인)',
+      '재료비 분담 방식 결정 (1/n, 사전 입금, 당일 정산)',
+      '조리 공간 섭외 또는 맛집 예약 (인원 + 접근성 고려)',
+      '위생 규칙 공지 (손 씻기, 앞치마, 머리망 등)',
+      '레시피 선정 방식 — 운영자 결정 vs 멤버 투표',
+    ],
+    routine: [
+      {t:'모임 2주 전', c:'메뉴 후보 투표 또는 테마 공지 (재료 준비 시간 확보)'},
+      {t:'모임 1주 전', c:'알레르기 최종 확인 + 재료비 사전 수금'},
+      {t:'모임 전날', c:'재료 구매 + 공간 세팅 준비 확인'},
+      {t:'모임 당일', c:'역할 분담 (재료 손질, 조리, 설거지) + 음식 플레이팅 사진'},
+      {t:'모임 D+1', c:'레시피 공유 + 다음 테마 공지 + 후기 사진 업로드'},
+    ],
+    members: [
+      '조리 실력별 역할 분담 — 초보자도 할 수 있는 쉬운 역할 배정',
+      '알레르기·채식 멤버 배려 — 별도 재료 or 메뉴 옵션 준비',
+      '레시피 제안 기회 멤버에게 균등 배분 (월 1회 멤버 레시피)',
+      '청소·정리 역할 명확히 분배 (갈등 예방)',
+      '요리 잘하는 멤버 → "쉐프 of the month" 공개 감사',
+    ],
+    retention: [
+      '월별 테마 기획 (이탈리아 달, 집밥 달, 제철 식재료 달 등)',
+      '쿡오프 대회 — 같은 재료로 각자 요리 → 투표',
+      '나만의 레시피 도전 이벤트 (멤버가 직접 주도하는 요리)',
+      '맛집 탐방 번외 편 기획 (특별 외식 모임)',
+      '시즌 이벤트 (크리스마스 케이크, 추석 송편 만들기 등)',
+    ],
+    crisis: [
+      {t:'재료 구매 실패', b:'마트 대용 재료 목록 항상 준비. 배달 앱 즉시 활용. 재료 구매는 전날 완료 원칙.'},
+      {t:'알레르기 반응', b:'응급 처치 키트 상비. 심각 시 즉시 119. 알레르기 확인 절차 재강화.'},
+      {t:'공간 취소', b:'예비 공간 항상 확보 (게스트하우스 공유주방, 요리교실 등). 배달+집에서 먹기로 전환 가능.'},
+      {t:'재료비 분쟁', b:'정산 방식 가입 시 명문화. 투명한 영수증 공유. 이견 있을 시 1:1 해결.'},
+    ],
+    tip: {bg:'#fefce8', border:'#fde68a', color:'#b45309', title:'🍳 요리·맛집 모임 핵심 원칙', body:'음식보다 사람이 먼저. 요리 결과가 형편없어도 "같이 만들었다"는 경험이 소속감의 본질. 재료비·정산 투명하게 → 갈등 예방이 장기 운영의 핵심.'},
+  },
+
+  language: {
+    checklist_specific: [
+      '레벨 테스트 방식 결정 (자체 레벨 질문지 or 자기신고)',
+      '그룹 분류 기준 설정 (초급/중급/고급, 또는 목적별)',
+      '진도 계획 확정 (교재 선정 or 자체 커리큘럼)',
+      '숙제·사전 준비 방식 공지 (강제 vs 권장)',
+      '스터디 진행 방식 결정 (발표/롤플레이/토론 중 선택)',
+    ],
+    routine: [
+      {t:'매주 월요일', c:'이번 주 학습 주제 + 숙제 공지 (명확한 목표 제시)'},
+      {t:'수·목요일', c:'숙제 제출 독려 or 중간 퀴즈 스터디'},
+      {t:'모임 전날', c:'발표 순서 최종 공지 + 준비물 안내'},
+      {t:'모임 당일', c:'발표 → 피드백 → 자유 연습 → 다음 주제 예고'},
+      {t:'모임 D+1', c:'주요 표현 정리 공유 + 다음 주 과제 공지'},
+    ],
+    members: [
+      '레벨별 소그룹 운영 — 초급자가 고급자 앞에서 위축되지 않게',
+      '원어민 or 고급자 파트너 매칭 (원어민 교환 학습 연결)',
+      '성취도 트래킹 — 개인별 성장 기록 공유 (소소한 성취도 인정)',
+      '숙제 미제출자 공개 압박 금지 — 개인 격려 중심',
+      '분기별 레벨업 체크 → 레벨 재배치 제안 (선택)',
+    ],
+    retention: [
+      '단계별 레벨업 인증 (중급 달성, OPIc AL 취득 등 팀 축하)',
+      '원어민 게스트 초청 특별 세션 (분기 1회)',
+      '어학 시험 단체 준비 (TOEIC, JLPT, HSK 함께)',
+      '언어 교환 파트너 매칭 이벤트 (외국인 멤버 초대)',
+      '회화 영상 제작 챌린지 (15초 자기소개 영상 공유)',
+    ],
+    crisis: [
+      {t:'레벨 격차 갈등', b:'소그룹 분리 재조정. 초급자에게 "성장 과정" 프레임 강조. 고급자에게는 "가르치며 배우는" 역할 부여.'},
+      {t:'숙제 미제출 多', b:'숙제 분량 줄이기. 강제 제출 폐지 검토. 제출률 높은 멤버에게 소소한 보상.'},
+      {t:'참여 동기 저하', b:'단기 목표 재설정 (4주 챌린지). 레벨테스트 재실시로 성장 확인. 번외 회화 카페 모임 추가.'},
+      {t:'발표 기피 멤버', b:'짝 활동 or 소그룹 발표로 부담 낮추기. 발표 후 긍정적 피드백만 먼저. 익명 발표 채널 운영.'},
+    ],
+    tip: {bg:'#eff6ff', border:'#bfdbfe', color:'#1d4ed8', title:'🗣️ 언어·스터디 핵심 원칙', body:'"틀리는 게 연습"이라는 심리적 안전감이 스터디 성패를 가른다. 실수에 박수 보내는 문화를 운영자가 먼저 모범으로 보여줘야. 레벨 차이보다 참여 의지 중심.'},
+  },
+
+  culture: {
+    checklist_specific: [
+      '정기 방문 장소 리스트 사전 선정 (전시, 공연, 영화관 등)',
+      '예약 방식 결정 — 단체 할인 협의 여부, 개인 예매 vs 단체 예매',
+      '집합 장소·시간 명확히 공지 (행사장 앞 or 지하철역 출구)',
+      '감상 에티켓 공지 (소음, 사진 촬영 규칙 등)',
+      '감상 후기 공유 방식 결정 (모임 후 카페 or 온라인)',
+    ],
+    routine: [
+      {t:'모임 3주 전', c:'다음 달 행사 후보 공유 + 투표 or 운영자 큐레이션'},
+      {t:'모임 1~2주 전', c:'예약 마감 공지 + 단체 입장권 구매 진행'},
+      {t:'모임 전날', c:'집합 방법·경로 상세 안내 + 당일 유의사항 공지'},
+      {t:'모임 당일', c:'감상 전 간단한 배경 설명 → 감상 → 소감 나누기'},
+      {t:'모임 D+1', c:'후기 사진 + 핵심 소감 공유 + 다음 행사 후보 공지'},
+    ],
+    members: [
+      '취향별 소관심사 파악 — 미술파/공연파/영화파 등 분류 후 맞춤 추천',
+      '감상 후기 공유 기회 균등 배분 — 발언 기피 멤버에게 먼저 기회',
+      '큐레이션 담당 로테이션 — 멤버가 직접 "이번 달 행사" 추천',
+      '첫 참여 멤버 옆에 기존 멤버 배치 — 낯선 분위기 완화',
+      '수집가형 멤버 (굿즈, 팸플릿) 배려 — 판매 시간 여유 확보',
+    ],
+    retention: [
+      '시즌 특별 공연·전시 기획 (크리스마스 클래식, 봄 야외 전시)',
+      '아티스트 만남 이벤트 or 작가와의 대화 참여',
+      '멤버 직접 창작 참여 기회 (원데이 드로잉, 도예 클래스 등)',
+      '"우리만의 취향 지도" 제작 — 멤버 추천 장소 누적 아카이브',
+      '연간 "베스트 전시·공연" 투표 이벤트',
+    ],
+    crisis: [
+      {t:'행사 취소/변경', b:'예비 행사 1~2개 항상 대기. 취소 인지 즉시 대안 공지. 환불 절차 운영자가 대표로 진행.'},
+      {t:'예약 노쇼', b:'입장권 환불 불가 시 대리 구매자 모집. 사전 예약금 or 선불 원칙 도입 검토.'},
+      {t:'취향 갈등', b:'장르 다양성 보장 (한 장르 3회 연속 금지). 정기 설문으로 선호 파악. 소그룹별 테마 모임 분리 운영.'},
+      {t:'장소 혼잡·불편', b:'피크타임 피한 예약 (평일 오전 추천). 좌석 사전 배치 확인. 불편 사항 즉시 해결책 안내.'},
+    ],
+    tip: {bg:'#fdf4ff', border:'#e9d5ff', color:'#7c3aed', title:'🎭 문화·예술 모임 핵심 원칙', body:'감상 후 "정답 찾기"가 아닌 "각자의 해석" 공유가 핵심. 운영자가 먼저 "저는 이렇게 느꼈어요"를 솔직하게 이야기하면 멤버들도 따라온다. 취향 다름을 인정하는 문화 먼저.'},
+  },
+
+  selfdev: {
+    checklist_specific: [
+      '목표 설정 양식 공유 — SMART 목표 (구체적, 측정 가능, 달성 가능)',
+      '진도 추적 방식 결정 (노션, 구글 시트, 오픈채팅 스레드 등)',
+      '성과 공유 주기 결정 (주간 체크인, 월간 발표 등)',
+      '심리적 안전 규칙 설정 — 실패 공유도 환영, 비교 금지',
+      '외부 전문가 or 강의 연결 계획 수립 (분기 1회 이상)',
+    ],
+    routine: [
+      {t:'매주 월요일', c:'주간 목표 공유 (3줄 이내) — 서로 응원 댓글'},
+      {t:'매주 금요일', c:'주간 달성 여부 체크인 — 미달성도 공유 장려'},
+      {t:'월초', c:'월간 목표 발표 + 지난 달 회고 공유'},
+      {t:'월말', c:'이달의 성과 발표 + 베스트 달성자 칭찬'},
+      {t:'분기 1회', c:'외부 강사 초청 or 전문가 Q&A 세션'},
+    ],
+    members: [
+      '목표 타입별 소그룹 — 재테크/건강/커리어 등 관심사 기반 분류',
+      '멘토-멘티 매칭 — 성과 좋은 멤버가 방향 잃은 멤버를 서포트',
+      '실패 공유도 환영하는 문화 — 운영자가 먼저 실패 경험 공유',
+      '목표 외 잡담도 허용 — 경직된 분위기 방지',
+      '번아웃 감지 → 1:1 DM으로 부드럽게 확인',
+    ],
+    retention: [
+      '단계별 달성 인증 이벤트 (1개월/3개월/6개월/1년 챌린지)',
+      '분기별 성과 발표회 — 멤버들의 성장 스토리 공유',
+      '외부 전문가 강의 + Q&A 세션 (재테크, 커리어, 건강 등)',
+      '"이달의 성장왕" 선정 — 작은 성취도 크게 인정',
+      '연말 회고 파티 — 한 해 성과 돌아보기',
+    ],
+    crisis: [
+      {t:'목표 미달성 좌절', b:'실패 = 데이터 프레임 강조. 1:1 체크인으로 원인 파악. 목표 재설정 기회 부여.'},
+      {t:'경쟁 과열', b:'비교 금지 문화 재공지. 개인 성장 중심 전환. 경쟁 구도 만드는 멤버 1:1 주의.'},
+      {t:'정보 편향', b:'다양한 관점 자료 공유 권장. "이게 정답" 단정 금지. 전문가 초청으로 균형 잡힌 시각 제공.'},
+      {t:'참여도 저하', b:'목표 난이도 재조정. 소그룹 집중 세션 추가. 번아웃 리커버리 프로그램 제안.'},
+    ],
+    tip: {bg:'#f0fdf4', border:'#bbf7d0', color:'#166534', title:'💰 자기계발 모임 핵심 원칙', body:'"같이 성장한다"는 감각이 핵심. 혼자 공부보다 함께여서 더 나은 경험을 주는 것이 목표. 실패를 숨기게 만드는 압박 문화가 이탈의 1번 원인.'},
+  },
+
+  social: {
+    checklist_specific: [
+      '아이스브레이킹 프로그램 준비 (퀴즈, 게임, 자기소개 카드 등)',
+      '연령·직군·성별 다양성 관리 방침 결정',
+      '음주 정책 공지 (음주 없는 모임 표시 or 주류 제한 여부)',
+      '자기소개 형식 결정 (이름만 vs 직업까지 vs 완전 익명)',
+      '연락처 공유 방식 결정 (자발적 공유 원칙)',
+    ],
+    routine: [
+      {t:'모임 시작', c:'아이스브레이킹 활동 15분 (게임, 공통점 찾기 등)'},
+      {t:'모임 중반', c:'자연스러운 소그룹 대화 → 운영자가 소외 멤버 연결'},
+      {t:'모임 후반', c:'전체 사진 촬영 + 다음 모임 예고'},
+      {t:'모임 D+1', c:'단체 사진 공유 + 소감 한 줄 받기'},
+      {t:'월 1회', c:'오래된 멤버 감사 게시글 + 신규 멤버 환영 공지'},
+    ],
+    members: [
+      '내향형 멤버 배려 — 소그룹 대화 자리 먼저 마련, 1:1 소개 주선',
+      '단골 멤버와 신규 멤버 의도적으로 섞어 앉히기',
+      '다양한 배경 멤버가 어울리도록 공통 주제 먼저 제시',
+      '알코올 음주 멤버 vs 비음주 멤버 자연스럽게 구분 배려',
+      '특정 직군·나이 쏠림 방지 — 모집 단계부터 다양성 의도',
+    ],
+    retention: [
+      '정기 소풍·나들이 기획 (봄·가을 당일 여행)',
+      '생일 멤버 깜짝 축하 문화 정착',
+      '분기별 MT or 1박 여행으로 깊은 유대감 형성',
+      '비정기 소그룹 모임 허용 — 자연스러운 친목 확장',
+      '"우리 모임 1주년" 파티 등 기념일 이벤트',
+    ],
+    crisis: [
+      {t:'로맨스·짝사랑 이슈', b:'공개 커플 행동 자제 원칙 공지. 특정 멤버에 집착 시 1:1 경고. 심각 시 해당 멤버 퇴장 검토.'},
+      {t:'집단 소외 감지', b:'소외 멤버 발견 시 운영자가 먼저 자연스럽게 대화 연결. 그룹 게임으로 전체 섞기.'},
+      {t:'특정 멤버 독점 발언', b:'타이머 활용 or 소그룹 분산 대화. 운영자가 다른 멤버에게 먼저 말 걸기.'},
+      {t:'음주 후 갈등', b:'음주 멤버 귀가 지원. 사건 다음 날 1:1 확인. 음주 정책 재검토.'},
+    ],
+    tip: {bg:'#eff6ff', border:'#bfdbfe', color:'#1d4ed8', title:'🤝 사교·친목 모임 핵심 원칙', body:'첫 모임이 전부. 처음 왔을 때 따뜻하게 환영받은 멤버가 오래 남는다. 운영자가 모든 멤버와 최소 1:1 대화를 나누는 것이 사교 모임의 가장 강력한 운영 전략.'},
+  },
+};
+
+/* ─── 플랫폼별 운영 데이터 ─── */
+const PLT_DATA = {
+  daangn: {
+    checklist_plt: [
+      '모임명에 지역명 포함 (예: "서울 러닝크루 🏃") — 검색 노출↑',
+      '가입 질문 1~2개 설정 (거주 동네, 참여 가능 요일 등 필터링)',
+      '첫 모임 날짜 창설 즉시 확정 → 당근 일정 바로 등록',
+    ],
+    algo: [
+      {t:'🥕 동네생활 게시글', b:'무기한 노출 효과! 주 1~2회 꾸준히. 활동 후기 + 지역 태그 + 모임명 세트로 올리기. 최적 시간: 저녁 7~9시.'},
+      {t:'⏱ 후기 타이밍', b:'활동 후 48시간 내 후기 사진 업로드 → 최신순 노출 유리. 참여자 태그 허용 시 자연 확산.'},
+      {t:'🎯 가입 승인', b:'가입 승인 24시간 내 처리 → 전환율↑. 모임 일정 자주 등록할수록 피드 상단 노출 지속.'},
+    ],
+    routine_plt: [
+      {t:'🗓 월요일', c:'이번 주 일정 공지 (모임 채팅 + 동네생활 동시 게시)'},
+      {t:'⚡ 금요일', c:'주말 활동 최종 리마인드 + 마감 임박 공지'},
+    ],
+  },
+  somoim: {
+    checklist_plt: [
+      '카테고리 정확히 선택 — SEO 노출 직결',
+      '창설 즉시 첫 소셜링 일정 등록 (2주 내 날짜)',
+      '소개 영상 업로드 — 30~60초, CTR 최대 40% 향상',
+    ],
+    algo: [
+      {t:'⭐ 리뷰 수 = 핵심 노출', b:'리뷰 3개부터 검색 상위 노출 시작. 모든 소셜링 후 참가자에게 리뷰 요청 DM 필수.'},
+      {t:'🗓 일정 등록 빈도', b:'소셜링 일정 주 1회 이상 등록 유지. 활성 모임으로 인식될수록 카테고리 상단 노출.'},
+      {t:'📸 첫 사진 최적화', b:'밝은 컬러 or 사람 얼굴 포함 시 CTR 최대 30% 상승. 계절감 있는 사진 주기적 교체.'},
+    ],
+    routine_plt: [
+      {t:'🗓 화요일', c:'다음 소셜링 모집 오픈 (화~목 전환율 최고)'},
+      {t:'⚡ 목요일', c:'마감 임박 리마인드 ("잔여 2석!")'},
+    ],
+  },
+  munto: {
+    checklist_plt: [
+      '대표 이미지 감성적으로 — 필름/빈티지/따뜻한 톤 (CTR↑)',
+      '첫 소셜링 콘셉트 테마 명확히 (예: "조용한 저녁 독서 모임 시즌1")',
+      '참가비 초기엔 낮게 시작 (무료~실비), 리뷰 쌓이면 인상',
+    ],
+    algo: [
+      {t:'✨ 감성 키워드 제목', b:'"함께", "처음", "따뜻한", "조용한", "낯선" 등 감성 단어가 클릭률↑. "독서 모임" 대신 "조용한 저녁, 책 한 권과 낯선 사람"처럼.'},
+      {t:'⭐ 리뷰 수 = 검색 노출', b:'리뷰 3개 이상부터 상위 노출 가능. 리뷰 할인 혜택 연동 시 작성률↑.'},
+      {t:'🗓 정기 오픈 주기', b:'소셜링 월 2회 이상 정기 오픈 유지. 시리즈 연속 오픈이 단발 행사보다 노출 유리.'},
+    ],
+    routine_plt: [
+      {t:'🗓 화요일', c:'다음 소셜링 페이지 오픈 (화~목 마감률 최고)'},
+      {t:'📸 소셜링 D+1', c:'감사 메시지 + 다음 시즌 예고 + 리뷰 부탁'},
+    ],
+  },
+  openchat: {
+    checklist_plt: [
+      '채팅방 이름에 키워드 포함 (지역 + 활동명 + 대상 조합)',
+      '고정 공지 작성 — 룰 3~5개 + 정기 일정 + 운영자 연락처',
+      '관리자 2인 이상 설정 — 운영자 부재 시 대비 필수',
+    ],
+    algo: [
+      {t:'🔑 키워드 최적화', b:'채팅방 제목 + 소개글 키워드 일치도 기반 검색. 예: "서울 | 러닝 | 주말 | 2030".'},
+      {t:'💬 활성도 = 노출', b:'일 최소 1개 의미 있는 메시지 유지. 장기 침묵 채널은 검색 노출 하락.'},
+      {t:'📲 링크 공유 전략', b:'당근·소모임·인스타 프로필에 오픈채팅 링크 연결. 공유 시 짧은 소개 문구 함께.'},
+    ],
+    routine_plt: [
+      {t:'📢 월요일 09시', c:'주간 일정 전체 공지 ("📢 이번 주 일정 안내" 포맷)'},
+      {t:'💬 수요일', c:'자유 토론 주제 던지기 (참여 유도)'},
+    ],
+  },
+  insta: {
+    checklist_plt: [
+      '계정명: @모임명_지역 형식 (예: @seoul_running_crew) — 검색 최적화',
+      '하이라이트 3개 이상: "모임 소개" / "이전 활동" / "가입 방법"',
+      '비즈니스 계정 전환 — 인사이트 분석 도구 사용 필수',
+    ],
+    algo: [
+      {t:'⏱ 첫 1시간이 결정', b:'게시 후 첫 1시간 내 좋아요·댓글·공유 수가 초기 노출 범위 결정.'},
+      {t:'💾 저장(Save)이 왕', b:'저장 수가 조회수보다 알고리즘 가중치 높음. 체크리스트·꿀팁 형식이 저장 유도 최적.'},
+      {t:'#️⃣ 해시태그 3단 전략', b:'메가(#러닝 1억+) + 미드(#서울러닝 10만) + 마이크로(#서울러닝크루 1만 미만) 혼합. 15~20개.'},
+    ],
+    routine_plt: [
+      {t:'📱 월/화', c:'릴스 or 카드뉴스 (정보성 콘텐츠)'},
+      {t:'📸 활동 후', c:'피드 업로드 (감성 편집 3~5장 슬라이드)'},
+    ],
+  },
+};
+
+/* ═══════════════════════════════════════
+   UI RENDERING
+═══════════════════════════════════════ */
+
+let selCat = null, selPlt = null;
+
+// Render category buttons
+(function(){
+  const g = document.getElementById('catGrid');
+  CATS.forEach(c=>{
+    const b = document.createElement('button');
+    b.className='cat-btn';
+    b.dataset.id=c.id;
+    b.innerHTML=`<span class="ce">${c.emoji}</span><span class="cl">${c.label}</span>`;
+    b.onclick=()=>{ selCat=c.id; document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); checkReady(); };
+    g.appendChild(b);
+  });
+})();
+
+// Render platform buttons
+(function(){
+  const g = document.getElementById('pltGrid');
+  PLTS.forEach(p=>{
+    const b = document.createElement('button');
+    b.className='plt-btn';
+    b.dataset.id=p.id;
+    b.style.cssText=`border-color:${p.color}20;`;
+    b.innerHTML=`<span class="pe">${p.emoji}</span><span class="pl">${p.label}</span>`;
+    b.onclick=()=>{
+      selPlt=p.id;
+      document.querySelectorAll('.plt-btn').forEach(x=>{ x.classList.remove('active'); x.style.background='#fff'; x.style.borderColor=PLTS.find(pp=>pp.id===x.dataset.id).color+'20'; });
+      b.classList.add('active');
+      b.style.background=p.color+'18';
+      b.style.borderColor=p.color;
+      b.querySelector('.pl').style.color=p.color;
+      checkReady();
+    };
+    g.appendChild(b);
+  });
+})();
+
+function checkReady(){
+  const btn = document.getElementById('genBtn');
+  if(selCat && selPlt){ btn.classList.add('ready'); } else { btn.classList.remove('ready'); }
 }
 
-document.querySelectorAll('.pill').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const p = btn.dataset.p;
-    document.querySelectorAll('.platform-sec').forEach(sec=>{
-      if(p==='all'||sec.dataset.p===p){
-        sec.classList.remove('hidden');
-      } else {
-        sec.classList.add('hidden');
-      }
-    });
-  });
-});
+function tog(head){
+  head.parentElement.classList.toggle('open');
+}
+
+function buildGuide(){
+  if(!selCat||!selPlt) return;
+  const cat = CAT_DATA[selCat];
+  const plt = PLT_DATA[selPlt];
+  const catObj = CATS.find(c=>c.id===selCat);
+  const pltObj = PLTS.find(p=>p.id===selPlt);
+
+  // Combined checklist
+  const checkItems = [...cat.checklist_specific, ...plt.checklist_plt];
+  // Combined routine
+  const routineItems = [...cat.routine, ...plt.routine_plt];
+
+  const html = `
+  <div class="result-head" style="background:${pltObj.bg}">
+    <div class="rh-icon">${catObj.emoji}${pltObj.emoji}</div>
+    <div>
+      <div class="rh-name">${catObj.label} × ${pltObj.label} 운영 전략</div>
+      <div class="rh-sub">${catObj.label} 모임을 ${pltObj.label}에서 운영하는 맞춤 가이드</div>
+    </div>
+  </div>
+
+  <!-- 카테고리 핵심 원칙 -->
+  <div class="tip-box" style="background:${cat.tip.bg};border-color:${cat.tip.border};margin-bottom:2px;">
+    <div class="tip-box-title" style="color:${cat.tip.color}">${cat.tip.title}</div>
+    <div class="tip-box-body" style="color:#374151;">${cat.tip.body}</div>
+  </div>
+
+  <div class="sec-list">
+
+    <!-- 창설 체크리스트 -->
+    <div class="sec open">
+      <div class="sec-head" onclick="tog(this)">
+        <span class="s-icon">📋</span><span class="s-title">창설 체크리스트</span><span class="s-arr">›</span>
+      </div>
+      <div class="sec-body">
+        <ul class="ck-list">
+          ${checkItems.map((item,i)=>`<li><span class="ck-num" style="background:${pltObj.color}">${i+1}</span>${item}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <!-- 주간 운영 루틴 -->
+    <div class="sec">
+      <div class="sec-head" onclick="tog(this)">
+        <span class="s-icon">📅</span><span class="s-title">운영 루틴</span><span class="s-arr">›</span>
+      </div>
+      <div class="sec-body">
+        <div class="wk-grid">
+          ${routineItems.map(r=>`<div class="wk-card"><div class="wk-day" style="color:${pltObj.color}">${r.t}</div><div class="wk-txt">${r.c}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- 멤버 관리 -->
+    <div class="sec">
+      <div class="sec-head" onclick="tog(this)">
+        <span class="s-icon">👥</span><span class="s-title">멤버 관리 매뉴얼</span><span class="s-arr">›</span>
+      </div>
+      <div class="sec-body">
+        <ul class="bl" style="--bc:${pltObj.color}">
+          ${cat.members.map(m=>`<li style="--bc:${pltObj.color}">${m}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <!-- 이탈 방지 -->
+    <div class="sec">
+      <div class="sec-head" onclick="tog(this)">
+        <span class="s-icon">💊</span><span class="s-title">이탈 방지 전략</span><span class="s-arr">›</span>
+      </div>
+      <div class="sec-body">
+        <ul class="bl">
+          ${cat.retention.map(r=>`<li>${r}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <!-- 알고리즘 -->
+    <div class="sec">
+      <div class="sec-head" onclick="tog(this)">
+        <span class="s-icon">🔍</span><span class="s-title">알고리즘 & 노출 전략</span><span class="s-arr">›</span>
+      </div>
+      <div class="sec-body">
+        ${plt.algo.map(a=>`<div class="alg"><div class="alg-title" style="color:${pltObj.color}">${a.t}</div><div class="alg-body">${a.b}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- 위기 대응 -->
+    <div class="sec">
+      <div class="sec-head" onclick="tog(this)">
+        <span class="s-icon">🚨</span><span class="s-title">위기 대응 SOP</span><span class="s-arr">›</span>
+      </div>
+      <div class="sec-body">
+        <div class="cr-grid">
+          ${cat.crisis.map(c=>`<div class="cr-card"><div class="cr-title">⚡ ${c.t}</div><div class="cr-body">${c.b}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+  </div>
+  `;
+
+  const r = document.getElementById('result');
+  r.style.display='block';
+  r.innerHTML=html;
+  r.scrollIntoView({behavior:'smooth', block:'start'});
+}
 </script>
 </body>
 </html>
