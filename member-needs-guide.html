@@ -274,6 +274,45 @@
   <span class="badge">모임 운영 필독 · 기존 + 신규 모임 공통</span>
 </header>
 
+<!-- ───── 플랫폼 퀵 셀렉터 ───── -->
+<div id="platformPicker" style="max-width:720px; margin:0 auto 20px; background:#fff; border-radius:20px; padding:22px 24px; border:2px solid #e0e7ff; box-shadow:0 6px 24px rgba(79,70,229,0.10);">
+  <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+    <div style="width:36px; height:36px; background:linear-gradient(135deg,#4f46e5,#7c3aed); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0;">🚀</div>
+    <div>
+      <div style="font-size:0.92rem; font-weight:800; color:#1a1a1a;">내 플랫폼만 딱 골라 전략 보기</div>
+      <div style="font-size:0.75rem; color:#888; margin-top:1px;">사용 중인 플랫폼을 체크하면 그 전략만 보여드려요</div>
+    </div>
+  </div>
+
+  <!-- 플랫폼 칩 -->
+  <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
+    <button id="chip-p7" onclick="togglePlatform('p7','card7',this)" style="display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:99px; border:2px solid #e5e7eb; background:#f9fafb; font-size:0.82rem; font-weight:700; color:#555; cursor:pointer; transition:all 0.2s;">
+      🥕 당근모임
+    </button>
+    <button id="chip-p8" onclick="togglePlatform('p8','card8',this)" style="display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:99px; border:2px solid #e5e7eb; background:#f9fafb; font-size:0.82rem; font-weight:700; color:#555; cursor:pointer; transition:all 0.2s;">
+      🤝 소모임
+    </button>
+    <button id="chip-p9" onclick="togglePlatform('p9','card9',this)" style="display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:99px; border:2px solid #e5e7eb; background:#f9fafb; font-size:0.82rem; font-weight:700; color:#555; cursor:pointer; transition:all 0.2s;">
+      🎭 문토
+    </button>
+    <button id="chip-p10" onclick="togglePlatform('p10','card10',this)" style="display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:99px; border:2px solid #e5e7eb; background:#f9fafb; font-size:0.82rem; font-weight:700; color:#555; cursor:pointer; transition:all 0.2s;">
+      💬 오픈채팅
+    </button>
+    <button id="chip-p11" onclick="togglePlatform('p11','card11',this)" style="display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:99px; border:2px solid #e5e7eb; background:#f9fafb; font-size:0.82rem; font-weight:700; color:#555; cursor:pointer; transition:all 0.2s;">
+      📸 인스타그램
+    </button>
+  </div>
+
+  <!-- 선택 결과 안내 -->
+  <div id="picker-hint" style="font-size:0.8rem; color:#a78bfa; font-weight:600; display:none;">
+    ✅ <span id="picker-count">0</span>개 플랫폼 선택됨 — 아래 전략 섹션에서 해당 플랫폼만 보여드려요
+    <a onclick="scrollToPlatform()" style="cursor:pointer; color:#4f46e5; margin-left:8px; text-decoration:underline;">→ 전략 바로 보기</a>
+  </div>
+  <div id="picker-empty" style="font-size:0.8rem; color:#aaa;">
+    ↑ 플랫폼을 선택하면 해당 전략이 플랫폼 가이드 섹션에서 필터링돼요
+  </div>
+</div>
+
 <!-- 인트로 -->
 <div class="intro-box">
   <p class="why">
@@ -1395,6 +1434,402 @@
   </div>
 </div>
 
+<!-- ───────────── 플랫폼별 전략 ───────────── -->
+<div id="platformGuide" class="section-title" style="margin-top:28px;">PLATFORM GUIDE · 플랫폼별 적용 전략</div>
+
+<!-- 인트로 -->
+<div style="max-width:720px; margin:0 auto 18px; background:#fff; border-radius:18px; padding:18px 22px; border:1.5px solid #e0e7ff; box-shadow:0 4px 16px rgba(79,70,229,0.07);">
+  <p style="font-size:0.85rem; color:#444; line-height:1.9; border-left:4px solid #7c3aed; padding-left:14px;">
+    멤버 니즈를 파악했다면, 이제 <strong>각 플랫폼 알고리즘에 맞게 적용하는 방법</strong>이 달라야 해요.<br/>
+    같은 모임도 어떤 플랫폼에서 운영하느냐에 따라 전략이 완전히 달라져요.
+  </p>
+</div>
+
+<!-- ── 당근 모임 ── -->
+<div class="banner-card" id="card7">
+  <div class="banner-head" onclick="toggle('card7')">
+    <div class="banner-icon" style="background:#fff3e8;">🥕</div>
+    <div class="banner-text">
+      <div class="banner-num" style="color:#FF6F0F;">당근 모임</div>
+      <div class="banner-title">동네 반경 5km — 거리가 알고리즘이에요</div>
+      <div class="banner-sub">Transformer ML이 내 활동 패턴을 24시간마다 학습해요</div>
+    </div>
+    <div class="banner-arrow">▼</div>
+  </div>
+  <div class="banner-body">
+
+    <div style="background:linear-gradient(135deg,#fff7ed,#ffedd5); border-radius:12px; padding:14px 16px; margin:16px 0 20px; border-left:4px solid #FF6F0F;">
+      <div style="font-size:0.78rem; color:#9a3412; line-height:1.9;">
+        당근은 <strong>조회→채팅/신청 CVR · 멤버 재참여율 · 정모 등록 빈도 · 후기·게시글</strong> 4가지를 핵심 알고리즘 신호로 봐요.<br/>
+        2026년부터 Transformer 기반 유저 임베딩이 모임에도 적용돼 — <strong>모임장이 당근을 얼마나 활발히 쓰는지</strong>도 간접 영향을 줘요.
+      </div>
+    </div>
+
+    <!-- 멤버 니즈 타입별 전략 -->
+    <div style="font-size:0.7rem; font-weight:800; color:#FF6F0F; letter-spacing:0.06em; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+      <span>멤버 니즈 타입별 당근 전략</span><div style="flex:1; height:1px; background:#fed7aa;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:18px;">
+      <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#ea580c; margin-bottom:5px;">🎯 콘텐츠형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">소개글에 회차별 활동 내용 상세 기재 → 커리큘럼 명시 → 결과물 사진 동네생활에 주기적 게시</div>
+      </div>
+      <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#ea580c; margin-bottom:5px;">🤝 커넥션형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">"따뜻한 분위기" 강조 → 멤버 후기 게시글 독려 → 번개/소모임 동네생활 공유</div>
+      </div>
+      <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#ea580c; margin-bottom:5px;">🏠 소속감형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">정기 일정 캘린더 미리 등록 → 모임 소식 동네생활 꾸준히 → 재참여율 올리는 게 알고리즘 직결</div>
+      </div>
+    </div>
+
+    <!-- 좋은 방법 -->
+    <div style="font-size:0.7rem; font-weight:800; color:#15803d; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>✅ 이럴 때 이렇게 하세요</span><div style="flex:1; height:1px; background:#bbf7d0;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">📍</span>
+        <div>
+          <div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">제목에 동네명+활동명 조합 (예: "마포 독서 모임")</div>
+          <div style="font-size:0.72rem; color:#555; line-height:1.5;">당근 검색 SEO의 핵심이에요. 광역 지명보다 구체적 동네명이 CVR을 높여요.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">⚡</span>
+        <div>
+          <div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">채팅 응답을 30분 이내로 유지하기</div>
+          <div style="font-size:0.72rem; color:#555; line-height:1.5;">응답 속도가 느리면 CVR 점수가 직접 떨어져요. 바쁜 날엔 "확인 후 연락드릴게요" 짧게라도 보내세요.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">📝</span>
+        <div>
+          <div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">모임 후 멤버 후기를 동네생활에 올리게 유도</div>
+          <div style="font-size:0.72rem; color:#555; line-height:1.5;">"오늘 사진 한 장 동네생활에 올려주세요!" 한 마디가 알고리즘 신호를 직접 만들어요.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">🔗</span>
+        <div>
+          <div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">오픈채팅 외부 링크 연결하기</div>
+          <div style="font-size:0.72rem; color:#555; line-height:1.5;">외부 링크가 있는 모임이 CVR +18점이에요. 카카오톡 오픈채팅 링크라도 연결하세요.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">📅</span>
+        <div>
+          <div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">정모를 캘린더에 자주, 규칙적으로 등록</div>
+          <div style="font-size:0.72rem; color:#555; line-height:1.5;">정모 등록 빈도가 알고리즘 신호예요. 월 1회보다 격주가, 격주보다 매주가 노출 점수에 유리해요.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 나쁜 방법 -->
+    <div style="font-size:0.7rem; font-weight:800; color:#dc2626; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>❌ 이건 피하세요</span><div style="flex:1; height:1px; background:#fca5a5;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;">
+        <span style="font-size:0.9rem; flex-shrink:0;">🚫</span>
+        <div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">노출 범위를 넓게 설정하기</strong> — 거래의 86%가 반경 5km 이내예요. 광역으로 넓히면 오히려 매칭 정확도가 떨어져 CVR이 낮아져요.</div>
+      </div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;">
+        <span style="font-size:0.9rem; flex-shrink:0;">🚫</span>
+        <div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">비공개 모임으로 설정하기</strong> — 공개 모임 대비 CVR -12점이에요. 폐쇄적 이미지 대신 신뢰 콘텐츠로 진입 장벽을 낮추세요.</div>
+      </div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;">
+        <span style="font-size:0.9rem; flex-shrink:0;">🚫</span>
+        <div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">소개글을 짧게 쓰거나 특수문자 도배</strong> — LLM이 카테고리 자동 분류해요. 내용이 부실하면 엉뚱한 카테고리로 분류되어 노출이 줄어요.</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#fff7ed,#ffedd5); border-radius:10px; padding:12px 16px; border-left:4px solid #FF6F0F; font-size:0.78rem; color:#9a3412; line-height:1.7;">
+      <strong>💡 핵심 전략</strong> — 모임장이 당근 앱을 활발히 쓸수록 내 모임 노출이 올라가요. 동네생활 게시글, 중고거래 모두 임베딩에 반영돼요.
+    </div>
+
+  </div>
+</div>
+
+<!-- ── 소모임 ── -->
+<div class="banner-card" id="card8">
+  <div class="banner-head" onclick="toggle('card8')">
+    <div class="banner-icon" style="background:#f0fdf4;">🤝</div>
+    <div class="banner-text">
+      <div class="banner-num" style="color:#16A34A;">소모임</div>
+      <div class="banner-title">CTR·LTV·호스트 브랜딩 — 숫자로 증명해야 해요</div>
+      <div class="banner-sub">클릭률과 재참여율이 노출을 결정해요</div>
+    </div>
+    <div class="banner-arrow">▼</div>
+  </div>
+  <div class="banner-body">
+
+    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-radius:12px; padding:14px 16px; margin:16px 0 20px; border-left:4px solid #16A34A;">
+      <div style="font-size:0.78rem; color:#14532d; line-height:1.9;">
+        소모임은 <strong>CTR(클릭률) · 멤버 LTV(재참여 횟수) · 호스트 브랜딩</strong>이 핵심이에요.<br/>
+        표지 이미지와 제목이 CTR을 결정하고, 멤버가 얼마나 반복 참여하는지가 추천 알고리즘에 직접 반영돼요.
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#16A34A; letter-spacing:0.06em; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+      <span>멤버 니즈 타입별 소모임 전략</span><div style="flex:1; height:1px; background:#bbf7d0;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:18px;">
+      <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#15803d; margin-bottom:5px;">🎯 콘텐츠형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">활동 난이도·커리큘럼 명시 → 참가자 결과물 사진 커버에 활용 → 회차별 목표 공개</div>
+      </div>
+      <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#15803d; margin-bottom:5px;">🤝 커넥션형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">호스트 프로필 강화 → "이런 분들이 오세요" 문구 → 멤버 소개 코너 운영</div>
+      </div>
+      <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#15803d; margin-bottom:5px;">🏠 소속감형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">시리즈로 기획 → 멤버십 느낌 → 재참여자 특전 설계 → LTV 높이기</div>
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#15803d; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>✅ 이럴 때 이렇게 하세요</span><div style="flex:1; height:1px; background:#bbf7d0;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">🖼️</span>
+        <div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">커버 이미지에 실제 활동 사진 쓰기</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">스톡 이미지보다 실제 멤버 활동 사진이 CTR이 훨씬 높아요. 사람이 나오는 사진이 특히 효과적이에요.</div></div>
+      </div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">👤</span>
+        <div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">호스트 소개 프로필 완성도 높이기</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">호스트가 누구인지 모르면 신뢰도가 떨어져요. 사진 + 한 줄 소개 + 운영 이력이 전환율을 올려요.</div></div>
+      </div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">⭐</span>
+        <div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">후기 리뷰를 5개 이상 쌓기</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">리뷰가 5개 이상부터 신규 방문자의 신뢰도가 크게 올라가요. 참여 후 후기 요청을 루틴화하세요.</div></div>
+      </div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">🔁</span>
+        <div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">단발성보다 시리즈로 기획</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">"1회 이벤트"보다 "n회차 시리즈"가 LTV를 올리고 알고리즘 추천 가중치가 높아져요.</div></div>
+      </div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;">
+        <span style="font-size:0.9rem; flex-shrink:0;">📊</span>
+        <div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">A/B 테스트로 제목 최적화</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">제목을 2가지 버전으로 만들어 번갈아 써보세요. 클릭률 차이가 2배 이상 나는 경우가 흔해요.</div></div>
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#dc2626; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>❌ 이건 피하세요</span><div style="flex:1; height:1px; background:#fca5a5;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">소개글 5줄 이하로 쓰기</strong> — 정보가 부족하면 신뢰도가 떨어져 이탈률이 높아져요. 최소 15줄 이상, 구체적으로 쓰세요.</div></div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">참여 후 후기 방치</strong> — 후기가 없으면 신규 참여자가 결정을 못 해요. 모임 후 48시간 내 후기 요청을 루틴화하세요.</div></div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">멤버 정원을 너무 많이 설정</strong> — "100명 모집"보다 "15명 소규모"가 희소성을 만들어 CTR이 높아요.</div></div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-radius:10px; padding:12px 16px; border-left:4px solid #16A34A; font-size:0.78rem; color:#14532d; line-height:1.7;">
+      <strong>💡 핵심 전략</strong> — 소모임은 "호스트를 믿을 수 있냐"가 가장 중요해요. 모임 퀄리티보다 호스트 신뢰도 구축이 먼저예요.
+    </div>
+
+  </div>
+</div>
+
+<!-- ── 문토 ── -->
+<div class="banner-card" id="card9">
+  <div class="banner-head" onclick="toggle('card9')">
+    <div class="banner-icon" style="background:#fdf4ff;">🎭</div>
+    <div class="banner-text">
+      <div class="banner-num" style="color:#9333ea;">문토</div>
+      <div class="banner-title">지적 자극이 기준이에요 — 가볍게 접근하면 안 통해요</div>
+      <div class="banner-sub">문화·취향·깊이 있는 주제 중심 플랫폼</div>
+    </div>
+    <div class="banner-arrow">▼</div>
+  </div>
+  <div class="banner-body">
+
+    <div style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff); border-radius:12px; padding:14px 16px; margin:16px 0 20px; border-left:4px solid #9333ea;">
+      <div style="font-size:0.78rem; color:#581c87; line-height:1.9;">
+        문토는 <strong>문화·취향·지적 호기심</strong>을 중심으로 한 플랫폼이에요.<br/>
+        "그냥 친목 모임"은 여기서 잘 안 통해요. <strong>뚜렷한 테마와 지적 자극</strong>이 있어야 참여율이 높아요.<br/>
+        멤버의 기대 수준 자체가 높아서, 퀄리티 관리가 핵심이에요.
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#9333ea; letter-spacing:0.06em; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+      <span>멤버 니즈 타입별 문토 전략</span><div style="flex:1; height:1px; background:#e9d5ff;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:18px;">
+      <div style="background:#fdf4ff; border:1.5px solid #e9d5ff; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#7e22ce; margin-bottom:5px;">🎯 콘텐츠형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">주제를 구체적이고 깊게 → 게스트 스피커 초빙 → 사전 자료 공유로 준비된 참여 유도</div>
+      </div>
+      <div style="background:#fdf4ff; border:1.5px solid #e9d5ff; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#7e22ce; margin-bottom:5px;">🤝 커넥션형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">"이런 분들이 모여요" 직군/취향 명시 → 소그룹 토론 설계 → 참여자 소개 세션</div>
+      </div>
+      <div style="background:#fdf4ff; border:1.5px solid #e9d5ff; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#7e22ce; margin-bottom:5px;">🏠 소속감형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">시리즈 커뮤니티로 기획 → 월간 살롱 느낌 → 멤버 간 지속 교류 채널 운영</div>
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#15803d; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>✅ 이럴 때 이렇게 하세요</span><div style="flex:1; height:1px; background:#bbf7d0;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">🎯</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">제목을 질문 형태로 만들기</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">"독서 모임"보다 "왜 우리는 같은 책을 다르게 읽을까?"가 지적 호기심을 자극해 CTR이 높아요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">📚</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">사전 자료 or 과제 제공</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">참여 전 읽어올 글, 보고 올 영상을 공유하면 참여 질이 높아지고 "준비된 모임" 이미지를 줘요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">👥</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">"이런 분이 오시면 좋아요" 타겟 명시</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">문토 유저는 자기 취향이 뚜렷해요. "누구나 환영"보다 구체적 대상이 적힌 모임에 더 적극적으로 참여해요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">📸</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">모임 후기를 글+사진으로 상세히 올리기</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">문토에서 후기 퀄리티가 다음 참여자의 기대감을 결정해요. 짧은 후기보다 긴 감상문이 신뢰를 만들어요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">🔄</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">후속 모임을 이어서 기획</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">"2편", "심화편"으로 이어지는 시리즈 구조가 충성 멤버를 만들어요. 재참여율이 문토에서 가장 중요한 지표예요.</div></div></div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#dc2626; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>❌ 이건 피하세요</span><div style="flex:1; height:1px; background:#fca5a5;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">주제 없이 "친목"만 강조</strong> — 문토 유저는 "그냥 사람 만나러"보다 "이 주제가 좋아서"가 동기예요. 테마 없는 모임은 외면받아요.</div></div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">기대 수준보다 낮은 모임 운영</strong> — 한 번 실망한 멤버는 재참여율이 거의 0에 가까워요. 첫 모임 퀄리티가 전부예요.</div></div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">소개글에 "누구나 환영합니다"</strong> — 타겟이 없으면 아무도 자기 이야기라고 느끼지 않아요. 구체적인 대상을 명시하세요.</div></div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff); border-radius:10px; padding:12px 16px; border-left:4px solid #9333ea; font-size:0.78rem; color:#581c87; line-height:1.7;">
+      <strong>💡 핵심 전략</strong> — 문토는 "이 모임이 나를 성장시켜줄까?"가 참여 기준이에요. 주제의 깊이와 호스트 전문성이 곧 브랜드예요.
+    </div>
+
+  </div>
+</div>
+
+<!-- ── 카카오 오픈채팅 ── -->
+<div class="banner-card" id="card10">
+  <div class="banner-head" onclick="toggle('card10')">
+    <div class="banner-icon" style="background:#fffbeb;">💬</div>
+    <div class="banner-text">
+      <div class="banner-num" style="color:#ca8a04;">카카오 오픈채팅</div>
+      <div class="banner-title">지금탭 = 숏폼 + 커뮤니티 피드 통합 — 활성도가 노출이에요</div>
+      <div class="banner-sub">2025년 9월 대개편 이후 활동 빈도가 가장 중요한 신호예요</div>
+    </div>
+    <div class="banner-arrow">▼</div>
+  </div>
+  <div class="banner-body">
+
+    <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7); border-radius:12px; padding:14px 16px; margin:16px 0 20px; border-left:4px solid #d97706;">
+      <div style="font-size:0.78rem; color:#78350f; line-height:1.9;">
+        2025년 9월 대개편으로 <strong>지금탭 = 숏폼 + 오픈채팅 커뮤니티 피드 통합</strong>이 됐어요.<br/>
+        채팅방 활성도(댓글·반응 수) · 트렌딩 탭 노출 · 검색 SEO(제목 키워드) 3가지가 핵심이에요.<br/>
+        <strong>관리자만 말하는 채팅방은 죽은 채팅방</strong>이에요.
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#d97706; letter-spacing:0.06em; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+      <span>멤버 니즈 타입별 오픈채팅 전략</span><div style="flex:1; height:1px; background:#fde68a;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:18px;">
+      <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#b45309; margin-bottom:5px;">🎯 콘텐츠형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">채팅방에 정기 콘텐츠 공유 → 주제 토론 활성화 → 숏폼 콘텐츠와 연계</div>
+      </div>
+      <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#b45309; margin-bottom:5px;">🤝 커넥션형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">소모임 내 소그룹 채팅 → 오프라인 번개 유도 → 자기소개 타임 운영</div>
+      </div>
+      <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#b45309; margin-bottom:5px;">🏠 소속감형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">채팅방 이름 브랜딩 → OO요일 정기 공지 → 멤버 기념일 챙기기</div>
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#15803d; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>✅ 이럴 때 이렇게 하세요</span><div style="flex:1; height:1px; background:#bbf7d0;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">🔤</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">제목에 핵심 키워드 앞에 배치</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">"독서 | 서울 직장인 독서모임 매주 수요일" — 카테고리+지역+활동+시간대 조합이 검색 SEO 최고예요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">⏰</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">활성 시간대에 집중 운영</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">저녁 7~10시, 점심 12~1시가 오픈채팅 피크 타임이에요. 이 시간대 대화가 트렌딩 노출에 유리해요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">💡</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">대화를 유도하는 질문 정기 발행</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">매주 같은 요일 "오늘의 질문"을 올리면 멤버가 답하는 습관이 생겨요. 활성도가 꾸준히 유지돼요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">📲</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">숏폼 콘텐츠와 연계</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">지금탭에 숏폼+채팅이 통합됐어요. 채팅방 관련 숏폼을 올리면 채팅방 노출이 함께 올라가요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">🎁</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">신규 멤버 환영 루틴 만들기</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">새 멤버가 들어오면 "환영해요!" + 간단한 자기소개 유도. 이게 채팅방을 살아있게 보이게 해요.</div></div></div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#dc2626; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>❌ 이건 피하세요</span><div style="flex:1; height:1px; background:#fca5a5;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">공지만 올리고 대화가 없는 채팅방</strong> — 관리자 혼자 말하면 신규 가입자가 "죽은 방"이라 느끼고 바로 나가요.</div></div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">제목에 키워드 없이 감성 이름만</strong> — "우리들의 따뜻한 공간"은 검색에 안 걸려요. 키워드+이름 조합이 필수예요.</div></div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">비활성 기간이 2주 이상 지속</strong> — 알고리즘이 비활성 채팅방을 트렌딩에서 제외해요. 최소 주 2회 이상 대화 유도가 필요해요.</div></div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7); border-radius:10px; padding:12px 16px; border-left:4px solid #d97706; font-size:0.78rem; color:#78350f; line-height:1.7;">
+      <strong>💡 핵심 전략</strong> — 오픈채팅은 "채팅방이 살아있어 보이는가"가 전부예요. 멤버 수보다 대화 빈도가 노출에 더 중요해요.
+    </div>
+
+  </div>
+</div>
+
+<!-- ── 인스타그램 ── -->
+<div class="banner-card" id="card11">
+  <div class="banner-head" onclick="toggle('card11')">
+    <div class="banner-icon" style="background:#fdf2f8;">📸</div>
+    <div class="banner-text">
+      <div class="banner-num" style="background:linear-gradient(90deg,#833ab4,#fd1d1d); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">인스타그램</div>
+      <div class="banner-title">저장·공유·릴스 — 팔로워 수보다 반응 질이에요</div>
+      <div class="banner-sub">Human Content Score + Freshness Score가 핵심 알고리즘이에요</div>
+    </div>
+    <div class="banner-arrow">▼</div>
+  </div>
+  <div class="banner-body">
+
+    <div style="background:linear-gradient(135deg,#fdf2f8,#fce7f3); border-radius:12px; padding:14px 16px; margin:16px 0 20px; border-left:4px solid #ec4899;">
+      <div style="font-size:0.78rem; color:#831843; line-height:1.9;">
+        인스타 알고리즘은 <strong>저장·공유(진짜 가치) > 좋아요·댓글</strong> 순으로 가중치를 줘요.<br/>
+        모임 홍보로 인스타를 쓴다면 <strong>릴스 우선 + 저장 유도 캡션 + 실제 멤버 얼굴</strong>이 노출을 만들어요.<br/>
+        2025년부터 "AI 생성 의심 콘텐츠"는 Human Content Score로 감점돼요.
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#ec4899; letter-spacing:0.06em; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+      <span>멤버 니즈 타입별 인스타 전략</span><div style="flex:1; height:1px; background:#fbcfe8;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:18px;">
+      <div style="background:#fdf2f8; border:1.5px solid #fbcfe8; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#be185d; margin-bottom:5px;">🎯 콘텐츠형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">활동 과정 릴스 → 비하인드 스토리 → "이 모임에서 배운 것" 카드뉴스</div>
+      </div>
+      <div style="background:#fdf2f8; border:1.5px solid #fbcfe8; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#be185d; margin-bottom:5px;">🤝 커넥션형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">멤버 태그 그룹샷 → 스토리 공유 유도 → 멤버 인터뷰 릴스</div>
+      </div>
+      <div style="background:#fdf2f8; border:1.5px solid #fbcfe8; border-radius:12px; padding:11px 12px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#be185d; margin-bottom:5px;">🏠 소속감형</div>
+        <div style="font-size:0.72rem; color:#444; line-height:1.6;">#n회차 시리즈 포스팅 → 멤버 성장 스토리 → 정기 루틴 콘텐츠화</div>
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#15803d; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>✅ 이럴 때 이렇게 하세요</span><div style="flex:1; height:1px; background:#bbf7d0;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">🎬</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">피드보다 릴스 먼저</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">같은 콘텐츠도 릴스로 올리면 도달이 3~5배 높아요. 15~30초짜리 현장 영상으로 시작하세요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">🔖</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">저장 유도 캡션 쓰기</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">"나중에 따라 해보고 싶은 분은 저장해두세요" — 저장수가 올라가면 알고리즘이 더 많이 퍼뜨려요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">😊</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">실제 멤버 얼굴이 나오는 콘텐츠</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">Human Content Score가 얼굴 인식 콘텐츠를 더 높게 평가해요. 풍경 사진보다 사람 사진이 도달이 높아요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">🏷️</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">틈새 해시태그 공략</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">#독서모임(수백만)보다 #마포독서모임(수천)이 탑에 노출될 확률이 높아요. 지역+활동 조합이 핵심이에요.</div></div></div>
+      <div style="display:flex; gap:10px; background:#f0fdf4; border-radius:10px; padding:10px 13px; border:1px solid #bbf7d0;"><span style="font-size:0.9rem; flex-shrink:0;">🔁</span><div><div style="font-size:0.76rem; font-weight:700; color:#15803d; margin-bottom:2px;">멤버 UGC(자발적 후기 게시물) 리그램</div><div style="font-size:0.72rem; color:#555; line-height:1.5;">멤버가 올린 포스팅을 스토리에 공유하면 멤버는 인정받고, 채널은 신뢰도가 올라가요.</div></div></div>
+    </div>
+
+    <div style="font-size:0.7rem; font-weight:800; color:#dc2626; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+      <span>❌ 이건 피하세요</span><div style="flex:1; height:1px; background:#fca5a5;"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">일정·공지만 올리기</strong> — "OO일 모임 있어요"만 반복하면 팔로워가 떠나요. 정보·경험·영감 중심으로 올리고 공지는 스토리로만 하세요.</div></div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">AI 생성 이미지 남발</strong> — 2025년부터 Human Content Score로 AI 콘텐츠 감지·감점해요. 실제 사진 위주로 운영하세요.</div></div>
+      <div style="display:flex; gap:10px; background:#fff5f5; border-radius:10px; padding:10px 13px; border:1px solid #fca5a5;"><span style="font-size:0.9rem; flex-shrink:0;">🚫</span><div style="font-size:0.76rem; color:#555; line-height:1.5;"><strong style="color:#dc2626;">Freshness 무시하고 몰아서 올리기</strong> — 주 3개씩 규칙적으로 올리는 게 한 달에 10개 몰아 올리는 것보다 도달이 높아요.</div></div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#fdf2f8,#fce7f3); border-radius:10px; padding:12px 16px; border-left:4px solid #ec4899; font-size:0.78rem; color:#831843; line-height:1.7;">
+      <strong>💡 핵심 전략</strong> — 인스타는 "모임 홍보"보다 "모임 경험 공유"가 더 잘 퍼져요. 광고처럼 보이는 순간 알고리즘도 사람도 외면해요.
+    </div>
+
+  </div>
+</div>
+
 <!-- 하단 요약 -->
 <div class="summary-box">
   <h3>🎯 핵심 한 줄 요약</h3>
@@ -1416,7 +1851,7 @@
 
 <script>
   // 아코디언: 하나 열면 나머지 닫기
-  const CARDS = ['card1','card2','card3','card4','card5','card6'];
+  const CARDS = ['card1','card2','card3','card4','card5','card6','card7','card8','card9','card10','card11'];
 
   function toggle(id) {
     const isOpen = document.getElementById(id).classList.contains('open');
@@ -1432,6 +1867,87 @@
 
   // 기본으로 첫 번째 카드 열기
   document.getElementById('card1').classList.add('open');
+
+  // ─── 플랫폼 퀵 셀렉터 ───
+  const PLATFORM_MAP = {
+    p7: 'card7',   // 당근모임
+    p8: 'card8',   // 소모임
+    p9: 'card9',   // 문토
+    p10: 'card10', // 오픈채팅
+    p11: 'card11'  // 인스타그램
+  };
+  const selectedPlatforms = new Set();
+
+  const PLATFORM_COLORS = {
+    p7:  { bg:'#fff7ed', border:'#FF6F0F', text:'#FF6F0F', label:'🥕 당근모임' },
+    p8:  { bg:'#f0fdf4', border:'#16A34A', text:'#16A34A', label:'🤝 소모임' },
+    p9:  { bg:'#fdf4ff', border:'#9333ea', text:'#9333ea', label:'🎭 문토' },
+    p10: { bg:'#fffbeb', border:'#d97706', text:'#d97706', label:'💬 오픈채팅' },
+    p11: { bg:'#fdf2f8', border:'#ec4899', text:'#ec4899', label:'📸 인스타그램' }
+  };
+
+  function togglePlatform(pid, cardId, chipEl) {
+    const c = PLATFORM_COLORS[pid];
+    if (selectedPlatforms.has(pid)) {
+      selectedPlatforms.delete(pid);
+      chipEl.style.background = '#f9fafb';
+      chipEl.style.borderColor = '#e5e7eb';
+      chipEl.style.color = '#555';
+    } else {
+      selectedPlatforms.add(pid);
+      chipEl.style.background = c.bg;
+      chipEl.style.borderColor = c.border;
+      chipEl.style.color = c.text;
+    }
+    filterPlatformCards();
+  }
+
+  function filterPlatformCards() {
+    const hint = document.getElementById('picker-hint');
+    const empty = document.getElementById('picker-empty');
+    const countEl = document.getElementById('picker-count');
+
+    if (selectedPlatforms.size === 0) {
+      // 아무것도 선택 안 됨 → 모든 플랫폼 카드 표시
+      hint.style.display = 'none';
+      empty.style.display = 'block';
+      Object.values(PLATFORM_MAP).forEach(cid => {
+        const el = document.getElementById(cid);
+        if (el) el.style.display = '';
+      });
+      document.getElementById('platformGuide').style.display = '';
+    } else {
+      // 선택된 것만 표시
+      hint.style.display = 'block';
+      empty.style.display = 'none';
+      countEl.textContent = selectedPlatforms.size;
+
+      let anyVisible = false;
+      Object.entries(PLATFORM_MAP).forEach(([pid, cid]) => {
+        const el = document.getElementById(cid);
+        if (!el) return;
+        if (selectedPlatforms.has(pid)) {
+          el.style.display = '';
+          anyVisible = true;
+        } else {
+          el.style.display = 'none';
+        }
+      });
+      document.getElementById('platformGuide').style.display = anyVisible ? '' : 'none';
+    }
+  }
+
+  function scrollToPlatform() {
+    const el = document.getElementById('platformGuide');
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+    // 선택된 플랫폼 카드 중 첫 번째 자동 열기
+    const first = [...selectedPlatforms][0];
+    if (first) {
+      const cardId = PLATFORM_MAP[first];
+      const isOpen = document.getElementById(cardId).classList.contains('open');
+      if (!isOpen) toggle(cardId);
+    }
+  }
 </script>
 </body>
 </html>
