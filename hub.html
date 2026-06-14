@@ -14,6 +14,9 @@
       padding: 48px 16px 64px;
       color: #1a1a2e;
       position: relative;
+      word-break:keep-all;
+      overflow-wrap:break-word;
+      -webkit-text-size-adjust:100%;
     }
 
     /* ── 대각선 흐르는 배경 마키 ── */
@@ -202,6 +205,33 @@
     .b-all    { background:#6366f118; color:#6366f1; }
 
 
+    /* ── 배너 그리드 (2×2) ── */
+    .banner-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      position:relative;
+      z-index:1;
+      margin-bottom:28px;
+      max-width:700px;
+      margin-left:auto;
+      margin-right:auto;
+      padding:0 4px;
+    }
+    @media(max-width:500px){
+      .banner-grid { grid-template-columns:1fr; }
+    }
+    @media(max-width:480px){
+      body { padding:28px 12px 60px; }
+      .logo-text { font-size:1.45rem; }
+      .grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+      .card { padding:18px 14px; gap:10px; border-radius:14px; }
+      .card-icon { font-size:1.8rem; }
+      .card-title { font-size:0.9rem; }
+      .tag { font-size:0.61rem; }
+      .banner-grid { gap:8px; }
+    }
+
     /* ── 푸터 ── */
     footer {
       text-align:center; margin-top:44px;
@@ -253,12 +283,11 @@
 </header>
 
 <!-- 가이드 배너 2개 나란히 -->
-<div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; margin-bottom:28px; max-width:720px; margin-left:auto; margin-right:auto; padding:0 4px;">
+<div class="banner-grid">
 
   <!-- 용어백과 -->
   <a href="glossary.html" style="
-    display:inline-flex; align-items:center; gap:10px;
-    flex:1; min-width:200px; max-width:340px;
+    display:flex; align-items:center; gap:10px;
     background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);
     border-radius:99px; padding:10px 16px 10px 14px;
     text-decoration:none; color:#fff;
@@ -278,8 +307,7 @@
 
   <!-- 멤버 니즈 가이드 -->
   <a href="member-needs-guide.html" style="
-    display:inline-flex; align-items:center; gap:10px;
-    flex:1; min-width:200px; max-width:340px;
+    display:flex; align-items:center; gap:10px;
     background:linear-gradient(135deg,#312e81 0%,#4c1d95 100%);
     border-radius:99px; padding:10px 16px 10px 14px;
     text-decoration:none; color:#fff;
@@ -299,8 +327,7 @@
 
   <!-- 소개글 작성 가이드 -->
   <a href="intro-guide.html" style="
-    display:inline-flex; align-items:center; gap:10px;
-    flex:1; min-width:200px; max-width:340px;
+    display:flex; align-items:center; gap:10px;
     background:linear-gradient(135deg,#14532d 0%,#166534 100%);
     border-radius:99px; padding:10px 16px 10px 14px;
     text-decoration:none; color:#fff;
@@ -320,8 +347,7 @@
 
   <!-- 모임 운영 가이드 -->
   <a href="operations-guide.html" style="
-    display:inline-flex; align-items:center; gap:10px;
-    flex:1; min-width:200px; max-width:340px;
+    display:flex; align-items:center; gap:10px;
     background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 100%);
     border-radius:99px; padding:10px 16px 10px 14px;
     text-decoration:none; color:#fff;
