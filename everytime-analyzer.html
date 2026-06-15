@@ -235,6 +235,36 @@
     .score-meter-wrap { margin:0 auto 10px; max-width:260px; }
     .score-meter-bar { height:12px; background:#f0f0f0; border-radius:99px; overflow:hidden; margin-top:4px; }
     .score-meter-fill { height:12px; border-radius:99px; transition:width 0.8s; background:linear-gradient(90deg,#E53E3E,#FC8181); }
+
+/* ── AI 진단 / 레이더 / 게이지 (에브리타임) ── */
+.ai-diag-card{background:linear-gradient(135deg,#1a0000,#2a0505,#1a0000);border-radius:18px;padding:24px;margin-bottom:18px;max-width:720px;margin-left:auto;margin-right:auto;box-shadow:0 8px 32px rgba(229,62,62,0.18);border:1.5px solid rgba(229,62,62,0.22);position:relative;overflow:hidden;}
+.ai-diag-card::before{content:'';position:absolute;top:0;left:-150%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(229,62,62,0.08),transparent);animation:ai-shimmer 2.8s infinite;}
+@keyframes ai-shimmer{to{left:220%;}}
+.ai-diag-card h2{font-size:1.05rem;font-weight:800;color:#FC8181;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.ai-grade-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.ai-grade-emoji{font-size:2.8rem;line-height:1;}
+.ai-grade-info{flex:1;}
+.ai-grade-lbl{font-size:0.72rem;color:#aaa;font-weight:600;margin-bottom:2px;}
+.ai-grade-name{font-size:1.15rem;font-weight:900;color:#FC8181;}
+.ai-grade-score-line{font-size:0.78rem;color:#ccc;margin-top:3px;}
+.typewriter-box{background:rgba(0,0,0,0.38);border-radius:12px;padding:16px 18px;font-size:0.87rem;line-height:1.9;color:#e0e0e0;min-height:48px;word-break:keep-all;overflow-wrap:break-word;margin-bottom:14px;}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:#E53E3E;animation:tw-blink 0.8s infinite;vertical-align:text-bottom;margin-left:1px;}
+@keyframes tw-blink{0%,100%{opacity:1}50%{opacity:0}}
+.ai-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.ai-tag{background:rgba(229,62,62,0.12);color:#FC8181;font-size:0.71rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid rgba(229,62,62,0.25);}
+.radar-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.radar-wrap canvas{max-width:300px;width:100%;}
+.radar-legend{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;}
+.radar-legend-item{font-size:0.78rem;color:#666;display:flex;align-items:center;gap:5px;}
+.radar-dot{width:8px;height:8px;border-radius:50%;}
+.algo-gauge-ttl{display:flex;justify-content:space-between;align-items:center;font-size:0.83rem;font-weight:700;color:#555;margin-bottom:8px;}
+.algo-gauge-bar{background:#f0f0f0;border-radius:99px;overflow:hidden;height:14px;margin-bottom:14px;}
+.algo-gauge-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#E53E3E,#FC8181);transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1);width:0%;}
+.algo-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.algo-tier{background:#f8f8f8;border-radius:10px;padding:10px 6px;text-align:center;font-size:0.73rem;font-weight:700;color:#888;border:1.5px solid #e8e8e8;transition:all 0.4s;}
+.algo-tier.eact{background:linear-gradient(135deg,#E53E3E,#FC8181);border-color:transparent;color:#fff;transform:scale(1.04);}
+@keyframes score-pop{0%{transform:scale(0.55);opacity:0}70%{transform:scale(1.09)}100%{transform:scale(1);opacity:1}}
+.score-number.popped{animation:score-pop 0.75s cubic-bezier(0.34,1.56,0.64,1) both;}
   </style>
 </head>
 <body>
@@ -490,6 +520,43 @@
     <div id="metricsArea"></div>
   </div>
 
+  <!-- 🤖 AI 종합 진단 -->
+  <div class="ai-diag-card" id="e-ai-card" style="display:none;">
+    <h2>🤖 AI 종합 진단</h2>
+    <div class="ai-grade-row">
+      <div class="ai-grade-emoji" id="e-ai-emoji">🌱</div>
+      <div class="ai-grade-info">
+        <div class="ai-grade-lbl">에브리타임 홍보 등급</div>
+        <div class="ai-grade-name" id="e-ai-name">분석 중...</div>
+        <div class="ai-grade-score-line" id="e-ai-score-line"></div>
+      </div>
+    </div>
+    <div class="typewriter-box" id="e-ai-tw"></div>
+    <div class="ai-tags" id="e-ai-tags"></div>
+  </div>
+
+  <!-- 📡 레이더 차트 -->
+  <div class="result-card" id="e-radar-card" style="display:none;">
+    <h2>📡 4차원 노출 분석 레이더</h2>
+    <div class="radar-wrap">
+      <canvas id="e-radar" width="300" height="300"></canvas>
+      <div class="radar-legend" id="e-radar-legend"></div>
+    </div>
+  </div>
+
+  <!-- 🎯 알고리즘 노출 게이지 -->
+  <div class="result-card" id="e-gauge-card" style="display:none;">
+    <h2>🎯 홍보 효과 예측</h2>
+    <div class="algo-gauge-ttl"><span>에브리타임 홍보게시판 효과 예측</span><span id="e-gauge-pct">—</span></div>
+    <div class="algo-gauge-bar"><div class="algo-gauge-fill" id="e-gauge-fill"></div></div>
+    <div class="algo-tiers">
+      <div class="algo-tier" id="e-at0">📉 하위 30%<br><small>즉시 개선 필요</small></div>
+      <div class="algo-tier" id="e-at1">📊 상위 50%<br><small>보통 수준</small></div>
+      <div class="algo-tier" id="e-at2">📈 상위 25%<br><small>효과적인 홍보</small></div>
+      <div class="algo-tier" id="e-at3">🏆 상위 10%<br><small>최적화 완료</small></div>
+    </div>
+  </div>
+
   <!-- 진단 분석 -->
   <div class="result-card">
     <h2>📈 항목별 진단</h2>
@@ -643,12 +710,23 @@
     else grade = '🚨 즉시 개선';
 
     // ── 결과 DOM 업데이트 ──
-    document.getElementById('scoreNum').textContent = score;
+    const eScoreEl = document.getElementById('scoreNum');
+    eScoreEl.classList.remove('popped'); void eScoreEl.offsetWidth;
+    countUpAnim(eScoreEl, score, 1400); eScoreEl.classList.add('popped');
     document.getElementById('scoreMeterFill').style.width = score + '%';
     document.getElementById('scoreGrade').textContent = grade;
-    document.getElementById('subViews').textContent = scoreViews;
-    document.getElementById('subReact').textContent = scoreReact;
-    document.getElementById('subContent').textContent = scoreContent;
+    countUpAnim(document.getElementById('subViews'), scoreViews, 900);
+    countUpAnim(document.getElementById('subReact'), scoreReact, 900);
+    countUpAnim(document.getElementById('subContent'), scoreContent, 900);
+
+    // AI 진단 / 레이더 / 게이지 카드 표시
+    ['e-ai-card','e-radar-card','e-gauge-card'].forEach(function(id){
+      var el=document.getElementById(id);if(el)el.style.display='';
+    });
+    renderAIDiagGeneric(score,[scoreViews,scoreReact,scoreContent,scoreOps],['조회수','반응률','콘텐츠','운영'],
+      'e-ai-emoji','e-ai-name','e-ai-score-line','e-ai-tw','e-ai-tags','#E53E3E','에브리타임');
+    drawRadarGeneric('e-radar',[scoreViews,scoreReact,scoreContent,scoreOps],['조회수','반응률','콘텐츠','운영'],'#E53E3E','e-radar-legend');
+    renderAlgoGaugeGeneric(score,'e-gauge-fill','e-gauge-pct',['e-at0','e-at1','e-at2','e-at3'],'eact');
     document.getElementById('categoryBonus').style.display = contestCat ? 'block' : 'none';
 
     // ── 핵심 지표 ──
@@ -1004,6 +1082,111 @@
     setTimeout(function() {
       document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
+  }
+
+  // ══════════ 공통 유틸 함수 ══════════
+  function countUpAnim(el,target,duration){
+    if(!el)return;
+    var start=performance.now(),startVal=parseInt(el.textContent)||0;
+    function update(now){
+      var elapsed=Math.min(now-start,duration),progress=elapsed/duration;
+      var ease=1-Math.pow(1-progress,3);
+      el.textContent=Math.round(startVal+(target-startVal)*ease);
+      if(progress<1)requestAnimationFrame(update);else el.textContent=target;
+    }
+    requestAnimationFrame(update);
+  }
+  function typewriterEffect(el,text,speed){
+    if(!el)return; el.innerHTML=''; var i=0;
+    var iv=setInterval(function(){
+      if(i<=text.length){el.innerHTML=text.slice(0,i).replace(/\n/g,'<br>')+'<span class="tw-cursor"></span>';i++;}
+      else{clearInterval(iv);el.innerHTML=text.replace(/\n/g,'<br>');}
+    },speed);
+  }
+  function drawRadarGeneric(canvasId,scores,labels,color,legendId){
+    var canvas=document.getElementById(canvasId);
+    if(!canvas)return;
+    var ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height;
+    var cx=W/2,cy=H/2,R=Math.min(W,H)/2-42,n=scores.length;
+    ctx.clearRect(0,0,W,H);
+    for(var r=1;r<=5;r++){
+      ctx.beginPath();
+      for(var i=0;i<n;i++){var a=(i/n)*Math.PI*2-Math.PI/2;var x=cx+(R*r/5)*Math.cos(a),y=cy+(R*r/5)*Math.sin(a);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+      ctx.closePath();ctx.strokeStyle=r===5?color+'44':'#ebebeb';ctx.lineWidth=r===5?1.5:1;ctx.stroke();
+      if(r===5){ctx.fillStyle=color+'12';ctx.fill();}
+    }
+    for(var i=0;i<n;i++){
+      var a=(i/n)*Math.PI*2-Math.PI/2;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
+      ctx.strokeStyle='#e0e0e0';ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.beginPath();
+    scores.forEach(function(s,i){
+      var a=(i/n)*Math.PI*2-Math.PI/2,rv=(Math.min(100,Math.max(0,s))/100)*R;
+      var x=cx+rv*Math.cos(a),y=cy+rv*Math.sin(a);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    });
+    ctx.closePath();ctx.fillStyle=color+'2e';ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.stroke();
+    scores.forEach(function(s,i){
+      var a=(i/n)*Math.PI*2-Math.PI/2,rv=(Math.min(100,Math.max(0,s))/100)*R;
+      var x=cx+rv*Math.cos(a),y=cy+rv*Math.sin(a);
+      ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    });
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    labels.forEach(function(lbl,i){
+      var a=(i/n)*Math.PI*2-Math.PI/2,lx=cx+(R+27)*Math.cos(a),ly=cy+(R+27)*Math.sin(a);
+      ctx.font='700 11px Apple SD Gothic Neo,sans-serif';ctx.fillStyle='#444';ctx.fillText(lbl,lx,ly-6);
+      ctx.font='800 10px Apple SD Gothic Neo,sans-serif';ctx.fillStyle=color;ctx.fillText(Math.round(scores[i]),lx,ly+7);
+    });
+    var lEl=document.getElementById(legendId);
+    if(lEl)lEl.innerHTML=labels.map(function(l,i){
+      var c=scores[i]>=70?'#22c55e':scores[i]>=40?color:'#ef4444';
+      return '<div class="radar-legend-item"><div class="radar-dot" style="background:'+c+';"></div>'+l+': <strong>'+Math.round(scores[i])+'</strong></div>';
+    }).join('');
+  }
+  function renderAIDiagGeneric(total,scores,labels,emojiId,nameId,scoreLineId,twId,tagsId,color,platform){
+    var emoji,gradeName,gradeDesc;
+    if(total>=88){emoji='🏆✨';gradeName='최상위 등급';gradeDesc='홍보 효과 최고 — 상위 5% 수준이에요';}
+    else if(total>=73){emoji='🥇';gradeName='프리미엄 등급';gradeDesc='상위 15% 경쟁력 — 꾸준히 유지하면 최상위예요';}
+    else if(total>=55){emoji='🌿';gradeName='성장 등급';gradeDesc='상위 35% 수준 — 핵심 약점 하나 개선하면 도약해요';}
+    else if(total>=35){emoji='🌱';gradeName='새싹 등급';gradeDesc='중위권 — 전략적 개선으로 빠르게 올라갈 수 있어요';}
+    else{emoji='🪴';gradeName='씨앗 단계';gradeDesc='개선이 필요한 상태예요';}
+    var emojiEl=document.getElementById(emojiId),nameEl=document.getElementById(nameId),slEl=document.getElementById(scoreLineId);
+    if(emojiEl)emojiEl.textContent=emoji;
+    if(nameEl)nameEl.textContent=gradeName;
+    if(slEl)slEl.textContent='종합 점수 '+total+'점 · '+gradeDesc;
+    var weakIdx=0,strongIdx=0;
+    scores.forEach(function(s,i){if(s<scores[weakIdx])weakIdx=i;if(s>scores[strongIdx])strongIdx=i;});
+    var lines=[];
+    if(scores[0]<13)lines.push(platform+' 홍보의 핵심은 조회수예요. 포스팅 타이밍(목요일 오후)과 제목 전략을 바꾸면 조회수가 즉시 올라가요.');
+    else if(scores[1]<13)lines.push('조회수는 있는데 반응률이 낮아요. 공감·댓글을 유도하는 질문형·혜택형 제목으로 바꾸면 반응률이 2배로 올라가요.');
+    else if(scores[2]<15)lines.push('콘텐츠 전략이 약해요. 이미지 2~3장 + 제목 키워드 + 적절한 포스팅 시간대가 홍보 효과의 80%를 결정해요.');
+    else if(total>=75)lines.push('모든 지표가 우수해요! '+platform+' 홍보 효과가 최상위예요. 지금 전략을 꾸준히 유지하세요.');
+    else lines.push(labels[strongIdx]+'이 강점이에요. '+labels[weakIdx]+'('+Math.round(scores[weakIdx])+'점)을 개선하면 가장 빠르게 점수가 올라가요.');
+    var twEl=document.getElementById(twId);
+    if(twEl)typewriterEffect(twEl,lines.join('\n\n'),22);
+    var allTags=[];
+    if(scores[0]>=20)allTags.push('✅ 높은 조회수');
+    if(scores[1]>=18)allTags.push('✅ 우수한 반응률');
+    if(scores[2]>=22)allTags.push('✅ 콘텐츠 최적화');
+    if(total>=75)allTags.push('✅ 상위 홍보 효과');
+    if(scores[0]<10)allTags.push('⚠️ 조회수 낮음');
+    if(scores[1]<10)allTags.push('⚠️ 반응률 개선 필요');
+    if(scores[2]<12)allTags.push('⚠️ 콘텐츠 전략 부족');
+    var tagsEl=document.getElementById(tagsId);
+    if(tagsEl)tagsEl.innerHTML=allTags.slice(0,6).map(function(t){return '<span class="ai-tag">'+t+'</span>';}).join('');
+  }
+  function renderAlgoGaugeGeneric(total,fillId,pctId,tierIds,activeClass){
+    var fillPct,tierIdx,tierLabel;
+    if(total>=75){fillPct=85+(total-75)*0.6;tierIdx=3;tierLabel='상위 10%';}
+    else if(total>=55){fillPct=55+(total-55)*1.5;tierIdx=2;tierLabel='상위 25%';}
+    else if(total>=35){fillPct=28+(total-35)*1.35;tierIdx=1;tierLabel='상위 50%';}
+    else{fillPct=total*0.8;tierIdx=0;tierLabel='하위 30%';}
+    fillPct=Math.min(100,Math.round(fillPct));
+    var fEl=document.getElementById(fillId),pEl=document.getElementById(pctId);
+    if(fEl){fEl.style.width='0%';setTimeout(function(){fEl.style.width=fillPct+'%';},100);}
+    if(pEl)pEl.textContent=tierLabel;
+    tierIds.forEach(function(id,i){var el=document.getElementById(id);if(el)el.classList.toggle(activeClass,i===tierIdx);});
   }
 </script>
 </body>

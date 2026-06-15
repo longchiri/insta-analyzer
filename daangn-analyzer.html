@@ -234,6 +234,72 @@
     .scroll-btn:hover { transform:scale(1.12); box-shadow:0 6px 20px rgba(255,111,15,0.5); }
     #scrollTopBtn { opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.2s; }
     #scrollTopBtn.visible { opacity:1; pointer-events:auto; }
+
+    /* ── AI 진단 박스 ── */
+    .ai-diag-card {
+      background:linear-gradient(135deg,#1a0800,#2d1200,#1a0800);
+      border-radius:18px; padding:24px; margin-bottom:18px;
+      max-width:720px; margin-left:auto; margin-right:auto;
+      border:1.5px solid rgba(255,111,15,0.45); position:relative; overflow:hidden;
+    }
+    .ai-diag-card::before {
+      content:''; position:absolute; top:0; left:-150%; width:50%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,163,69,0.10),transparent);
+      animation:ai-shimmer 2.8s infinite;
+    }
+    @keyframes ai-shimmer { to { left:220%; } }
+    .ai-diag-card h2 { color:#fff; font-size:1.05rem; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+    .ai-grade-row {
+      display:flex; align-items:center; gap:16px; margin-bottom:18px;
+      background:rgba(255,255,255,0.06); border-radius:14px; padding:16px 18px;
+      border:1px solid rgba(255,111,15,0.22);
+    }
+    .ai-grade-emoji { font-size:2.8rem; flex-shrink:0; }
+    .ai-grade-info { flex:1; min-width:0; }
+    .ai-grade-lbl { font-size:0.7rem; color:#888; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
+    .ai-grade-name { font-size:1.25rem; font-weight:900; background:linear-gradient(90deg,#FF6F0F,#FFB347); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .ai-grade-score-line { font-size:0.82rem; color:#777; margin-top:4px; }
+    .typewriter-box {
+      background:rgba(0,0,0,0.38); border-radius:12px; padding:16px 18px;
+      font-size:0.87rem; line-height:1.9; color:#e0e0e0;
+      min-height:68px; border:1px solid rgba(255,111,15,0.2);
+      word-break:keep-all; overflow-wrap:break-word;
+    }
+    .tw-cursor { display:inline-block; width:2px; height:1em; background:#FF6F0F; animation:tw-blink 0.8s infinite; vertical-align:text-bottom; margin-left:1px; border-radius:1px; }
+    @keyframes tw-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .ai-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+    .ai-tag { background:rgba(255,111,15,0.14); color:#FFB347; font-size:0.71rem; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid rgba(255,111,15,0.28); }
+
+    /* ── 레이더 차트 ── */
+    .radar-wrap { display:flex; flex-direction:column; align-items:center; padding:10px 0 4px; }
+    .radar-wrap canvas { max-width:300px; width:100%; }
+    .radar-legend { display:flex; flex-wrap:wrap; justify-content:center; gap:8px 18px; margin-top:14px; }
+    .radar-legend-item { display:flex; align-items:center; gap:5px; font-size:0.72rem; font-weight:700; color:#555; }
+    .radar-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+
+    /* ── 알고리즘 노출 게이지 ── */
+    .algo-gauge-ttl { font-size:0.82rem; font-weight:700; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+    .algo-gauge-bar { height:14px; background:#f0f0f0; border-radius:99px; overflow:hidden; margin-bottom:16px; position:relative; }
+    .algo-gauge-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#FF6F0F,#FFB347); transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1); width:0%; }
+    .algo-tiers { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    @media(max-width:500px){ .algo-tiers { grid-template-columns:repeat(2,1fr); gap:6px; } }
+    .algo-tier { background:#fff8f3; border-radius:10px; padding:10px 6px; text-align:center; border:1.5px solid #FFE0C8; transition:all 0.3s; }
+    .algo-tier.active-tier { background:linear-gradient(135deg,#FF6F0F,#FFB347); border-color:transparent; transform:scale(1.04); box-shadow:0 4px 16px rgba(255,111,15,0.35); }
+    .at-num { font-size:0.9rem; font-weight:900; color:#FF6F0F; }
+    .algo-tier.active-tier .at-num { color:#fff; }
+    .at-lbl { font-size:0.62rem; color:#aaa; margin-top:3px; line-height:1.4; word-break:keep-all; }
+    .algo-tier.active-tier .at-lbl { color:rgba(255,255,255,0.88); }
+    .at-now { display:none; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.25); border-radius:4px; padding:1px 5px; color:#fff; margin-bottom:3px; }
+    .algo-tier.active-tier .at-now { display:block; }
+
+    /* ── count-up 팝 애니메이션 ── */
+    @keyframes score-pop { 0%{transform:scale(0.55);opacity:0} 70%{transform:scale(1.09)} 100%{transform:scale(1);opacity:1} }
+    .score-number.popped { animation:score-pop 0.75s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+    /* ── 8칸 서브점수 그리드 ── */
+    .sub-score-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px; }
+    @media(max-width:500px){ .sub-score-grid { grid-template-columns:repeat(2,1fr); } }
+    .sub-item.new-s { background:linear-gradient(135deg,#FFF5EC,#FFEEDD); border:1.5px solid #FFD5A8; }
   </style>
 </head>
 <body>
@@ -839,6 +905,72 @@
   </div>
 </div>
 
+<!-- 8. 콘텐츠 품질 진단 -->
+<div class="card">
+  <h2>✍️ 콘텐츠 품질 진단</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>소개글 구조화 수준
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 당근앱 → 모임 → 소개 탭</span>이모지·단락 구분·핵심정보 배치 등 소개글 구성 수준이에요.</span>
+        </span>
+      </label>
+      <select id="introFormat">
+        <option value="" disabled selected>— 선택 —</option>
+        <option value="structured">이모지+단락+핵심정보 모두 있음</option>
+        <option value="emoji">이모지·단락만 사용</option>
+        <option value="plain">단순 텍스트 (구분 없음)</option>
+        <option value="none">소개글 거의 없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>소개글에서 핵심 정보 위치
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">일정·장소·대상 등 핵심 정보가 소개글 어느 부분에 있나요?</span>
+        </span>
+      </label>
+      <select id="infoPosition">
+        <option value="" disabled selected>— 선택 —</option>
+        <option value="top">첫 3줄 이내에 핵심 정보 있음</option>
+        <option value="mid">중간 정도에 있음</option>
+        <option value="bottom">마지막 부분에 있음</option>
+        <option value="none">핵심 정보 없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>신규 멤버 온보딩 공지
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 당근앱 → 모임 → 공지 탭</span>신규 가입자 환영 메시지·운영 안내 공지가 있나요?</span>
+        </span>
+      </label>
+      <select id="onboardingNotice">
+        <option value="" disabled selected>— 선택 —</option>
+        <option value="yes">환영 공지·운영 안내 있음</option>
+        <option value="partial">간단한 인사만 있음</option>
+        <option value="no">없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>게시글 유형 다양성
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">모임 게시판에 공지·후기·질문·사진 등 다양한 유형의 글이 올라오나요?</span>
+        </span>
+      </label>
+      <select id="postVariety">
+        <option value="" disabled selected>— 선택 —</option>
+        <option value="diverse">공지·후기·질문·사진 모두 있음</option>
+        <option value="some">2~3가지 유형 있음</option>
+        <option value="mono">공지·안내만 있음</option>
+        <option value="none">게시글 거의 없음</option>
+      </select>
+    </div>
+  </div>
+</div>
+
 <button class="btn-analyze" onclick="analyze()">🥕 당근 모임 분석하기</button>
 
 <!-- ══════════ 결과 ══════════ -->
@@ -868,7 +1000,7 @@
       <div class="score-label" id="scoreLabel">—</div>
     </div>
 
-    <!-- 세부 점수 -->
+    <!-- 세부 점수 (8개) -->
     <div class="sub-score-grid">
       <div class="sub-item">
         <div class="sv" id="seoScore">—</div>
@@ -900,6 +1032,75 @@
         <div class="sn">성장 점수</div>
         <div class="sm">멤버 증가율</div>
       </div>
+      <div class="sub-item new-s">
+        <div class="sv" id="contentScore">—</div>
+        <div class="sn">콘텐츠 품질</div>
+        <div class="sm">소개글·구조화</div>
+      </div>
+      <div class="sub-item new-s">
+        <div class="sv" id="communityScore">—</div>
+        <div class="sn">커뮤니티 건강도</div>
+        <div class="sm">단골·소통·이탈</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🤖 AI 종합 진단 (NEW) -->
+  <div class="ai-diag-card" id="aiDiagCard">
+    <h2>🤖 AI 종합 진단</h2>
+    <div class="ai-grade-row">
+      <div class="ai-grade-emoji" id="aiGradeEmoji">🌱</div>
+      <div class="ai-grade-info">
+        <div class="ai-grade-lbl">당근 모임 등급</div>
+        <div class="ai-grade-name" id="aiGradeName">분석 중...</div>
+        <div class="ai-grade-score-line" id="aiGradeScoreLine"></div>
+      </div>
+    </div>
+    <div class="typewriter-box" id="aiTypewriter"></div>
+    <div class="ai-tags" id="aiTags"></div>
+  </div>
+
+  <!-- 📡 6차원 레이더 차트 (NEW) -->
+  <div class="result-card">
+    <h2>📡 6차원 노출 분석 레이더</h2>
+    <div class="radar-wrap">
+      <canvas id="radarChart" width="300" height="300"></canvas>
+      <div class="radar-legend" id="radarLegend"></div>
+    </div>
+  </div>
+
+  <!-- 🎯 알고리즘 노출 예측 게이지 (NEW) -->
+  <div class="result-card">
+    <h2>🎯 알고리즘 노출 예측</h2>
+    <div class="algo-gauge-ttl">
+      <span>현재 당근 알고리즘 상위 노출 예측</span>
+      <span id="algoGaugePct" style="color:#FF6F0F;font-weight:900;font-size:1rem;">—%</span>
+    </div>
+    <div class="algo-gauge-bar"><div class="algo-gauge-fill" id="algoGaugeFill"></div></div>
+    <div class="algo-tiers">
+      <div class="algo-tier" id="atier0">
+        <div class="at-now">현재</div>
+        <div class="at-num">하위 30%</div>
+        <div class="at-lbl">씨앗 단계<br>0~34점</div>
+      </div>
+      <div class="algo-tier" id="atier1">
+        <div class="at-now">현재</div>
+        <div class="at-num">상위 50%</div>
+        <div class="at-lbl">새싹 단계<br>35~54점</div>
+      </div>
+      <div class="algo-tier" id="atier2">
+        <div class="at-now">현재</div>
+        <div class="at-num">상위 25%</div>
+        <div class="at-lbl">성장 단계<br>55~74점</div>
+      </div>
+      <div class="algo-tier" id="atier3">
+        <div class="at-now">현재</div>
+        <div class="at-num">상위 10%</div>
+        <div class="at-lbl">당근·황금<br>75점+</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#fff8f3;border-radius:10px;font-size:0.78rem;color:#666;border:1px solid #FFE0C8;line-height:1.7;word-break:keep-all;">
+      <strong style="color:#FF6F0F;">💡 노출 예측 기준</strong> — 당근 모임 알고리즘은 ①최근 14일 일정 ②활성 멤버 비율 ③호스트 매너온도 ④태그·SEO ⑤전환율 순으로 가중치를 적용해요. 2026년 LLM 기반 AI 추천 도입으로 콘텐츠 품질·운영 일관성 평가가 강화됐어요.
     </div>
   </div>
 
@@ -1049,6 +1250,12 @@ function analyze() {
   const churnCount   = parseInt(document.getElementById('churnCount').value) || 0;
   const naverSearch  = document.getElementById('naverSearch').value;
 
+  // 섹션 8 — 콘텐츠 품질 진단
+  const introFormat      = document.getElementById('introFormat').value;
+  const infoPosition     = document.getElementById('infoPosition').value;
+  const onboardingNotice = document.getElementById('onboardingNotice').value;
+  const postVariety      = document.getElementById('postVariety').value;
+
   // ── 점수 계산 (각 항목 0~100) ──
 
   // 1. SEO 점수 (25%)
@@ -1154,6 +1361,32 @@ function analyze() {
   if (growRate >= 20) grow = 100; else if (growRate >= 10) grow = 70; else if (growRate >= 5) grow = 45; else if (growRate > 0) grow = 20;
   grow = Math.min(100, grow);
 
+  // 7. 콘텐츠 품질 점수 (보조)
+  let content = 0;
+  if (introFormat === 'structured') content += 35;
+  else if (introFormat === 'emoji') content += 20;
+  else if (introFormat === 'plain') content += 8;
+  if (infoPosition === 'top') content += 25;
+  else if (infoPosition === 'mid') content += 12;
+  else if (infoPosition === 'bottom') content += 4;
+  if (intro.length >= 200) content += 20;
+  else if (intro.length >= 100) content += 14;
+  else if (intro.length >= 50) content += 7;
+  if (introLocation === 'yes') content += 12;
+  if (hasKeyword) content += 8;
+  content = Math.min(100, content);
+
+  // 8. 커뮤니티 건강도 점수 (보조)
+  const churnRate2 = memberCount > 0 ? (churnCount / memberCount) * 100 : 0;
+  let community = 0;
+  if (regularRate >= 60) community += 28; else if (regularRate >= 40) community += 18; else if (regularRate >= 20) community += 9;
+  if (churnRate2 <= 3) community += 28; else if (churnRate2 <= 8) community += 18; else if (churnRate2 <= 15) community += 8; else community -= 8;
+  if (commentAvg >= 5) community += 22; else if (commentAvg >= 2) community += 14; else if (commentAvg >= 1) community += 6;
+  if (attendRate >= 70) community += 22; else if (attendRate >= 50) community += 14; else if (attendRate >= 30) community += 6;
+  if (onboardingNotice === 'yes') community += 10; else if (onboardingNotice === 'partial') community += 5;
+  if (postVariety === 'diverse') community += 10; else if (postVariety === 'some') community += 6;
+  community = Math.min(100, Math.max(0, community));
+
   // 종합 점수
   const total = Math.round(seo * 0.25 + act * 0.25 + trust * 0.20 + exp * 0.15 + cvr * 0.10 + grow * 0.05);
 
@@ -1165,18 +1398,34 @@ function analyze() {
   else if (total >= 40) { grade = '📌 평균'; label = '개선 포인트가 여러 곳 있어요 — 로드맵을 따라가세요'; }
   else { grade = '⚠️ 노출 부족'; label = '알고리즘이 모임을 잘 추천하지 않는 상태예요 — 지금 바로 개선하세요'; }
 
-  // ── 결과 렌더 ──
-  document.getElementById('totalScore').textContent = total;
+  // ── 결과 렌더 (count-up 애니메이션) ──
+  const scoreEl = document.getElementById('totalScore');
+  scoreEl.classList.remove('popped');
+  void scoreEl.offsetWidth; // reflow trigger
+  countUpAnim(scoreEl, total, 1400);
+  scoreEl.classList.add('popped');
   document.getElementById('scoreGrade').textContent = grade;
   document.getElementById('scoreLabel').textContent = label;
 
   const fmt = v => Math.round(v);
-  document.getElementById('seoScore').textContent   = fmt(seo);
-  document.getElementById('actScore').textContent   = fmt(act);
-  document.getElementById('trustScore').textContent = fmt(trust);
-  document.getElementById('expScore').textContent   = fmt(exp);
-  document.getElementById('cvrScore').textContent   = fmt(cvr);
-  document.getElementById('growScore').textContent  = fmt(grow);
+  // 서브 점수 카운트업
+  countUpAnim(document.getElementById('seoScore'), fmt(seo), 900);
+  countUpAnim(document.getElementById('actScore'), fmt(act), 900);
+  countUpAnim(document.getElementById('trustScore'), fmt(trust), 900);
+  countUpAnim(document.getElementById('expScore'), fmt(exp), 900);
+  countUpAnim(document.getElementById('cvrScore'), fmt(cvr), 900);
+  countUpAnim(document.getElementById('growScore'), fmt(grow), 900);
+  countUpAnim(document.getElementById('contentScore'), fmt(content), 900);
+  countUpAnim(document.getElementById('communityScore'), fmt(community), 900);
+
+  // ── AI 종합 진단 ──
+  renderAIDiag(total, {seo, act, trust, exp, cvr, grow, content, community});
+
+  // ── 레이더 차트 ──
+  drawRadarDaangn([seo, act, trust, exp, cvr, grow]);
+
+  // ── 알고리즘 노출 게이지 ──
+  renderAlgoGauge(total);
 
   // ── 진행 바 ──
   const barClass = v => v >= 70 ? 'bar-good' : v >= 40 ? 'bar-mid' : 'bar-bad';
@@ -2649,6 +2898,252 @@ function shareResult() {
     navigator.share({ title:'당근 모임 분석 결과', url: location.href });
   } else {
     navigator.clipboard.writeText(location.href).then(() => alert('링크가 복사되었어요!'));
+  }
+}
+
+// ══════════════════════════════════════════════════
+// 🔢 COUNT-UP 애니메이션
+// ══════════════════════════════════════════════════
+function countUpAnim(el, target, duration) {
+  if (!el) return;
+  const start = performance.now();
+  const startVal = parseInt(el.textContent) || 0;
+  const update = (now) => {
+    const elapsed = Math.min(now - start, duration);
+    const progress = elapsed / duration;
+    const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    el.textContent = Math.round(startVal + (target - startVal) * ease);
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(update);
+}
+
+// ══════════════════════════════════════════════════
+// ✍️ 타이핑(typewriter) 효과
+// ══════════════════════════════════════════════════
+function typewriterEffect(el, text, speed) {
+  if (!el) return;
+  el.innerHTML = '';
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i <= text.length) {
+      el.innerHTML = text.slice(0, i).replace(/\n/g, '<br>') + '<span class="tw-cursor"></span>';
+      i++;
+    } else {
+      clearInterval(interval);
+      el.innerHTML = text.replace(/\n/g, '<br>');
+    }
+  }, speed);
+}
+
+// ══════════════════════════════════════════════════
+// 📡 레이더 차트 (당근)
+// ══════════════════════════════════════════════════
+function drawRadarDaangn(scores) {
+  const canvas = document.getElementById('radarChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2;
+  const R = Math.min(W, H) / 2 - 42;
+  const labels = ['SEO','활성도','신뢰도','노출','전환율','성장'];
+  const color  = '#FF6F0F';
+  const n = scores.length;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // 배경 그리드 (5단계)
+  for (let r = 1; r <= 5; r++) {
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+      const x = cx + (R * r / 5) * Math.cos(angle);
+      const y = cy + (R * r / 5) * Math.sin(angle);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = r === 5 ? '#FF6F0F44' : '#ebebeb';
+    ctx.lineWidth = r === 5 ? 1.5 : 1;
+    ctx.stroke();
+    if (r === 5) {
+      ctx.fillStyle = '#fff8f344';
+      ctx.fill();
+    }
+  }
+
+  // 축선
+  for (let i = 0; i < n; i++) {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + R * Math.cos(angle), cy + R * Math.sin(angle));
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // 데이터 폴리곤 (채우기)
+  ctx.beginPath();
+  scores.forEach((s, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const r = (Math.min(100, Math.max(0, s)) / 100) * R;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = color + '30';
+  ctx.fill();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // 데이터 점
+  scores.forEach((s, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const r = (Math.min(100, Math.max(0, s)) / 100) * R;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+
+  // 레이블
+  ctx.font = '700 11px Apple SD Gothic Neo, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  labels.forEach((lbl, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const lx = cx + (R + 27) * Math.cos(angle);
+    const ly = cy + (R + 27) * Math.sin(angle);
+    const val = Math.round(scores[i]);
+    // 점수 배경 없애고 간결하게 표시
+    ctx.fillStyle = '#444';
+    ctx.fillText(lbl, lx, ly - 6);
+    ctx.fillStyle = color;
+    ctx.font = '800 10px Apple SD Gothic Neo, sans-serif';
+    ctx.fillText(val, lx, ly + 7);
+    ctx.font = '700 11px Apple SD Gothic Neo, sans-serif';
+    ctx.fillStyle = '#444';
+  });
+
+  // 레전드
+  const legendEl = document.getElementById('radarLegend');
+  if (legendEl) {
+    const scoreColors = scores.map(s => s >= 70 ? '#22c55e' : s >= 40 ? '#FF6F0F' : '#ef4444');
+    legendEl.innerHTML = labels.map((lbl, i) =>
+      `<div class="radar-legend-item"><div class="radar-dot" style="background:${scoreColors[i]};"></div>${lbl}: <strong>${Math.round(scores[i])}</strong></div>`
+    ).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════
+// 🤖 AI 종합 진단
+// ══════════════════════════════════════════════════
+function renderAIDiag(total, scores) {
+  // 등급 결정
+  let emoji, gradeName, gradeDesc;
+  if (total >= 88)      { emoji='🥕✨'; gradeName='황금당근 등급'; gradeDesc='알고리즘 최상위 — 당근 추천 AI가 적극 확산 중이에요'; }
+  else if (total >= 73) { emoji='🥕'; gradeName='당근 등급'; gradeDesc='상위 15% 경쟁력 — 꾸준히 유지하면 황금당근 달성해요'; }
+  else if (total >= 55) { emoji='🌿'; gradeName='성장 등급'; gradeDesc='상위 35% 수준 — 핵심 약점 하나만 고치면 도약해요'; }
+  else if (total >= 35) { emoji='🌱'; gradeName='새싹 등급'; gradeDesc='중위권 — 노출전략 개선으로 빠르게 올라갈 수 있어요'; }
+  else                   { emoji='🪴'; gradeName='씨앗 단계'; gradeDesc='당장 개선이 필요한 상태예요 — 로드맵을 따라가세요'; }
+
+  document.getElementById('aiGradeEmoji').textContent = emoji;
+  document.getElementById('aiGradeName').textContent  = gradeName;
+  document.getElementById('aiGradeScoreLine').textContent = `종합 점수 ${total}점 · ${gradeDesc}`;
+
+  // 패턴 기반 진단 텍스트 생성
+  const {seo, act, trust, exp, cvr, grow, content, community} = scores;
+  const lines = [];
+
+  // 강점 파악
+  const strongPoints = [];
+  if (seo >= 70)  strongPoints.push('SEO 최적화');
+  if (act >= 70)  strongPoints.push('활발한 활동');
+  if (trust >= 70) strongPoints.push('높은 신뢰도');
+  if (exp >= 70)  strongPoints.push('노출 채널');
+  if (cvr >= 70)  strongPoints.push('전환율');
+  if (community >= 70) strongPoints.push('커뮤니티 건강도');
+
+  // 약점 파악
+  const weakPoints = [];
+  if (seo < 40)   weakPoints.push('제목·SEO');
+  if (act < 40)   weakPoints.push('모임 활성도');
+  if (trust < 40) weakPoints.push('호스트 신뢰도');
+  if (exp < 40)   weakPoints.push('노출 최적화');
+  if (cvr < 40)   weakPoints.push('신청 전환율');
+  if (content < 40) weakPoints.push('소개글 품질');
+
+  // 패턴별 핵심 진단
+  if (seo < 45 && act >= 65) {
+    lines.push('활동은 활발한데 아직 검색에서 잘 안 보이는 상태예요. 제목에 동네명+활동 키워드를 넣고 태그를 3개 이상 설정하면 노출이 즉시 달라져요.');
+  } else if (act < 45 && seo >= 65) {
+    lines.push('검색 최적화는 잘 되어 있어요. 이제 실제 활동 데이터를 쌓아야 알고리즘이 모임을 "살아있는 모임"으로 인식해요. 14일 이내 일정 등록이 최우선이에요.');
+  } else if (trust < 45 && total >= 50) {
+    lines.push('다른 지표는 괜찮은데 호스트 신뢰도가 발목을 잡고 있어요. 매너온도와 후기 수를 높이면 전체 노출 점수가 빠르게 올라와요.');
+  } else if (cvr < 40 && act >= 60) {
+    lines.push('모임 활동은 좋은데 새 멤버 유입에서 막히고 있어요. 소개글 첫 3줄에 핵심 정보를 배치하고 사진을 최신으로 바꾸면 전환율이 올라가요.');
+  } else if (total >= 80) {
+    lines.push('모든 핵심 지표가 우수해요! 2026년 당근 AI 업데이트 이후 "콘텐츠 품질·운영 일관성"이 더 중요해졌어요. 지금 수준을 꾸준히 유지하는 것 자체가 전략이에요.');
+  } else if (total <= 35) {
+    lines.push('여러 지표에서 개선이 필요한 상태예요. 한꺼번에 다 하려 하지 말고 아래 로드맵 ① 항목 하나만 먼저 해결해보세요. 첫 번째 개선이 가장 큰 변화를 만들어요.');
+  } else {
+    const strongStr = strongPoints.length > 0 ? strongPoints.slice(0,2).join('·')+'이 강점이에요' : '골고루 중위권이에요';
+    const weakStr   = weakPoints.length > 0   ? weakPoints[0]+'을(를) 먼저 개선하면 가장 빠르게 올라가요' : '지금 상태를 꾸준히 유지하세요';
+    lines.push(strongStr + '. ' + weakStr + '.');
+  }
+
+  // 2026 알고리즘 진단
+  if (content < 50) lines.push('소개글 구조화 수준이 낮아요. 이모지·단락 구분·핵심정보(일정·장소·대상)를 첫 3줄에 배치하면 2026 AI 추천 점수가 올라가요.');
+  if (community < 50 && memberCount > 0) lines.push('커뮤니티 건강도 개선 여지가 있어요. 단골 멤버 비율과 게시글 소통 빈도가 2026 알고리즘의 "모임 품질 신호"예요.');
+
+  const diagText = lines.join('\n\n');
+  const twEl = document.getElementById('aiTypewriter');
+  if (twEl) typewriterEffect(twEl, diagText, 22);
+
+  // AI 태그 생성
+  const allTags = [];
+  if (seo >= 70) allTags.push('✅ SEO 최적화');
+  if (act >= 70) allTags.push('✅ 활성 모임');
+  if (trust >= 70) allTags.push('✅ 신뢰 호스트');
+  if (total >= 75) allTags.push('✅ 알고리즘 추천 대상');
+  if (seo < 40) allTags.push('⚠️ SEO 개선 필요');
+  if (act < 40) allTags.push('⚠️ 활성도 낮음');
+  if (trust < 40) allTags.push('⚠️ 신뢰도 개선 필요');
+  if (content < 40) allTags.push('⚠️ 소개글 품질 개선');
+  if (community < 40) allTags.push('⚠️ 커뮤니티 활성화 필요');
+  const tagsEl = document.getElementById('aiTags');
+  if (tagsEl) tagsEl.innerHTML = allTags.slice(0, 7).map(t => `<span class="ai-tag">${t}</span>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+// 🎯 알고리즘 노출 게이지
+// ══════════════════════════════════════════════════
+function renderAlgoGauge(total) {
+  // 게이지 바 채우기
+  let fillPct, tierIdx, tierPctLabel;
+  if (total >= 75)      { fillPct = 85 + (total - 75) * 0.6; tierIdx = 3; tierPctLabel = '상위 10%'; }
+  else if (total >= 55) { fillPct = 55 + (total - 55) * 1.5; tierIdx = 2; tierPctLabel = '상위 25%'; }
+  else if (total >= 35) { fillPct = 28 + (total - 35) * 1.35; tierIdx = 1; tierPctLabel = '상위 50%'; }
+  else                   { fillPct = total * 0.8; tierIdx = 0; tierPctLabel = '하위 30%'; }
+  fillPct = Math.min(100, Math.round(fillPct));
+
+  const fillEl = document.getElementById('algoGaugeFill');
+  const pctEl  = document.getElementById('algoGaugePct');
+  if (fillEl) { fillEl.style.width = '0%'; setTimeout(() => { fillEl.style.width = fillPct + '%'; }, 100); }
+  if (pctEl) pctEl.textContent = tierPctLabel;
+
+  // 활성 단계 강조
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('atier' + i);
+    if (el) el.classList.toggle('active-tier', i === tierIdx);
   }
 }
 

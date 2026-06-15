@@ -215,6 +215,36 @@
 .scroll-btn:hover { transform:scale(1.12); box-shadow:0 6px 24px rgba(254,229,0,0.8); }
 #scrollTopBtn { opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.2s; }
 #scrollTopBtn.visible { opacity:1; pointer-events:auto; }
+
+/* ── AI 진단 / 레이더 / 게이지 (카카오) ── */
+.ai-diag-card{background:linear-gradient(135deg,#1a1500,#2a2000,#1a1500);border-radius:18px;padding:24px;margin-bottom:18px;max-width:720px;margin-left:auto;margin-right:auto;box-shadow:0 8px 32px rgba(254,229,0,0.18);border:1.5px solid rgba(200,168,0,0.22);position:relative;overflow:hidden;}
+.ai-diag-card::before{content:'';position:absolute;top:0;left:-150%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(254,229,0,0.08),transparent);animation:ai-shimmer 2.8s infinite;}
+@keyframes ai-shimmer{to{left:220%;}}
+.ai-diag-card h2{font-size:1.05rem;font-weight:800;color:#FEE500;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.ai-grade-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.ai-grade-emoji{font-size:2.8rem;line-height:1;}
+.ai-grade-info{flex:1;}
+.ai-grade-lbl{font-size:0.72rem;color:#aaa;font-weight:600;margin-bottom:2px;}
+.ai-grade-name{font-size:1.15rem;font-weight:900;color:#FEE500;}
+.ai-grade-score-line{font-size:0.78rem;color:#ccc;margin-top:3px;}
+.typewriter-box{background:rgba(0,0,0,0.38);border-radius:12px;padding:16px 18px;font-size:0.87rem;line-height:1.9;color:#e0e0e0;min-height:48px;word-break:keep-all;overflow-wrap:break-word;margin-bottom:14px;}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:#FEE500;animation:tw-blink 0.8s infinite;vertical-align:text-bottom;margin-left:1px;}
+@keyframes tw-blink{0%,100%{opacity:1}50%{opacity:0}}
+.ai-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.ai-tag{background:rgba(254,229,0,0.12);color:#FFD700;font-size:0.71rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid rgba(254,229,0,0.25);}
+.radar-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.radar-wrap canvas{max-width:300px;width:100%;}
+.radar-legend{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;}
+.radar-legend-item{font-size:0.78rem;color:#666;display:flex;align-items:center;gap:5px;}
+.radar-dot{width:8px;height:8px;border-radius:50%;}
+.algo-gauge-ttl{display:flex;justify-content:space-between;align-items:center;font-size:0.83rem;font-weight:700;color:#555;margin-bottom:8px;}
+.algo-gauge-bar{background:#f0f0f0;border-radius:99px;overflow:hidden;height:14px;margin-bottom:14px;}
+.algo-gauge-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#c8a800,#FEE500);transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1);width:0%;}
+.algo-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.algo-tier{background:#f8f8f8;border-radius:10px;padding:10px 6px;text-align:center;font-size:0.73rem;font-weight:700;color:#888;border:1.5px solid #e8e8e8;transition:all 0.4s;}
+.algo-tier.kact{background:linear-gradient(135deg,#c8a800,#FEE500);border-color:transparent;color:#3C1E1E;transform:scale(1.04);}
+@keyframes score-pop{0%{transform:scale(0.55);opacity:0}70%{transform:scale(1.09)}100%{transform:scale(1);opacity:1}}
+.score-number.popped{animation:score-pop 0.75s cubic-bezier(0.34,1.56,0.64,1) both;}
   </style>
 </head>
 <body>
@@ -814,6 +844,43 @@
     <div id="statBars"></div>
   </div>
 
+  <!-- 🤖 AI 종합 진단 -->
+  <div class="ai-diag-card" id="k-ai-card" style="display:none;">
+    <h2>🤖 AI 종합 진단</h2>
+    <div class="ai-grade-row">
+      <div class="ai-grade-emoji" id="k-ai-emoji">🌱</div>
+      <div class="ai-grade-info">
+        <div class="ai-grade-lbl">카카오 오픈채팅 등급</div>
+        <div class="ai-grade-name" id="k-ai-name">분석 중...</div>
+        <div class="ai-grade-score-line" id="k-ai-score-line"></div>
+      </div>
+    </div>
+    <div class="typewriter-box" id="k-ai-tw"></div>
+    <div class="ai-tags" id="k-ai-tags"></div>
+  </div>
+
+  <!-- 📡 레이더 차트 -->
+  <div class="result-card" id="k-radar-card" style="display:none;">
+    <h2>📡 4차원 노출 분석 레이더</h2>
+    <div class="radar-wrap">
+      <canvas id="k-radar" width="300" height="300"></canvas>
+      <div class="radar-legend" id="k-radar-legend"></div>
+    </div>
+  </div>
+
+  <!-- 🎯 알고리즘 노출 게이지 -->
+  <div class="result-card" id="k-gauge-card" style="display:none;">
+    <h2>🎯 알고리즘 노출 예측</h2>
+    <div class="algo-gauge-ttl"><span>카카오 오픈채팅 알고리즘 상위 노출 예측</span><span id="k-gauge-pct">—</span></div>
+    <div class="algo-gauge-bar"><div class="algo-gauge-fill" id="k-gauge-fill"></div></div>
+    <div class="algo-tiers">
+      <div class="algo-tier" id="k-at0">📉 하위 30%<br><small>노출 개선 필요</small></div>
+      <div class="algo-tier" id="k-at1">📊 상위 50%<br><small>평균 수준</small></div>
+      <div class="algo-tier" id="k-at2">📈 상위 25%<br><small>활성 노출 중</small></div>
+      <div class="algo-tier" id="k-at3">🏆 상위 10%<br><small>추천 알고리즘</small></div>
+    </div>
+  </div>
+
   <!-- 노출 알고리즘 지표 -->
   <div class="result-card">
     <h2>🔍 노출 알고리즘 지표</h2>
@@ -1145,24 +1212,37 @@ function analyze() {
   const memberDensity = maxMem > 0 ? Math.round(currentMem / maxMem * 100) : 0;
 
   // ── 렌더링 ──
-  document.getElementById('totalScore').textContent = total;
+  const kScoreEl = document.getElementById('totalScore');
+  kScoreEl.classList.remove('popped'); void kScoreEl.offsetWidth;
+  countUpAnim(kScoreEl, total, 1400); kScoreEl.classList.add('popped');
   document.getElementById('scoreGrade').textContent = grade;
   document.getElementById('scoreGrade').style.color = gradeColor;
   document.getElementById('scoreLabel').textContent =
     `SEO ${seoScore}/30 · 활성도 ${activityScore}/35 · 소셜 ${socialScore}/25 · 지금탭 +${nowTabScore} · 운영보너스 +${newBonus} · 페널티 -${penalty}`;
 
   // 세부 점수 4칸
-  document.getElementById('subScoreGrid').innerHTML = [
-    { name:'SEO 노출',  val:seoScore,      max:30, desc:'30점' },
-    { name:'활성도',    val:activityScore, max:35, desc:'35점' },
-    { name:'소셜신뢰',  val:socialScore,   max:25, desc:'25점' },
-    { name:'지금탭 ⚡', val:nowTabScore,   max:13, desc:'13점' },
-  ].map(s => `
+  const kSubData = [
+    { id:'ksub0', name:'SEO 노출',  val:seoScore,      desc:'30점' },
+    { id:'ksub1', name:'활성도',    val:activityScore, desc:'35점' },
+    { id:'ksub2', name:'소셜신뢰',  val:socialScore,   desc:'25점' },
+    { id:'ksub3', name:'지금탭 ⚡', val:nowTabScore,   desc:'13점' },
+  ];
+  document.getElementById('subScoreGrid').innerHTML = kSubData.map(s => `
     <div class="sub-item">
-      <div class="sv">${s.val}</div>
+      <div class="sv" id="${s.id}">0</div>
       <div class="sn">${s.name}</div>
       <div class="sm">${s.desc} 만점</div>
     </div>`).join('');
+  kSubData.forEach(s => countUpAnim(document.getElementById(s.id), s.val, 900));
+
+  // AI 진단 / 레이더 / 게이지 카드 표시
+  ['k-ai-card','k-radar-card','k-gauge-card'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.style.display='';
+  });
+  renderAIDiagGeneric(total, [seoScore,activityScore,socialScore,nowTabScore], ['SEO','활성도','소셜신뢰','지금탭'],
+    'k-ai-emoji','k-ai-name','k-ai-score-line','k-ai-tw','k-ai-tags','#c8a800','카카오');
+  drawRadarGeneric('k-radar',[seoScore,activityScore,socialScore,nowTabScore],['SEO','활성도','소셜신뢰','지금탭'],'#c8a800','k-radar-legend');
+  renderAlgoGaugeGeneric(total,'k-gauge-fill','k-gauge-pct',['k-at0','k-at1','k-at2','k-at3'],'kact');
 
   // 진행 바
   const feedPt  = feedExposure==='active'?5:feedExposure==='sometimes'?2:0;
@@ -2248,6 +2328,111 @@ ${htText}`}
     +`<p style="font-size:0.85rem;color:#888;margin:0 0 14px;">📊 분석 결과를 바탕으로 인스타 캡션과 해시태그를 생성해드려요</p>`
     +`<button onclick="(function(){var el=document.getElementById('${targetId}');el.innerHTML=window._snsKit['${targetId}'];})()" style="padding:13px 32px;background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(255,107,107,0.3);">📱 SNS 홍보 키트 생성하기</button>`
     +`</div>`;
+}
+
+// ══════════ 공통 유틸 함수 ══════════
+function countUpAnim(el,target,duration){
+  if(!el)return;
+  const start=performance.now(),startVal=parseInt(el.textContent)||0;
+  const update=(now)=>{
+    const elapsed=Math.min(now-start,duration),progress=elapsed/duration;
+    const ease=1-Math.pow(1-progress,3);
+    el.textContent=Math.round(startVal+(target-startVal)*ease);
+    if(progress<1)requestAnimationFrame(update);else el.textContent=target;
+  };
+  requestAnimationFrame(update);
+}
+function typewriterEffect(el,text,speed){
+  if(!el)return; el.innerHTML=''; let i=0;
+  const iv=setInterval(()=>{
+    if(i<=text.length){el.innerHTML=text.slice(0,i).replace(/\n/g,'<br>')+'<span class="tw-cursor"></span>';i++;}
+    else{clearInterval(iv);el.innerHTML=text.replace(/\n/g,'<br>');}
+  },speed);
+}
+function drawRadarGeneric(canvasId,scores,labels,color,legendId){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height;
+  const cx=W/2,cy=H/2,R=Math.min(W,H)/2-42,n=scores.length;
+  ctx.clearRect(0,0,W,H);
+  for(let r=1;r<=5;r++){
+    ctx.beginPath();
+    for(let i=0;i<n;i++){const a=(i/n)*Math.PI*2-Math.PI/2;const x=cx+(R*r/5)*Math.cos(a),y=cy+(R*r/5)*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.closePath(); ctx.strokeStyle=r===5?color+'44':'#ebebeb'; ctx.lineWidth=r===5?1.5:1; ctx.stroke();
+    if(r===5){ctx.fillStyle=color+'12';ctx.fill();}
+  }
+  for(let i=0;i<n;i++){
+    const a=(i/n)*Math.PI*2-Math.PI/2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
+    ctx.strokeStyle='#e0e0e0';ctx.lineWidth=1;ctx.stroke();
+  }
+  ctx.beginPath();
+  scores.forEach((s,i)=>{
+    const a=(i/n)*Math.PI*2-Math.PI/2,r=(Math.min(100,Math.max(0,s))/100)*R;
+    const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.closePath();ctx.fillStyle=color+'2e';ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.stroke();
+  scores.forEach((s,i)=>{
+    const a=(i/n)*Math.PI*2-Math.PI/2,r=(Math.min(100,Math.max(0,s))/100)*R;
+    const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+  });
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  labels.forEach((lbl,i)=>{
+    const a=(i/n)*Math.PI*2-Math.PI/2,lx=cx+(R+27)*Math.cos(a),ly=cy+(R+27)*Math.sin(a);
+    ctx.font='700 11px Apple SD Gothic Neo,sans-serif';ctx.fillStyle='#444';ctx.fillText(lbl,lx,ly-6);
+    ctx.font='800 10px Apple SD Gothic Neo,sans-serif';ctx.fillStyle=color;ctx.fillText(Math.round(scores[i]),lx,ly+7);
+  });
+  const lEl=document.getElementById(legendId);
+  if(lEl) lEl.innerHTML=labels.map((l,i)=>{
+    const c=scores[i]>=70?'#22c55e':scores[i]>=40?color:'#ef4444';
+    return `<div class="radar-legend-item"><div class="radar-dot" style="background:${c};"></div>${l}: <strong>${Math.round(scores[i])}</strong></div>`;
+  }).join('');
+}
+function renderAIDiagGeneric(total,scores,labels,emojiId,nameId,scoreLineId,twId,tagsId,color,platform){
+  let emoji,gradeName,gradeDesc;
+  if(total>=88){emoji='🏆✨';gradeName='최상위 등급';gradeDesc='알고리즘 최우선 추천 — 상위 5% 수준이에요';}
+  else if(total>=73){emoji='🥇';gradeName='프리미엄 등급';gradeDesc='상위 15% 경쟁력 — 꾸준히 유지하면 최상위예요';}
+  else if(total>=55){emoji='🌿';gradeName='성장 등급';gradeDesc='상위 35% 수준 — 핵심 약점 하나 개선하면 도약해요';}
+  else if(total>=35){emoji='🌱';gradeName='새싹 등급';gradeDesc='중위권 — 전략적 개선으로 빠르게 올라갈 수 있어요';}
+  else{emoji='🪴';gradeName='씨앗 단계';gradeDesc='개선이 필요한 상태예요';}
+  const emojiEl=document.getElementById(emojiId),nameEl=document.getElementById(nameId),slEl=document.getElementById(scoreLineId);
+  if(emojiEl)emojiEl.textContent=emoji;
+  if(nameEl)nameEl.textContent=gradeName;
+  if(slEl)slEl.textContent='종합 점수 '+total+'점 · '+gradeDesc;
+  const weakIdx=scores.indexOf(Math.min(...scores));
+  const strongIdx=scores.indexOf(Math.max(...scores));
+  const lines=[];
+  if(scores[0]<40)lines.push(platform+' 검색 노출의 핵심은 제목 SEO예요. 제목에 키워드·주제·지역을 명확히 넣으면 노출이 즉시 달라져요.');
+  else if(scores[1]<40)lines.push('검색은 잘 되는데 활성도가 낮아요. 정기적인 활동과 멤버 소통이 '+platform+' 알고리즘 핵심 신호예요.');
+  else if(scores[2]<40)lines.push('신뢰도가 발목을 잡고 있어요. 후기·인증·꾸준한 운영으로 소셜 신뢰를 높이면 전환율이 올라가요.');
+  else if(total>=75)lines.push('모든 지표가 우수해요! '+platform+' 추천 알고리즘이 이 채널을 적극 확산 중이에요. 지금 수준을 유지하는 것이 최선의 전략이에요.');
+  else lines.push(labels[strongIdx]+'이 강점이에요. '+labels[weakIdx]+'('+Math.round(scores[weakIdx])+'점)을 개선하면 가장 빠르게 노출 점수가 올라가요.');
+  const twEl=document.getElementById(twId);
+  if(twEl)typewriterEffect(twEl,lines.join('\n\n'),22);
+  const allTags=[];
+  if(scores[0]>=70)allTags.push('✅ SEO 최적화');
+  if(scores[1]>=70)allTags.push('✅ 높은 활성도');
+  if(scores[2]>=70)allTags.push('✅ 신뢰도 우수');
+  if(total>=75)allTags.push('✅ 알고리즘 추천 대상');
+  if(scores[0]<40)allTags.push('⚠️ SEO 개선 필요');
+  if(scores[1]<40)allTags.push('⚠️ 활성도 낮음');
+  if(scores[2]<40)allTags.push('⚠️ 신뢰도 개선');
+  const tagsEl=document.getElementById(tagsId);
+  if(tagsEl)tagsEl.innerHTML=allTags.slice(0,6).map(t=>'<span class="ai-tag">'+t+'</span>').join('');
+}
+function renderAlgoGaugeGeneric(total,fillId,pctId,tierIds,activeClass){
+  let fillPct,tierIdx,tierLabel;
+  if(total>=75){fillPct=85+(total-75)*0.6;tierIdx=3;tierLabel='상위 10%';}
+  else if(total>=55){fillPct=55+(total-55)*1.5;tierIdx=2;tierLabel='상위 25%';}
+  else if(total>=35){fillPct=28+(total-35)*1.35;tierIdx=1;tierLabel='상위 50%';}
+  else{fillPct=total*0.8;tierIdx=0;tierLabel='하위 30%';}
+  fillPct=Math.min(100,Math.round(fillPct));
+  const fEl=document.getElementById(fillId),pEl=document.getElementById(pctId);
+  if(fEl){fEl.style.width='0%';setTimeout(()=>{fEl.style.width=fillPct+'%';},100);}
+  if(pEl)pEl.textContent=tierLabel;
+  tierIds.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.classList.toggle(activeClass,i===tierIdx);});
 }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>

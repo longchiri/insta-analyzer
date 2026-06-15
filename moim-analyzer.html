@@ -260,6 +260,58 @@
 .scroll-btn:hover { transform:scale(1.12); box-shadow:0 6px 20px rgba(22,163,74,0.5); }
 #scrollTopBtn { opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.2s; }
 #scrollTopBtn.visible { opacity:1; pointer-events:auto; }
+/* ── AI 진단 박스 (공통) ── */
+.ai-diag-card { border-radius:18px; padding:24px; margin-bottom:18px; max-width:720px; margin-left:auto; margin-right:auto; position:relative; overflow:hidden; }
+.ai-diag-card.moim-ai { background:linear-gradient(135deg,#041f0a,#0a3015,#041f0a); border:1.5px solid rgba(22,163,74,0.45); }
+.ai-diag-card.munto-ai { background:linear-gradient(135deg,#1f0800,#3a1200,#1f0800); border:1.5px solid rgba(234,88,12,0.45); }
+.ai-diag-card::before { content:''; position:absolute; top:0; left:-150%; width:50%; height:100%; animation:ai-shimmer 2.8s infinite; }
+.ai-diag-card.moim-ai::before  { background:linear-gradient(90deg,transparent,rgba(34,197,94,0.09),transparent); }
+.ai-diag-card.munto-ai::before { background:linear-gradient(90deg,transparent,rgba(234,88,12,0.09),transparent); }
+@keyframes ai-shimmer { to { left:220%; } }
+.ai-diag-card h2 { color:#fff; font-size:1.05rem; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.ai-grade-row { display:flex; align-items:center; gap:16px; margin-bottom:18px; background:rgba(255,255,255,0.06); border-radius:14px; padding:16px 18px; }
+.ai-grade-emoji { font-size:2.8rem; flex-shrink:0; }
+.ai-grade-info { flex:1; min-width:0; }
+.ai-grade-lbl { font-size:0.7rem; color:#888; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
+.ai-grade-name { font-size:1.2rem; font-weight:900; }
+.ai-grade-name.moim-gn  { background:linear-gradient(90deg,#16A34A,#22c55e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.ai-grade-name.munto-gn { background:linear-gradient(90deg,#EA580C,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.ai-grade-score-line { font-size:0.82rem; color:#777; margin-top:4px; }
+.typewriter-box { background:rgba(0,0,0,0.38); border-radius:12px; padding:16px 18px; font-size:0.87rem; line-height:1.9; color:#e0e0e0; min-height:68px; border:1px solid rgba(255,255,255,0.08); word-break:keep-all; overflow-wrap:break-word; }
+.tw-cursor { display:inline-block; width:2px; height:1em; animation:tw-blink 0.8s infinite; vertical-align:text-bottom; margin-left:1px; border-radius:1px; }
+.moim-ai .tw-cursor { background:#22c55e; }
+.munto-ai .tw-cursor { background:#f97316; }
+@keyframes tw-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.ai-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+.ai-tag { font-size:0.71rem; font-weight:700; padding:4px 10px; border-radius:99px; }
+.moim-ai .ai-tag  { background:rgba(22,163,74,0.14); color:#86efac; border:1px solid rgba(22,163,74,0.28); }
+.munto-ai .ai-tag { background:rgba(234,88,12,0.14); color:#fdba74; border:1px solid rgba(234,88,12,0.28); }
+/* ── 레이더 ── */
+.radar-wrap { display:flex; flex-direction:column; align-items:center; padding:10px 0 4px; }
+.radar-wrap canvas { max-width:300px; width:100%; }
+.radar-legend { display:flex; flex-wrap:wrap; justify-content:center; gap:8px 18px; margin-top:14px; }
+.radar-legend-item { display:flex; align-items:center; gap:5px; font-size:0.72rem; font-weight:700; color:#555; }
+.radar-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+/* ── 게이지 ── */
+.algo-gauge-ttl { font-size:0.82rem; font-weight:700; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; }
+.algo-gauge-bar { height:14px; background:#f0f0f0; border-radius:99px; overflow:hidden; margin-bottom:16px; }
+.algo-gauge-fill { height:100%; border-radius:99px; transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1); width:0%; }
+.algo-gauge-fill.moim-g  { background:linear-gradient(90deg,#16A34A,#22c55e); }
+.algo-gauge-fill.munto-g { background:linear-gradient(90deg,#EA580C,#f97316); }
+.algo-tiers { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+@media(max-width:500px){ .algo-tiers { grid-template-columns:repeat(2,1fr); gap:6px; } }
+.algo-tier { background:#f9f9f9; border-radius:10px; padding:10px 6px; text-align:center; border:1.5px solid #e5e5e5; transition:all 0.3s; }
+.algo-tier.moim-act  { background:linear-gradient(135deg,#16A34A,#22c55e); border-color:transparent; transform:scale(1.04); }
+.algo-tier.munto-act { background:linear-gradient(135deg,#EA580C,#f97316); border-color:transparent; transform:scale(1.04); }
+.at-num { font-size:0.9rem; font-weight:900; color:#555; }
+.algo-tier.moim-act .at-num, .algo-tier.munto-act .at-num { color:#fff; }
+.at-lbl { font-size:0.62rem; color:#aaa; margin-top:3px; line-height:1.4; word-break:keep-all; }
+.algo-tier.moim-act .at-lbl, .algo-tier.munto-act .at-lbl { color:rgba(255,255,255,0.88); }
+.at-now { display:none; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.25); border-radius:4px; padding:1px 5px; color:#fff; margin-bottom:3px; }
+.algo-tier.moim-act .at-now, .algo-tier.munto-act .at-now { display:block; }
+/* ── count-up pop ── */
+@keyframes score-pop { 0%{transform:scale(0.55);opacity:0} 70%{transform:scale(1.09)} 100%{transform:scale(1);opacity:1} }
+.score-number.popped { animation:score-pop 0.75s cubic-bezier(0.34,1.56,0.64,1) both; }
   </style>
 </head>
 <body>
@@ -684,6 +736,43 @@
       </div>
     </div>
 
+    <!-- 🤖 AI 진단 (소모임) -->
+    <div class="ai-diag-card moim-ai" id="m-ai-card">
+      <h2>🤖 AI 종합 진단</h2>
+      <div class="ai-grade-row">
+        <div class="ai-grade-emoji" id="m-ai-emoji">🌱</div>
+        <div class="ai-grade-info">
+          <div class="ai-grade-lbl">소모임 등급</div>
+          <div class="ai-grade-name moim-gn" id="m-ai-name">분석 중...</div>
+          <div class="ai-grade-score-line" id="m-ai-score-line"></div>
+        </div>
+      </div>
+      <div class="typewriter-box" id="m-ai-tw"></div>
+      <div class="ai-tags" id="m-ai-tags"></div>
+    </div>
+
+    <!-- 📡 레이더 (소모임) -->
+    <div class="result-card moim-res">
+      <h2>📡 6차원 노출 분석</h2>
+      <div class="radar-wrap">
+        <canvas id="m-radar" width="300" height="300"></canvas>
+        <div class="radar-legend" id="m-radar-legend"></div>
+      </div>
+    </div>
+
+    <!-- 🎯 알고리즘 게이지 (소모임) -->
+    <div class="result-card moim-res">
+      <h2>🎯 알고리즘 노출 예측</h2>
+      <div class="algo-gauge-ttl"><span>소모임 알고리즘 상위 노출 예측</span><span id="m-gauge-pct" style="color:#16A34A;font-weight:900;font-size:1rem;">—%</span></div>
+      <div class="algo-gauge-bar"><div class="algo-gauge-fill moim-g" id="m-gauge-fill"></div></div>
+      <div class="algo-tiers">
+        <div class="algo-tier" id="m-at0"><div class="at-now">현재</div><div class="at-num">하위 30%</div><div class="at-lbl">씨앗 단계<br>0~34점</div></div>
+        <div class="algo-tier" id="m-at1"><div class="at-now">현재</div><div class="at-num">상위 50%</div><div class="at-lbl">새싹 단계<br>35~54점</div></div>
+        <div class="algo-tier" id="m-at2"><div class="at-now">현재</div><div class="at-num">상위 25%</div><div class="at-lbl">성장 단계<br>55~74점</div></div>
+        <div class="algo-tier" id="m-at3"><div class="at-now">현재</div><div class="at-num">상위 10%</div><div class="at-lbl">프리미엄<br>75점+</div></div>
+      </div>
+    </div>
+
     <div class="result-card moim-res">
       <h2>📐 소모임 노출 공식</h2>
       <div class="formula-box moim-fb">
@@ -1010,6 +1099,43 @@
       </div>
     </div>
 
+    <!-- 🤖 AI 진단 (문토) -->
+    <div class="ai-diag-card munto-ai" id="t-ai-card">
+      <h2>🤖 AI 종합 진단</h2>
+      <div class="ai-grade-row">
+        <div class="ai-grade-emoji" id="t-ai-emoji">🌱</div>
+        <div class="ai-grade-info">
+          <div class="ai-grade-lbl">문토 클럽 등급</div>
+          <div class="ai-grade-name munto-gn" id="t-ai-name">분석 중...</div>
+          <div class="ai-grade-score-line" id="t-ai-score-line"></div>
+        </div>
+      </div>
+      <div class="typewriter-box" id="t-ai-tw"></div>
+      <div class="ai-tags" id="t-ai-tags"></div>
+    </div>
+
+    <!-- 📡 레이더 (문토) -->
+    <div class="result-card munto-res">
+      <h2>📡 6차원 노출 분석</h2>
+      <div class="radar-wrap">
+        <canvas id="t-radar" width="300" height="300"></canvas>
+        <div class="radar-legend" id="t-radar-legend"></div>
+      </div>
+    </div>
+
+    <!-- 🎯 알고리즘 게이지 (문토) -->
+    <div class="result-card munto-res">
+      <h2>🎯 알고리즘 노출 예측</h2>
+      <div class="algo-gauge-ttl"><span>문토 알고리즘 상위 노출 예측</span><span id="t-gauge-pct" style="color:#EA580C;font-weight:900;font-size:1rem;">—%</span></div>
+      <div class="algo-gauge-bar"><div class="algo-gauge-fill munto-g" id="t-gauge-fill"></div></div>
+      <div class="algo-tiers">
+        <div class="algo-tier" id="t-at0"><div class="at-now">현재</div><div class="at-num">하위 30%</div><div class="at-lbl">씨앗 단계<br>0~34점</div></div>
+        <div class="algo-tier" id="t-at1"><div class="at-now">현재</div><div class="at-num">상위 50%</div><div class="at-lbl">새싹 단계<br>35~54점</div></div>
+        <div class="algo-tier" id="t-at2"><div class="at-now">현재</div><div class="at-num">상위 25%</div><div class="at-lbl">성장 단계<br>55~74점</div></div>
+        <div class="algo-tier" id="t-at3"><div class="at-now">현재</div><div class="at-num">상위 10%</div><div class="at-lbl">프리미엄<br>75점+</div></div>
+      </div>
+    </div>
+
     <div class="result-card munto-res">
       <h2>📐 문토 노출 공식</h2>
       <div class="formula-box munto-fb">
@@ -1247,12 +1373,17 @@ function analyzeMoim() {
   const total = Math.round(seo*0.25 + act*0.25 + trust*0.20 + cvr*0.15 + ltvScore*0.10 + grow*0.05);
   const { g, l } = grade(total, 'moim');
 
-  document.getElementById('m-totalScore').textContent = total;
+  const mScoreEl = document.getElementById('m-totalScore');
+  mScoreEl.classList.remove('popped'); void mScoreEl.offsetWidth;
+  countUpAnim(mScoreEl, total, 1400); mScoreEl.classList.add('popped');
   document.getElementById('m-scoreGrade').textContent = g;
   document.getElementById('m-scoreLabel').textContent = l;
-  ['m-s1','m-s2','m-s3','m-s4','m-s5','m-s6'].forEach((id, i) => {
-    document.getElementById(id).textContent = [seo,act,trust,cvr,ltvScore,grow].map(Math.round)[i];
-  });
+  const mSubVals = [seo,act,trust,cvr,ltvScore,grow].map(Math.round);
+  ['m-s1','m-s2','m-s3','m-s4','m-s5','m-s6'].forEach((id, i) => countUpAnim(document.getElementById(id), mSubVals[i], 900));
+  // AI 진단 + 레이더 + 게이지
+  renderAIDiagGeneric(total, [seo,act,trust,cvr,ltvScore,grow], ['SEO','활성도','신뢰도','전환율','LTV','성장'], 'm-ai-emoji','m-ai-name','m-ai-score-line','m-ai-tw','m-ai-tags','#16A34A','소모임');
+  drawRadarGeneric('m-radar',[seo,act,trust,cvr,ltvScore,grow],['SEO','활성도','신뢰도','전환율','LTV','성장'],'#16A34A','m-radar-legend');
+  renderAlgoGaugeGeneric(total,'m-gauge-fill','m-gauge-pct',['m-at0','m-at1','m-at2','m-at3'],'moim-act');
 
   document.getElementById('m-statRows').innerHTML = statRowHtml([
     { name:'제목 SEO', desc:'키워드·지역 포함 여부', val:seo },
@@ -1311,13 +1442,13 @@ function analyzeMoim() {
     `소개글 키워드 밀도가 높아요 — 알고리즘이 모임 주제를 정확하게 파악할 수 있어서 관련 관심사 사용자에게 더 잘 매칭돼요. 키워드 ${introKwCount}개는 같은 카테고리 모임 상위 20% 수준이에요.`,
     `2025 관심사 매칭 업데이트 이후 소개글 키워드가 카테고리만큼 중요해졌어요. 지금 소개글에 ${introKwCount}개 키워드가 있어서 매칭 정확도가 높은 상태예요.`,
     `소개글 키워드가 풍부해서 소모임 검색 알고리즘이 "이 모임이 어떤 사람에게 맞는지" 명확하게 파악해요. 새 멤버 유입 시 이탈률도 낮아지는 효과가 있어요.`
-  ]));
+  ]) });
   else if (introKwCount <= 1) expChecks.push({ type:'warn', title:`소개글 키워드 부족 (${introKwCount}개) — 매칭 정확도 낮음`, desc: pick([
     `소개글에 관련 키워드가 ${introKwCount}개뿐이에요. 2025 소모임 매칭 알고리즘은 소개글 키워드로 관심사를 분석해요. "매주 토요일", "강남", "20~30대 직장인" 같은 구체적 키워드를 더 넣어보세요.`,
     `소개글 키워드가 부족하면 알고리즘이 모임 주제를 정확히 파악하지 못해요. 맞지 않는 사람에게도 노출돼서 CTR이 낮아지는 악순환이 생겨요. 키워드를 4개 이상으로 늘려보세요.`,
     `2025 관심사 매칭 업데이트 이후 소개글 키워드 밀도가 검색 노출 순위에 직접 영향을 줘요. 지금 소개글에 모임 장소·대상·활동 키워드를 구체적으로 추가해보세요.`,
     `소개글 키워드 ${introKwCount}개는 같은 카테고리 모임 평균 대비 낮아요. "어떤 사람이 오는지", "언제 어디서 하는지"를 명확히 쓰면 키워드가 자연스럽게 늘어나요.`
-  ]));
+  ]) });
 
   if (intro.length >= 100) expChecks.push({ type:'ok', title:`소개글 ${intro.length}자 — 알고리즘 이해도 충분`, desc: pick([
     `소개글이 100자 이상이면 소모임 알고리즘이 모임 주제를 정확히 파악해서 관련 검색에 노출시켜요. 일정·장소·대상이 모두 담겨 있으면 전환율이 추가로 올라가요.`,
@@ -1748,12 +1879,17 @@ function analyzeMunto() {
   const total = Math.round(seo*0.20 + act*0.20 + trust*0.20 + cvr*0.15 + charm*0.15 + ltvScore*0.10);
   const { g, l } = grade(total, 'munto');
 
-  document.getElementById('t-totalScore').textContent = total;
+  const tScoreEl = document.getElementById('t-totalScore');
+  tScoreEl.classList.remove('popped'); void tScoreEl.offsetWidth;
+  countUpAnim(tScoreEl, total, 1400); tScoreEl.classList.add('popped');
   document.getElementById('t-scoreGrade').textContent = g;
   document.getElementById('t-scoreLabel').textContent = l;
-  ['t-s1','t-s2','t-s3','t-s4','t-s5','t-s6'].forEach((id, i) => {
-    document.getElementById(id).textContent = [seo,act,trust,cvr,charm,ltvScore].map(Math.round)[i];
-  });
+  const tSubVals = [seo,act,trust,cvr,charm,ltvScore].map(Math.round);
+  ['t-s1','t-s2','t-s3','t-s4','t-s5','t-s6'].forEach((id, i) => countUpAnim(document.getElementById(id), tSubVals[i], 900));
+  // AI 진단 + 레이더 + 게이지
+  renderAIDiagGeneric(total, [seo,act,trust,cvr,charm,ltvScore], ['SEO','활성도','신뢰도','전환율','매력도','LTV'], 't-ai-emoji','t-ai-name','t-ai-score-line','t-ai-tw','t-ai-tags','#EA580C','문토');
+  drawRadarGeneric('t-radar',[seo,act,trust,cvr,charm,ltvScore],['SEO','활성도','신뢰도','전환율','매력도','LTV'],'#EA580C','t-radar-legend');
+  renderAlgoGaugeGeneric(total,'t-gauge-fill','t-gauge-pct',['t-at0','t-at1','t-at2','t-at3'],'munto-act');
 
   document.getElementById('t-statRows').innerHTML = statRowHtml([
     { name:'제목 SEO', desc:'키워드·감성어 포함', val:seo },
@@ -2213,6 +2349,111 @@ ${htText}`}
     +`<p style="font-size:0.85rem;color:#888;margin:0 0 14px;">📊 분석 결과를 바탕으로 인스타 캡션과 해시태그를 생성해드려요</p>`
     +`<button onclick="(function(){var el=document.getElementById('${targetId}');el.innerHTML=window._snsKit['${targetId}'];})()" style="padding:13px 32px;background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(255,107,107,0.3);">📱 SNS 홍보 키트 생성하기</button>`
     +`</div>`;
+}
+
+// ══════════ 공통 유틸 함수 ══════════
+function countUpAnim(el,target,duration){
+  if(!el)return;
+  const start=performance.now(),startVal=parseInt(el.textContent)||0;
+  const update=(now)=>{
+    const elapsed=Math.min(now-start,duration),progress=elapsed/duration;
+    const ease=1-Math.pow(1-progress,3);
+    el.textContent=Math.round(startVal+(target-startVal)*ease);
+    if(progress<1)requestAnimationFrame(update);else el.textContent=target;
+  };
+  requestAnimationFrame(update);
+}
+function typewriterEffect(el,text,speed){
+  if(!el)return; el.innerHTML=''; let i=0;
+  const iv=setInterval(()=>{
+    if(i<=text.length){el.innerHTML=text.slice(0,i).replace(/\n/g,'<br>')+'<span class="tw-cursor"></span>';i++;}
+    else{clearInterval(iv);el.innerHTML=text.replace(/\n/g,'<br>');}
+  },speed);
+}
+function drawRadarGeneric(canvasId,scores,labels,color,legendId){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height;
+  const cx=W/2,cy=H/2,R=Math.min(W,H)/2-42,n=scores.length;
+  ctx.clearRect(0,0,W,H);
+  for(let r=1;r<=5;r++){
+    ctx.beginPath();
+    for(let i=0;i<n;i++){const a=(i/n)*Math.PI*2-Math.PI/2;const x=cx+(R*r/5)*Math.cos(a),y=cy+(R*r/5)*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.closePath(); ctx.strokeStyle=r===5?color+'44':'#ebebeb'; ctx.lineWidth=r===5?1.5:1; ctx.stroke();
+    if(r===5){ctx.fillStyle=color+'12';ctx.fill();}
+  }
+  for(let i=0;i<n;i++){
+    const a=(i/n)*Math.PI*2-Math.PI/2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
+    ctx.strokeStyle='#e0e0e0';ctx.lineWidth=1;ctx.stroke();
+  }
+  ctx.beginPath();
+  scores.forEach((s,i)=>{
+    const a=(i/n)*Math.PI*2-Math.PI/2,r=(Math.min(100,Math.max(0,s))/100)*R;
+    const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.closePath();ctx.fillStyle=color+'2e';ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.stroke();
+  scores.forEach((s,i)=>{
+    const a=(i/n)*Math.PI*2-Math.PI/2,r=(Math.min(100,Math.max(0,s))/100)*R;
+    const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+  });
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  labels.forEach((lbl,i)=>{
+    const a=(i/n)*Math.PI*2-Math.PI/2,lx=cx+(R+27)*Math.cos(a),ly=cy+(R+27)*Math.sin(a);
+    ctx.font='700 11px Apple SD Gothic Neo,sans-serif';ctx.fillStyle='#444';ctx.fillText(lbl,lx,ly-6);
+    ctx.font='800 10px Apple SD Gothic Neo,sans-serif';ctx.fillStyle=color;ctx.fillText(Math.round(scores[i]),lx,ly+7);
+  });
+  const lEl=document.getElementById(legendId);
+  if(lEl) lEl.innerHTML=labels.map((l,i)=>{
+    const c=scores[i]>=70?'#22c55e':scores[i]>=40?color:'#ef4444';
+    return `<div class="radar-legend-item"><div class="radar-dot" style="background:${c};"></div>${l}: <strong>${Math.round(scores[i])}</strong></div>`;
+  }).join('');
+}
+function renderAIDiagGeneric(total,scores,labels,emojiId,nameId,scoreLineId,twId,tagsId,color,platform){
+  let emoji,gradeName,gradeDesc;
+  if(total>=88){emoji='🏆✨';gradeName='최상위 등급';gradeDesc='알고리즘 최우선 추천 — 상위 5% 수준이에요';}
+  else if(total>=73){emoji='🥇';gradeName='프리미엄 등급';gradeDesc='상위 15% 경쟁력 — 꾸준히 유지하면 최상위예요';}
+  else if(total>=55){emoji='🌿';gradeName='성장 등급';gradeDesc='상위 35% 수준 — 핵심 약점 하나 개선하면 도약해요';}
+  else if(total>=35){emoji='🌱';gradeName='새싹 등급';gradeDesc='중위권 — 전략적 개선으로 빠르게 올라갈 수 있어요';}
+  else{emoji='🪴';gradeName='씨앗 단계';gradeDesc='개선이 필요한 상태예요';}
+  const emojiEl=document.getElementById(emojiId),nameEl=document.getElementById(nameId),slEl=document.getElementById(scoreLineId);
+  if(emojiEl)emojiEl.textContent=emoji;
+  if(nameEl)nameEl.textContent=gradeName;
+  if(slEl)slEl.textContent=`종합 점수 ${total}점 · ${gradeDesc}`;
+  const weakIdx=scores.indexOf(Math.min(...scores));
+  const strongIdx=scores.indexOf(Math.max(...scores));
+  const lines=[];
+  if(scores[0]<40)lines.push(`${platform} 검색 노출의 핵심은 제목 SEO예요. 지역명+활동+대상 조합으로 제목을 개선하면 노출이 즉시 달라져요.`);
+  else if(scores[1]<40)lines.push(`검색은 잘 되는데 활성도가 낮아요. 정기 모임 일정 등록과 게시글 활동이 ${platform} 알고리즘의 핵심 신호예요.`);
+  else if(scores[2]<40)lines.push(`신뢰도가 발목을 잡고 있어요. 후기·별점을 높이면 전환율과 노출 점수가 동시에 올라가요.`);
+  else if(total>=75)lines.push(`모든 지표가 우수해요! ${platform} 추천 알고리즘이 이 ${platform==='소모임'?'모임':'클럽'}을 적극 확산 중이에요. 지금 수준을 유지하는 것이 최선의 전략이에요.`);
+  else lines.push(`${labels[strongIdx]}이 강점이에요. ${labels[weakIdx]}(${Math.round(scores[weakIdx])}점)을 개선하면 가장 빠르게 노출 점수가 올라가요.`);
+  const twEl=document.getElementById(twId);
+  if(twEl)typewriterEffect(twEl,lines.join('\n\n'),22);
+  const allTags=[];
+  if(scores[0]>=70)allTags.push('✅ SEO 최적화');
+  if(scores[1]>=70)allTags.push('✅ 활성 모임');
+  if(scores[2]>=70)allTags.push('✅ 신뢰 호스트');
+  if(total>=75)allTags.push('✅ 알고리즘 추천 대상');
+  if(scores[0]<40)allTags.push('⚠️ SEO 개선 필요');
+  if(scores[1]<40)allTags.push('⚠️ 활성도 낮음');
+  if(scores[2]<40)allTags.push('⚠️ 신뢰도 개선');
+  const tagsEl=document.getElementById(tagsId);
+  if(tagsEl)tagsEl.innerHTML=allTags.slice(0,6).map(t=>`<span class="ai-tag">${t}</span>`).join('');
+}
+function renderAlgoGaugeGeneric(total,fillId,pctId,tierIds,activeClass){
+  let fillPct,tierIdx,tierLabel;
+  if(total>=75){fillPct=85+(total-75)*0.6;tierIdx=3;tierLabel='상위 10%';}
+  else if(total>=55){fillPct=55+(total-55)*1.5;tierIdx=2;tierLabel='상위 25%';}
+  else if(total>=35){fillPct=28+(total-35)*1.35;tierIdx=1;tierLabel='상위 50%';}
+  else{fillPct=total*0.8;tierIdx=0;tierLabel='하위 30%';}
+  fillPct=Math.min(100,Math.round(fillPct));
+  const fEl=document.getElementById(fillId),pEl=document.getElementById(pctId);
+  if(fEl){fEl.style.width='0%';setTimeout(()=>{fEl.style.width=fillPct+'%';},100);}
+  if(pEl)pEl.textContent=tierLabel;
+  tierIds.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.classList.toggle(activeClass,i===tierIdx);});
 }
 </script>
 
