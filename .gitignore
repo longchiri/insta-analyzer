@@ -4,3 +4,22 @@
 __pycache__/
 .DS_Store
 *.backup_*
+
+# ── 크롤러 파일 (깃허브 업로드 금지!) ──────────────────
+daangn_crawler.py
+daangn_detail_crawler.py
+daangn_debug.py
+daangn_debug2.py
+daangn_detail_debug.py
+daangn_test.py
+*_crawler.py
+*_debug.py
+*_debug2.py
+
+# ── 수집 데이터 / 스크린샷 ──────────────────────────────
+*.xlsx
+*.png
+daangn_detail_progress.xlsx
+
+# ── Claude 내부 폴더 ────────────────────────────────────
+.claude/
