@@ -107,10 +107,11 @@
 
     /* ── 카드 그리드 ── */
     .grid {
-      display:grid;
-      grid-template-columns:repeat(2, 1fr);
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
       gap:18px;
-      max-width:720px;
+      max-width:1020px;
       margin:0 auto;
     }
 
@@ -124,6 +125,8 @@
       border:1.5px solid #ebebeb;
       transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
       position:relative; overflow:hidden;
+      flex: 0 0 calc(33.333% - 14px);
+      min-width:260px;
     }
     .card::before {
       content:'';
@@ -369,25 +372,6 @@
     ">보기 →</span>
   </a>
 
-  <!-- 에브리타임 홍보게시판 분석기 -->
-  <a href="everytime-analyzer.html" style="
-    display:flex; align-items:center; gap:10px;
-    background:linear-gradient(135deg,#7a0000 0%,#b91c1c 100%);
-    border-radius:99px; padding:10px 16px 10px 14px;
-    text-decoration:none; color:#fff;
-    box-shadow:0 3px 14px rgba(229,62,62,0.22);
-    transition:transform 0.18s, box-shadow 0.18s;
-    " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 22px rgba(229,62,62,0.35)'"
-       onmouseout="this.style.transform='';this.style.boxShadow='0 3px 14px rgba(229,62,62,0.22)'">
-    <span style="font-size:1.1rem; line-height:1; flex-shrink:0;">📚</span>
-    <span style="font-size:0.8rem; font-weight:700; color:#fca5a5; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">에브리타임 홍보게시판 분석기</span>
-    <span style="
-      background:linear-gradient(90deg,#E53E3E,#FC8181);
-      border-radius:99px; padding:5px 12px;
-      font-size:0.7rem; font-weight:800; color:#fff;
-      white-space:nowrap; flex-shrink:0;
-    ">분석 시작 →</span>
-  </a>
 
 </div>
 

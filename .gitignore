@@ -12,9 +12,12 @@ daangn_debug.py
 daangn_debug2.py
 daangn_detail_debug.py
 daangn_test.py
+daangn_region_finder.py
 *_crawler.py
+*_finder.py
 *_debug.py
 *_debug2.py
+region_finder_result.json
 
 # ── 수집 데이터 / 스크린샷 ──────────────────────────────
 *.xlsx
