@@ -2061,8 +2061,8 @@ function analyze() {
 
   // 렌더링
   const renderChecks = (arr) => arr.map(c => {
-    const bg     = c.type === 'ok' ? '#f0fdf4' : c.type === 'bad' ? '#fef2f2' : '#fffbeb';
-    const border = c.type === 'ok' ? '#16a34a' : c.type === 'bad' ? '#ef4444' : '#f59e0b';
+    const bg     = c.type === 'ok' ? '#eef3f7' : c.type === 'bad' ? '#fef2f2' : '#fffbeb';
+    const border = c.type === 'ok' ? '#7a9bba' : c.type === 'bad' ? '#ef4444' : '#f59e0b';
     const icon   = c.type === 'ok' ? '✅' : c.type === 'bad' ? '❌' : '⚠️';
     return `<div style="border-radius:10px;border-left:4px solid ${border};background:${bg};padding:12px 14px;margin-bottom:10px;">
       <div style="font-weight:700;font-size:0.88rem;color:#333;margin-bottom:4px;">${icon} ${c.title}</div>
@@ -2208,19 +2208,19 @@ const _SNS_HT={
 function renderSNSKit(targetId, platform) {
   const el=document.getElementById(targetId);
   if(!el) return;
-  let name='',category='기타',introText='',userHashtags=[],memberCount=0,borderColor='#16A34A',platformTags=[];
+  let name='',category='기타',introText='',userHashtags=[],memberCount=0,borderColor='#7a9bba',platformTags=[];
   if(platform==='somoim'){
     name=(document.getElementById('m-title')?.value||'').trim();
     introText=(document.getElementById('m-intro')?.value||'').trim();
     category=document.getElementById('m-category')?.value||'기타';
     memberCount=parseInt(document.getElementById('m-members')?.value)||0;
-    borderColor='#16A34A'; platformTags=['#소모임','#소모임앱'];
+    borderColor='#7a9bba'; platformTags=['#소모임','#소모임앱'];
   } else if(platform==='munto'){
     name=(document.getElementById('t-title')?.value||'').trim();
     introText=(document.getElementById('t-intro')?.value||'').trim();
     category=document.getElementById('t-category')?.value||'기타';
     memberCount=parseInt(document.getElementById('t-members')?.value)||0;
-    borderColor='#EA580C'; platformTags=['#문토','#문토클럽'];
+    borderColor='#ff4628'; platformTags=['#문토','#문토클럽'];
   } else if(platform==='kakao'){
     name=(document.getElementById('roomTitle')?.value||'').trim();
     introText=(document.getElementById('roomIntro')?.value||'').trim();
@@ -2234,7 +2234,7 @@ function renderSNSKit(targetId, platform) {
     introText=(document.getElementById('moimIntro')?.value||'').trim();
     category=document.getElementById('category')?.value||'기타';
     memberCount=parseInt(document.getElementById('memberCount')?.value)||0;
-    borderColor='#FF6F0F'; platformTags=['#당근모임','#당근마켓모임'];
+    borderColor='#ff4628'; platformTags=['#당근모임','#당근마켓모임'];
   }
   const searchText=name+' '+introText;
   const region=_REGIONS.find(r=>searchText.includes(r))||'';
@@ -2297,7 +2297,7 @@ ${htText}`}
   ];
   const htHtml=[
     ...large.map(h=>`<span style="background:#e8f4fd;color:#1a6fb5;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
-    ...medium.map(h=>`<span style="background:#eef6ee;color:#16A34A;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
+    ...medium.map(h=>`<span style="background:#eef3f7;color:#7a9bba;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
     ...niche.map(h=>`<span style="background:#f3f0ff;color:#7c3aed;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
     ...extras.map(h=>`<span style="background:#fff3e0;color:#e65100;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`)
   ].join('');

@@ -268,7 +268,7 @@
       font-size: 0.82rem; font-weight: 600;
     }
     .kw-tag-existing { background: #f5f0ff; border: 1.5px solid #c13584; color: #833ab4; }
-    .kw-tag-suggest  { background: #fff8f0; border: 1.5px dashed #FF9744; color: #FF6F0F; }
+    .kw-tag-suggest  { background: #fff8f0; border: 1.5px dashed #FF9744; color: #ff4628; }
 
     /* 추천 아이템 */
     .reco-item {
@@ -632,7 +632,7 @@
     </div>
 
     <!-- 프로필 SEO -->
-    <div style="font-size:0.78rem;font-weight:700;color:#16a34a;margin-bottom:8px;">🔍 프로필 & 전략</div>
+    <div style="font-size:0.78rem;font-weight:700;color:#7a9bba;margin-bottom:8px;">🔍 프로필 & 전략</div>
     <div class="form-grid">
       <div class="form-group">
         <label>월 프로필 방문자 수</label>
@@ -1444,7 +1444,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 4.9.3</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 5.4.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -2529,7 +2529,7 @@ function autoFillSEO(data) {
     const seoCard = document.querySelector('.seo-card-wrap');
     if (seoCard) {
       const banner = document.createElement('div');
-      banner.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:0.72rem;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:7px 12px;margin-bottom:12px;';
+      banner.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:0.72rem;color:#7a9bba;background:#eef3f7;border:1px solid #d0dfe9;border-radius:8px;padding:7px 12px;margin-bottom:12px;';
       banner.innerHTML = '✅ ZIP에서 ' + filled.join('·') + ' 자동 입력됨 — 수정 후 분석하세요';
       seoCard.insertBefore(banner, seoCard.firstChild);
     }
@@ -2537,13 +2537,13 @@ function autoFillSEO(data) {
 }
 
 function markAutoFill(el, label) {
-  el.style.borderColor = '#16a34a';
-  el.style.background = '#f0fdf4';
+  el.style.borderColor = '#7a9bba';
+  el.style.background = '#eef3f7';
   const wrap = el.parentElement;
   if (!wrap.querySelector('.autofill-badge')) {
     const badge = document.createElement('span');
     badge.className = 'autofill-badge';
-    badge.style.cssText = 'display:inline-block;font-size:0.62rem;color:#16a34a;font-weight:700;margin-left:6px;vertical-align:middle;';
+    badge.style.cssText = 'display:inline-block;font-size:0.62rem;color:#7a9bba;font-weight:700;margin-left:6px;vertical-align:middle;';
     badge.textContent = '✓ ' + label;
     wrap.querySelector('label').appendChild(badge);
   }
@@ -3067,7 +3067,7 @@ function analyze() {
     const nfCnt  = D.avgReach ? Math.round(D.avgReach * nfrPct / 100) : 0;
     const fCnt   = D.avgReach ? D.avgReach - nfCnt : 0;
     const diagColor = nfrPct>=80 ? '#166534' : nfrPct>=50 ? '#92400e' : nfrPct>=20 ? '#b45309' : '#991b1b';
-    const diagBg    = nfrPct>=80 ? '#f0fdf4' : nfrPct>=50 ? '#fffbeb' : nfrPct>=20 ? '#fff7ed' : '#fef2f2';
+    const diagBg    = nfrPct>=80 ? '#eef3f7' : nfrPct>=50 ? '#fffbeb' : nfrPct>=20 ? '#fff7ed' : '#fef2f2';
     const diagMsg   = nfrPct>=80
       ? '🚀 알고리즘이 탐색·릴스 피드에 콘텐츠를 공격적으로 배포 중입니다. 신규 팔로워 유입 최적 상태예요.'
       : nfrPct>=50
@@ -3088,10 +3088,10 @@ function analyze() {
         <div style="font-size:0.7rem;color:#666;margin-top:2px;">총 도달</div>
         <div style="font-size:0.62rem;color:#aaa;">팔+비팔 합산</div>
       </div>
-      <div style="text-align:center;background:#f0fdf4;border-radius:10px;padding:12px 4px;">
-        <div style="font-size:1.15rem;font-weight:800;color:#16a34a;">${nfCnt ? nfCnt.toLocaleString() : (nfrPct?nfrPct+'%':'—')}</div>
+      <div style="text-align:center;background:#eef3f7;border-radius:10px;padding:12px 4px;">
+        <div style="font-size:1.15rem;font-weight:800;color:#7a9bba;">${nfCnt ? nfCnt.toLocaleString() : (nfrPct?nfrPct+'%':'—')}</div>
         <div style="font-size:0.7rem;color:#666;margin-top:2px;">비팔 도달</div>
-        <div style="font-size:0.62rem;color:#16a34a;font-weight:700;">${nfrPct ? nfrPct+'%' : ''}</div>
+        <div style="font-size:0.62rem;color:#7a9bba;font-weight:700;">${nfrPct ? nfrPct+'%' : ''}</div>
       </div>
       <div style="text-align:center;background:#eff6ff;border-radius:10px;padding:12px 4px;">
         <div style="font-size:1.15rem;font-weight:800;color:#2563eb;">${fCnt && nfCnt ? fCnt.toLocaleString() : '—'}</div>
@@ -5171,7 +5171,7 @@ function analyze() {
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;">
         ${[
           {bg:'#f0f9ff',c:'#1d4ed8',label:'분석 게시물',val:fpTotal+'개'},
-          {bg:'#f0fdf4',c:'#166534',label:'평균 도달',val:fpAvgReach.toLocaleString()+'명'},
+          {bg:'#eef3f7',c:'#166534',label:'평균 도달',val:fpAvgReach.toLocaleString()+'명'},
           {bg:'#fdf4ff',c:'#7e22ce',label:'평균 인게이지먼트율',val:isNaN(fpAvgEng)?'—':fpAvgEng.toFixed(1)+'%'},
           {bg:'#eff6ff',c:'#1e40af',label:'평균 노출',val:fpAvgImpr?fpAvgImpr.toLocaleString()+'회':'—'},
         ].map(s=>`<div style="background:${s.bg};border-radius:12px;padding:11px;text-align:center;"><div style="font-size:0.7rem;color:#aaa;margin-bottom:3px;">${s.label}</div><div style="font-size:1.2rem;font-weight:900;color:${s.c};">${s.val}</div></div>`).join('')}
@@ -6147,7 +6147,7 @@ function renderSNSKitInsta(){
     +'</div>'
     +(largeFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#fee2e2;color:#991b1b;padding:2px 7px;border-radius:20px;font-weight:700;">대형 (100만+)</span> <span style="font-size:0.82rem;color:#555;">'+largeFinal.join(' ')+'</span></div>':'')
     +(mediumFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#fef9c3;color:#854d0e;padding:2px 7px;border-radius:20px;font-weight:700;">중형 (10~100만)</span> <span style="font-size:0.82rem;color:#555;">'+mediumFinal.join(' ')+'</span></div>':'')
-    +(nicheFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#dcfce7;color:#166534;padding:2px 7px;border-radius:20px;font-weight:700;">소형 (틈새)</span> <span style="font-size:0.82rem;color:#555;">'+nicheFinal.join(' ')+'</span></div>':'')
+    +(nicheFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#d0dfe9;color:#166534;padding:2px 7px;border-radius:20px;font-weight:700;">소형 (틈새)</span> <span style="font-size:0.82rem;color:#555;">'+nicheFinal.join(' ')+'</span></div>':'')
     +(regionFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#dbeafe;color:#1d4ed8;padding:2px 7px;border-radius:20px;font-weight:700;">지역</span> <span style="font-size:0.82rem;color:#555;">'+regionFinal.join(' ')+'</span></div>':'')
     +'<div id="isk-tags-box" style="display:none;">'+tagsLine+'</div>'
     +'</div>';
@@ -6167,11 +6167,11 @@ function renderSNSKitInsta(){
     +'</div>';
 
   // 콘텐츠 아이디어 섹션
-  var ideasHtml='<div style="background:#f0fdf4;border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid #bbf7d0;">'
+  var ideasHtml='<div style="background:#eef3f7;border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid #d0dfe9;">'
     +'<div style="font-weight:800;font-size:0.85rem;color:#166534;margin-bottom:10px;">💡 콘텐츠 아이디어 5가지</div>'
     +contentIdeas.map(function(idea,idx){
-      return '<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #dcfce7;">'
-        +'<span style="flex-shrink:0;font-weight:800;color:#16a34a;font-size:0.8rem;">'+(idx+1)+'.</span>'
+      return '<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #d0dfe9;">'
+        +'<span style="flex-shrink:0;font-weight:800;color:#7a9bba;font-size:0.8rem;">'+(idx+1)+'.</span>'
         +'<span style="font-size:0.83rem;color:#333;">'+idea+'</span>'
         +'</div>';
     }).join('')

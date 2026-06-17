@@ -16,12 +16,12 @@
     header .logo { font-size:2.8rem; margin-bottom:6px; }
     header h1 {
       font-size:1.9rem; font-weight:900;
-      background:linear-gradient(90deg,#FF6F0F,#FFB347);
+      background:linear-gradient(90deg,#ff4628,#ff8c78);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     }
     header p { color:#aaa; margin-top:6px; font-size:0.9rem; }
     .algo-badge {
-      display:inline-block; background:linear-gradient(90deg,#FF6F0F,#FFB347);
+      display:inline-block; background:linear-gradient(90deg,#ff4628,#ff8c78);
       color:#fff; font-size:0.72rem; font-weight:800;
       padding:3px 12px; border-radius:99px; margin-top:8px;
     }
@@ -29,7 +29,7 @@
     /* ── 카드 ── */
     .card {
       background:#fff; border-radius:18px; padding:24px;
-      margin-bottom:18px; box-shadow:0 4px 20px rgba(255,111,15,0.1);
+      margin-bottom:18px; box-shadow:0 4px 20px rgba(255,70,40,0.1);
       max-width:720px; margin-left:auto; margin-right:auto;
       border:1.5px solid #FFE0C8;
     }
@@ -49,16 +49,16 @@
       padding:10px 12px; font-size:0.93rem; outline:none;
       transition:border 0.2s; background:#fafafa; font-family:inherit;
     }
-    input:focus, textarea:focus, select:focus { border-color:#FF6F0F; background:#fff8f3; }
+    input:focus, textarea:focus, select:focus { border-color:#ff4628; background:#fff8f3; }
     textarea { resize:vertical; min-height:70px; }
 
     /* 슬라이더 */
     input[type="range"] {
       border:none; background:none; padding:0;
-      width:100%; cursor:pointer; accent-color:#FF6F0F;
+      width:100%; cursor:pointer; accent-color:#ff4628;
     }
     .range-row { display:flex; align-items:center; gap:10px; }
-    .range-val { font-size:1rem; font-weight:800; color:#FF6F0F; min-width:50px; text-align:right; }
+    .range-val { font-size:1rem; font-weight:800; color:#ff4628; min-width:50px; text-align:right; }
 
     /* ── PC / 모바일 모드 탭 ── */
     .mode-tab-wrap {
@@ -72,27 +72,27 @@
       cursor:pointer; transition:all 0.18s; color:#aaa;
     }
     .mode-tab.active {
-      border-color:#FF6F0F; background:linear-gradient(135deg,#fff8f3,#fff);
-      color:#FF6F0F;
+      border-color:#ff4628; background:linear-gradient(135deg,#fff8f3,#fff);
+      color:#ff4628;
     }
     /* PC 모드 카드 */
     .pc-card {
       max-width:720px; margin:0 auto 20px;
       background:#fff; border-radius:18px; padding:26px 22px;
-      border:2px solid #FF6F0F;
-      box-shadow:0 4px 24px rgba(255,111,15,0.08);
+      border:2px solid #ff4628;
+      box-shadow:0 4px 24px rgba(255,70,40,0.08);
     }
-    .pc-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:18px; color:#FF6F0F; }
+    .pc-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:18px; color:#ff4628; }
     .pc-step {
       background:#fff8f3; border-radius:12px; padding:14px 16px;
       margin-bottom:14px; border:1px solid #FFE0C8;
     }
     .pc-step-label {
-      font-size:0.78rem; font-weight:800; color:#FF6F0F;
+      font-size:0.78rem; font-weight:800; color:#ff4628;
       margin-bottom:8px; display:flex; align-items:center; gap:6px;
     }
     .pc-step-num {
-      width:20px; height:20px; background:#FF6F0F; color:#fff;
+      width:20px; height:20px; background:#ff4628; color:#fff;
       border-radius:50%; display:inline-flex; align-items:center;
       justify-content:center; font-size:0.72rem; font-weight:800; flex-shrink:0;
     }
@@ -105,7 +105,7 @@
       word-break:break-all; line-height:1.5;
     }
     .cmd-copy-btn {
-      background:#FF6F0F; color:#fff; border:none; border-radius:8px;
+      background:#ff4628; color:#fff; border:none; border-radius:8px;
       padding:6px 14px; font-size:0.75rem; font-weight:800;
       cursor:pointer; flex-shrink:0; transition:opacity 0.2s;
     }
@@ -116,10 +116,10 @@
       font-family:monospace; font-size:0.8rem; resize:vertical;
       background:#fff; margin-top:8px; box-sizing:border-box;
     }
-    .json-paste:focus { border-color:#FF6F0F; outline:none; background:#fff8f3; }
+    .json-paste:focus { border-color:#ff4628; outline:none; background:#fff8f3; }
     .btn-autofill {
       margin-top:10px; padding:10px 22px;
-      background:linear-gradient(90deg,#FF6F0F,#FFB347);
+      background:linear-gradient(90deg,#ff4628,#ff8c78);
       color:#fff; border:none; border-radius:10px;
       font-size:0.88rem; font-weight:800; cursor:pointer;
       transition:opacity 0.2s;
@@ -130,7 +130,7 @@
       border-radius:10px; font-size:0.82rem; font-weight:700;
       display:none;
     }
-    .autofill-result.ok  { background:#e8f9ee; color:#166534; border:1px solid #bbf7d0; }
+    .autofill-result.ok  { background:#e8f9ee; color:#166534; border:1px solid #d0dfe9; }
     .autofill-result.err { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
     .pc-manual-grid {
       display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:4px;
@@ -147,11 +147,11 @@
     /* 분석 버튼 */
     .btn-analyze {
       display:block; width:100%; max-width:720px; margin:0 auto 24px;
-      padding:16px; background:linear-gradient(90deg,#FF6F0F,#FFB347);
+      padding:16px; background:linear-gradient(90deg,#ff4628,#ff8c78);
       color:#fff; font-size:1.05rem; font-weight:800;
       border:none; border-radius:14px; cursor:pointer;
       transition:opacity 0.2s, transform 0.1s;
-      box-shadow:0 4px 20px rgba(255,111,15,0.4);
+      box-shadow:0 4px 20px rgba(255,70,40,0.4);
     }
     .btn-analyze:hover { opacity:0.9; transform:translateY(-1px); }
 
@@ -166,14 +166,14 @@
       background:linear-gradient(90deg,transparent,#FFE0C8,transparent);
     }
     .section-divider-label {
-      background:#FF6F0F; color:#fff;
+      background:#ff4628; color:#fff;
       font-size:0.78rem; font-weight:800;
       padding:5px 16px; border-radius:99px;
       letter-spacing:0.05em; white-space:nowrap;
     }
     .result-card {
       background:#fff; border-radius:18px; padding:24px;
-      margin-bottom:18px; box-shadow:0 4px 20px rgba(255,111,15,0.1);
+      margin-bottom:18px; box-shadow:0 4px 20px rgba(255,70,40,0.1);
       max-width:720px; margin-left:auto; margin-right:auto;
       border:1.5px solid #FFE0C8;
     }
@@ -184,11 +184,11 @@
       text-align:center; padding:24px 20px 20px;
       background:linear-gradient(135deg,#FFF5EC,#FFEEDD);
       border-radius:14px; margin-bottom:22px;
-      border:2px solid #FFB347;
+      border:2px solid #ff8c78;
     }
     .score-number {
       font-size:4rem; font-weight:900;
-      background:linear-gradient(90deg,#FF6F0F,#e05000);
+      background:linear-gradient(90deg,#ff4628,#e05000);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent;
       line-height:1;
     }
@@ -201,7 +201,7 @@
       background:#FFF5EC; border-radius:12px; padding:14px 8px; text-align:center;
       border:1.5px solid #FFE0C8;
     }
-    .sub-item .sv { font-size:1.4rem; font-weight:900; color:#FF6F0F; }
+    .sub-item .sv { font-size:1.4rem; font-weight:900; color:#ff4628; }
     .sub-item .sn { font-size:0.72rem; color:#888; margin-top:4px; font-weight:700; }
     .sub-item .sm { font-size:0.68rem; color:#bbb; margin-top:2px; }
 
@@ -213,23 +213,23 @@
     .bar-wrap { flex:1; background:#f0f0f0; border-radius:99px; height:10px; min-width:80px; }
     .bar-fill { height:10px; border-radius:99px; transition:width 0.6s; }
     .bar-good { background:linear-gradient(90deg,#22c55e,#86efac); }
-    .bar-mid  { background:linear-gradient(90deg,#FF6F0F,#FFB347); }
+    .bar-mid  { background:linear-gradient(90deg,#ff4628,#ff8c78); }
     .bar-bad  { background:linear-gradient(90deg,#ef4444,#fca5a5); }
     .stat-val { width:64px; text-align:right; font-size:0.82rem; color:#888; flex-shrink:0; }
-    .stat-tip { width:100%; font-size:0.78rem; color:#664; background:#FFF5EC; border-left:3px solid #FF6F0F; padding:6px 10px; border-radius:0 6px 6px 0; margin-top:4px; line-height:1.6; }
+    .stat-tip { width:100%; font-size:0.78rem; color:#664; background:#FFF5EC; border-left:3px solid #ff4628; padding:6px 10px; border-radius:0 6px 6px 0; margin-top:4px; line-height:1.6; }
 
     /* 종합 진단 */
-    .diag-text { font-size:0.88rem; line-height:1.9; color:#444; background:#FFF8F4; border-left:4px solid #FF6F0F; padding:14px 16px; border-radius:0 10px 10px 0; margin-bottom:16px; }
+    .diag-text { font-size:0.88rem; line-height:1.9; color:#444; background:#FFF8F4; border-left:4px solid #ff4628; padding:14px 16px; border-radius:0 10px 10px 0; margin-bottom:16px; }
     .diag-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     @media(max-width:500px){ .diag-grid{ grid-template-columns:1fr; } }
     .diag-col { background:#fafafa; border-radius:10px; padding:12px 14px; }
     .diag-label { font-size:0.76rem; font-weight:800; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid #eee; }
-    .diag-label.good { color:#16a34a; }
+    .diag-label.good { color:#202020; }
     .diag-label.bad { color:#dc2626; }
     .diag-item { font-size:0.82rem; color:#555; padding:6px 0; border-bottom:1px solid #f0f0f0; line-height:1.5; }
     .diag-item:last-child { border-bottom:none; }
     .diag-score { display:inline-block; font-size:0.72rem; font-weight:700; padding:2px 7px; border-radius:99px; margin-left:6px; }
-    .diag-score.good { background:#dcfce7; color:#16a34a; }
+    .diag-score.good { background:#dcfce7; color:#202020; }
     .diag-score.mid  { background:#fff3e0; color:#f57c00; }
     .diag-score.bad  { background:#fee2e2; color:#dc2626; }
 
@@ -239,7 +239,7 @@
       padding:11px 14px; border-radius:10px; margin-bottom:8px;
     }
     .check-ok   { background:#f0fff4; border-left:3px solid #22c55e; }
-    .check-warn { background:#fff8f3; border-left:3px solid #FF6F0F; }
+    .check-warn { background:#fff8f3; border-left:3px solid #ff4628; }
     .check-bad  { background:#fff5f5; border-left:3px solid #ef4444; }
     .check-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
     .check-title { font-size:0.84rem; font-weight:700; }
@@ -248,28 +248,28 @@
     /* 팁 박스 */
     .tip-box {
       background:linear-gradient(135deg,#FFF5EC,#FFEEDD);
-      border-left:4px solid #FF6F0F; border-radius:0 10px 10px 0;
+      border-left:4px solid #ff4628; border-radius:0 10px 10px 0;
       padding:14px 16px; font-size:0.87rem; color:#7a2e00; line-height:1.7;
     }
-    .tip-box strong { color:#FF6F0F; }
+    .tip-box strong { color:#ff4628; }
 
     /* 공식 박스 */
     .formula-box {
       background:#7a2e00; border-radius:14px; padding:20px;
-      text-align:center; margin-bottom:18px; color:#FFB347;
+      text-align:center; margin-bottom:18px; color:#ff8c78;
     }
     .formula-text {
       font-size:1rem; font-weight:700; letter-spacing:0.5px;
       line-height:1.8;
     }
-    .formula-sub { font-size:0.75rem; color:#FFB34799; margin-top:6px; }
+    .formula-sub { font-size:0.75rem; color:#ff8c7899; margin-top:6px; }
 
     /* 로드맵 */
     .roadmap-item {
       padding:14px 16px; border-radius:12px; margin-bottom:10px;
-      border-left:4px solid #FF6F0F; background:#fafafa;
+      border-left:4px solid #ff4628; background:#fafafa;
     }
-    .roadmap-title { font-weight:700; font-size:0.88rem; color:#FF6F0F; margin-bottom:4px; }
+    .roadmap-title { font-weight:700; font-size:0.88rem; color:#ff4628; margin-bottom:4px; }
     .roadmap-action { font-size:0.82rem; color:#444; margin-bottom:3px; }
     .roadmap-why { font-size:0.77rem; color:#888; font-style:italic; }
 
@@ -277,7 +277,7 @@
     .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
     @media(max-width:500px){ .metric-grid { grid-template-columns:repeat(2,1fr); } }
     .metric-box { background:linear-gradient(135deg,#FFF5EC,#FFEEDD); border-radius:12px; padding:14px 10px; text-align:center; border:1px solid #FFE0C8; }
-    .metric-box .m-val { font-size:1.3rem; font-weight:800; color:#FF6F0F; }
+    .metric-box .m-val { font-size:1.3rem; font-weight:800; color:#ff4628; }
     .metric-box .m-label { font-size:0.72rem; color:#888; margin-top:4px; }
 
     /* 섹션 구분 */
@@ -286,27 +286,27 @@
     /* ⓘ 버튼 */
     .info-wrap { position:relative; display:inline-block; vertical-align:middle; margin-left:5px; }
     .info-btn {
-      width:16px; height:16px; background:#FFE0C8; color:#FF6F0F;
+      width:16px; height:16px; background:#FFE0C8; color:#ff4628;
       border-radius:50%; border:none; cursor:pointer; font-size:0.62rem;
       font-weight:800; line-height:16px; text-align:center; padding:0;
       display:inline-flex; align-items:center; justify-content:center;
       flex-shrink:0;
     }
-    .info-btn:hover { background:#FF6F0F; color:#fff; }
+    .info-btn:hover { background:#ff4628; color:#fff; }
     .info-wrap:hover .info-tooltip { display:block; }
     .info-tooltip {
       display:none; position:absolute; width:230px;
       bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
       background:#fff; border:1.5px solid #FFE0C8; border-radius:12px;
       padding:10px 12px; font-size:0.78rem; color:#444; z-index:999;
-      box-shadow:0 6px 24px rgba(255,111,15,0.15); line-height:1.6;
+      box-shadow:0 6px 24px rgba(255,70,40,0.15); line-height:1.6;
       font-weight:400; text-align:left; pointer-events:none;
     }
     .info-tooltip.active { display:block; }
-    .tooltip-where { background:#FFF5EC; color:#FF6F0F; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
+    .tooltip-where { background:#FFF5EC; color:#ff4628; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
 
     /* PDF 바 */
-    #pdf-bar { display:none; max-width:720px; margin:0 auto 18px; background:#fff; border-radius:14px; padding:14px 20px; box-shadow:0 4px 20px rgba(255,111,15,0.15); border:1.5px solid #FFE0C8; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    #pdf-bar { display:none; max-width:720px; margin:0 auto 18px; background:#fff; border-radius:14px; padding:14px 20px; box-shadow:0 4px 20px rgba(255,70,40,0.15); border:1.5px solid #FFE0C8; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
     footer { text-align:center; color:#bbb; font-size:0.8rem; margin-top:10px; }
     .tg-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:9px 20px; background:#229ED9; border-radius:99px; text-decoration:none; color:#fff; font-size:0.8rem; font-weight:700; }
@@ -314,8 +314,8 @@
     .back-wrap { max-width:720px; margin:0 auto 10px; }
     /* 스크롤 버튼 */
     .scroll-btns { position:fixed; bottom:24px; right:20px; display:flex; flex-direction:column; gap:8px; z-index:1000; }
-    .scroll-btn { width:42px; height:42px; border-radius:50%; border:none; background:linear-gradient(135deg,#FF6F0F,#FFB347); color:#fff; font-size:1.1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(255,111,15,0.35); transition:all 0.2s; }
-    .scroll-btn:hover { transform:scale(1.12); box-shadow:0 6px 20px rgba(255,111,15,0.5); }
+    .scroll-btn { width:42px; height:42px; border-radius:50%; border:none; background:linear-gradient(135deg,#ff4628,#ff8c78); color:#fff; font-size:1.1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(255,70,40,0.35); transition:all 0.2s; }
+    .scroll-btn:hover { transform:scale(1.12); box-shadow:0 6px 20px rgba(255,70,40,0.5); }
     #scrollTopBtn { opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.2s; }
     #scrollTopBtn.visible { opacity:1; pointer-events:auto; }
 
@@ -324,7 +324,7 @@
       background:linear-gradient(135deg,#1a0800,#2d1200,#1a0800);
       border-radius:18px; padding:24px; margin-bottom:18px;
       max-width:720px; margin-left:auto; margin-right:auto;
-      border:1.5px solid rgba(255,111,15,0.45); position:relative; overflow:hidden;
+      border:1.5px solid rgba(255,70,40,0.45); position:relative; overflow:hidden;
     }
     .ai-diag-card::before {
       content:''; position:absolute; top:0; left:-150%; width:50%; height:100%;
@@ -336,23 +336,23 @@
     .ai-grade-row {
       display:flex; align-items:center; gap:16px; margin-bottom:18px;
       background:rgba(255,255,255,0.06); border-radius:14px; padding:16px 18px;
-      border:1px solid rgba(255,111,15,0.22);
+      border:1px solid rgba(255,70,40,0.22);
     }
     .ai-grade-emoji { font-size:2.8rem; flex-shrink:0; }
     .ai-grade-info { flex:1; min-width:0; }
     .ai-grade-lbl { font-size:0.7rem; color:#888; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
-    .ai-grade-name { font-size:1.25rem; font-weight:900; background:linear-gradient(90deg,#FF6F0F,#FFB347); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .ai-grade-name { font-size:1.25rem; font-weight:900; background:linear-gradient(90deg,#ff4628,#ff8c78); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .ai-grade-score-line { font-size:0.82rem; color:#777; margin-top:4px; }
     .typewriter-box {
       background:rgba(0,0,0,0.38); border-radius:12px; padding:16px 18px;
       font-size:0.87rem; line-height:1.9; color:#e0e0e0;
-      min-height:68px; border:1px solid rgba(255,111,15,0.2);
+      min-height:68px; border:1px solid rgba(255,70,40,0.2);
       word-break:keep-all; overflow-wrap:break-word;
     }
-    .tw-cursor { display:inline-block; width:2px; height:1em; background:#FF6F0F; animation:tw-blink 0.8s infinite; vertical-align:text-bottom; margin-left:1px; border-radius:1px; }
+    .tw-cursor { display:inline-block; width:2px; height:1em; background:#ff4628; animation:tw-blink 0.8s infinite; vertical-align:text-bottom; margin-left:1px; border-radius:1px; }
     @keyframes tw-blink { 0%,100%{opacity:1} 50%{opacity:0} }
     .ai-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
-    .ai-tag { background:rgba(255,111,15,0.14); color:#FFB347; font-size:0.71rem; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid rgba(255,111,15,0.28); }
+    .ai-tag { background:rgba(255,70,40,0.14); color:#ff8c78; font-size:0.71rem; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid rgba(255,70,40,0.28); }
 
     /* ── 레이더 차트 ── */
     .radar-wrap { display:flex; flex-direction:column; align-items:center; padding:10px 0 4px; }
@@ -364,12 +364,12 @@
     /* ── 알고리즘 노출 게이지 ── */
     .algo-gauge-ttl { font-size:0.82rem; font-weight:700; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
     .algo-gauge-bar { height:14px; background:#f0f0f0; border-radius:99px; overflow:hidden; margin-bottom:16px; position:relative; }
-    .algo-gauge-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#FF6F0F,#FFB347); transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1); width:0%; }
+    .algo-gauge-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#ff4628,#ff8c78); transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1); width:0%; }
     .algo-tiers { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
     @media(max-width:500px){ .algo-tiers { grid-template-columns:repeat(2,1fr); gap:6px; } }
     .algo-tier { background:#fff8f3; border-radius:10px; padding:10px 6px; text-align:center; border:1.5px solid #FFE0C8; transition:all 0.3s; }
-    .algo-tier.active-tier { background:linear-gradient(135deg,#FF6F0F,#FFB347); border-color:transparent; transform:scale(1.04); box-shadow:0 4px 16px rgba(255,111,15,0.35); }
-    .at-num { font-size:0.9rem; font-weight:900; color:#FF6F0F; }
+    .algo-tier.active-tier { background:linear-gradient(135deg,#ff4628,#ff8c78); border-color:transparent; transform:scale(1.04); box-shadow:0 4px 16px rgba(255,70,40,0.35); }
+    .at-num { font-size:0.9rem; font-weight:900; color:#ff4628; }
     .algo-tier.active-tier .at-num { color:#fff; }
     .at-lbl { font-size:0.62rem; color:#aaa; margin-top:3px; line-height:1.4; word-break:keep-all; }
     .algo-tier.active-tier .at-lbl { color:rgba(255,255,255,0.88); }
@@ -389,7 +389,7 @@
 <body>
 
 <header>
-  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#FF6F0F; font-weight:700; font-size:1.2rem;">longchiri</span></p>
+  <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#ff4628; font-weight:700; font-size:1.2rem;">longchiri</span></p>
   <div class="logo">🥕</div>
   <h1>당근 모임 분석기</h1>
   <p>당근 알고리즘 기반으로 모임 노출 점수를 진단하고 성장 전략을 받아보세요</p>
@@ -477,13 +477,13 @@
           <label>매너온도 (°C)</label>
           <input type="range" id="pcMannerTemp" min="30" max="99" value="36.5" step="0.1"
             oninput="document.getElementById('pcMannerTempVal').textContent=parseFloat(this.value).toFixed(1)+'°C';document.getElementById('mannerTemp').value=this.value;"/>
-          <span style="font-size:0.9rem;font-weight:800;color:#FF6F0F;" id="pcMannerTempVal">36.5°C</span>
+          <span style="font-size:0.9rem;font-weight:800;color:#ff4628;" id="pcMannerTempVal">36.5°C</span>
         </div>
         <div class="pc-manual-item">
           <label>재참여율 (%)</label>
           <input type="range" id="pcReattendRate" min="0" max="100" value="0"
             oninput="document.getElementById('pcReattendRateVal').textContent=this.value+'%';document.getElementById('reattendRate').value=this.value;"/>
-          <span style="font-size:0.9rem;font-weight:800;color:#FF6F0F;" id="pcReattendRateVal">0%</span>
+          <span style="font-size:0.9rem;font-weight:800;color:#ff4628;" id="pcReattendRateVal">0%</span>
         </div>
         <div class="pc-manual-item">
           <label>인증 배지 수</label>
@@ -1136,14 +1136,14 @@
   <div id="pdf-bar" style="display:flex;">
     <span style="font-size:0.9rem; font-weight:700; color:#7a2e00;">📄 분석 결과 저장</span>
     <div style="display:flex; gap:8px;">
-      <button onclick="window.print()" style="padding:8px 18px; border-radius:99px; border:1.5px solid #FF6F0F; background:#fff; color:#FF6F0F; font-size:0.82rem; font-weight:700; cursor:pointer;">🖨️ PDF 저장</button>
-      <button onclick="shareResult()" style="padding:8px 18px; border-radius:99px; border:none; background:linear-gradient(90deg,#FF6F0F,#FFB347); color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">🔗 링크 공유</button>
+      <button onclick="window.print()" style="padding:8px 18px; border-radius:99px; border:1.5px solid #ff4628; background:#fff; color:#ff4628; font-size:0.82rem; font-weight:700; cursor:pointer;">🖨️ PDF 저장</button>
+      <button onclick="shareResult()" style="padding:8px 18px; border-radius:99px; border:none; background:linear-gradient(90deg,#ff4628,#ff8c78); color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">🔗 링크 공유</button>
     </div>
   </div>
 
   <!-- 용어 링크 -->
   <div style="text-align:center;margin-bottom:14px;">
-    <a href="glossary.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;color:#FF6F0F;font-weight:700;text-decoration:none;background:#fff8f3;padding:6px 14px;border-radius:99px;border:1.5px solid #FFE0C8;">
+    <a href="glossary.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;color:#ff4628;font-weight:700;text-decoration:none;background:#fff8f3;padding:6px 14px;border-radius:99px;border:1.5px solid #FFE0C8;">
       📖 결과에 모르는 용어가 있으면 용어백과사전에서 확인하세요 →
     </a>
   </div>
@@ -1230,7 +1230,7 @@
     <h2>🎯 알고리즘 노출 예측</h2>
     <div class="algo-gauge-ttl">
       <span>현재 당근 알고리즘 상위 노출 예측</span>
-      <span id="algoGaugePct" style="color:#FF6F0F;font-weight:900;font-size:1rem;">—%</span>
+      <span id="algoGaugePct" style="color:#ff4628;font-weight:900;font-size:1rem;">—%</span>
     </div>
     <div class="algo-gauge-bar"><div class="algo-gauge-fill" id="algoGaugeFill"></div></div>
     <div class="algo-tiers">
@@ -1256,7 +1256,7 @@
       </div>
     </div>
     <div style="margin-top:14px;padding:12px 14px;background:#fff8f3;border-radius:10px;font-size:0.78rem;color:#666;border:1px solid #FFE0C8;line-height:1.7;word-break:keep-all;">
-      <strong style="color:#FF6F0F;">💡 노출 예측 기준</strong> — 당근 모임 알고리즘은 ①최근 14일 일정 ②활성 멤버 비율 ③호스트 매너온도 ④태그·SEO ⑤전환율 순으로 가중치를 적용해요. 2026년 LLM 기반 AI 추천 도입으로 콘텐츠 품질·운영 일관성 평가가 강화됐어요.
+      <strong style="color:#ff4628;">💡 노출 예측 기준</strong> — 당근 모임 알고리즘은 ①최근 14일 일정 ②활성 멤버 비율 ③호스트 매너온도 ④태그·SEO ⑤전환율 순으로 가중치를 적용해요. 2026년 LLM 기반 AI 추천 도입으로 콘텐츠 품질·운영 일관성 평가가 강화됐어요.
     </div>
   </div>
 
@@ -1342,8 +1342,8 @@
 </div><!-- #result -->
 
 <footer>
-  <p>by <b style="color:#FF6F0F;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.7.0</p>
+  <p>by <b style="color:#ff4628;">longchiri</b></p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.8.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -3236,7 +3236,7 @@ function renderBenchmark(category, memberCount, meetingFreq, attendRate, postCou
 
   const html = `
     <div style="background:#fff8f3;border-radius:12px;padding:14px 16px;margin-bottom:14px;border:1.5px solid #FFE0C8;">
-      <div style="font-size:0.8rem;color:#888;margin-bottom:4px;">비교 기준: <strong style="color:#FF6F0F;">${catKr} · ${sizeLabel}(${sizeLabel==='소형'?'100명 미만':sizeLabel==='중형'?'100~300명':sizeLabel==='대형'?'300~600명':'600명+'})</strong> · 실제 모임 ${ref.count||bench.count}개 데이터</div>
+      <div style="font-size:0.8rem;color:#888;margin-bottom:4px;">비교 기준: <strong style="color:#ff4628;">${catKr} · ${sizeLabel}(${sizeLabel==='소형'?'100명 미만':sizeLabel==='중형'?'100~300명':sizeLabel==='대형'?'300~600명':'600명+'})</strong> · 실제 모임 ${ref.count||bench.count}개 데이터</div>
       <div style="font-size:0.75rem;color:#aaa;">📅 2026년 6월 수집 기준</div>
     </div>
 
@@ -3266,7 +3266,7 @@ function renderBenchmark(category, memberCount, meetingFreq, attendRate, postCou
 
     <div style="background:#fff3e0;border-radius:12px;padding:14px 16px;">
       <div style="font-size:0.85rem;font-weight:800;color:#7a2e00;margin-bottom:8px;">🎯 지금 가장 먼저 할 것</div>
-      ${tips.map(t=>`<div style="font-size:0.83rem;color:#444;margin-bottom:6px;padding-left:12px;border-left:3px solid #FF6F0F;">• ${t}</div>`).join('')}
+      ${tips.map(t=>`<div style="font-size:0.83rem;color:#444;margin-bottom:6px;padding-left:12px;border-left:3px solid #ff4628;">• ${t}</div>`).join('')}
     </div>`;
 
   // TOP3 모임 카드
@@ -3274,9 +3274,9 @@ function renderBenchmark(category, memberCount, meetingFreq, attendRate, postCou
   const medals = ['🥇','🥈','🥉'];
   const top3Html = top3.length ? `
     <div style="margin-top:16px;">
-      <div style="font-size:0.88rem;font-weight:800;color:#FF6F0F;margin-bottom:10px;">🏆 같은 카테고리 활성점수 TOP 3 — 직접 확인해보세요</div>
+      <div style="font-size:0.88rem;font-weight:800;color:#ff4628;margin-bottom:10px;">🏆 같은 카테고리 활성점수 TOP 3 — 직접 확인해보세요</div>
       ${top3.map((m,i)=>`
-        <a href="${m.url}" target="_blank" rel="noopener" style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:#fafafa;border-radius:12px;margin-bottom:8px;text-decoration:none;border:1.5px solid #f0f0f0;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#FF6F0F'" onmouseout="this.style.borderColor='#f0f0f0'">
+        <a href="${m.url}" target="_blank" rel="noopener" style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:#fafafa;border-radius:12px;margin-bottom:8px;text-decoration:none;border:1.5px solid #f0f0f0;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#ff4628'" onmouseout="this.style.borderColor='#f0f0f0'">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:1px;">${medals[i]}</span>
           <div style="flex:1;min-width:0;">
             <div style="font-size:0.87rem;font-weight:800;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
@@ -3286,10 +3286,10 @@ function renderBenchmark(category, memberCount, meetingFreq, attendRate, postCou
               <span>📝 ${m.posts.toLocaleString()}글</span>
               <span>📅 ${m.schedules}일정</span>
               <span>참여율 ${m.partic}%</span>
-              <span style="color:#FF6F0F;font-weight:700;">활성 ${m.score}점</span>
+              <span style="color:#ff4628;font-weight:700;">활성 ${m.score}점</span>
             </div>
           </div>
-          <span style="font-size:0.75rem;color:#FF6F0F;flex-shrink:0;margin-top:2px;">바로가기 →</span>
+          <span style="font-size:0.75rem;color:#ff4628;flex-shrink:0;margin-top:2px;">바로가기 →</span>
         </a>
       `).join('')}
     </div>` : '';
@@ -3354,7 +3354,7 @@ function drawRadarDaangn(scores) {
   const cx = W / 2, cy = H / 2;
   const R = Math.min(W, H) / 2 - 42;
   const labels = ['SEO','활성도','신뢰도','노출','전환율','성장'];
-  const color  = '#FF6F0F';
+  const color  = '#ff4628';
   const n = scores.length;
 
   ctx.clearRect(0, 0, W, H);
@@ -3369,7 +3369,7 @@ function drawRadarDaangn(scores) {
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     }
     ctx.closePath();
-    ctx.strokeStyle = r === 5 ? '#FF6F0F44' : '#ebebeb';
+    ctx.strokeStyle = r === 5 ? '#ff462844' : '#ebebeb';
     ctx.lineWidth = r === 5 ? 1.5 : 1;
     ctx.stroke();
     if (r === 5) {
@@ -3442,7 +3442,7 @@ function drawRadarDaangn(scores) {
   // 레전드
   const legendEl = document.getElementById('radarLegend');
   if (legendEl) {
-    const scoreColors = scores.map(s => s >= 70 ? '#22c55e' : s >= 40 ? '#FF6F0F' : '#ef4444');
+    const scoreColors = scores.map(s => s >= 70 ? '#22c55e' : s >= 40 ? '#ff4628' : '#ef4444');
     legendEl.innerHTML = labels.map((lbl, i) =>
       `<div class="radar-legend-item"><div class="radar-dot" style="background:${scoreColors[i]};"></div>${lbl}: <strong>${Math.round(scores[i])}</strong></div>`
     ).join('');
@@ -3610,19 +3610,19 @@ const _SNS_HT={
 function renderSNSKit(targetId, platform) {
   const el=document.getElementById(targetId);
   if(!el) return;
-  let name='',category='기타',introText='',userHashtags=[],memberCount=0,borderColor='#16A34A',platformTags=[];
+  let name='',category='기타',introText='',userHashtags=[],memberCount=0,borderColor='#202020',platformTags=[];
   if(platform==='somoim'){
     name=(document.getElementById('m-title')?.value||'').trim();
     introText=(document.getElementById('m-intro')?.value||'').trim();
     category=document.getElementById('m-category')?.value||'기타';
     memberCount=parseInt(document.getElementById('m-members')?.value)||0;
-    borderColor='#16A34A'; platformTags=['#소모임','#소모임앱'];
+    borderColor='#202020'; platformTags=['#소모임','#소모임앱'];
   } else if(platform==='munto'){
     name=(document.getElementById('t-title')?.value||'').trim();
     introText=(document.getElementById('t-intro')?.value||'').trim();
     category=document.getElementById('t-category')?.value||'기타';
     memberCount=parseInt(document.getElementById('t-members')?.value)||0;
-    borderColor='#EA580C'; platformTags=['#문토','#문토클럽'];
+    borderColor='#ff4628'; platformTags=['#문토','#문토클럽'];
   } else if(platform==='kakao'){
     name=(document.getElementById('roomTitle')?.value||'').trim();
     introText=(document.getElementById('roomIntro')?.value||'').trim();
@@ -3636,7 +3636,7 @@ function renderSNSKit(targetId, platform) {
     introText=(document.getElementById('moimIntro')?.value||'').trim();
     category=document.getElementById('category')?.value||'기타';
     memberCount=parseInt(document.getElementById('memberCount')?.value)||0;
-    borderColor='#FF6F0F'; platformTags=['#당근모임','#당근마켓모임'];
+    borderColor='#ff4628'; platformTags=['#당근모임','#당근마켓모임'];
   }
   const searchText=name+' '+introText;
   const region=_REGIONS.find(r=>searchText.includes(r))||'';
@@ -3699,7 +3699,7 @@ ${htText}`}
   ];
   const htHtml=[
     ...large.map(h=>`<span style="background:#e8f4fd;color:#1a6fb5;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
-    ...medium.map(h=>`<span style="background:#eef6ee;color:#16A34A;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
+    ...medium.map(h=>`<span style="background:#eef3f7;color:#202020;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
     ...niche.map(h=>`<span style="background:#f3f0ff;color:#7c3aed;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
     ...extras.map(h=>`<span style="background:#fff3e0;color:#e65100;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`)
   ].join('');
