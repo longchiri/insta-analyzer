@@ -60,6 +60,90 @@
     .range-row { display:flex; align-items:center; gap:10px; }
     .range-val { font-size:1rem; font-weight:800; color:#FF6F0F; min-width:50px; text-align:right; }
 
+    /* ── PC / 모바일 모드 탭 ── */
+    .mode-tab-wrap {
+      display:flex; gap:10px;
+      max-width:720px; margin:0 auto 20px;
+    }
+    .mode-tab {
+      flex:1; padding:13px 0;
+      border-radius:14px; border:2px solid #ebebeb;
+      background:#fff; font-size:0.9rem; font-weight:800;
+      cursor:pointer; transition:all 0.18s; color:#aaa;
+    }
+    .mode-tab.active {
+      border-color:#FF6F0F; background:linear-gradient(135deg,#fff8f3,#fff);
+      color:#FF6F0F;
+    }
+    /* PC 모드 카드 */
+    .pc-card {
+      max-width:720px; margin:0 auto 20px;
+      background:#fff; border-radius:18px; padding:26px 22px;
+      border:2px solid #FF6F0F;
+      box-shadow:0 4px 24px rgba(255,111,15,0.08);
+    }
+    .pc-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:18px; color:#FF6F0F; }
+    .pc-step {
+      background:#fff8f3; border-radius:12px; padding:14px 16px;
+      margin-bottom:14px; border:1px solid #FFE0C8;
+    }
+    .pc-step-label {
+      font-size:0.78rem; font-weight:800; color:#FF6F0F;
+      margin-bottom:8px; display:flex; align-items:center; gap:6px;
+    }
+    .pc-step-num {
+      width:20px; height:20px; background:#FF6F0F; color:#fff;
+      border-radius:50%; display:inline-flex; align-items:center;
+      justify-content:center; font-size:0.72rem; font-weight:800; flex-shrink:0;
+    }
+    .cmd-box {
+      background:#1a1a2e; border-radius:10px; padding:12px 14px;
+      display:flex; align-items:center; gap:10px; margin-top:8px;
+    }
+    .cmd-text {
+      flex:1; color:#a0c4ff; font-family:monospace; font-size:0.8rem;
+      word-break:break-all; line-height:1.5;
+    }
+    .cmd-copy-btn {
+      background:#FF6F0F; color:#fff; border:none; border-radius:8px;
+      padding:6px 14px; font-size:0.75rem; font-weight:800;
+      cursor:pointer; flex-shrink:0; transition:opacity 0.2s;
+    }
+    .cmd-copy-btn:hover { opacity:0.85; }
+    .json-paste {
+      width:100%; min-height:90px; border-radius:10px;
+      border:1.5px solid #FFE0C8; padding:10px 12px;
+      font-family:monospace; font-size:0.8rem; resize:vertical;
+      background:#fff; margin-top:8px; box-sizing:border-box;
+    }
+    .json-paste:focus { border-color:#FF6F0F; outline:none; background:#fff8f3; }
+    .btn-autofill {
+      margin-top:10px; padding:10px 22px;
+      background:linear-gradient(90deg,#FF6F0F,#FFB347);
+      color:#fff; border:none; border-radius:10px;
+      font-size:0.88rem; font-weight:800; cursor:pointer;
+      transition:opacity 0.2s;
+    }
+    .btn-autofill:hover { opacity:0.9; }
+    .autofill-result {
+      margin-top:10px; padding:10px 14px;
+      border-radius:10px; font-size:0.82rem; font-weight:700;
+      display:none;
+    }
+    .autofill-result.ok  { background:#e8f9ee; color:#166534; border:1px solid #bbf7d0; }
+    .autofill-result.err { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+    .pc-manual-grid {
+      display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:4px;
+    }
+    .pc-manual-item label {
+      font-size:0.78rem; font-weight:700; color:#666; display:block; margin-bottom:5px;
+    }
+    .pc-competitor-box {
+      background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px;
+      padding:12px 14px; margin-top:4px; font-size:0.82rem;
+      color:#0369a1; display:none;
+    }
+
     /* 분석 버튼 */
     .btn-analyze {
       display:block; width:100%; max-width:720px; margin:0 auto 24px;
@@ -343,7 +427,77 @@
   ">용어 보기 →</div>
 </a>
 
-<!-- ══════════ 입력 ══════════ -->
+<!-- ══════════ 모드 선택 ══════════ -->
+<div class="mode-tab-wrap">
+  <button class="mode-tab active" id="tabPc" onclick="switchMode('pc')">💻 PC 버전 (URL 자동 분석)</button>
+  <button class="mode-tab" id="tabMobile" onclick="switchMode('mobile')">📱 모바일 버전 (직접 입력)</button>
+</div>
+
+<!-- ══════════ PC 모드 ══════════ -->
+<div id="pcMode">
+  <div class="pc-card">
+    <h2>🔗 URL 자동 분석</h2>
+
+    <!-- STEP 1: URL 입력 -->
+    <div class="pc-step">
+      <div class="pc-step-label"><span class="pc-step-num">1</span> 당근 모임 URL 붙여넣기</div>
+      <input type="text" id="pcUrl"
+        placeholder="https://www.daangn.com/kr/group/모임이름-xxxxx/"
+        oninput="onUrlInput()"
+        style="width:100%;box-sizing:border-box;"/>
+    </div>
+
+    <!-- STEP 2: 명령어 실행 -->
+    <div class="pc-step" id="pcStep2" style="display:none;">
+      <div class="pc-step-label"><span class="pc-step-num">2</span> 터미널에서 아래 명령어 실행</div>
+      <div style="font-size:0.76rem;color:#888;margin-bottom:4px;">📁 longchiri 폴더에서 실행하세요</div>
+      <div class="cmd-box">
+        <span class="cmd-text" id="pcCmdText"></span>
+        <button class="cmd-copy-btn" onclick="copyCmd()">복사</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: JSON 붙여넣기 -->
+    <div class="pc-step" id="pcStep3" style="display:none;">
+      <div class="pc-step-label"><span class="pc-step-num">3</span> 실행 결과 JSON 전체 붙여넣기</div>
+      <div style="font-size:0.76rem;color:#888;margin-bottom:4px;">터미널에 출력된 <b>{ }</b> 블록 전체를 복사해서 붙여넣으세요</div>
+      <textarea class="json-paste" id="pcJsonPaste" placeholder='{"title":"모임명","members":150,"category":"운동",...}'></textarea>
+      <br/>
+      <button class="btn-autofill" onclick="applyAutoFill()">✨ 자동완성 적용</button>
+      <div class="autofill-result" id="autofillResult"></div>
+      <!-- 경쟁 모임 정보 -->
+      <div class="pc-competitor-box" id="competitorBox"></div>
+    </div>
+
+    <!-- STEP 4: 수동 입력 3개 (관리자만 볼 수 있는 값) -->
+    <div class="pc-step" id="pcStep4" style="display:none;">
+      <div class="pc-step-label"><span class="pc-step-num">4</span> 아래 3개만 직접 입력 <span style="font-weight:400;color:#aaa;">(모임 관리자 화면에서만 보여요)</span></div>
+      <div class="pc-manual-grid">
+        <div class="pc-manual-item">
+          <label>매너온도 (°C)</label>
+          <input type="range" id="pcMannerTemp" min="30" max="99" value="36.5" step="0.1"
+            oninput="document.getElementById('pcMannerTempVal').textContent=parseFloat(this.value).toFixed(1)+'°C';document.getElementById('mannerTemp').value=this.value;"/>
+          <span style="font-size:0.9rem;font-weight:800;color:#FF6F0F;" id="pcMannerTempVal">36.5°C</span>
+        </div>
+        <div class="pc-manual-item">
+          <label>재참여율 (%)</label>
+          <input type="range" id="pcReattendRate" min="0" max="100" value="0"
+            oninput="document.getElementById('pcReattendRateVal').textContent=this.value+'%';document.getElementById('reattendRate').value=this.value;"/>
+          <span style="font-size:0.9rem;font-weight:800;color:#FF6F0F;" id="pcReattendRateVal">0%</span>
+        </div>
+        <div class="pc-manual-item">
+          <label>인증 배지 수</label>
+          <input type="number" id="pcBadgeCount" min="0" max="10" value="0" placeholder="예: 2"
+            oninput="document.getElementById('badgeCount').value=this.value;"/>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 모바일 모드 / 기본 입력 ══════════ -->
+<div id="mobileMode" style="display:none;">
 
 <!-- 1. 모임 기본정보 -->
 <div class="card">
@@ -971,6 +1125,8 @@
   </div>
 </div>
 
+</div><!-- /#mobileMode -->
+
 <button class="btn-analyze" onclick="analyze()">🥕 당근 모임 분석하기</button>
 
 <!-- ══════════ 결과 ══════════ -->
@@ -1221,6 +1377,122 @@ document.addEventListener('click', e => {
     document.querySelectorAll('.info-tooltip').forEach(t => t.classList.remove('active'));
   }
 });
+
+// ══════════ PC / 모바일 모드 ══════════
+function switchMode(mode) {
+  const isPc = mode === 'pc';
+  document.getElementById('pcMode').style.display     = isPc ? 'block' : 'none';
+  document.getElementById('mobileMode').style.display = isPc ? 'none'  : 'block';
+  document.getElementById('tabPc').classList.toggle('active', isPc);
+  document.getElementById('tabMobile').classList.toggle('active', !isPc);
+}
+
+function onUrlInput() {
+  const url = (document.getElementById('pcUrl').value || '').trim();
+  const hasUrl = url.includes('daangn.com') && url.includes('group');
+  document.getElementById('pcStep2').style.display = hasUrl ? 'block' : 'none';
+  document.getElementById('pcStep3').style.display = hasUrl ? 'block' : 'none';
+  if (hasUrl) {
+    document.getElementById('pcCmdText').textContent =
+      `python3 daangn_url_analyzer.py "${url}"`;
+  }
+}
+
+function copyCmd() {
+  const txt = document.getElementById('pcCmdText').textContent;
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = event.target;
+    btn.textContent = '✅ 복사됨';
+    setTimeout(() => btn.textContent = '복사', 1500);
+  });
+}
+
+// ── 카테고리 매핑 (Python 스크립트와 동일) ──
+const CAT_SELECT_MAP = {
+  '운동':'운동','아웃도어':'아웃도어','아웃도어/여행':'아웃도어',
+  '여행':'여행','반려동물':'반려동물','음식/음료':'맛집','음식':'맛집',
+  '문화/예술':'미술','문화':'미술','음악/악기':'음악','음악':'음악',
+  '독서/인문학':'독서','독서':'독서','가족/육아':'육아','육아':'육아',
+  '자기계발':'언어','취미/오락':'게임','동네친구':'기타','기타':'기타',
+};
+
+function applyAutoFill() {
+  const raw = (document.getElementById('pcJsonPaste').value || '').trim();
+  const res  = document.getElementById('autofillResult');
+  const comp = document.getElementById('competitorBox');
+
+  if (!raw) {
+    res.className = 'autofill-result err';
+    res.style.display = 'block';
+    res.textContent = '❌ JSON을 먼저 붙여넣어 주세요.';
+    return;
+  }
+
+  let d;
+  try { d = JSON.parse(raw); }
+  catch(e) {
+    res.className = 'autofill-result err';
+    res.style.display = 'block';
+    res.textContent = '❌ JSON 형식이 잘못됐어요. 터미널 출력 전체를 다시 복사해 주세요.';
+    return;
+  }
+
+  // 텍스트 필드
+  if (d.title)    document.getElementById('moimTitle').value   = d.title;
+  if (d.intro)    document.getElementById('moimIntro').value   = d.intro;
+
+  // 카테고리 select
+  if (d.category) {
+    const sel = document.getElementById('category');
+    const mapped = CAT_SELECT_MAP[d.category] || d.category;
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === mapped || sel.options[i].text.includes(mapped)) {
+        sel.selectedIndex = i; break;
+      }
+    }
+  }
+
+  // 숫자 필드
+  if (d.members)           setVal('memberCount',  d.members);
+  if (d.posts_30d)         setVal('postCount30',  d.posts_30d);
+  if (d.meetings_per_month) setVal('meetingFreq', d.meetings_per_month);
+  if (d.attend_rate)       setRange('attendRate', d.attend_rate);
+
+  // 생활글 & 이웃 게시글 여부
+  if (d.social_post_count > 0) {
+    const nbr = document.getElementById('neighborPost');
+    if (nbr) nbr.value = 'active';
+  }
+
+  // 경쟁 모임 정보 표시
+  if (d.competitor_count > 0) {
+    comp.style.display = 'block';
+    comp.innerHTML = `📊 같은 동네 경쟁 모임 <b>${d.competitor_count}개</b> 발견 · 평균 멤버 <b>${d.competitor_avg_members}명</b>
+      ${d.social_post_count > 0 ? `· 생활글 홍보 <b>${d.social_post_count}회</b>` : '· 생활글 홍보 기록 없음'}`;
+  }
+
+  // STEP 4 (수동 입력 3개) 표시
+  document.getElementById('pcStep4').style.display = 'block';
+
+  // 성공 메시지
+  const filled = ['title','intro','category','members','posts_30d','meetings_per_month','attend_rate']
+    .filter(k => d[k]).length;
+  res.className = 'autofill-result ok';
+  res.style.display = 'block';
+  res.textContent = `✅ ${filled}개 항목 자동완성 완료! 아래 STEP 4에서 나머지 3개만 입력하세요.`;
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+function setRange(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = val;
+  const disp = document.getElementById(id + 'Val');
+  if (disp) disp.textContent = val + '%';
+}
 
 function analyze() {
   // ── 유틸 ──
@@ -3470,6 +3742,8 @@ ${htText}`}
 window.addEventListener('scroll',()=>{
   document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 300);
 });
+// 기본 모드: PC
+switchMode('pc');
 </script>
 
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8f8a4525d9ac4010bc4bd44ddb28b9aa"}'></script><!-- End Cloudflare Web Analytics -->
