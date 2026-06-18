@@ -5704,11 +5704,10 @@ function analyze() {
 
   document.getElementById('result').style.display = 'block';
   document.getElementById('partNav').style.display = 'block';
-  revealCards('result');
   // 전체 버튼 활성화 초기화
   document.querySelectorAll('.p-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   renderSNSKitInsta();
-  // 결과 뷰로 페이지 전환
+  // 결과 뷰로 페이지 전환 (카드 애니메이션은 뷰 전환 완료 후 실행)
   showResultsView();
 }
 
@@ -5724,7 +5723,10 @@ function showResultsView() {
     rv.style.transition = 'opacity 0.25s';
     window.scrollTo({top:0});
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => { rv.style.opacity = '1'; });
+      requestAnimationFrame(() => {
+        rv.style.opacity = '1';
+        revealCards('result'); // 뷰 전환 완료 후 카드 등장 애니메이션
+      });
     });
   }, 180);
 }
