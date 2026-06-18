@@ -1061,6 +1061,23 @@
 <!-- ══════════ 결과 ══════════ -->
 <div id="result">
 
+  <!-- 파트 네비게이션 -->
+  <div id="partNav" style="display:none;position:sticky;top:0;z-index:100;background:#fff;padding:10px 0 0;margin-bottom:10px;border-bottom:1.5px solid #f0f0f0;">
+    <div style="max-width:720px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:0 4px 10px;">
+      <style>
+        .p-btn{display:inline-flex;align-items:center;gap:5px;border:1.5px solid #e5e7eb;background:#f9fafb;color:#555;border-radius:99px;padding:7px 15px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;margin-right:6px;white-space:nowrap;}
+        .p-btn.active{background:linear-gradient(135deg,#ff4628,#ff8c78);color:#fff;border-color:transparent;}
+        .p-btn:hover:not(.active){background:#fff8f3;border-color:#ff9578;color:#ff4628;}
+      </style>
+      <button class="p-btn active" onclick="setPartFilter('all',this)">전체</button>
+      <button class="p-btn" onclick="setPartFilter('overview',this)">📊 종합</button>
+      <button class="p-btn" onclick="setPartFilter('ai',this)">🤖 AI 진단</button>
+      <button class="p-btn" onclick="setPartFilter('report',this)">📋 보고서</button>
+      <button class="p-btn" onclick="setPartFilter('benchmark',this)">📊 데이터</button>
+      <button class="p-btn" onclick="setPartFilter('strategy',this)">💡 전략</button>
+    </div>
+  </div>
+
   <!-- PDF 저장 바 -->
   <div id="pdf-bar" style="display:flex;">
     <span style="font-size:0.9rem; font-weight:700; color:#7a2e00;">📄 분석 결과 저장</span>
@@ -1077,7 +1094,7 @@
     </a>
   </div>
   <!-- 종합 점수 -->
-  <div class="result-card">
+  <div class="result-card" data-part="overview">
     <h2>🏆 당근 모임 노출 종합 점수</h2>
     <div class="score-big-box">
       <div class="score-number" id="totalScore">—</div>
@@ -1131,7 +1148,7 @@
   </div>
 
   <!-- 🤖 AI 종합 진단 (NEW) -->
-  <div class="ai-diag-card" id="aiDiagCard">
+  <div class="ai-diag-card" id="aiDiagCard" data-part="ai">
     <h2>🤖 AI 종합 진단</h2>
     <div class="ai-grade-row">
       <div class="ai-grade-emoji" id="aiGradeEmoji">🌱</div>
@@ -1146,7 +1163,7 @@
   </div>
 
   <!-- 📡 6차원 레이더 차트 (NEW) -->
-  <div class="result-card">
+  <div class="result-card" data-part="ai">
     <h2>📡 6차원 노출 분석 레이더</h2>
     <div class="radar-wrap">
       <canvas id="radarChart" width="300" height="300"></canvas>
@@ -1155,7 +1172,7 @@
   </div>
 
   <!-- 🎯 알고리즘 노출 예측 게이지 (NEW) -->
-  <div class="result-card">
+  <div class="result-card" data-part="ai">
     <h2>🎯 알고리즘 노출 예측</h2>
     <div class="algo-gauge-ttl">
       <span>현재 당근 알고리즘 상위 노출 예측</span>
@@ -1190,7 +1207,7 @@
   </div>
 
   <!-- 노출 공식 -->
-  <div class="result-card">
+  <div class="result-card" data-part="overview">
     <h2>📐 당근 모임 노출 공식</h2>
     <div class="formula-box">
       <div class="formula-text">
@@ -1201,7 +1218,7 @@
   </div>
 
   <!-- 종합 진단 -->
-  <div class="result-card">
+  <div class="result-card" data-part="report">
     <h2>📋 종합 진단 리포트</h2>
     <div id="diagText" class="diag-text"></div>
     <div class="diag-grid">
@@ -1217,31 +1234,31 @@
   </div>
 
   <!-- 진행 바 -->
-  <div class="result-card">
+  <div class="result-card" data-part="report">
     <h2>📊 지표별 상세 분석</h2>
     <div id="statRows"></div>
   </div>
 
   <!-- 실제 데이터 벤치마크 비교 카드 -->
-  <div class="section-divider">
+  <div class="section-divider" data-part="benchmark">
     <span class="section-divider-label">📊 실제 데이터 비교</span>
   </div>
-  <div class="result-card" id="benchmarkCard" style="display:none;">
+  <div class="result-card" id="benchmarkCard" data-part="benchmark" style="display:none;">
     <h2>📊 실제 TOP500 모임과 비교 <span id="benchCatLabel" style="font-size:0.8rem;color:#aaa;font-weight:400;"></span></h2>
     <div id="benchmarkContent"></div>
   </div>
 
   <!-- 카테고리 내 순위 & 경쟁 현황 -->
-  <div class="result-card" id="rankCard" style="display:none;"></div>
+  <div class="result-card" id="rankCard" data-part="benchmark" style="display:none;"></div>
 
   <!-- 개선 시뮬레이션 -->
-  <div class="result-card" id="simCard" style="display:none;"></div>
+  <div class="result-card" id="simCard" data-part="strategy" style="display:none;"></div>
 
   <!-- 운영 유형 진단 -->
-  <div class="section-divider">
+  <div class="section-divider" data-part="benchmark">
     <span class="section-divider-label">🔬 운영 패턴 진단</span>
   </div>
-  <div class="result-card" id="opTypeCard">
+  <div class="result-card" id="opTypeCard" data-part="benchmark">
     <h2>🔬 운영 유형 진단 <span style="font-size:0.75rem;color:#aaa;font-weight:400;">51,252개 실제 데이터 기반</span></h2>
     <div id="opTypeDiag"></div>
     <div id="slotFillDiag" style="margin-top:14px;"></div>
@@ -1273,37 +1290,37 @@
   </div>
 
   <!-- 월별 활동 패턴 -->
-  <div class="result-card" id="monthlyCard" style="display:none;"></div>
+  <div class="result-card" id="monthlyCard" data-part="strategy" style="display:none;"></div>
 
   <!-- 약점/강점 레이더 요약 -->
-  <div class="result-card" id="swCard" style="display:none;"></div>
+  <div class="result-card" id="swCard" data-part="report" style="display:none;"></div>
 
   <!-- 운영팁 섹션 구분선 -->
-  <div class="section-divider">
+  <div class="section-divider" data-part="report">
     <span class="section-divider-label">🔧 운영 팁</span>
   </div>
 
   <!-- 노출 알고리즘 지표 -->
-  <div class="result-card">
+  <div class="result-card" data-part="report">
     <h2>🔍 노출 알고리즘 지표</h2>
     <div id="expList"></div>
   </div>
 
   <!-- 운영완성도 -->
-  <div class="result-card">
+  <div class="result-card" data-part="report">
     <h2>⚙️ 운영완성도</h2>
     <div id="opList"></div>
   </div>
 
   <!-- 개선 로드맵 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>🗺️ 이번 주 실행 로드맵</h2>
     <div id="roadmap"></div>
     <div id="daangn-sns-kit"></div>
   </div>
 
   <!-- 알고리즘 팁 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>💡 2026 당근 알고리즘 핵심 팁</h2>
     <div class="tip-box">
       <strong>① 활성 모임 우선 노출</strong> — 당근은 최근 14일 이내 일정이 있는 모임을 상위 노출시켜요. 모임 일정을 자주 등록하세요.<br/><br/>
@@ -1359,6 +1376,20 @@ document.addEventListener('click', e => {
     document.querySelectorAll('.info-tooltip').forEach(t => t.classList.remove('active'));
   }
 });
+
+function setPartFilter(part, btn) {
+  document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const items = document.querySelectorAll('#result .result-card, #result .ai-diag-card, #result .section-divider');
+  items.forEach(c => {
+    const cp = c.getAttribute('data-part');
+    c.style.display = (part === 'all' || cp === part) ? '' : 'none';
+  });
+  const navEl = document.getElementById('partNav');
+  const navH  = navEl ? navEl.offsetHeight : 0;
+  const resTop = document.getElementById('result').getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({ top: resTop - navH - 8, behavior: 'smooth' });
+}
 
 function revealCards(containerId) {
   var wrap = document.getElementById(containerId || 'result');
@@ -3090,10 +3121,10 @@ function analyze() {
   // ── 결과 표시 + 카드 등장 애니메이션 ──
   document.getElementById('result').style.display = 'block';
   document.getElementById('pdf-bar').style.display = 'flex';
-  revealCards('result');
-  setTimeout(() => {
-    document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 150);
+  document.getElementById('partNav').style.display = '';
+  document.querySelectorAll('.p-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  document.getElementById('result').scrollIntoView({ behavior:'instant', block:'start' });
+  setTimeout(() => { revealCards('result'); }, 100);
 }
 
 // ══════════════════════════════════════════════════

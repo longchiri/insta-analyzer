@@ -255,6 +255,7 @@
 </head>
 <body>
 
+<div id="inputView">
 <header>
   <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#FEE500; font-weight:700; font-size:1.2rem;">longchiri</span></p>
   <div class="logo">💬</div>
@@ -811,6 +812,13 @@
 </div>
 
 <button class="btn-analyze" onclick="analyze()">💬 오픈채팅 알고리즘 분석하기</button>
+</div><!-- #inputView -->
+
+<div id="resultsView" style="display:none">
+  <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 4px 2px;">
+    <button onclick="showInputView()" style="background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:99px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;color:#555;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.15s;" onmouseover="this.style.background='#fffde7';this.style.borderColor='#FEE500';this.style.color='#c8a800'" onmouseout="this.style.background='#f3f4f6';this.style.borderColor='#e5e7eb';this.style.color='#555'">← 다시 분석</button>
+    <span style="font-size:0.75rem;color:#aaa;font-weight:600;">분석 완료 ✅</span>
+  </div>
 
 <!-- ── PDF 저장 바 ── -->
 <div id="pdf-bar" style="display:none;max-width:720px;margin:0 auto 18px;background:#fff;border-radius:14px;padding:14px 20px;box-shadow:0 4px 20px rgba(254,229,0,0.2);border:1.5px solid #FFF3B0;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
@@ -2093,12 +2101,46 @@ function analyze() {
 
   renderSNSKit('kakao-sns-kit', 'kakao');
 
+  showResultsView();
+}
+
+function showResultsView() {
   document.getElementById('result').style.display = 'block';
   document.getElementById('pdf-bar').style.display = 'flex';
-  revealCards('result');
+  const iv = document.getElementById('inputView');
+  const rv = document.getElementById('resultsView');
+  iv.style.transition = 'opacity 0.2s';
+  iv.style.opacity = '0';
   setTimeout(() => {
-    document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 100);
+    iv.style.display = 'none';
+    rv.style.display = '';
+    rv.style.opacity = '0';
+    rv.style.transition = 'opacity 0.25s';
+    window.scrollTo({top:0});
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        rv.style.opacity = '1';
+        setTimeout(() => { revealCards('result'); }, 280);
+      });
+    });
+  }, 180);
+}
+
+function showInputView() {
+  const iv = document.getElementById('inputView');
+  const rv = document.getElementById('resultsView');
+  rv.style.transition = 'opacity 0.2s';
+  rv.style.opacity = '0';
+  setTimeout(() => {
+    rv.style.display = 'none';
+    iv.style.display = '';
+    iv.style.opacity = '0';
+    iv.style.transition = 'opacity 0.25s';
+    window.scrollTo({top:0});
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { iv.style.opacity = '1'; });
+    });
+  }, 180);
 }
 
 // ── PDF 내보내기 ──
@@ -2468,5 +2510,6 @@ window.addEventListener('scroll',()=>{
 });
 </script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8f8a4525d9ac4010bc4bd44ddb28b9aa"}'></script><!-- End Cloudflare Web Analytics -->
+</div><!-- #resultsView -->
 </body>
 </html>

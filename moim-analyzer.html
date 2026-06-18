@@ -369,6 +369,7 @@
 
 <!-- ══════════ 소모임 입력 ══════════ -->
 <div id="moim-section" class="moim-section">
+<div id="moim-inputArea">
 
   <!-- 1. 모임 기본정보 -->
   <div class="card moim-card">
@@ -708,9 +709,14 @@
   </div>
 
   <button class="btn-moim" onclick="analyzeMoim()">🌿 소모임 노출 점수 분석하기</button>
+</div><!-- #moim-inputArea -->
 
   <!-- 소모임 결과 -->
   <div id="moim-result" class="result-section">
+    <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 4px 2px;">
+      <button onclick="showMoimInputView()" style="background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:99px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;color:#555;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.15s;" onmouseover="this.style.background='#eef3f7';this.style.borderColor='#202020';this.style.color='#202020'" onmouseout="this.style.background='#f3f4f6';this.style.borderColor='#e5e7eb';this.style.color='#555'">← 다시 분석</button>
+      <span style="font-size:0.75rem;color:#aaa;font-weight:600;">소모임 분석 완료 ✅</span>
+    </div>
     <!-- 용어 링크 -->
     <div style="text-align:center;margin-bottom:14px;">
       <a href="glossary.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;color:#202020;font-weight:700;text-decoration:none;background:#eef3f7;padding:6px 14px;border-radius:99px;border:1.5px solid #d0dfe9;">
@@ -814,6 +820,7 @@
 
 <!-- ══════════ 문토 입력 ══════════ -->
 <div id="munto-section" class="munto-section hidden">
+<div id="munto-inputArea">
 
   <!-- 1. 클럽 기본정보 -->
   <div class="card munto-card">
@@ -1077,6 +1084,7 @@
   </div>
 
   <button class="btn-munto" onclick="analyzeMunto()">🔥 문토 노출 점수 분석하기</button>
+</div><!-- #munto-inputArea -->
 
   <!-- 문토 결과 -->
   <div id="munto-result" class="result-section">
@@ -1264,6 +1272,83 @@ function statRowHtml(data, platform) {
 }
 
 // ── 카드 등장 애니메이션 ──
+
+function showMoimResultView() {
+  const ia = document.getElementById('moim-inputArea');
+  const res = document.getElementById('moim-result');
+  document.getElementById('moim-result').style.display = 'block';
+  document.getElementById('pdf-bar-moim').style.display = 'flex';
+  ia.style.transition = 'opacity 0.2s';
+  ia.style.opacity = '0';
+  setTimeout(() => {
+    ia.style.display = 'none';
+    res.style.opacity = '0';
+    res.style.transition = 'opacity 0.25s';
+    window.scrollTo({top: document.getElementById('moim-section').getBoundingClientRect().top + window.scrollY - 10});
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        res.style.opacity = '1';
+        setTimeout(() => { revealCards('moim-result'); }, 280);
+      });
+    });
+  }, 180);
+}
+
+function showMoimInputView() {
+  const ia = document.getElementById('moim-inputArea');
+  const res = document.getElementById('moim-result');
+  res.style.transition = 'opacity 0.2s';
+  res.style.opacity = '0';
+  setTimeout(() => {
+    res.style.display = 'none';
+    ia.style.display = '';
+    ia.style.opacity = '0';
+    ia.style.transition = 'opacity 0.25s';
+    window.scrollTo({top: document.getElementById('moim-section').getBoundingClientRect().top + window.scrollY - 10});
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { ia.style.opacity = '1'; });
+    });
+  }, 180);
+}
+
+function showMuntoResultView() {
+  const ia = document.getElementById('munto-inputArea');
+  const res = document.getElementById('munto-result');
+  document.getElementById('munto-result').style.display = 'block';
+  document.getElementById('pdf-bar-munto').style.display = 'flex';
+  ia.style.transition = 'opacity 0.2s';
+  ia.style.opacity = '0';
+  setTimeout(() => {
+    ia.style.display = 'none';
+    res.style.opacity = '0';
+    res.style.transition = 'opacity 0.25s';
+    window.scrollTo({top: document.getElementById('munto-section').getBoundingClientRect().top + window.scrollY - 10});
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        res.style.opacity = '1';
+        setTimeout(() => { revealCards('munto-result'); }, 280);
+      });
+    });
+  }, 180);
+}
+
+function showMuntoInputView() {
+  const ia = document.getElementById('munto-inputArea');
+  const res = document.getElementById('munto-result');
+  res.style.transition = 'opacity 0.2s';
+  res.style.opacity = '0';
+  setTimeout(() => {
+    res.style.display = 'none';
+    ia.style.display = '';
+    ia.style.opacity = '0';
+    ia.style.transition = 'opacity 0.25s';
+    window.scrollTo({top: document.getElementById('munto-section').getBoundingClientRect().top + window.scrollY - 10});
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { ia.style.opacity = '1'; });
+    });
+  }, 180);
+}
+
 function revealCards(containerId) {
   var wrap = document.getElementById(containerId || 'moim-result');
   if (!wrap) return;
@@ -1820,12 +1905,7 @@ function analyzeMoim() {
   document.getElementById('m-roadmap').innerHTML = roadmapHtml(roads, 'moim');
   renderSNSKit('m-sns-kit', 'somoim');
 
-  document.getElementById('moim-result').style.display = 'block';
-  document.getElementById('pdf-bar-moim').style.display = 'flex';
-  revealCards('moim-result');
-  setTimeout(() => {
-    document.getElementById('moim-result').scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 100);
+  showMoimResultView();
 }
 
 // ════════════ 문토 분석 ════════════
@@ -2167,12 +2247,7 @@ function analyzeMunto() {
   document.getElementById('t-roadmap').innerHTML = roadmapHtml(roads, 'munto');
   renderSNSKit('t-sns-kit', 'munto');
 
-  document.getElementById('munto-result').style.display = 'block';
-  document.getElementById('pdf-bar-munto').style.display = 'flex';
-  revealCards('munto-result');
-  setTimeout(() => {
-    document.getElementById('munto-result').scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 100);
+  showMuntoResultView();
 }
 
 function shareResult() {
