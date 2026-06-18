@@ -1225,6 +1225,12 @@
     <div id="benchmarkContent"></div>
   </div>
 
+  <!-- 카테고리 내 순위 & 경쟁 현황 -->
+  <div class="result-card" id="rankCard" style="display:none;"></div>
+
+  <!-- 개선 시뮬레이션 -->
+  <div class="result-card" id="simCard" style="display:none;"></div>
+
   <!-- 운영 유형 진단 -->
   <div class="section-divider">
     <span class="section-divider-label">🔬 운영 패턴 진단</span>
@@ -1234,6 +1240,7 @@
     <div id="opTypeDiag"></div>
     <div id="slotFillDiag" style="margin-top:14px;"></div>
     <div id="challengeDiag" style="margin-top:14px;"></div>
+    <div id="periodDiag" style="margin-top:14px;"></div>
     <div id="successFormula" style="margin-top:18px;padding:16px;background:#fff8f3;border-radius:12px;border:1.5px solid #FFE0C8;">
       <div style="font-size:0.78rem;font-weight:800;color:#7a2e00;margin-bottom:10px;">📊 TOP500 성공 모임 공식 (실제 데이터)</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
@@ -1258,6 +1265,12 @@
       </div>
     </div>
   </div>
+
+  <!-- 월별 활동 패턴 -->
+  <div class="result-card" id="monthlyCard" style="display:none;"></div>
+
+  <!-- 약점/강점 레이더 요약 -->
+  <div class="result-card" id="swCard" style="display:none;"></div>
 
   <!-- 운영팁 섹션 구분선 -->
   <div class="section-divider">
@@ -3038,8 +3051,23 @@ function analyze() {
   // ── 벤치마크 비교 ──
   renderBenchmark(category, memberCount, meetingFreq, attendRate, postCount);
 
+  // ── 카테고리 내 순위 추정 ──
+  renderCategoryRank(total, CAT_MAP[category] || '');
+
+  // ── 개선 시뮬레이션 ──
+  renderSimulation({ postCount, slotFillRate, dday, neighborPost, challengeYn, totalSchedules }, total);
+
+  // ── 약점/강점 분석 ──
+  renderStrengthWeakness(seo, act, trust, exp, cvr, grow);
+
+  // ── 월별 활동 패턴 ──
+  renderMonthlyPattern(CAT_MAP[category] || '', meetingFreq);
+
   // ── 운영 유형 진단 ──
   renderOpTypeDiag(postCount, meetingFreq, slotFillRate, totalSchedules, challengeYn, category);
+
+  // ── 운영 기간 분석 ──
+  renderPeriodAnalysis(hostAge, totalSchedules, postCount, CAT_MAP[category] || '');
 
   // ── 결과 표시 ──
   document.getElementById('result').style.display = 'block';
@@ -3163,6 +3191,349 @@ function shareResult() {
   } else {
     navigator.clipboard.writeText(location.href).then(() => alert('링크가 복사되었어요!'));
   }
+}
+
+// ══════════════════════════════════════════════════
+// 🏅 1. 카테고리 내 순위 추정
+// ══════════════════════════════════════════════════
+function renderCategoryRank(total, catKr) {
+  const el = document.getElementById('rankCard');
+  if (!el) return;
+  const bench = catKr ? BENCHMARK_DATA[catKr] : null;
+  if (!bench) { el.style.display='none'; return; }
+
+  const catAvg   = bench.avg_score;
+  const catCount = bench.count;
+  const totalClubs  = Math.round(catCount / 500 * 51252);
+  const activeClubs = Math.round(totalClubs * (1 - bench.ghost_pct / 100));
+
+  let pctile, pctDesc, pctColor, pctBg;
+  if (total >= catAvg * 1.05) {
+    pctile='상위 5%'; pctColor='#22c55e'; pctBg='#f0fff4';
+    pctDesc=`전체 ${catKr} 모임 약 ${totalClubs.toLocaleString()}개 중 최상위권이에요! TOP500과 어깨를 나란히 해요.`;
+  } else if (total >= catAvg * 0.9) {
+    pctile='상위 10%'; pctColor='#3b82f6'; pctBg='#eff6ff';
+    pctDesc=`${catKr} 전체 모임 TOP 10% 수준이에요. 조금만 더 개선하면 최상위권으로 올라가요.`;
+  } else if (total >= catAvg * 0.75) {
+    pctile='상위 20%'; pctColor='#8b5cf6'; pctBg='#f5f3ff';
+    pctDesc=`${catKr} 활성 모임 중 상위 20% 수준이에요. 핵심 지표 한두 개만 개선하면 TOP 10%예요.`;
+  } else if (total >= 40) {
+    pctile='상위 35%'; pctColor='#f59e0b'; pctBg='#fffbeb';
+    pctDesc=`활성 모임 중 중상위권이에요. 게시글·일정 빈도를 높이면 상위 20%로 올라갈 수 있어요.`;
+  } else if (total >= 25) {
+    pctile='상위 50%'; pctColor='#f97316'; pctBg='#fff7ed';
+    pctDesc=`전체 기준 중위권이에요. 기본 활동 지표(일정·게시글)를 꾸준히 쌓으면 빠르게 올라가요.`;
+  } else {
+    pctile='하위 40%'; pctColor='#ef4444'; pctBg='#fff5f5';
+    pctDesc=`개선이 필요한 구간이에요. 일정 등록과 게시글 작성부터 시작하면 점수가 바로 올라가요.`;
+  }
+
+  const myBar  = Math.min(98, Math.round(total));
+  const avgBar = Math.min(98, Math.round(catAvg));
+
+  el.style.display='block';
+  el.innerHTML=`
+    <h2>🏅 카테고리 내 순위 추정 <span style="font-size:0.75rem;color:#aaa;font-weight:400;">${catKr}</span></h2>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding:14px 16px;background:${pctBg};border-radius:14px;border:1.5px solid ${pctColor}30;">
+      <div style="text-align:center;flex-shrink:0;">
+        <div style="font-size:1.5rem;font-weight:900;color:${pctColor};">${pctile}</div>
+        <div style="font-size:0.7rem;color:#888;margin-top:2px;">추정 순위</div>
+      </div>
+      <div style="flex:1;font-size:0.82rem;color:#444;line-height:1.7;">${pctDesc}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div style="text-align:center;padding:12px 6px;background:#fafafa;border-radius:12px;">
+        <div style="font-size:1.3rem;font-weight:900;color:#ff4628;">${total}점</div>
+        <div style="font-size:0.7rem;color:#888;margin-top:3px;">내 모임 점수</div>
+      </div>
+      <div style="text-align:center;padding:12px 6px;background:#fafafa;border-radius:12px;">
+        <div style="font-size:1.3rem;font-weight:900;color:#555;">${catAvg}점</div>
+        <div style="font-size:0.7rem;color:#888;margin-top:3px;">TOP500 카테고리 평균</div>
+      </div>
+      <div style="text-align:center;padding:12px 6px;background:#fafafa;border-radius:12px;">
+        <div style="font-size:1.3rem;font-weight:900;color:#555;">~${totalClubs.toLocaleString()}개</div>
+        <div style="font-size:0.7rem;color:#888;margin-top:3px;">카테고리 전체 모임</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:6px;font-size:0.78rem;font-weight:700;color:#666;">점수 분포에서 내 위치</div>
+    <div style="position:relative;background:linear-gradient(90deg,#f0f0f0 0%,#ffd0b5 65%,#ff4628 100%);border-radius:99px;height:14px;margin-bottom:4px;">
+      <div style="position:absolute;top:-5px;left:${avgBar}%;transform:translateX(-50%);">
+        <div style="width:3px;height:24px;background:#888;border-radius:2px;"></div>
+      </div>
+      <div style="position:absolute;top:-7px;left:${myBar}%;transform:translateX(-50%);">
+        <div style="width:14px;height:28px;background:${pctColor};border-radius:4px;display:flex;align-items:center;justify-content:center;">
+          <div style="width:5px;height:5px;background:#fff;border-radius:50%;"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:0.68rem;color:#aaa;">
+      <span>0점</span><span style="color:#888;">▲ TOP500평균 ${catAvg}점</span><span>100점</span>
+    </div>
+
+    <div style="padding:10px 12px;background:#f5f5f5;border-radius:10px;font-size:0.75rem;color:#666;line-height:1.6;">
+      💡 전체 ${catKr} 약 ${totalClubs.toLocaleString()}개 모임 중 실제 활성 모임은 약 <b>${activeClubs.toLocaleString()}개</b>예요. TOP500 평균(${catAvg}점) 이상이면 전체 기준 상위 5~10% 수준이에요.
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════
+// 🚀 2. 개선 시뮬레이션
+// ══════════════════════════════════════════════════
+function renderSimulation(inp, total) {
+  const el = document.getElementById('simCard');
+  if (!el) return;
+
+  const sims = [];
+
+  // 게시글 월 40개로 늘리기
+  const curPA = inp.postCount >= 20 ? 15 : inp.postCount >= 8 ? 10 : inp.postCount >= 2 ? 5 : 0;
+  if (curPA < 15) {
+    sims.push({ icon:'📝', action:'게시글을 월 40개로 늘리면',
+      detail:`현재 ${inp.postCount}개/월 → 40개/월`, delta:Math.round((15-curPA)*0.25),
+      diff:'중간', dc:'#f59e0b' });
+  }
+
+  // 정원 채움률 70%로 개선
+  const curSA = inp.slotFillRate>=80?28:inp.slotFillRate>=60?20:inp.slotFillRate>=40?12:inp.slotFillRate>=20?6:0;
+  if (curSA < 20) {
+    sims.push({ icon:'🎯', action:'정원 채움률 70%로 개선하면',
+      detail:`현재 ${inp.slotFillRate}% → 70% (정원 줄이기 전략)`, delta:Math.round((20-curSA)*0.25),
+      diff:'쉬움', dc:'#22c55e' });
+  }
+
+  // 7일 이내 일정 등록
+  const curDA = inp.dday<=3?12:inp.dday<=7?8:inp.dday<=14?5:0;
+  if (curDA < 8) {
+    sims.push({ icon:'📅', action:'7일 이내 일정 등록하면',
+      detail:'지금 당장 가능한 가장 빠른 개선', delta:Math.round((8-curDA)*0.25),
+      diff:'매우 쉬움', dc:'#22c55e' });
+  }
+
+  // 동네생활 정기 연동
+  const curNE = inp.neighborPost==='regular'?18:inp.neighborPost==='sometimes'?9:0;
+  if (curNE < 18) {
+    sims.push({ icon:'🏘️', action:'동네생활 정기 연동하면',
+      detail:'주 1회 모임 후기를 동네생활에 공유', delta:Math.round((18-curNE)*0.15),
+      diff:'쉬움', dc:'#22c55e' });
+  }
+
+  // 챌린지 등록
+  if (inp.challengeYn !== 'yes') {
+    sims.push({ icon:'🚀', action:'챌린지 등록하면',
+      detail:'챌린지 탭에서 1개 챌린지 만들기', delta:Math.round(20*0.15),
+      diff:'매우 쉬움', dc:'#22c55e' });
+  }
+
+  // 누적 일정 30개 이상
+  const curTA = inp.totalSchedules>=200?18:inp.totalSchedules>=100?13:inp.totalSchedules>=30?8:inp.totalSchedules>=5?4:0;
+  if (curTA < 13 && inp.totalSchedules < 100) {
+    sims.push({ icon:'🗓️', action:'누적 일정 100개까지 쌓으면',
+      detail:`현재 ${inp.totalSchedules}개 → 100개 (꾸준한 일정 등록)`, delta:Math.round((13-curTA)*0.25),
+      diff:'장기전략', dc:'#8b5cf6' });
+  }
+
+  if (sims.length === 0) { el.style.display='none'; return; }
+  sims.sort((a,b)=>b.delta-a.delta);
+
+  const maxGain = sims.reduce((s,x)=>s+x.delta,0);
+  const projected = Math.min(100, total + maxGain);
+
+  el.style.display='block';
+  el.innerHTML=`
+    <h2>🚀 개선 시뮬레이션 <span style="font-size:0.75rem;color:#aaa;font-weight:400;">지금 할 수 있는 것들</span></h2>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding:14px 16px;background:#fff8f3;border-radius:14px;border:1.5px solid #FFE0C8;">
+      <div style="text-align:center;flex-shrink:0;">
+        <div style="font-size:0.7rem;color:#888;">현재</div>
+        <div style="font-size:1.5rem;font-weight:900;color:#aaa;">${total}점</div>
+      </div>
+      <div style="font-size:1.6rem;color:#ff4628;flex-shrink:0;">→</div>
+      <div style="text-align:center;flex-shrink:0;">
+        <div style="font-size:0.7rem;color:#888;">최대 개선 후</div>
+        <div style="font-size:1.8rem;font-weight:900;color:#ff4628;">${projected}점</div>
+      </div>
+      <div style="flex:1;font-size:0.8rem;color:#555;line-height:1.7;">아래 항목을 모두 개선하면 <strong style="color:#ff4628;">+${Math.min(100-total,maxGain)}점</strong> 향상 가능해요</div>
+    </div>
+    ${sims.map(s=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fafafa;border-radius:12px;margin-bottom:8px;border:1.5px solid #f0f0f0;">
+        <span style="font-size:1.4rem;flex-shrink:0;">${s.icon}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.85rem;font-weight:800;color:#1a1a1a;">${s.action}</div>
+          <div style="font-size:0.75rem;color:#888;margin-top:2px;">${s.detail}</div>
+          <span style="display:inline-block;margin-top:4px;font-size:0.7rem;color:${s.dc};font-weight:700;background:${s.dc}18;padding:2px 8px;border-radius:99px;">${s.diff}</span>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:1.3rem;font-weight:900;color:#22c55e;">+${s.delta}점</div>
+          <div style="font-size:0.68rem;color:#aaa;">점수 향상</div>
+        </div>
+      </div>`).join('')}
+    <div style="margin-top:8px;font-size:0.72rem;color:#bbb;text-align:center;">* 추정값이에요. 실제 반영까지 1~3일 소요될 수 있어요.</div>`;
+}
+
+// ══════════════════════════════════════════════════
+// ⏳ 4. 운영 기간 분석
+// ══════════════════════════════════════════════════
+function renderPeriodAnalysis(hostAge, totalSchedules, postCount, catKr) {
+  const el = document.getElementById('periodDiag');
+  if (!el || !hostAge || hostAge <= 0) { if(el) el.innerHTML=''; return; }
+
+  const bench = catKr ? BENCHMARK_DATA[catKr] : null;
+  const spm = (totalSchedules / hostAge).toFixed(1);
+
+  let ageBadge, ageColor, ageDesc, ageLabel;
+  if      (hostAge < 3)  { ageBadge='🌱 신생';      ageColor='#f59e0b'; ageLabel='1개월 미만';   ageDesc='아직 데이터가 쌓이는 단계예요. 첫 3개월이 방향을 결정해요.'; }
+  else if (hostAge < 6)  { ageBadge='🌿 성장';      ageColor='#22c55e'; ageLabel='1~6개월';     ageDesc='정기 일정 루틴을 만드는 것이 핵심이에요.'; }
+  else if (hostAge < 12) { ageBadge='🌿 성장';      ageColor='#22c55e'; ageLabel='6개월~1년';   ageDesc='안정적인 정기 일정이 생기기 시작하는 단계예요.'; }
+  else if (hostAge < 24) { ageBadge='🌳 안정';      ageColor='#3b82f6'; ageLabel='1~2년';       ageDesc='안정된 운영 이력이 쌓이고 있어요. 이제 품질 개선에 집중해요.'; }
+  else                   { ageBadge='🏆 베테랑';    ageColor='#8b5cf6'; ageLabel='2년 이상';     ageDesc='운영 일관성이 알고리즘 신뢰 신호예요. 이 루틴을 유지하세요.'; }
+
+  let schedCmt = '';
+  if (bench) {
+    const catSpm = (bench.avg_schedules / 12).toFixed(1);
+    const ratio  = parseFloat(spm) / parseFloat(catSpm);
+    const icon   = ratio >= 1.2 ? '✅' : ratio >= 0.7 ? '📊' : '⚠️';
+    const msg    = ratio >= 1.2
+      ? `TOP500 평균(월 ${catSpm}회)보다 많아요. 훌륭해요!`
+      : ratio >= 0.7
+      ? `TOP500 평균(월 ${catSpm}회)과 비슷한 수준이에요.`
+      : `TOP500 평균(월 ${catSpm}회)보다 적어요. 일정 빈도를 높이면 점수가 올라가요.`;
+    schedCmt = `<div style="margin-top:8px;padding:8px 10px;background:#fff;border-radius:8px;border-left:3px solid #ff4628;font-size:0.77rem;color:#444;">${icon} 월 일정 ${spm}회 · ${msg}</div>`;
+  }
+
+  el.innerHTML=`
+    <div style="padding:14px 16px;border-radius:12px;background:#fafafa;border:1.5px solid #f0f0f0;">
+      <div style="font-size:0.85rem;font-weight:800;color:#7a2e00;margin-bottom:10px;">⏳ 운영 기간 분석</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="font-size:0.82rem;font-weight:700;color:${ageColor};background:${ageColor}18;padding:4px 12px;border-radius:99px;">${ageBadge}</span>
+        <span style="font-size:0.82rem;font-weight:700;color:#555;">당근 활동 ${ageLabel}</span>
+      </div>
+      <div style="font-size:0.78rem;color:#555;line-height:1.7;">${ageDesc}</div>
+      ${schedCmt}
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════
+// 📅 6. 월별 활동 패턴 추천
+// ══════════════════════════════════════════════════
+function renderMonthlyPattern(catKr, meetingFreq) {
+  const el = document.getElementById('monthlyCard');
+  if (!el) return;
+
+  const patterns = {
+    '운동':        [3,3,5,5,4,3,3,4,5,5,3,3],
+    '독서/인문학':  [4,4,3,3,3,2,2,3,4,4,5,5],
+    '아웃도어/여행':[3,3,5,5,5,4,2,3,5,5,3,2],
+    '음식/음료':   [4,3,4,4,4,3,3,4,4,4,4,5],
+    '취미/오락':   [4,4,3,3,3,4,5,5,3,3,4,5],
+    '자기계발':    [5,4,3,3,3,2,2,3,5,4,3,4],
+    '동네친구':    [3,3,5,5,4,4,3,4,5,5,4,3],
+    '문화/예술':   [3,4,4,5,4,3,3,3,4,5,4,4],
+    '반려동물':    [3,3,4,5,5,3,3,4,5,4,3,3],
+    '가족/육아':   [4,3,3,4,4,3,3,5,4,4,3,4],
+    '음악/악기':   [4,4,3,3,3,3,4,4,3,3,4,5],
+    '기타':        [4,4,4,4,4,3,3,4,4,4,4,4],
+  };
+  const seasonTips = {
+    '운동':        '봄(3-4월)·가을(9-10월)이 최고 시즌이에요. 이 시기 전에 신규 모집을 집중하고, 여름·겨울엔 실내 활동 대안 일정을 만들어 이탈을 막으세요.',
+    '독서/인문학':  '겨울(11-2월)이 참여율이 가장 높아요. 11월~2월 정기 모임을 늘리고, 여름엔 "여름 독서" 테마 기획으로 참여를 유지하세요.',
+    '아웃도어/여행':'봄(3-5월)·가을(9-10월)이 메인 시즌이에요. 비수기인 여름·겨울엔 가벼운 도심 나들이 일정으로 멤버를 유지하세요.',
+    '음식/음료':   '연중 고른 편이에요. 12월~1월 연말·신년 시즌에 특별 테마 모임을 기획하면 참여율이 올라가요.',
+    '취미/오락':   '여름방학(7-8월)·겨울방학(1-2월)에 참여가 늘어요. 방학 시즌에 집중 일정을 기획하세요.',
+    '자기계발':    '신년(1월)·새학기(9월)가 최고 시즌이에요. 이 시기 전에 모집과 일정 등록을 집중하면 효과적이에요.',
+    '동네친구':    '봄·가을이 활성 시즌이에요. 야외 활동과 맛집 탐방을 결합한 일정이 인기 있어요.',
+    '문화/예술':   '봄(4-5월)·가을(10-11월) 전시·공연 시즌에 참여율이 올라가요. 특별 전시 연계 일정을 기획해보세요.',
+    '반려동물':    '봄·가을에 야외 산책·모임이 활발해요. 여름·겨울엔 실내 카페 모임을 대안으로 활용하세요.',
+    '가족/육아':   '방학 시즌(여름·겨울)에 참여가 늘어요. 방학 특별 프로그램을 기획해보세요.',
+    '음악/악기':   '연말 공연 시즌(12-1월)에 활동이 활발해요. 정기 합주나 미니 공연을 연말에 기획하면 효과적이에요.',
+    '기타':        '연중 고른 활동을 유지하는 것이 좋아요. 월 2회 이상 정기 일정으로 멤버 활성도를 유지하세요.',
+  };
+
+  const months  = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const weights = patterns[catKr] || patterns['기타'];
+  const tip     = seasonTips[catKr] || seasonTips['기타'];
+  const now     = new Date().getMonth();
+  const maxW    = Math.max(...weights);
+
+  const bars = weights.map((w,i) => {
+    const isNow  = i === now;
+    const isPeak = !isNow && w === maxW;
+    const color  = isNow ? '#ff4628' : isPeak ? '#f97316' : w >= 4 ? '#fbbf24' : w >= 3 ? '#d1d5db' : '#e5e7eb';
+    const h      = Math.round((w / maxW) * 60);
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+      <div style="width:100%;background:${color};border-radius:4px 4px 0 0;height:${h}px;"></div>
+      <div style="font-size:0.6rem;color:${isNow?'#ff4628':'#999'};font-weight:${isNow?'800':'400'};white-space:nowrap;">${months[i]}</div>
+    </div>`;
+  }).join('');
+
+  const isNowPeak = weights[now] === maxW;
+
+  el.style.display='block';
+  el.innerHTML=`
+    <h2>📅 월별 활동 패턴 추천 <span style="font-size:0.75rem;color:#aaa;font-weight:400;">${catKr} 카테고리 기반</span></h2>
+    <div style="display:flex;align-items:flex-end;gap:3px;height:80px;margin-bottom:8px;padding:0 2px;">${bars}</div>
+    <div style="display:flex;gap:10px;font-size:0.72rem;margin-bottom:14px;flex-wrap:wrap;">
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#ff4628;border-radius:2px;display:inline-block;"></span>현재 월</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#f97316;border-radius:2px;display:inline-block;"></span>최고 시즌</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#fbbf24;border-radius:2px;display:inline-block;"></span>활성</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#d1d5db;border-radius:2px;display:inline-block;"></span>평시</span>
+    </div>
+    <div style="padding:10px 12px;background:${isNowPeak?'#fff3e0':'#f5f5f5'};border-radius:10px;border-left:3px solid ${isNowPeak?'#ff4628':'#ddd'};">
+      <div style="font-size:0.78rem;font-weight:800;color:${isNowPeak?'#ff4628':'#666'};margin-bottom:4px;">
+        ${isNowPeak?'🔥 지금이 최고 시즌이에요! 적극 모집하세요':'💡 카테고리별 시즌 전략'}
+      </div>
+      <div style="font-size:0.77rem;color:#555;line-height:1.7;">${tip}</div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════
+// 💪 5. 약점/강점 레이더 요약
+// ══════════════════════════════════════════════════
+function renderStrengthWeakness(seo, act, trust, exp, cvr, grow) {
+  const el = document.getElementById('swCard');
+  if (!el) return;
+
+  const items = [
+    { name:'SEO·제목', val:seo,  icon:'🔍' },
+    { name:'활성도',   val:act,  icon:'🔥' },
+    { name:'신뢰도',   val:trust,icon:'⭐' },
+    { name:'노출최적화',val:exp,  icon:'📡' },
+    { name:'전환율',   val:cvr,  icon:'🎯' },
+    { name:'성장성',   val:grow, icon:'📈' },
+  ];
+
+  const sorted = [...items].sort((a,b)=>b.val-a.val);
+  const top2   = sorted.slice(0,2);
+  const bot2   = sorted.slice(-2).reverse();
+
+  const barRow = (item, color) => {
+    const pct = Math.round(item.val);
+    return `<div style="margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+        <span style="font-size:0.8rem;font-weight:700;">${item.icon} ${item.name}</span>
+        <span style="font-size:0.82rem;font-weight:800;color:${color};">${pct}점</span>
+      </div>
+      <div style="background:#f0f0f0;border-radius:99px;height:8px;">
+        <div style="width:${pct}%;height:8px;border-radius:99px;background:${color};transition:width 0.5s;"></div>
+      </div>
+    </div>`;
+  };
+
+  el.style.display='block';
+  el.innerHTML=`
+    <h2>💪 강점 &amp; 약점 분석</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div style="padding:14px;background:#f0fff4;border-radius:14px;border:1.5px solid #bbf7d0;">
+        <div style="font-size:0.82rem;font-weight:800;color:#16a34a;margin-bottom:12px;">🏆 강점 TOP 2</div>
+        ${top2.map(i=>barRow(i,'#22c55e')).join('')}
+      </div>
+      <div style="padding:14px;background:#fff5f5;border-radius:14px;border:1.5px solid #fecaca;">
+        <div style="font-size:0.82rem;font-weight:800;color:#dc2626;margin-bottom:12px;">⚠️ 약점 · 개선 필요</div>
+        ${bot2.map(i=>barRow(i,'#ef4444')).join('')}
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:10px 12px;background:#f5f5f5;border-radius:10px;font-size:0.75rem;color:#666;line-height:1.6;">
+      💡 약점 항목을 10점 올리면 종합 점수는 최대 ${Math.round(10*0.25)}~${Math.round(10*0.20)}점 향상돼요. 가장 낮은 항목부터 집중 개선을 추천해요.
+    </div>`;
 }
 
 // ══════════════════════════════════════════════════
