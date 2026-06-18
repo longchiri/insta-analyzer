@@ -1365,9 +1365,10 @@ function revealCards(containerId) {
 function analyzeMoim() {
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
-  const title   = (document.getElementById('m-title').value || '').trim();
-  const intro   = (document.getElementById('m-intro').value || '').trim();
-  const area    = document.getElementById('m-area').value;
+  const title    = (document.getElementById('m-title').value || '').trim();
+  const intro    = (document.getElementById('m-intro').value || '').trim();
+  const category = document.getElementById('m-category').value || '기타';
+  const area     = document.getElementById('m-area').value;
   const photo   = document.getElementById('m-photo').value;
   const vis     = document.getElementById('m-visibility').value;
   const members = parseInt(document.getElementById('m-members').value) || 0;
