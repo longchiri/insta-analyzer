@@ -863,6 +863,42 @@
         <option value="no">없음</option>
       </select>
     </div>
+    <div class="form-group">
+      <label>챌린지 운영 여부 <span style="color:#ff4628;font-size:0.72rem;font-weight:800;">★ 필수</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 당근앱 → 모임 → 챌린지 탭</span>TOP500 전원 챌린지 보유 — 없으면 상위 노출 불가</span>
+        </span>
+      </label>
+      <select id="challengeYn">
+        <option value="" disabled selected>— 선택 —</option>
+        <option value="yes">챌린지 운영 중</option>
+        <option value="no">챌린지 없음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>일정 정원 채움률 (%) <span style="color:#ff4628;font-size:0.72rem;font-weight:800;">★ 최중요</span>
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip">일정 올릴 때 "10/20명" 중 평균 몇 % 채워지나요? 활성점수와 가장 높은 상관(0.714). TOP500 평균 60.4%</span>
+        </span>
+        <span class="tip">정원을 작게 잡아서 꽉 채우는 전략이 핵심</span>
+      </label>
+      <div class="range-row">
+        <input type="range" id="slotFillRate" min="0" max="100" value="0" oninput="document.getElementById('slotFillRateVal').textContent=this.value+'%'"/>
+        <span class="range-val" id="slotFillRateVal">0%</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>누적 일정 횟수 (전체)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 당근앱 → 모임 → 일정 탭 → 지난 일정 수 합산</span>상위그룹 중위 238개 vs 하위그룹 1개</span>
+        </span>
+        <span class="tip">과거 전체 누적 일정 수</span>
+      </label>
+      <input type="number" id="totalSchedules" placeholder="예: 30" min="0"/>
+    </div>
   </div>
 </div>
 
@@ -1189,6 +1225,40 @@
     <div id="benchmarkContent"></div>
   </div>
 
+  <!-- 운영 유형 진단 -->
+  <div class="section-divider">
+    <span class="section-divider-label">🔬 운영 패턴 진단</span>
+  </div>
+  <div class="result-card" id="opTypeCard">
+    <h2>🔬 운영 유형 진단 <span style="font-size:0.75rem;color:#aaa;font-weight:400;">51,252개 실제 데이터 기반</span></h2>
+    <div id="opTypeDiag"></div>
+    <div id="slotFillDiag" style="margin-top:14px;"></div>
+    <div id="challengeDiag" style="margin-top:14px;"></div>
+    <div id="successFormula" style="margin-top:18px;padding:16px;background:#fff8f3;border-radius:12px;border:1.5px solid #FFE0C8;">
+      <div style="font-size:0.78rem;font-weight:800;color:#7a2e00;margin-bottom:10px;">📊 TOP500 성공 모임 공식 (실제 데이터)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div style="text-align:center;padding:10px 6px;background:#fff;border-radius:8px;border:1px solid #FFE0C8;">
+          <div style="font-size:1.3rem;font-weight:900;color:#ff4628;">74.2%</div>
+          <div style="font-size:0.7rem;color:#888;margin-top:3px;">정원 채움률</div>
+          <div style="font-size:0.65rem;color:#bbb;">상위그룹 중위</div>
+        </div>
+        <div style="text-align:center;padding:10px 6px;background:#fff;border-radius:8px;border:1px solid #FFE0C8;">
+          <div style="font-size:1.3rem;font-weight:900;color:#ff4628;">238개</div>
+          <div style="font-size:0.7rem;color:#888;margin-top:3px;">누적 일정수</div>
+          <div style="font-size:0.65rem;color:#bbb;">상위그룹 중위</div>
+        </div>
+        <div style="text-align:center;padding:10px 6px;background:#fff;border-radius:8px;border:1px solid #FFE0C8;">
+          <div style="font-size:1.3rem;font-weight:900;color:#ff4628;">949개</div>
+          <div style="font-size:0.7rem;color:#888;margin-top:3px;">누적 게시글</div>
+          <div style="font-size:0.65rem;color:#bbb;">상위그룹 중위</div>
+        </div>
+      </div>
+      <div style="font-size:0.75rem;color:#666;line-height:1.7;">
+        하위그룹(50점-): 게시글 <b>198개</b>, 일정 <b>1개</b>, 채움률 <b>25%</b> — 3~5배 차이가 등급을 가름
+      </div>
+    </div>
+  </div>
+
   <!-- 운영팁 섹션 구분선 -->
   <div class="section-divider">
     <span class="section-divider-label">🔧 운영 팁</span>
@@ -1230,7 +1300,7 @@
 
 <footer>
   <p>by <b style="color:#ff4628;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.8.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.9.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1241,9 +1311,9 @@
 
 <script>
 // ══════════════════════════════════════════════════
-// 📊 실제 TOP500 모임 벤치마크 데이터 (2026.06.17 수집)
+// 📊 실제 TOP500 모임 벤치마크 데이터 (2026.06.18 수집 — 51,252개 기반)
 // ══════════════════════════════════════════════════
-const BENCHMARK_DATA = {"가족/육아": {"count": 22, "avg_members": 328.0, "avg_posts": 175.0, "avg_schedules": 10.0, "avg_participation": 25.2, "avg_score": 33.5, "ghost_pct": 54.5, "by_size": {"중형": {"count": 15, "avg_posts": 111.0, "avg_schedules": 6.0, "avg_participation": 17.7, "avg_score": 29.5}, "대형": {"count": 4, "avg_posts": 151.0, "avg_schedules": 5.0, "avg_participation": 25.4, "avg_score": 33.6}, "초대형": {"count": 3, "avg_posts": 524.0, "avg_schedules": 34.0, "avg_participation": 62.3, "avg_score": 53.8}}}, "기타": {"count": 13, "avg_members": 359.0, "avg_posts": 343.0, "avg_schedules": 73.0, "avg_participation": 41.8, "avg_score": 46.2, "ghost_pct": 15.4, "by_size": {"중형": {"count": 8, "avg_posts": 228.0, "avg_schedules": 65.0, "avg_participation": 50.2, "avg_score": 46.4}, "대형": {"count": 3, "avg_posts": 414.0, "avg_schedules": 126.0, "avg_participation": 17.2, "avg_score": 38.5}, "초대형": {"count": 2, "avg_posts": 694.0, "avg_schedules": 22.0, "avg_participation": 45.0, "avg_score": 57.0}}}, "독서/인문학": {"count": 3, "avg_members": 322.0, "avg_posts": 449.0, "avg_schedules": 102.0, "avg_participation": 75.0, "avg_score": 67.7, "ghost_pct": 0.0, "by_size": {"중형": {"count": 2, "avg_posts": 466.0, "avg_schedules": 81.0, "avg_participation": 62.5, "avg_score": 64.8}}}, "동네친구": {"count": 77, "avg_members": 241.0, "avg_posts": 2825.0, "avg_schedules": 698.0, "avg_participation": 64.8, "avg_score": 71.4, "ghost_pct": 0.0, "by_size": {"소형": {"count": 2, "avg_posts": 1040.0, "avg_schedules": 376.0, "avg_participation": 75.0, "avg_score": 68.6}, "중형": {"count": 64, "avg_posts": 2551.0, "avg_schedules": 658.0, "avg_participation": 63.4, "avg_score": 70.6}, "대형": {"count": 8, "avg_posts": 4049.0, "avg_schedules": 953.0, "avg_participation": 73.8, "avg_score": 76.4}, "초대형": {"count": 3, "avg_posts": 5838.0, "avg_schedules": 743.0, "avg_participation": 62.3, "avg_score": 74.6}}}, "반려동물": {"count": 36, "avg_members": 293.0, "avg_posts": 326.0, "avg_schedules": 21.0, "avg_participation": 32.1, "avg_score": 38.6, "ghost_pct": 44.4, "by_size": {"중형": {"count": 22, "avg_posts": 224.0, "avg_schedules": 14.0, "avg_participation": 26.8, "avg_score": 35.5}, "대형": {"count": 9, "avg_posts": 374.0, "avg_schedules": 36.0, "avg_participation": 37.1, "avg_score": 44.5}, "초대형": {"count": 5, "avg_posts": 649.0, "avg_schedules": 27.0, "avg_participation": 43.6, "avg_score": 45.3}}}, "문화/예술": {"count": 30, "avg_members": 265.0, "avg_posts": 502.0, "avg_schedules": 65.0, "avg_participation": 52.2, "avg_score": 52.0, "ghost_pct": 10.0, "by_size": {"중형": {"count": 22, "avg_posts": 434.0, "avg_schedules": 56.0, "avg_participation": 52.5, "avg_score": 51.6}, "대형": {"count": 5, "avg_posts": 527.0, "avg_schedules": 91.0, "avg_participation": 55.4, "avg_score": 56.0}, "초대형": {"count": 3, "avg_posts": 1008.0, "avg_schedules": 79.0, "avg_participation": 45.0, "avg_score": 51.7}}}, "아웃도어/여행": {"count": 51, "avg_members": 293.0, "avg_posts": 815.0, "avg_schedules": 99.0, "avg_participation": 53.0, "avg_score": 54.4, "ghost_pct": 7.8, "by_size": {"소형": {"count": 2, "avg_posts": 183.0, "avg_schedules": 11.0, "avg_participation": 24.0, "avg_score": 37.0}, "중형": {"count": 33, "avg_posts": 699.0, "avg_schedules": 88.0, "avg_participation": 51.2, "avg_score": 53.7}, "대형": {"count": 10, "avg_posts": 815.0, "avg_schedules": 106.0, "avg_participation": 55.2, "avg_score": 56.8}, "초대형": {"count": 6, "avg_posts": 1510.0, "avg_schedules": 147.0, "avg_participation": 57.7, "avg_score": 57.5}}}, "음식/음료": {"count": 30, "avg_members": 284.0, "avg_posts": 318.0, "avg_schedules": 82.0, "avg_participation": 65.1, "avg_score": 54.1, "ghost_pct": 10.0, "by_size": {"중형": {"count": 21, "avg_posts": 245.0, "avg_schedules": 70.0, "avg_participation": 64.4, "avg_score": 52.8}, "대형": {"count": 7, "avg_posts": 367.0, "avg_schedules": 112.0, "avg_participation": 67.9, "avg_score": 57.3}, "초대형": {"count": 2, "avg_posts": 798.0, "avg_schedules": 62.0, "avg_participation": 62.0, "avg_score": 58.6}}}, "음악/악기": {"count": 13, "avg_members": 219.0, "avg_posts": 436.0, "avg_schedules": 116.0, "avg_participation": 64.5, "avg_score": 57.5, "ghost_pct": 7.7, "by_size": {"중형": {"count": 11, "avg_posts": 432.0, "avg_schedules": 123.0, "avg_participation": 66.7, "avg_score": 58.2}}}, "운동": {"count": 110, "avg_members": 276.0, "avg_posts": 1243.0, "avg_schedules": 318.0, "avg_participation": 56.2, "avg_score": 62.4, "ghost_pct": 2.7, "by_size": {"소형": {"count": 3, "avg_posts": 266.0, "avg_schedules": 82.0, "avg_participation": 60.3, "avg_score": 55.4}, "중형": {"count": 79, "avg_posts": 1038.0, "avg_schedules": 264.0, "avg_participation": 53.2, "avg_score": 61.0}, "대형": {"count": 20, "avg_posts": 1643.0, "avg_schedules": 472.0, "avg_participation": 63.8, "avg_score": 66.5}, "초대형": {"count": 8, "avg_posts": 2228.0, "avg_schedules": 622.0, "avg_participation": 65.3, "avg_score": 68.5}}}, "자기계발": {"count": 56, "avg_members": 330.0, "avg_posts": 406.0, "avg_schedules": 64.0, "avg_participation": 62.2, "avg_score": 54.2, "ghost_pct": 7.1, "by_size": {"중형": {"count": 31, "avg_posts": 376.0, "avg_schedules": 48.0, "avg_participation": 60.9, "avg_score": 52.9}, "대형": {"count": 16, "avg_posts": 370.0, "avg_schedules": 70.0, "avg_participation": 61.4, "avg_score": 54.5}, "초대형": {"count": 9, "avg_posts": 617.0, "avg_schedules": 115.0, "avg_participation": 68.0, "avg_score": 59.7}}}, "취미/오락": {"count": 59, "avg_members": 311.0, "avg_posts": 1142.0, "avg_schedules": 201.0, "avg_participation": 49.6, "avg_score": 54.1, "ghost_pct": 11.9, "by_size": {"소형": {"count": 2, "avg_posts": 142.0, "avg_schedules": 14.0, "avg_participation": 15.0, "avg_score": 31.3}, "중형": {"count": 37, "avg_posts": 919.0, "avg_schedules": 172.0, "avg_participation": 47.6, "avg_score": 53.2}, "대형": {"count": 12, "avg_posts": 1266.0, "avg_schedules": 258.0, "avg_participation": 57.5, "avg_score": 57.9}, "초대형": {"count": 8, "avg_posts": 2438.0, "avg_schedules": 330.0, "avg_participation": 50.5, "avg_score": 57.8}}}};
+const BENCHMARK_DATA = {"가족/육아": {"count": 22, "avg_members": 521.0, "avg_posts": 268.0, "avg_schedules": 10.0, "avg_participation": 39.5, "avg_score": 39.8, "ghost_pct": 0.0, "by_size": {"중형": {"count": 15, "avg_posts": 111.0, "avg_schedules": 6.0, "avg_participation": 17.7, "avg_score": 29.5}, "대형": {"count": 4, "avg_posts": 151.0, "avg_schedules": 5.0, "avg_participation": 25.4, "avg_score": 33.6}, "초대형": {"count": 3, "avg_posts": 524.0, "avg_schedules": 34.0, "avg_participation": 62.3, "avg_score": 53.8}}}, "기타": {"count": 13, "avg_members": 359.0, "avg_posts": 343.0, "avg_schedules": 73.0, "avg_participation": 41.8, "avg_score": 46.2, "ghost_pct": 15.4, "by_size": {"중형": {"count": 8, "avg_posts": 228.0, "avg_schedules": 65.0, "avg_participation": 50.2, "avg_score": 46.4}, "대형": {"count": 3, "avg_posts": 414.0, "avg_schedules": 126.0, "avg_participation": 17.2, "avg_score": 38.5}, "초대형": {"count": 2, "avg_posts": 694.0, "avg_schedules": 22.0, "avg_participation": 45.0, "avg_score": 57.0}}}, "독서/인문학": {"count": 3, "avg_members": 322.0, "avg_posts": 449.0, "avg_schedules": 102.0, "avg_participation": 75.0, "avg_score": 67.7, "ghost_pct": 0.0, "by_size": {"중형": {"count": 2, "avg_posts": 466.0, "avg_schedules": 81.0, "avg_participation": 62.5, "avg_score": 64.8}}}, "동네친구": {"count": 77, "avg_members": 241.0, "avg_posts": 2825.0, "avg_schedules": 698.0, "avg_participation": 64.8, "avg_score": 71.4, "ghost_pct": 0.0, "by_size": {"소형": {"count": 2, "avg_posts": 1040.0, "avg_schedules": 376.0, "avg_participation": 75.0, "avg_score": 68.6}, "중형": {"count": 64, "avg_posts": 2551.0, "avg_schedules": 658.0, "avg_participation": 63.4, "avg_score": 70.6}, "대형": {"count": 8, "avg_posts": 4049.0, "avg_schedules": 953.0, "avg_participation": 73.8, "avg_score": 76.4}, "초대형": {"count": 3, "avg_posts": 5838.0, "avg_schedules": 743.0, "avg_participation": 62.3, "avg_score": 74.6}}}, "반려동물": {"count": 36, "avg_members": 293.0, "avg_posts": 326.0, "avg_schedules": 21.0, "avg_participation": 32.1, "avg_score": 38.6, "ghost_pct": 44.4, "by_size": {"중형": {"count": 22, "avg_posts": 224.0, "avg_schedules": 14.0, "avg_participation": 26.8, "avg_score": 35.5}, "대형": {"count": 9, "avg_posts": 374.0, "avg_schedules": 36.0, "avg_participation": 37.1, "avg_score": 44.5}, "초대형": {"count": 5, "avg_posts": 649.0, "avg_schedules": 27.0, "avg_participation": 43.6, "avg_score": 45.3}}}, "문화/예술": {"count": 30, "avg_members": 265.0, "avg_posts": 502.0, "avg_schedules": 65.0, "avg_participation": 52.2, "avg_score": 52.0, "ghost_pct": 10.0, "by_size": {"중형": {"count": 22, "avg_posts": 434.0, "avg_schedules": 56.0, "avg_participation": 52.5, "avg_score": 51.6}, "대형": {"count": 5, "avg_posts": 527.0, "avg_schedules": 91.0, "avg_participation": 55.4, "avg_score": 56.0}, "초대형": {"count": 3, "avg_posts": 1008.0, "avg_schedules": 79.0, "avg_participation": 45.0, "avg_score": 51.7}}}, "아웃도어/여행": {"count": 51, "avg_members": 293.0, "avg_posts": 815.0, "avg_schedules": 99.0, "avg_participation": 53.0, "avg_score": 54.4, "ghost_pct": 7.8, "by_size": {"소형": {"count": 2, "avg_posts": 183.0, "avg_schedules": 11.0, "avg_participation": 24.0, "avg_score": 37.0}, "중형": {"count": 33, "avg_posts": 699.0, "avg_schedules": 88.0, "avg_participation": 51.2, "avg_score": 53.7}, "대형": {"count": 10, "avg_posts": 815.0, "avg_schedules": 106.0, "avg_participation": 55.2, "avg_score": 56.8}, "초대형": {"count": 6, "avg_posts": 1510.0, "avg_schedules": 147.0, "avg_participation": 57.7, "avg_score": 57.5}}}, "음식/음료": {"count": 30, "avg_members": 284.0, "avg_posts": 318.0, "avg_schedules": 82.0, "avg_participation": 65.1, "avg_score": 54.1, "ghost_pct": 10.0, "by_size": {"중형": {"count": 21, "avg_posts": 245.0, "avg_schedules": 70.0, "avg_participation": 64.4, "avg_score": 52.8}, "대형": {"count": 7, "avg_posts": 367.0, "avg_schedules": 112.0, "avg_participation": 67.9, "avg_score": 57.3}, "초대형": {"count": 2, "avg_posts": 798.0, "avg_schedules": 62.0, "avg_participation": 62.0, "avg_score": 58.6}}}, "음악/악기": {"count": 13, "avg_members": 219.0, "avg_posts": 436.0, "avg_schedules": 116.0, "avg_participation": 64.5, "avg_score": 57.5, "ghost_pct": 7.7, "by_size": {"중형": {"count": 11, "avg_posts": 432.0, "avg_schedules": 123.0, "avg_participation": 66.7, "avg_score": 58.2}}}, "운동": {"count": 110, "avg_members": 276.0, "avg_posts": 1243.0, "avg_schedules": 318.0, "avg_participation": 56.2, "avg_score": 62.4, "ghost_pct": 2.7, "by_size": {"소형": {"count": 3, "avg_posts": 266.0, "avg_schedules": 82.0, "avg_participation": 60.3, "avg_score": 55.4}, "중형": {"count": 79, "avg_posts": 1038.0, "avg_schedules": 264.0, "avg_participation": 53.2, "avg_score": 61.0}, "대형": {"count": 20, "avg_posts": 1643.0, "avg_schedules": 472.0, "avg_participation": 63.8, "avg_score": 66.5}, "초대형": {"count": 8, "avg_posts": 2228.0, "avg_schedules": 622.0, "avg_participation": 65.3, "avg_score": 68.5}}}, "자기계발": {"count": 56, "avg_members": 330.0, "avg_posts": 406.0, "avg_schedules": 64.0, "avg_participation": 62.2, "avg_score": 54.2, "ghost_pct": 7.1, "by_size": {"중형": {"count": 31, "avg_posts": 376.0, "avg_schedules": 48.0, "avg_participation": 60.9, "avg_score": 52.9}, "대형": {"count": 16, "avg_posts": 370.0, "avg_schedules": 70.0, "avg_participation": 61.4, "avg_score": 54.5}, "초대형": {"count": 9, "avg_posts": 617.0, "avg_schedules": 115.0, "avg_participation": 68.0, "avg_score": 59.7}}}, "취미/오락": {"count": 59, "avg_members": 311.0, "avg_posts": 1142.0, "avg_schedules": 201.0, "avg_participation": 49.6, "avg_score": 54.1, "ghost_pct": 11.9, "by_size": {"소형": {"count": 2, "avg_posts": 142.0, "avg_schedules": 14.0, "avg_participation": 15.0, "avg_score": 31.3}, "중형": {"count": 37, "avg_posts": 919.0, "avg_schedules": 172.0, "avg_participation": 47.6, "avg_score": 53.2}, "대형": {"count": 12, "avg_posts": 1266.0, "avg_schedules": 258.0, "avg_participation": 57.5, "avg_score": 57.9}, "초대형": {"count": 8, "avg_posts": 2438.0, "avg_schedules": 330.0, "avg_participation": 50.5, "avg_score": 57.8}}}};
 
 const TOP3_BY_CAT = {"가족/육아":[{"name":"강동구)강동맘 육아 모임🥕","members":625,"score":69.1,"posts":644,"schedules":98,"partic":68.6,"intro":"*함께 육아 소통하고 올림픽공원 산책해요~~!","url":"https://www.daangn.com/kr/group/강동구-강동맘-육아-모임-xb12bcrri51y/"},{"name":"관악 토끼띠용띠뱀띠 맘님들 어서오세요~^^","members":210,"score":58.2,"posts":369,"schedules":16,"partic":66.0,"intro":"관악 토끼띠용띠뱀띠 맘님들 어서오세요~^^","url":"https://www.daangn.com/kr/group/관악-토끼띠용띠뱀띠-맘님들-어서오세요-6guq3c64m65z/"},{"name":"[목동권]상위권자녀교육모임","members":265,"score":57.7,"posts":165,"schedules":10,"partic":95.4,"intro":"상위권을 지향하는 학생을 키우는 엄마의 고민을 나누는 곳입니다.","url":"https://www.daangn.com/kr/group/목동권-상위권자녀교육모임-m8hohfrfbb9u/"}],"기타":[{"name":"4560힐링.웰빙모임 산행공연여행산책취미함께","members":412,"score":67.1,"posts":872,"schedules":378,"partic":51.5,"intro":"서울시 강남구 역삼동","url":"https://www.daangn.com/kr/group/4560힐링-웰빙모임-산행공연여행산책취미함께-d11vpchzn4kk/"},{"name":"외국인과 함께하는 영어회화FLEC_Hanam","members":291,"score":66.7,"posts":609,"schedules":316,"partic":57.9,"intro":"외국인과 함께하는 영어회화FLEC_Hanam","url":"https://www.daangn.com/kr/group/외국인과-함께하는-영어회화flec-hanam-gn1a76jwgwgn/"},{"name":"거짓말만 하는 모임","members":953,"score":65.7,"posts":1188,"schedules":29,"partic":58.6,"intro":"이름도, 직업도, 하루 일과도 전부 거짓말이어야 합니다....","url":"https://www.daangn.com/kr/group/거짓말만-하는-모임-sfgybc77y3de/"}],"독서/인문학":[{"name":"독서모임 온도🕊️","members":256,"score":75.9,"posts":716,"schedules":115,"partic":100.0,"intro":"📚 혼자 읽기 아쉬웠던 책, 같이 읽어요.","url":"https://www.daangn.com/kr/group/독서모임-온도-cbwnn46nkokk/"},{"name":"20~30 독서모임📚","members":557,"score":73.3,"posts":416,"schedules":145,"partic":100.0,"intro":"편안한 자유 독서📚","url":"https://www.daangn.com/kr/group/20-30-독서모임-5jjxs75cc99t/"},{"name":"📚자유•지정 독서모임(강남, 관악)","members":153,"score":53.8,"posts":216,"schedules":47,"partic":25.0,"intro":"책 읽으면 뭐가 좋아요?","url":"https://www.daangn.com/kr/group/자유-지정-독서모임-강남-관악-3oyt6edq5663/"}],"동네친구":[{"name":"☕️슬기로운 취미생활 (논알콜 96-86)","members":152,"score":85.0,"posts":4989,"schedules":1148,"partic":100.0,"intro":"☕️슬기로운 취미생활 (논알콜 96-86)","url":"https://www.daangn.com/kr/group/슬기로운-취미생활-논알콜-96-86-9esazb63oob6/"},{"name":"술꾼도시남녀74~93모임 서울일상술집맛집탐방","members":191,"score":84.5,"posts":11877,"schedules":1427,"partic":97.5,"intro":"서울시 강서구 화곡동","url":"https://www.daangn.com/kr/group/술꾼도시남녀74-93모임-서울일상술집맛집탐방-y4oji5568m4y/"},{"name":"[강남 싱글즈] 75-95💕강남.서초.송파","members":242,"score":83.2,"posts":4649,"schedules":1137,"partic":92.5,"intro":"맛집탐방, 문화생활, 취미생활을 같이해요.","url":"https://www.daangn.com/kr/group/강남-싱글즈-75-95-강남-서초-송파-g29r1ci7gsf7/"}],"문화/예술":[{"name":"종이와연필","members":310,"score":81.6,"posts":5708,"schedules":306,"partic":83.1,"intro":"손 풀러 나오시는 전공자들이나 쏨씨 자랑이 목표시면 헛걸음 입니다....","url":"https://www.daangn.com/kr/group/종이와연필-z6gpvutk8n31/"},{"name":"40~60 현대미술과 미술품 애호가","members":407,"score":77.9,"posts":1396,"schedules":208,"partic":94.6,"intro":"40~60 현대미술과 미술품 애호가","url":"https://www.daangn.com/kr/group/40-60-현대미술과-미술품-애호가-zz1bbg5evjc3/"},{"name":"🖼대경문화생활3040🎶🎻🎺📽","members":134,"score":74.8,"posts":2058,"schedules":233,"partic":69.6,"intro":"🖼대경문화생활3040🎶🎻🎺📽","url":"https://www.daangn.com/kr/group/대경문화생활3040-skxyh7exaswu/"}],"반려동물":[{"name":"Esperanza-유기동물들에게 희망을","members":582,"score":76.1,"posts":1263,"schedules":260,"partic":88.0,"intro":"Esperanza-유기동물들에게 희망을","url":"https://www.daangn.com/kr/group/esperanza-유기동물들에게-희망을-mknyj7vu3wap/"},{"name":"강동 냥냥이들🐾","members":189,"score":71.7,"posts":3269,"schedules":44,"partic":52.8,"intro":"고양이를 키우시는 분들의 정보와 일상을 공유하며","url":"https://www.daangn.com/kr/group/강동-냥냥이들-sj62yn51htgu/"},{"name":"유기동물보호소봉사모임","members":229,"score":69.3,"posts":380,"schedules":149,"partic":82.0,"intro":"보호소봉사에 관심있는분들을 모십니다~","url":"https://www.daangn.com/kr/group/유기동물보호소봉사모임-4hvcjrfvy5f6/"}],"아웃도어/여행":[{"name":"먹고 놀고 여행가자! (74~88년생)","members":300,"score":77.4,"posts":10723,"schedules":968,"partic":61.9,"intro":"먹고 놀고 여행가자! (74~88년생)","url":"https://www.daangn.com/kr/group/먹고-놀고-여행가자-74-88년생-58xm1v6k57e1/"},{"name":"⛰️2030 등린이 [신이나 산악회] 🏔️","members":458,"score":77.0,"posts":2846,"schedules":276,"partic":73.3,"intro":"⛰️2030 등린이 [신이나 산악회] 🏔️","url":"https://www.daangn.com/kr/group/2030-등린이-신이나-산악회-ui3cw61tkxgu/"},{"name":"[7080등산모임]산타슈~","members":178,"score":76.8,"posts":3115,"schedules":301,"partic":70.0,"intro":"70년생부터 89년생까지 산우들과 서로 존중하며, 같이 갈 수 있기를 바랍니다....","url":"https://www.daangn.com/kr/group/7080등산모임-산타슈-7pb3cv93xv34/"}],"운동":[{"name":"남산 둘레길을 걷고 뛰는 3040(초보환영)","members":421,"score":82.0,"posts":9200,"schedules":569,"partic":85.0,"intro":"남산 둘레길을 걷고 뛰는 3040(초보환영)","url":"https://www.daangn.com/kr/group/남산-둘레길을-걷고-뛰는-3040-초보환영-de9dt9wtfjy6/"},{"name":"열정의 테니스","members":859,"score":80.3,"posts":1840,"schedules":1687,"partic":100.0,"intro":"서울시 서초구 반포본동","url":"https://www.daangn.com/kr/group/열정의-테니스-jt4fgqhx1vaf/"},{"name":"세종시 3040 배드민턴 초보","members":573,"score":78.9,"posts":2663,"schedules":1277,"partic":84.4,"intro":"세종시 3040 배드민턴 초보","url":"https://www.daangn.com/kr/group/세종시-3040-배드민턴-초보-nofqfdkz5uwq/"}],"음식/음료":[{"name":"한남동 바(bar)투어","members":520,"score":74.1,"posts":1229,"schedules":240,"partic":78.4,"intro":"한남동 바(bar)투어","url":"https://www.daangn.com/kr/group/한남동-바-bar-투어-umd2n9m2ecr3/"},{"name":"평일 점심 같이 먹어요(서초,강남)","members":203,"score":73.9,"posts":1554,"schedules":465,"partic":71.7,"intro":"평일 점심 같이 먹어요(서초,강남)","url":"https://www.daangn.com/kr/group/평일-점심-같이-먹어요-서초-강남-9y59too7qio7/"},{"name":"린치's🌈2030 맛집 무료협찬 친구만들기","members":301,"score":71.9,"posts":1093,"schedules":398,"partic":70.0,"intro":"린치's🌈2030 맛집 무료협찬 친구만들기","url":"https://www.daangn.com/kr/group/린치s-2030-맛집-무료협찬-친구만들기-xpiyv5tdmv8h/"}],"음악/악기":[{"name":"서초 강남 LP 좋아하시는 분들의 모임","members":329,"score":77.2,"posts":2114,"schedules":551,"partic":81.2,"intro":"서울시 강남구 대치1동","url":"https://www.daangn.com/kr/group/서초-강남-lp-좋아하시는-분들의-모임-n3qnotmee7qw/"},{"name":"송파 음악 동아리 Music Talk","members":184,"score":69.8,"posts":979,"schedules":76,"partic":62.3,"intro":"송파 음악 동아리 Music Talk","url":"https://www.daangn.com/kr/group/송파-음악-동아리-music-talk-piij1rtawcow/"},{"name":"Jpop 일본 코인 노래방","members":253,"score":69.0,"posts":784,"schedules":288,"partic":63.3,"intro":"Jpop 일본 코인 노래방","url":"https://www.daangn.com/kr/group/jpop-일본-코인-노래방-gjvu3199y1k8/"}],"자기계발":[{"name":"책며듦 독서모임","members":145,"score":73.9,"posts":1052,"schedules":32,"partic":100.0,"intro":"편하게 만나서 독서, 필사 해요.","url":"https://www.daangn.com/kr/group/책며듦-독서모임-mosamcx86xmm/"},{"name":"신도림에서 돈 안들이고 영어 배우는 모임","members":794,"score":73.2,"posts":1113,"schedules":581,"partic":76.1,"intro":"신도림역 근처 카페에서 약 2시간 가량 영어로 대화합니다....","url":"https://www.daangn.com/kr/group/신도림에서-돈-안들이고-영어-배우는-모임-gqzre1p3hgcd/"},{"name":"잠실 일본어 프리토킹","members":874,"score":72.7,"posts":1580,"schedules":228,"partic":65.3,"intro":"잠실 일본어 프리토킹","url":"https://www.daangn.com/kr/group/잠실-일본어-프리토킹-qtyhmx45rfv3/"}],"취미/오락":[{"name":"대구 오타쿠 연합","members":215,"score":82.5,"posts":7019,"schedules":564,"partic":87.3,"intro":"웹소/라노벨/책 이야기","url":"https://www.daangn.com/kr/group/대구-오타쿠-연합-byr2xq1pek8o/"},{"name":"동네에서 열쇠챙겨 방탈출","members":343,"score":81.1,"posts":3843,"schedules":1561,"partic":86.7,"intro":"동네에서 열쇠챙겨 방탈출","url":"https://www.daangn.com/kr/group/동네에서-열쇠챙겨-방탈출-zp5e7h9qacum/"},{"name":"🌎20대 대구 액티비티 모임👍","members":166,"score":79.1,"posts":1759,"schedules":387,"partic":95.0,"intro":"학교를 졸업해서 친구를 마땅히 사귈 공간이 없으신 분이나 바쁜 직장생활 중 가끔 친구들과 모여서 함께 놀거나","url":"https://www.daangn.com/kr/group/20대-대구-액티비티-모임-6nyvwqp9cvdf/"}]};
 
@@ -1307,6 +1377,9 @@ function analyze() {
   const regularRate  = parseInt(document.getElementById('regularRate').value) || 0;
   const meetingTime  = document.getElementById('meetingTime').value;
   const introLocation= document.getElementById('introLocation').value;
+  const challengeYn    = document.getElementById('challengeYn').value;
+  const slotFillRate   = parseInt(document.getElementById('slotFillRate').value) || 0;
+  const totalSchedules = parseInt(document.getElementById('totalSchedules').value) || 0;
 
   // 섹션 7 — 추가 노출 채널
   const photoCount   = parseInt(document.getElementById('photoCount').value) || 0;
@@ -1354,20 +1427,23 @@ function analyze() {
 
   // 2. 활성도 점수 (25%)
   let act = 0;
-  if (meetingFreq >= 4) act += 22; else if (meetingFreq >= 2) act += 14; else if (meetingFreq >= 1) act += 6;
-  if (attendRate >= 70) act += 20; else if (attendRate >= 50) act += 12; else if (attendRate >= 30) act += 6;
-  // ★추가: 재참여율 — 같은 멤버 재방문이 모임 신뢰도 핵심 신호
-  if (reattendRate >= 60) act += 15; else if (reattendRate >= 40) act += 9; else if (reattendRate >= 20) act += 4;
-  if (postCount >= 20) act += 18; else if (postCount >= 8) act += 12; else if (postCount >= 2) act += 6;
-  if (commentAvg >= 5) act += 15; else if (commentAvg >= 2) act += 8; else if (commentAvg >= 1) act += 4;
+  if (meetingFreq >= 4) act += 18; else if (meetingFreq >= 2) act += 11; else if (meetingFreq >= 1) act += 5;
+  // ★ 정원 채움률 — 활성점수 최고 상관(0.714), 실제 데이터 기반 최중요 지표
+  if (slotFillRate >= 80) act += 28; else if (slotFillRate >= 60) act += 20; else if (slotFillRate >= 40) act += 12; else if (slotFillRate >= 20) act += 6;
+  // ★ 누적 일정수 — 상위그룹 중위 238개 vs 하위 1개
+  if (totalSchedules >= 200) act += 18; else if (totalSchedules >= 100) act += 13; else if (totalSchedules >= 30) act += 8; else if (totalSchedules >= 5) act += 4;
+  // ★ 재참여율 — 같은 멤버 재방문이 모임 신뢰도 핵심 신호
+  if (reattendRate >= 60) act += 12; else if (reattendRate >= 40) act += 7; else if (reattendRate >= 20) act += 3;
+  if (postCount >= 20) act += 15; else if (postCount >= 8) act += 10; else if (postCount >= 2) act += 5;
+  if (commentAvg >= 5) act += 10; else if (commentAvg >= 2) act += 6; else if (commentAvg >= 1) act += 3;
   // D-Day 보너스 (14일 이내 일정)
-  if (dday <= 3) act += 15; else if (dday <= 7) act += 10; else if (dday <= 14) act += 6;
+  if (dday <= 3) act += 12; else if (dday <= 7) act += 8; else if (dday <= 14) act += 5;
   // 정기 모임 보너스
-  if (scheduleType === 'weekly') act += 10; else if (scheduleType === 'biweekly') act += 7; else if (scheduleType === 'monthly') act += 4;
+  if (scheduleType === 'weekly') act += 8; else if (scheduleType === 'biweekly') act += 5; else if (scheduleType === 'monthly') act += 3;
   // 활동 일관성 보너스 (2026 AI 운영 이력 평가)
-  if (activityConsistency === 'high') act += 12; else if (activityConsistency === 'mid') act += 6; else if (activityConsistency === 'new') act += 3;
+  if (activityConsistency === 'high') act += 10; else if (activityConsistency === 'mid') act += 5; else if (activityConsistency === 'new') act += 2;
   // 단골 멤버 보너스
-  if (regularRate >= 50) act += 10; else if (regularRate >= 30) act += 5;
+  if (regularRate >= 50) act += 8; else if (regularRate >= 30) act += 4;
   // 이탈률 패널티
   const churnRate = memberCount > 0 ? (churnCount / memberCount) * 100 : 0;
   if (churnRate >= 20) act -= 15; else if (churnRate >= 10) act -= 8;
@@ -1387,23 +1463,25 @@ function analyze() {
 
   // 4. 노출 점수 (15%)
   let exp = 0;
+  // ★ 챌린지 여부 — TOP500 전원 보유, 없으면 상위 노출 불가
+  if (challengeYn === 'yes') exp += 20; else if (challengeYn === 'no') exp -= 10;
   // 태그 최적화
-  if (tagSet === 'many') exp += 28; else if (tagSet === 'few') exp += 14;
+  if (tagSet === 'many') exp += 22; else if (tagSet === 'few') exp += 11;
   // 동네생활 연동
-  if (neighborPost === 'regular') exp += 22; else if (neighborPost === 'sometimes') exp += 11;
+  if (neighborPost === 'regular') exp += 18; else if (neighborPost === 'sometimes') exp += 9;
   // 대표 사진 퀄리티
-  if (photoQuality === 'real') exp += 12; else if (photoQuality === 'basic') exp += 6;
+  if (photoQuality === 'real') exp += 10; else if (photoQuality === 'basic') exp += 5;
   // 사진 개수 보너스
-  if (photoCount >= 5) exp += 14; else if (photoCount >= 3) exp += 8; else if (photoCount >= 1) exp += 3;
+  if (photoCount >= 5) exp += 12; else if (photoCount >= 3) exp += 7; else if (photoCount >= 1) exp += 3;
   // SNS 홍보 보너스
-  if (snsPromo === 'both') exp += 14; else if (snsPromo === 'insta' || snsPromo === 'blog') exp += 8;
+  if (snsPromo === 'both') exp += 10; else if (snsPromo === 'insta' || snsPromo === 'blog') exp += 6;
   // 교차 활용 보너스
-  if (crossPromo === 'active') exp += 6; else if (crossPromo === 'sometimes') exp += 3;
+  if (crossPromo === 'active') exp += 5; else if (crossPromo === 'sometimes') exp += 2;
   // 카카오맵 등록
-  if (kakaoMap === 'yes') exp += 4;
+  if (kakaoMap === 'yes') exp += 3;
   // 당근 카페 연동 보너스 (2026.01 신규)
-  if (daangnCafe === 'yes') exp += 8;
-  exp = Math.min(100, exp);
+  if (daangnCafe === 'yes') exp += 6;
+  exp = Math.min(100, Math.max(0, exp));
 
   // 5. 전환율 점수 (10%)
   let cvr = 0;
@@ -2954,6 +3032,9 @@ function analyze() {
   // ── 벤치마크 비교 ──
   renderBenchmark(category, memberCount, meetingFreq, attendRate, postCount);
 
+  // ── 운영 유형 진단 ──
+  renderOpTypeDiag(postCount, meetingFreq, slotFillRate, totalSchedules, challengeYn, category);
+
   // ── 결과 표시 ──
   document.getElementById('result').style.display = 'block';
   document.getElementById('pdf-bar').style.display = 'flex';
@@ -3117,6 +3198,102 @@ function typewriterEffect(el, text, speed) {
 // ══════════════════════════════════════════════════
 // 📡 레이더 차트 (당근)
 // ══════════════════════════════════════════════════
+function renderOpTypeDiag(postCount, meetingFreq, slotFillRate, totalSchedules, challengeYn, category) {
+  // 운영 유형 분류
+  const hasPost  = postCount >= 8;
+  const hasSched = meetingFreq >= 2;
+  let opType, opColor, opDesc, opAdvice;
+  if (hasPost && hasSched) {
+    opType   = '균형형 🏆';
+    opColor  = '#22c55e';
+    opDesc   = '게시글 + 일정 모두 활발 — TOP500 최상위 유형 (평균 66.4점)';
+    opAdvice = '정원 채움률을 높이는 것이 다음 레벨의 핵심이에요. 일정 정원을 현재보다 20~30% 줄여 꽉 채우는 전략을 써보세요.';
+  } else if (hasPost && !hasSched) {
+    opType   = '게시판 중심형 ⚠️';
+    opColor  = '#f59e0b';
+    opDesc   = '게시글은 많은데 일정이 부족 — 평균 52.7점 (균형형보다 14점 낮음)';
+    opAdvice = '지금 당장 정기 일정을 만드세요. 주 1회라도 정기 일정을 만들면 알고리즘 점수가 크게 뛰어요. 게시판에서 "다음 모임" 공지를 반드시 올리세요.';
+  } else if (!hasPost && hasSched) {
+    opType   = '일정 중심형 ⚡';
+    opColor  = '#3b82f6';
+    opDesc   = '일정은 많은데 게시판이 부족 — 평균 62.2점';
+    opAdvice = '일정 후기글, 사진, 멤버 소개글을 게시판에 올려보세요. 모임 후 간단한 후기 1개만 올려도 커뮤니티 생명력이 달라 보여요.';
+  } else {
+    opType   = '게시판형 🚨';
+    opColor  = '#ef4444';
+    opDesc   = '게시글도 일정도 부족 — 평균 25.3점 (최하위 유형)';
+    opAdvice = '지금 가장 급한 건 일정 만들기입니다. 일정 없이 모임 노출은 거의 불가능해요. 오늘 바로 일정 1개를 등록하고, 소개글 1개를 게시판에 올리세요.';
+  }
+
+  // 정원 채움률 진단
+  let fillHtml = '';
+  const top500AvgFill = 60.4;
+  if (slotFillRate > 0) {
+    const diff = slotFillRate - top500AvgFill;
+    const fillColor = slotFillRate >= 70 ? '#22c55e' : slotFillRate >= 40 ? '#f59e0b' : '#ef4444';
+    const fillMsg = slotFillRate >= 80
+      ? '최상위 수준! 정원 전략이 완벽해요. 이 채움률을 유지하는 것이 알고리즘 노출의 핵심이에요.'
+      : slotFillRate >= 60
+      ? 'TOP500 평균 수준이에요. 정원을 현재보다 10~20% 줄이면 채움률이 올라가요.'
+      : slotFillRate >= 30
+      ? '정원 채움률이 낮아요. 일정 정원을 절반으로 줄이고 꽉 채우는 전략을 써보세요. 정원 10명 → 채움 10명이 정원 30명 → 채움 18명보다 알고리즘 점수가 높아요.'
+      : '정원 채움률이 매우 낮아요. 지금 당장 일정 정원 수를 줄이는 게 가장 중요한 개선이에요.';
+    fillHtml = `<div style="padding:12px 14px;border-radius:10px;border-left:4px solid ${fillColor};background:${fillColor}15;">
+      <div style="font-size:0.8rem;font-weight:800;color:${fillColor};margin-bottom:5px;">📊 일정 정원 채움률: ${slotFillRate}% (TOP500 평균 60.4%)</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="flex:1;background:#f0f0f0;border-radius:99px;height:8px;">
+          <div style="width:${Math.min(100,slotFillRate)}%;height:8px;border-radius:99px;background:${fillColor};"></div>
+        </div>
+        <span style="font-size:0.78rem;color:${diff>=0?'#22c55e':'#ef4444'};font-weight:700;">${diff>=0?'+':''}${diff.toFixed(0)}%p</span>
+      </div>
+      <div style="font-size:0.77rem;color:#555;line-height:1.6;">${fillMsg}</div>
+    </div>`;
+  } else {
+    fillHtml = `<div style="padding:12px 14px;border-radius:10px;border-left:4px solid #aaa;background:#f9f9f9;font-size:0.78rem;color:#888;">
+      💡 일정 정원 채움률을 입력하면 TOP500과 비교한 상세 진단을 볼 수 있어요 (활성점수 상관계수 0.714 — 가장 중요한 지표)
+    </div>`;
+  }
+
+  // 챌린지 진단
+  let challHtml = '';
+  if (challengeYn === 'no') {
+    challHtml = `<div style="padding:12px 14px;border-radius:10px;border-left:4px solid #ef4444;background:#fff5f5;">
+      <div style="font-size:0.8rem;font-weight:800;color:#ef4444;margin-bottom:4px;">🚨 챌린지 없음 — 상위 노출 차단</div>
+      <div style="font-size:0.77rem;color:#555;line-height:1.6;">TOP500 모임 500개가 전원 챌린지를 보유하고 있어요. 챌린지가 없으면 당근 알고리즘의 상위 추천 대상에서 제외될 가능성이 높아요. 지금 바로 챌린지 탭에서 새 챌린지를 만들어보세요.</div>
+    </div>`;
+  } else if (challengeYn === 'yes') {
+    challHtml = `<div style="padding:12px 14px;border-radius:10px;border-left:4px solid #22c55e;background:#f0fff4;">
+      <div style="font-size:0.8rem;font-weight:800;color:#22c55e;margin-bottom:4px;">✅ 챌린지 운영 중 — TOP500 필수 요건 충족</div>
+      <div style="font-size:0.77rem;color:#555;line-height:1.6;">챌린지는 유지하면서 참여율(달성률)을 높이는 것이 중요해요. 달성하기 쉬운 챌린지로 설정해서 완료율을 높이세요.</div>
+    </div>`;
+  }
+
+  // 카테고리별 운영 유형 팁
+  const catTips = {
+    'social':  '동네친구 카테고리는 TOP500 중 최상위(평균 75.1점). 게시글 4,410개 / 일정 979개가 평균이에요. 일정 + 게시판 균형이 특히 중요합니다.',
+    'sports':  '운동 카테고리는 TOP500 중 2위(평균 64.4점). 평균 일정 397개, 채움률 61.8%. 일정을 자주 만들수록 유리해요.',
+    'reading': '독서/인문학은 TOP500 중 3위(평균 64.2점). 평균 참여율 67.8%로 매우 높아요. 소수 정예 + 높은 채움률 전략이 유리합니다.',
+    'outdoor': '아웃도어/여행 카테고리 평균 56.9점. 게시글과 일정 모두 중요하고, 사진 콘텐츠가 가입 전환에 큰 영향을 줘요.',
+    'food':    '음식/음료 평균 56.4점. 참여율 56.5%로 중위권. 음식 사진 + 후기 게시글이 핵심이에요.',
+    'hobby':   '취미/오락 평균 55.6점. 게시글 1,290개 / 일정 212개가 TOP500 평균. 덕질 특성상 게시판 활성도가 중요해요.',
+    'study':   '자기계발 평균 53.1점. 카테고리 특성상 일정이 적어요 (평균 88개). 게시글로 지식 공유를 자주 하면 차별화 가능해요.',
+    'pet':     '반려동물 평균 43.3점 (카테고리 하위). 일정이 28개로 매우 적은 게 문제예요. 산책·봉사 등 정기 일정을 추가하면 크게 올라가요.',
+    'family':  '가족/육아 평균 39.8점 (최하위). 일정이 10개로 매우 적어요. 정기 모임을 만들기 어려운 카테고리지만 한 달에 1~2번 정기 일정만 있어도 큰 차이가 나요.',
+  };
+  const catTipHtml = catTips[category] ? `<div style="margin-top:8px;font-size:0.75rem;color:#666;padding:8px 10px;background:#f5f5f5;border-radius:8px;">💡 ${catTips[category]}</div>` : '';
+
+  document.getElementById('opTypeDiag').innerHTML = `
+    <div style="padding:14px;border-radius:12px;border-left:4px solid ${opColor};background:${opColor}15;margin-bottom:12px;">
+      <div style="font-size:0.9rem;font-weight:800;color:${opColor};margin-bottom:5px;">운영 유형: ${opType}</div>
+      <div style="font-size:0.8rem;color:#555;line-height:1.6;margin-bottom:6px;">${opDesc}</div>
+      <div style="font-size:0.78rem;color:#333;line-height:1.7;background:#fff;padding:10px 12px;border-radius:8px;">👉 ${opAdvice}</div>
+      ${catTipHtml}
+    </div>`;
+
+  document.getElementById('slotFillDiag').innerHTML  = fillHtml;
+  document.getElementById('challengeDiag').innerHTML = challHtml;
+}
+
 function drawRadarDaangn(scores) {
   const canvas = document.getElementById('radarChart');
   if (!canvas) return;
