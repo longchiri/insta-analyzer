@@ -323,6 +323,11 @@
     .sub-score-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px; }
     @media(max-width:500px){ .sub-score-grid { grid-template-columns:repeat(2,1fr); } }
     .sub-item.new-s { background:linear-gradient(135deg,#FFF5EC,#FFEEDD); border:1.5px solid #FFD5A8; }
+    /* AI 카드 등장 애니메이션 */
+    @keyframes cardReveal {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -1353,6 +1358,21 @@ document.addEventListener('click', e => {
     document.querySelectorAll('.info-tooltip').forEach(t => t.classList.remove('active'));
   }
 });
+
+function revealCards(containerId) {
+  const wrap = document.getElementById(containerId || 'result');
+  if (!wrap) return;
+  const cards = wrap.querySelectorAll('.result-card, .ai-diag-card');
+  cards.forEach(function(card, i) {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(16px)';
+    setTimeout(function() {
+      card.style.transition = 'opacity .45s cubic-bezier(.22,1,.36,1), transform .45s cubic-bezier(.22,1,.36,1)';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, 80 + i * 130);
+  });
+}
 
 function analyze() {
   // ── 유틸 ──
@@ -3069,9 +3089,10 @@ function analyze() {
   // ── 운영 기간 분석 ──
   renderPeriodAnalysis(hostAge, totalSchedules, postCount, CAT_MAP[category] || '');
 
-  // ── 결과 표시 ──
+  // ── 결과 표시 + 카드 등장 애니메이션 ──
   document.getElementById('result').style.display = 'block';
   document.getElementById('pdf-bar').style.display = 'flex';
+  revealCards('result');
   setTimeout(() => {
     document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' });
   }, 150);
