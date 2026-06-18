@@ -383,6 +383,7 @@
     from { opacity:0; transform:translateY(16px); }
     to   { opacity:1; transform:translateY(0); }
   }
+  .card-reveal { animation: cardReveal .45s cubic-bezier(.22,1,.36,1) both; }
   </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -2614,17 +2615,14 @@ function getVal(id) { const el = document.getElementById(id); return el ? el.val
 function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
 
 function revealCards(containerId) {
-  const wrap = document.getElementById(containerId || 'result');
+  var wrap = document.getElementById(containerId || 'result');
   if (!wrap) return;
-  const cards = wrap.querySelectorAll('.result-card, .ai-diag-card');
+  var cards = wrap.querySelectorAll('.result-card, .ai-diag-card');
   cards.forEach(function(card, i) {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(16px)';
-    setTimeout(function() {
-      card.style.transition = 'opacity .45s cubic-bezier(.22,1,.36,1), transform .45s cubic-bezier(.22,1,.36,1)';
-      card.style.opacity = '1';
-      card.style.transform = 'translateY(0)';
-    }, 80 + i * 130);
+    card.classList.remove('card-reveal');
+    card.style.animationDelay = (i * 120) + 'ms';
+    void card.offsetWidth;
+    card.classList.add('card-reveal');
   });
 }
 
