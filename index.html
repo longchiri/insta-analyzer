@@ -378,6 +378,11 @@
   .scroll-btn:hover { transform:scale(1.12); box-shadow:0 6px 20px rgba(131,58,180,0.5); }
   #scrollTopBtn { opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.2s; }
   #scrollTopBtn.visible { opacity:1; pointer-events:auto; }
+  /* AI 카드 등장 애니메이션 */
+  @keyframes cardReveal {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
   </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -2607,6 +2612,21 @@ function guessNiche(topHashtags, nicheInput) {
 // ──────────────────────────────
 function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 function getNum(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
+
+function revealCards(containerId) {
+  const wrap = document.getElementById(containerId || 'result');
+  if (!wrap) return;
+  const cards = wrap.querySelectorAll('.result-card, .ai-diag-card');
+  cards.forEach(function(card, i) {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(16px)';
+    setTimeout(function() {
+      card.style.transition = 'opacity .45s cubic-bezier(.22,1,.36,1), transform .45s cubic-bezier(.22,1,.36,1)';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, 80 + i * 130);
+  });
+}
 
 function analyze() {
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -5686,6 +5706,7 @@ function analyze() {
 
   document.getElementById('result').style.display = 'block';
   document.getElementById('partNav').style.display = 'block';
+  revealCards('result');
   // 전체 버튼 활성화 초기화
   document.querySelectorAll('.p-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   renderSNSKitInsta();
