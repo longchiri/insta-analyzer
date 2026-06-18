@@ -1373,7 +1373,8 @@ function analyzeMoim() {
   const vis     = document.getElementById('m-visibility').value;
   const members = parseInt(document.getElementById('m-members').value) || 0;
   const newMem  = parseInt(document.getElementById('m-newmembers').value) || 0;
-  const freq    = parseInt(document.getElementById('m-freq').value) || 0;
+  const freq        = parseInt(document.getElementById('m-freq').value) || 0;
+  const meetingFreq = freq; // alias
   const attend  = parseInt(document.getElementById('m-attend').value) || 0;
   const posts   = parseInt(document.getElementById('m-posts').value) || 0;
   const flash   = parseInt(document.getElementById('m-flash').value) || 0;
