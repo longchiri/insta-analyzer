@@ -5725,7 +5725,9 @@ function showResultsView() {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         rv.style.opacity = '1';
-        revealCards('result'); // 뷰 전환 완료 후 카드 등장 애니메이션
+        setTimeout(() => {
+          revealCards('result'); // 컨테이너 전환(250ms) 완료 후 카드 등장 애니메이션
+        }, 280);
       });
     });
   }, 180);
