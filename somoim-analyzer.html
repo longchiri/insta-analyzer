@@ -2074,18 +2074,78 @@ function renderMoimBenchmark(formCat, city) {
   const top10Avg  = st.top10_avg_members || 0;
   const top3      = (st.top10 || []).slice(0, 3);
 
-  // 우선순위 팁
-  const tips = [];
-  if (updDays > 0)
-    tips.push('오늘 모임 소개나 사진을 수정·업데이트하면 예상 순위가 <strong>' + estRank + '위 → ~106위</strong>로 크게 상승해요');
-  if (todayPct >= 60)
-    tips.push('이 카테고리는 <strong>경쟁이 매우 치열해요</strong> (' + todayPct + '%가 오늘 업데이트). 지금 바로 업데이트하세요!');
-  else if (todayPct >= 35)
-    tips.push('경쟁모임의 <strong>' + todayPct + '%가 오늘 업데이트</strong>했어요. 늦기 전에 업데이트하세요');
-  else
-    tips.push('오늘 업데이트한 경쟁모임이 ' + todayPct + '%로 적어요. <strong>지금 업데이트하면 TOP권 진입이 쉬워요</strong>');
-  if (myMembers > 0 && myMembers < avgMem * 0.5)
-    tips.push('내 멤버(' + myMembers + '명)가 평균(' + avgMem + '명)보다 적어요. 모임 소개와 사진을 보강해 멤버를 늘려보세요');
+  // ── 노출 전략 플랜 변수 ─────────────────────────────────
+  const top10Min  = st.top10_min_members || 0;
+  const rank1Upd  = (typeof st.rank1_upd  !== 'undefined') ? st.rank1_upd  : 0;
+  const rank1Mem  = st.rank1_members || 0;
+  const rank1Name = (st.rank1_name   || '1위 모임').slice(0, 14);
+  const memGap    = (myMembers > 0 && top10Min > myMembers) ? (top10Min - myMembers) : 0;
+  const updBarW   = Math.max(4, Math.round(Math.max(0, 1 - updDays  / 7) * 100));
+  const r1BarW    = Math.max(4, Math.round(Math.max(0, 1 - rank1Upd / 7) * 100));
+  const memBarW   = (top10Min > 0 && myMembers > 0) ? Math.min(100, Math.round(myMembers / top10Min * 100)) : 0;
+  const compLabel = todayPct >= 60 ? '매우 치열' : todayPct >= 35 ? '치열' : todayPct >= 15 ? '보통' : '여유';
+
+  // ── 우선순위 액션 3개 생성 ───────────────────────────────
+  const actions = [];
+
+  // 1. 업데이트 전략
+  actions.push({
+    icon: updDays === 0 ? '✅' : '🔥',
+    priority: updDays === 0 ? '유지' : '긴급',
+    pColor: updDays === 0 ? '#22c55e' : '#ef4444',
+    title: updDays === 0 ? '업데이트 최적 상태 — 매일 유지하세요' : '지금 당장 업데이트하기',
+    desc: updDays === 0
+      ? '오늘 업데이트 완료! 경쟁모임 <strong>' + todayUpdN + '개(' + todayPct + '%)</strong>가 오늘 업데이트했어요. 내일도 빠짐없이 업데이트해야 TOP권 유지됩니다.'
+      : '지금 업데이트하면 예상 순위 <strong>~106위(상위 20%)</strong> 진입! 오늘 업데이트한 경쟁모임 <strong>' + todayUpdN + '개(' + todayPct + '%)</strong>보다 뒤처지지 마세요.',
+    steps: updDays === 0
+      ? ['매일 같은 시간 업데이트 루틴 만들기 (예: 매일 저녁 8시)', '정모 일정 수정만 해도 업데이트로 반영됨', '경쟁 강도: ' + compLabel + ' — ' + (todayPct >= 35 ? '매일 빠짐없이 업데이트 필수' : '하루 한 번이면 충분')]
+      : ['소모임 앱 → 내 모임 → 소개 편집 → 한 줄 수정 후 저장', '또는 정모 일정 등록·수정만 해도 업데이트 반영', '소개글 · 사진 · 일정 중 가장 빠른 것부터 시작']
+  });
+
+  // 2. 멤버 수 전략
+  if (myMembers > 0) {
+    if (memGap > 0) {
+      actions.push({
+        icon: '👥', priority: 'TOP10까지 ' + memGap + '명', pColor: '#f59e0b',
+        title: 'TOP10 진입까지 멤버 ' + memGap + '명 더 필요',
+        desc: '현재 <strong>' + myMembers + '명</strong> · TOP10 최소 기준 <strong>' + top10Min + '명</strong>. 멤버가 많을수록 활동레벨↑ → 알고리즘에서 유리하고 <strong>업데이트 효과도 배가</strong>됩니다.',
+        steps: ['소개글 첫 줄에 "어떤 사람을 위한 모임인지" 명확하게 작성', '최근 활동 사진 업로드 (실제 모임 모습이 가입 전환율↑)', '정기모임 일정 2주 이상 미리 등록 (활동레벨 상승)', '카카오 채널·인스타그램에 모임 링크 공유', '신규 멤버 가입 즉시 환영 메시지 → 이탈 방지']
+      });
+    } else if (myMembers < avgMem) {
+      actions.push({
+        icon: '👥', priority: '보통', pColor: '#6366f1',
+        title: '카테고리 평균까지 ' + (avgMem - myMembers) + '명 남았어요',
+        desc: '현재 <strong>' + myMembers + '명</strong> · 카테고리 평균 <strong>' + avgMem + '명</strong>. TOP10 기준(' + top10Min + '명)은 달성! 평균 도달하면 더 안정적인 노출이 가능해요.',
+        steps: ['소개글·사진 주기적으로 업데이트해 신뢰감 형성', '다음 정모 일정 미리 공지해서 신규 참여 유도', '모임 후기 올리기 (활동 증거가 가입 전환율↑)']
+      });
+    } else {
+      actions.push({
+        icon: '👥', priority: '양호', pColor: '#22c55e',
+        title: '멤버 경쟁력 확보 — 활동 빈도에 집중하세요',
+        desc: '현재 <strong>' + myMembers + '명</strong>으로 TOP10 기준(' + top10Min + '명) 달성! 이제 멤버 수보다 <strong>활동레벨·업데이트 빈도</strong>가 순위를 가릅니다.',
+        steps: ['정기모임 월 2회 이상 꾸준히 유지', '모임 후 활동 사진 바로 올리기 → 활동레벨 상승', '기존 멤버가 주변에 추천할 수 있도록 모임 퀄리티 유지']
+      });
+    }
+  } else {
+    actions.push({
+      icon: '👥', priority: '확인 필요', pColor: '#94a3b8',
+      title: '멤버 수 입력하면 맞춤 전략이 나와요',
+      desc: 'TOP10 최소 기준 <strong>' + top10Min + '명</strong> · 전체 평균 <strong>' + avgMem + '명</strong>. 위에 내 멤버 수를 입력하면 정확한 전략을 알 수 있어요.',
+      steps: []
+    });
+  }
+
+  // 3. 1위 벤치마킹
+  actions.push({
+    icon: '🏆', priority: '참고', pColor: '#8b5cf6',
+    title: '1위 "' + rank1Name + '" 벤치마킹',
+    desc: '멤버 <strong>' + rank1Mem + '명</strong> · ' + (rank1Upd === 0 ? '오늘도 업데이트' : rank1Upd + '일 전 업데이트') + '. 1위 운영 패턴을 직접 확인해 참고하세요.',
+    steps: [
+      '소모임 앱에서 직접 검색해 소개글 구성·사진 스타일 참고',
+      rank1Upd <= 1 ? '1위도 거의 매일 업데이트 → 매일 업데이트가 핵심!' : '1위의 업데이트 주기(' + rank1Upd + '일)를 기준으로 삼기',
+      '정모 형태·참가비·소개글 길이 등 벤치마킹 포인트 메모'
+    ]
+  });
 
   body.innerHTML =
     // ① 상단 노출 예측 카드
@@ -2172,13 +2232,105 @@ function renderMoimBenchmark(formCat, city) {
       '</div>'
     : '') +
 
-    // 지금 가장 먼저 할 것
-    '<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px;margin-bottom:16px;">' +
-      '<div style="font-weight:700;font-size:.88rem;color:#92400e;margin-bottom:10px;">🚀 지금 가장 먼저 할 것</div>' +
-      tips.map(function(t) {
-        return '<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;">' +
-          '<div style="width:3px;min-height:18px;border-radius:99px;background:#f59e0b;flex-shrink:0;margin-top:3px;"></div>' +
-          '<div style="font-size:.82rem;color:#44403c;line-height:1.5;">' + t + '</div>' +
+    // ④ 내 모임 vs TOP10 격차 분석 바
+    '<div style="background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:14px;padding:18px;margin-bottom:16px;">' +
+      '<div style="font-weight:700;font-size:.88rem;color:#fff;margin-bottom:14px;">📈 내 모임 vs TOP10 격차 분석</div>' +
+      // 업데이트 바
+      '<div style="margin-bottom:13px;">' +
+        '<div style="display:flex;justify-content:space-between;font-size:.72rem;color:#c7d2fe;margin-bottom:5px;">' +
+          '<span>업데이트 최신성</span>' +
+          '<span>내 모임 ' + (updDays===0?'오늘':updDays+'일 전') + ' vs 1위 ' + (rank1Upd===0?'오늘':rank1Upd+'일 전') + '</span>' +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
+          '<div>' +
+            '<div style="font-size:.65rem;color:#a5b4fc;margin-bottom:3px;">내 모임</div>' +
+            '<div style="height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden;">' +
+              '<div style="height:100%;width:' + updBarW + '%;background:' + myTier.color + ';border-radius:99px;"></div>' +
+            '</div>' +
+          '</div>' +
+          '<div>' +
+            '<div style="font-size:.65rem;color:#a5b4fc;margin-bottom:3px;">TOP10 기준(1위)</div>' +
+            '<div style="height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden;">' +
+              '<div style="height:100%;width:' + r1BarW + '%;background:#818cf8;border-radius:99px;"></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      // 멤버 바 (입력시만)
+      (myMembers > 0 ?
+        '<div>' +
+          '<div style="display:flex;justify-content:space-between;font-size:.72rem;color:#c7d2fe;margin-bottom:5px;">' +
+            '<span>멤버 경쟁력</span>' +
+            '<span>내 ' + myMembers + '명 vs TOP10최소 ' + top10Min + '명</span>' +
+          '</div>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
+            '<div>' +
+              '<div style="font-size:.65rem;color:#a5b4fc;margin-bottom:3px;">내 모임</div>' +
+              '<div style="height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden;">' +
+                '<div style="height:100%;width:' + memBarW + '%;background:' + (memGap > 0 ? '#fbbf24' : '#34d399') + ';border-radius:99px;"></div>' +
+              '</div>' +
+            '</div>' +
+            '<div>' +
+              '<div style="font-size:.65rem;color:#a5b4fc;margin-bottom:3px;">TOP10 기준(100%)</div>' +
+              '<div style="height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden;">' +
+                '<div style="height:100%;width:100%;background:#818cf8;border-radius:99px;"></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          (memGap > 0
+            ? '<div style="font-size:.7rem;color:#fde68a;margin-top:6px;">⚠ TOP10 진입까지 ' + memGap + '명 부족</div>'
+            : '<div style="font-size:.7rem;color:#86efac;margin-top:6px;">✅ TOP10 멤버 기준 달성!</div>'
+          ) +
+        '</div>'
+      : '<div style="font-size:.72rem;color:#94a3b8;margin-top:4px;font-style:italic;">멤버 수 입력 시 멤버 경쟁력 비교 표시</div>') +
+    '</div>' +
+
+    // ⑤ 우선순위 액션 플랜
+    '<div style="margin-bottom:16px;">' +
+      '<div style="font-weight:700;font-size:.9rem;color:#1e293b;margin-bottom:10px;">🎯 우선순위 액션 플랜</div>' +
+      actions.map(function(a, idx) {
+        return '<div style="background:#fff;border:1.5px solid ' + a.pColor + '30;border-radius:12px;padding:14px 14px 12px;margin-bottom:10px;position:relative;">' +
+          '<div style="position:absolute;top:0;left:14px;background:' + a.pColor + ';color:#fff;font-size:.62rem;font-weight:700;padding:1px 8px;border-radius:0 0 6px 6px;white-space:nowrap;">' +
+            (idx + 1) + '순위 · ' + a.priority +
+          '</div>' +
+          '<div style="margin-top:15px;display:flex;align-items:flex-start;gap:10px;">' +
+            '<div style="font-size:1.2rem;flex-shrink:0;line-height:1;">' + a.icon + '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div style="font-weight:700;font-size:.86rem;color:#1e293b;margin-bottom:5px;">' + a.title + '</div>' +
+              '<div style="font-size:.79rem;color:#475569;line-height:1.55;margin-bottom:' + (a.steps.length > 0 ? '8' : '0') + 'px;">' + a.desc + '</div>' +
+              (a.steps.length > 0 ?
+                '<div style="background:#f8fafc;border-radius:8px;padding:10px;">' +
+                  '<div style="font-size:.71rem;font-weight:600;color:#475569;margin-bottom:5px;">실행 방법</div>' +
+                  a.steps.map(function(s, si) {
+                    return '<div style="display:flex;gap:6px;margin-bottom:' + (si < a.steps.length - 1 ? '4' : '0') + 'px;">' +
+                      '<span style="font-size:.73rem;color:' + a.pColor + ';font-weight:700;flex-shrink:0;min-width:14px;">' + (si + 1) + '.</span>' +
+                      '<span style="font-size:.76rem;color:#64748b;line-height:1.5;">' + s + '</span>' +
+                    '</div>';
+                  }).join('') +
+                '</div>'
+              : '') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+
+    // ⑥ 이번 주 할 일 체크리스트
+    '<div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:16px;">' +
+      '<div style="font-weight:700;font-size:.88rem;color:#166534;margin-bottom:12px;">✅ 이번 주 할 일 체크리스트</div>' +
+      [
+        { when: '📌 오늘', color: '#ef4444', items: ['모임 소개글 또는 사진 수정해서 업데이트하기', '정모 일정 등록 또는 수정하기'] },
+        { when: '📅 이번 주', color: '#f59e0b', items: ['소개글 첫 문장에 모임 핵심 가치 한 줄로 정리', '최근 활동 사진 1장 이상 업로드', '신규 멤버에게 환영 메시지 보내기'] },
+        { when: '🗓 이번 달', color: '#22c55e', items: ['커버 이미지를 최신 활동 사진으로 교체', '인스타·카카오 채널에 모임 홍보 1회', '모임 후기 또는 활동 스토리 작성'] }
+      ].map(function(g) {
+        return '<div style="margin-bottom:11px;">' +
+          '<div style="font-size:.74rem;font-weight:700;color:' + g.color + ';margin-bottom:6px;">' + g.when + '</div>' +
+          g.items.map(function(item) {
+            return '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;">' +
+              '<div style="width:14px;height:14px;border:1.5px solid #22c55e;border-radius:3px;flex-shrink:0;margin-top:2px;background:#fff;"></div>' +
+              '<div style="font-size:.79rem;color:#374151;line-height:1.45;">' + item + '</div>' +
+            '</div>';
+          }).join('') +
         '</div>';
       }).join('') +
     '</div>' +
