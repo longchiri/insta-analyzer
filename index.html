@@ -384,6 +384,56 @@
     to   { opacity:1; transform:translateY(0); }
   }
   .card-reveal { animation: cardReveal .45s cubic-bezier(.22,1,.36,1) both; }
+
+  /* ── AI 종합 진단 카드 ── */
+  .ai-diag-card {
+    background:linear-gradient(135deg,#1a0030,#2d0050,#1a0030);
+    border-radius:18px; padding:24px; margin-bottom:18px;
+    max-width:720px; margin-left:auto; margin-right:auto;
+    border:1.5px solid rgba(168,85,247,0.45); position:relative; overflow:hidden;
+  }
+  .ai-diag-card::before {
+    content:''; position:absolute; top:0; left:-150%; width:50%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(253,29,29,0.10),transparent);
+    animation:ai-shimmer 2.8s infinite;
+  }
+  @keyframes ai-shimmer { to { left:220%; } }
+  .ai-diag-card h2 { color:#fff; font-size:1.05rem; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .ai-grade-row {
+    display:flex; align-items:center; gap:16px; margin-bottom:18px;
+    background:rgba(255,255,255,0.06); border-radius:14px; padding:16px 18px;
+    border:1px solid rgba(168,85,247,0.22);
+  }
+  .ai-grade-emoji { font-size:2.8rem; flex-shrink:0; }
+  .ai-grade-info { flex:1; min-width:0; }
+  .ai-grade-lbl { font-size:0.7rem; color:#888; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
+  .ai-grade-name { font-size:1.25rem; font-weight:900; background:linear-gradient(90deg,#a855f7,#fd1d1d,#fcb045); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .ai-grade-score-line { font-size:0.82rem; color:#777; margin-top:4px; }
+  .typewriter-box {
+    background:rgba(0,0,0,0.38); border-radius:12px; padding:16px 18px;
+    font-size:0.87rem; line-height:1.9; color:#e0e0e0;
+    min-height:68px; border:1px solid rgba(168,85,247,0.2);
+    word-break:keep-all; overflow-wrap:break-word;
+  }
+  .tw-cursor { display:inline-block; width:2px; height:1em; background:#a855f7; animation:tw-blink 0.8s infinite; vertical-align:text-bottom; margin-left:1px; border-radius:1px; }
+  @keyframes tw-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .ai-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+  .ai-tag { background:rgba(168,85,247,0.14); color:#c084fc; font-size:0.71rem; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid rgba(168,85,247,0.28); }
+
+  /* ── 알고리즘 노출 게이지 ── */
+  .algo-gauge-ttl { font-size:0.82rem; font-weight:700; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+  .algo-gauge-bar { height:14px; background:#f0f0f0; border-radius:99px; overflow:hidden; margin-bottom:16px; position:relative; }
+  .algo-gauge-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045); transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1); width:0%; }
+  .algo-tiers { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  @media(max-width:500px){ .algo-tiers { grid-template-columns:repeat(2,1fr); gap:6px; } }
+  .algo-tier { background:#f9f0ff; border-radius:10px; padding:10px 6px; text-align:center; border:1.5px solid #e9d5ff; transition:all 0.3s; }
+  .algo-tier.active-tier { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); border-color:transparent; transform:scale(1.04); box-shadow:0 4px 16px rgba(131,58,180,0.35); }
+  .at-num { font-size:0.9rem; font-weight:900; color:#833ab4; }
+  .algo-tier.active-tier .at-num { color:#fff; }
+  .at-lbl { font-size:0.62rem; color:#aaa; margin-top:3px; line-height:1.4; word-break:keep-all; }
+  .algo-tier.active-tier .at-lbl { color:rgba(255,255,255,0.88); }
+  .at-now { display:none; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.25); border-radius:4px; padding:1px 5px; color:#fff; margin-bottom:3px; }
+  .algo-tier.active-tier .at-now { display:block; }
   </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -1310,6 +1360,56 @@ function setPartFilter(part, btn) {
     </div>
     <div class="sub-score-grid" id="subScoreGrid"></div>
     <div id="statBars"></div>
+  </div>
+
+  <!-- 🤖 AI 종합 진단 -->
+  <div class="ai-diag-card" id="aiDiagCard" data-part="overview">
+    <h2>🤖 AI 종합 진단</h2>
+    <div class="ai-grade-row">
+      <div class="ai-grade-emoji" id="aiGradeEmoji">🌱</div>
+      <div class="ai-grade-info">
+        <div class="ai-grade-lbl">인스타그램 채널 등급</div>
+        <div class="ai-grade-name" id="aiGradeName">분석 중...</div>
+        <div class="ai-grade-score-line" id="aiGradeScoreLine"></div>
+      </div>
+    </div>
+    <div class="typewriter-box" id="aiTypewriter"></div>
+    <div class="ai-tags" id="aiTags"></div>
+  </div>
+
+  <!-- 🎯 알고리즘 노출 예측 -->
+  <div class="result-card" id="algoGaugeCard" data-part="overview">
+    <h2>🎯 알고리즘 노출 예측</h2>
+    <div class="algo-gauge-ttl">
+      <span>현재 인스타 알고리즘 상위 노출 예측</span>
+      <span id="algoGaugePct" style="color:#833ab4;font-weight:900;font-size:1rem;">—%</span>
+    </div>
+    <div class="algo-gauge-bar"><div class="algo-gauge-fill" id="algoGaugeFill"></div></div>
+    <div class="algo-tiers">
+      <div class="algo-tier" id="atier0">
+        <div class="at-now">현재</div>
+        <div class="at-num">하위 30%</div>
+        <div class="at-lbl">초기 단계<br>0~34점</div>
+      </div>
+      <div class="algo-tier" id="atier1">
+        <div class="at-now">현재</div>
+        <div class="at-num">상위 50%</div>
+        <div class="at-lbl">성장 단계<br>35~54점</div>
+      </div>
+      <div class="algo-tier" id="atier2">
+        <div class="at-now">현재</div>
+        <div class="at-num">상위 25%</div>
+        <div class="at-lbl">탐색 탭 진입<br>55~74점</div>
+      </div>
+      <div class="algo-tier" id="atier3">
+        <div class="at-now">현재</div>
+        <div class="at-num">상위 10%</div>
+        <div class="at-lbl">추천 알고리즘<br>75점+</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#f9f0ff;border-radius:10px;font-size:0.78rem;color:#666;border:1px solid #e9d5ff;line-height:1.7;word-break:keep-all;">
+      <strong style="color:#833ab4;">💡 노출 예측 기준</strong> — 인스타 알고리즘은 ①인게이지먼트율 ②저장·공유율 ③릴스 시청 완료율 ④팔로워 성장률 ⑤캡션·해시태그 SEO 순으로 가중치를 적용해요. 2026년 Meta AI 추천 시스템 도입으로 오리지널 콘텐츠·크리에이터 다양성 평가가 강화됐어요.
+    </div>
   </div>
 
   <!-- 채널별 점수 -->
@@ -2629,6 +2729,117 @@ function revealCards(containerId) {
   });
 }
 
+// ══════════════════════════════════════════════════
+// ✍️ 타이핑(typewriter) 효과
+// ══════════════════════════════════════════════════
+function typewriterEffect(el, text, speed) {
+  if (!el) return;
+  el.innerHTML = '';
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i <= text.length) {
+      el.innerHTML = text.slice(0, i).replace(/\n/g, '<br>') + '<span class="tw-cursor"></span>';
+      i++;
+    } else {
+      clearInterval(interval);
+      el.innerHTML = text.replace(/\n/g, '<br>');
+    }
+  }, speed);
+}
+
+// ══════════════════════════════════════════════════
+// 🤖 AI 종합 진단 (인스타)
+// ══════════════════════════════════════════════════
+function renderAIDiagInsta(total, erScore, ssScore, grScore, conScore) {
+  let emoji, gradeName, gradeDesc;
+  if (total >= 85)      { emoji='💫'; gradeName='인플루언서급';     gradeDesc='알고리즘 최상위 — Meta AI가 적극 확산 중이에요'; }
+  else if (total >= 70) { emoji='🔥'; gradeName='추천 계정';        gradeDesc='상위 15% — 탐색 탭 진입, 꾸준히 유지하면 인플루언서 도달해요'; }
+  else if (total >= 55) { emoji='⭐'; gradeName='탐색 탭 진입권';   gradeDesc='상위 35% — 핵심 약점 하나만 고치면 급상승해요'; }
+  else if (total >= 35) { emoji='🌿'; gradeName='성장 단계';        gradeDesc='중위권 — 릴스·저장율 개선으로 빠르게 올라갈 수 있어요'; }
+  else                   { emoji='🌱'; gradeName='초기 단계';        gradeDesc='지금부터 기초를 다지면 3개월 안에 확 달라져요'; }
+
+  document.getElementById('aiGradeEmoji').textContent = emoji;
+  document.getElementById('aiGradeName').textContent  = gradeName;
+  document.getElementById('aiGradeScoreLine').textContent = `종합 점수 ${total}점 · ${gradeDesc}`;
+
+  const lines = [];
+
+  // 강점 파악
+  const strongPoints = [];
+  if (erScore >= 28)  strongPoints.push('높은 인게이지먼트');
+  if (ssScore >= 17)  strongPoints.push('저장·공유율');
+  if (grScore >= 14)  strongPoints.push('팔로워 성장률');
+  if (conScore >= 12) strongPoints.push('꾸준한 업로드');
+
+  // 약점 파악
+  const weakPoints = [];
+  if (erScore < 15)   weakPoints.push('인게이지먼트율');
+  if (ssScore < 8)    weakPoints.push('저장·공유율');
+  if (grScore < 6)    weakPoints.push('팔로워 성장률');
+  if (conScore < 5)   weakPoints.push('업로드 빈도');
+
+  // 패턴별 핵심 진단
+  if (erScore < 15 && grScore >= 10) {
+    lines.push('팔로워는 늘고 있는데 인게이지먼트가 낮아요. 댓글 답글 + 스토리 투표·질문 스티커로 기존 팔로워와 먼저 친밀도를 높이세요. 알고리즘은 도달보다 반응을 더 중요하게 봐요.');
+  } else if (ssScore < 8 && erScore >= 20) {
+    lines.push('좋아요·댓글은 잘 받고 있는데 저장률이 낮아요. "저장해두면 유용한 정보형" 콘텐츠(공지, 팁, 체크리스트)를 3개 중 1개 비율로 섞으면 저장률이 2배로 올라가요.');
+  } else if (conScore < 5 && erScore >= 20) {
+    lines.push('콘텐츠 퀄리티는 좋은데 업로드 빈도가 낮아요. 알고리즘은 꾸준한 계정을 더 신뢰해요. 주 3회 이상 릴스 위주로 올리면 탐색 탭 배정이 확 늘어나요.');
+  } else if (grScore < 6 && erScore >= 20) {
+    lines.push('팔로워 내부 반응은 좋은데 신규 유입이 적어요. 협업 콘텐츠(Collab Post) 또는 트라이얼 릴스를 활용하면 비팔로워 도달이 2배로 올라가요.');
+  } else if (total >= 80) {
+    lines.push('모든 핵심 지표가 우수해요! 2026년 Meta AI 업데이트로 "오리지널 콘텐츠 다양성·크리에이터 친밀도"가 더 중요해졌어요. 지금 수준을 꾸준히 유지하는 것 자체가 전략이에요.');
+  } else if (total <= 34) {
+    lines.push('여러 지표를 한꺼번에 올리려 하지 말고, 인게이지먼트 하나만 먼저 잡으세요. 가장 반응 좋았던 게시물과 비슷한 포맷으로 주 3개씩 올리면 30일 안에 점수가 달라져요.');
+  } else {
+    const strongStr = strongPoints.length > 0 ? strongPoints.slice(0,2).join('·')+'이 강점이에요' : '전반적으로 중위권이에요';
+    const weakStr   = weakPoints.length > 0   ? weakPoints[0]+'을(를) 먼저 개선하면 가장 빠르게 올라가요' : '지금 상태를 꾸준히 유지하세요';
+    lines.push(strongStr + '. ' + weakStr + '.');
+  }
+
+  // 2026 알고리즘 추가 진단
+  if (ssScore < 8) lines.push('저장률이 낮으면 알고리즘이 콘텐츠를 "확산 가치 낮음"으로 분류해요. 캐러셀 마지막 슬라이드에 "저장해두세요!" CTA를 넣으면 저장률이 즉시 올라가요.');
+
+  const diagText = lines.join('\n\n');
+  const twEl = document.getElementById('aiTypewriter');
+  if (twEl) typewriterEffect(twEl, diagText, 22);
+
+  // AI 태그 생성
+  const allTags = [];
+  if (erScore >= 28)  allTags.push('✅ 인게이지먼트 우수');
+  if (ssScore >= 17)  allTags.push('✅ 저장율 높음');
+  if (grScore >= 14)  allTags.push('✅ 빠른 성장');
+  if (total >= 70)    allTags.push('✅ 탐색 탭 추천 대상');
+  if (erScore < 15)   allTags.push('⚠️ 인게이지먼트 낮음');
+  if (ssScore < 8)    allTags.push('⚠️ 저장율 개선 필요');
+  if (grScore < 6)    allTags.push('⚠️ 성장률 낮음');
+  if (conScore < 5)   allTags.push('⚠️ 업로드 빈도 부족');
+  const tagsEl = document.getElementById('aiTags');
+  if (tagsEl) tagsEl.innerHTML = allTags.slice(0, 7).map(t => `<span class="ai-tag">${t}</span>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+// 🎯 알고리즘 노출 게이지 (인스타)
+// ══════════════════════════════════════════════════
+function renderAlgoGaugeInsta(total) {
+  let fillPct, tierIdx, tierPctLabel;
+  if (total >= 75)      { fillPct = 85 + (total - 75) * 0.6; tierIdx = 3; tierPctLabel = '상위 10%'; }
+  else if (total >= 55) { fillPct = 55 + (total - 55) * 1.5; tierIdx = 2; tierPctLabel = '상위 25%'; }
+  else if (total >= 35) { fillPct = 28 + (total - 35) * 1.35; tierIdx = 1; tierPctLabel = '상위 50%'; }
+  else                   { fillPct = total * 0.8; tierIdx = 0; tierPctLabel = '하위 30%'; }
+  fillPct = Math.min(100, Math.round(fillPct));
+
+  const fillEl = document.getElementById('algoGaugeFill');
+  const pctEl  = document.getElementById('algoGaugePct');
+  if (fillEl) { fillEl.style.width = '0%'; setTimeout(() => { fillEl.style.width = fillPct + '%'; }, 300); }
+  if (pctEl) pctEl.textContent = tierPctLabel;
+
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('atier' + i);
+    if (el) el.classList.toggle('active-tier', i === tierIdx);
+  }
+}
+
 function analyze() {
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
   let D = {};  // working data object
@@ -2846,6 +3057,10 @@ function analyze() {
   document.getElementById('scoreGrade').textContent = grade;
   document.getElementById('scoreGrade').style.color = gradeColor;
   document.getElementById('scoreLabel').textContent = `인게이지먼트 ${erScore}/40 · 저장·공유 ${ssScore}/25 · 성장 ${grScore}/20 · 꾸준함 ${conScore}/15`;
+
+  // 🤖 AI 종합 진단 + 🎯 알고리즘 노출 예측
+  renderAIDiagInsta(total, erScore, ssScore, grScore, conScore);
+  renderAlgoGaugeInsta(total);
 
   // 세부 점수 4칸
   document.getElementById('subScoreGrid').innerHTML = [
