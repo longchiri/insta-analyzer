@@ -974,15 +974,15 @@
       <input type="number" id="churnCount" placeholder="예: 2" min="0"/>
     </div>
     <div class="form-group">
-      <label>네이버 검색 등록 여부
+      <label>네이버 블로그/카페 홍보 여부
         <span class="info-wrap">
           <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
-          <span class="info-tooltip"><span class="tooltip-where">📍 네이버 블로그/카페에 모임 후기 글 등록</span></span>
+          <span class="info-tooltip"><span class="tooltip-where">📍 네이버 블로그·카페에 모임 소개글/후기 작성 여부 (직접 등록 불가, 블로그 홍보만 가능)</span></span>
         </span>
       </label>
       <select id="naverSearch">
         <option value="" disabled selected>— 선택 —</option>
-        <option value="yes">등록됨 (블로그·카페 있음)</option>
+        <option value="yes">있음 (블로그·카페 소개글 작성)</option>
         <option value="no">없음</option>
       </select>
     </div>
@@ -2421,13 +2421,13 @@ function analyze() {
       '사진 올리기가 부담스럽다면 모임 당일 스마트폰으로 2~3장만 찍어서 바로 올리는 루틴을 만들어보세요. 자연스러운 활동 사진이 가장 클릭율이 높아요.',
     ])});
 
-  // 네이버 검색 → 노출
+  // 네이버 블로그/카페 홍보 → 외부 유입
   if (naverSearch === 'yes')
-    expChecks.push({ type:'ok', title:'네이버 검색 등록됨', desc: pick([
-      '네이버에 모임이 검색돼요. 당근 외부 유입 채널이 확보된 상태예요.',
-      '블로그·카페를 통한 외부 유입이 있어요. 꾸준히 콘텐츠를 올려주세요.',
-      '네이버 검색 유입은 당근 검색과 다른 타겟층을 끌어와요. 두 채널을 동시에 활용하면 더 다양한 멤버 구성이 가능해요.',
-      '네이버 블로그 후기를 정기적으로 올리면 시간이 지날수록 검색 노출이 쌓여요. 꾸준함이 핵심이에요.',
+    expChecks.push({ type:'ok', title:'네이버 블로그/카페 홍보 중 — 포털 검색 외부 유입 확보', desc: pick([
+      '네이버 블로그/카페에 모임 소개글이 있으면 당근 검색과 다른 타겟층에게도 도달할 수 있어요. 두 채널을 동시에 유지하면 유입 채널이 이중화돼요.',
+      '블로그·카페를 통한 외부 유입이 있어요. 모임 활동 후기를 월 1~2개 꾸준히 올리면 검색 노출이 시간이 지날수록 쌓여요.',
+      '네이버 포털 유입은 당근 앱을 안 쓰는 사람도 발견할 수 있게 해줘요. 블로그 글에 당근 모임 링크를 명확하게 넣어두면 전환이 생겨요.',
+      '네이버 블로그 후기를 꾸준히 올리면 "OO 모임 [지역명]" 키워드로 검색 상위에 올라갈 수 있어요. 멤버들에게도 후기 블로그 작성을 부탁해보세요.',
     ])});
 
   // 시간대 → 노출 (타겟 풀)
