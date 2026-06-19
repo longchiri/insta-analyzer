@@ -184,12 +184,12 @@
 <body>
 
 <header>
-  <a class="back-btn" id="backBtn" href="hub.html">← 홈으로 돌아가기</a>
+  <a class="back-btn" id="backBtn" href="index.html">← 홈으로 돌아가기</a>
   <script>
     (function(){
       const ref = document.referrer;
       const btn = document.getElementById('backBtn');
-      if (ref.includes('index.html') || ref.includes('instagram')) {
+      if (ref.includes('insta-analyzer.html') || ref.includes('instagram')) {
         btn.href = 'index.html'; btn.textContent = '← 인스타 분석기로';
       } else if (ref.includes('daangn')) {
         btn.href = 'daangn-analyzer.html'; btn.textContent = '← 당근 분석기로';
