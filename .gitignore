@@ -6,6 +6,11 @@ __pycache__/
 *.backup_*
 
 # ── 크롤러 파일 (깃허브 업로드 금지!) ──────────────────
+munto/문토_크롤러.py
+munto/문토_소셜링_*.html
+munto/문토_통합_*.html
+munto/문토_소셜링_*.xlsx
+munto/문토_통합_*.xlsx
 daangn_crawler.py
 daangn_detail_crawler.py
 daangn_debug.py
