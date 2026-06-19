@@ -333,6 +333,7 @@
 </head>
 <body>
 
+<div id="inputView">
 <header>
   <p style="font-size:1.1rem; margin-bottom:6px;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#ff4628; font-weight:700; font-size:1.2rem;">longchiri</span></p>
   <div class="logo">🥕</div>
@@ -1057,8 +1058,14 @@
 </div><!-- /#form -->
 
 <button class="btn-analyze" onclick="analyze()">🥕 당근 모임 분석하기</button>
+</div><!-- #inputView -->
 
 <!-- ══════════ 결과 ══════════ -->
+<div id="resultsView" style="display:none">
+  <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 4px 2px;">
+    <button onclick="showInputView()" style="background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:99px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;color:#555;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.15s;" onmouseover="this.style.background='#fff8f3';this.style.borderColor='#ff9578';this.style.color='#ff4628'" onmouseout="this.style.background='#f3f4f6';this.style.borderColor='#e5e7eb';this.style.color='#555'">← 다시 분석</button>
+    <span style="font-size:0.75rem;color:#aaa;font-weight:600;">분석 완료 ✅</span>
+  </div>
 <div id="result">
 
   <!-- 파트 네비게이션 -->
@@ -1333,6 +1340,7 @@
   </div>
 
 </div><!-- #result -->
+</div><!-- #resultsView -->
 
 <footer>
   <p>by <b style="color:#ff4628;">longchiri</b></p>
@@ -1376,6 +1384,47 @@ document.addEventListener('click', e => {
     document.querySelectorAll('.info-tooltip').forEach(t => t.classList.remove('active'));
   }
 });
+
+function showResultsView() {
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('pdf-bar').style.display = 'flex';
+  document.getElementById('partNav').style.display = '';
+  document.querySelectorAll('.p-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  const iv = document.getElementById('inputView');
+  const rv = document.getElementById('resultsView');
+  iv.style.transition = 'opacity 0.2s';
+  iv.style.opacity = '0';
+  setTimeout(() => {
+    iv.style.display = 'none';
+    rv.style.display = '';
+    rv.style.opacity = '0';
+    rv.style.transition = 'opacity 0.25s';
+    window.scrollTo({top:0});
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        rv.style.opacity = '1';
+        setTimeout(() => { revealCards('result'); }, 280);
+      });
+    });
+  }, 180);
+}
+
+function showInputView() {
+  const iv = document.getElementById('inputView');
+  const rv = document.getElementById('resultsView');
+  rv.style.transition = 'opacity 0.2s';
+  rv.style.opacity = '0';
+  setTimeout(() => {
+    rv.style.display = 'none';
+    iv.style.display = '';
+    iv.style.opacity = '0';
+    iv.style.transition = 'opacity 0.25s';
+    window.scrollTo({top:0});
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { iv.style.opacity = '1'; });
+    });
+  }, 180);
+}
 
 function setPartFilter(part, btn) {
   document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
@@ -3118,13 +3167,8 @@ function analyze() {
   // ── 운영 기간 분석 ──
   renderPeriodAnalysis(hostAge, totalSchedules, postCount, CAT_MAP[category] || '');
 
-  // ── 결과 표시 + 카드 등장 애니메이션 ──
-  document.getElementById('result').style.display = 'block';
-  document.getElementById('pdf-bar').style.display = 'flex';
-  document.getElementById('partNav').style.display = '';
-  document.querySelectorAll('.p-btn').forEach((b,i) => b.classList.toggle('active', i===0));
-  document.getElementById('result').scrollIntoView({ behavior:'instant', block:'start' });
-  setTimeout(() => { revealCards('result'); }, 100);
+  // ── 결과 표시 + 뷰 전환 ──
+  showResultsView();
 }
 
 // ══════════════════════════════════════════════════
