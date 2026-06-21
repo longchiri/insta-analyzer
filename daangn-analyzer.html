@@ -1255,6 +1255,15 @@
     <div id="benchmarkContent"></div>
   </div>
 
+  <!-- 👻 유령모임 진단 -->
+  <div class="section-divider" data-part="benchmark">
+    <span class="section-divider-label">👻 유령모임 진단</span>
+  </div>
+  <div class="result-card" id="ghostCard" data-part="benchmark" style="display:none;">
+    <h2>👻 유령모임 진단</h2>
+    <div id="ghostContent"></div>
+  </div>
+
   <!-- 카테고리 내 순위 & 경쟁 현황 -->
   <div class="result-card" id="rankCard" data-part="benchmark" style="display:none;"></div>
 
@@ -3149,6 +3158,9 @@ function analyze() {
   // ── 벤치마크 비교 ──
   renderBenchmark(category, memberCount, meetingFreq, attendRate, postCount);
 
+  // ── 👻 유령모임 진단 ──
+  renderGhostDiagnosis(category, postCount, scheduleType, meetingFreq, totalSchedules, memberCount);
+
   // ── 카테고리 내 순위 추정 ──
   renderCategoryRank(total, CAT_MAP[category] || '');
 
@@ -3174,6 +3186,82 @@ function analyze() {
 // ══════════════════════════════════════════════════
 // 📊 실제 데이터 벤치마크 비교
 // ══════════════════════════════════════════════════
+function renderGhostDiagnosis(category, postCount, scheduleType, meetingFreq, totalSchedules, memberCount) {
+  const card = document.getElementById('ghostCard');
+  const el   = document.getElementById('ghostContent');
+  if (!card || !el) return;
+
+  const catKr = (typeof CAT_MAP !== 'undefined') ? CAT_MAP[category] : category;
+  const bench = (typeof BENCHMARK_DATA !== 'undefined' && catKr) ? BENCHMARK_DATA[catKr] : null;
+
+  const hasPost  = postCount > 0;
+  const hasSched = (meetingFreq > 0) || (totalSchedules > 0);
+
+  let color, bg, emoji, title, sub;
+  if (!hasPost && !hasSched) {
+    color = '#ef4444'; bg = '#fef2f2'; emoji = '🚨';
+    title = '유령모임 위험 — 알고리즘 노출 사실상 제외';
+    sub   = '게시글도 일정도 없는 모임은 당근이 "비활성/유령"으로 분류해 검색·추천에서 거의 노출되지 않아요.';
+  } else if (!hasPost || !hasSched) {
+    color = '#f97316'; bg = '#fff7ed'; emoji = '⚠️';
+    title = !hasPost ? '반쪽 활성 — 게시글 0' : '반쪽 활성 — 일정 0';
+    sub   = !hasPost
+      ? '일정은 있지만 게시판이 비어 있어요. 게시글이 없으면 신규 멤버에게 "죽은 모임"으로 보여 가입 전환이 떨어져요.'
+      : '게시글은 있지만 일정이 없어요. 일정 없는 모임은 당근이 휴면으로 분류해 상단 노출이 막혀요.';
+  } else if (postCount < 3 && meetingFreq < 1) {
+    color = '#d97706'; bg = '#fffbeb'; emoji = '🟡';
+    title = '활동 저조 — 유령화 진행 중';
+    sub   = '최소한의 활동은 있지만 추세가 약해요. 이대로면 몇 주 안에 유령모임 구간으로 떨어질 수 있어요.';
+  } else {
+    color = '#22c55e'; bg = '#f0fdf4'; emoji = '✅';
+    title = '활성 모임 — 유령 위험 없음';
+    sub   = '게시글·일정이 모두 살아있어요. 지금 페이스를 유지하세요.';
+  }
+
+  const missing = [];
+  if (!hasPost) missing.push('게시글');
+  if (meetingFreq === 0) missing.push('정기 일정');
+  if (totalSchedules === 0) missing.push('누적 일정');
+
+  let benchLine = '';
+  if (bench) {
+    const gp = bench.ghost_pct;
+    benchLine =
+      '<div style="margin-top:12px;padding:12px 14px;background:#fff;border-radius:10px;border:1px solid ' + color + '22;font-size:0.82rem;color:#444;line-height:1.7;">' +
+        '📊 <strong>' + catKr + '</strong> 카테고리 TOP500 기준 — 유령모임 비율 ' +
+        '<strong style="color:' + (gp >= 20 ? '#ef4444' : '#16a34a') + ';">' + gp + '%</strong>' +
+        ' · 활성 모임 평균 누적 게시글 <strong>' + Math.round(bench.avg_posts).toLocaleString() + '개</strong>, 누적 일정 <strong>' + Math.round(bench.avg_schedules).toLocaleString() + '개</strong>' +
+        (gp >= 30 ? '<br>⚠️ 이 카테고리는 유령 비율이 높아 <strong>꾸준한 운영만으로도 상위권</strong>에 갈 수 있어요.' : '') +
+      '</div>';
+  }
+
+  let action;
+  if (!hasPost && !hasSched) {
+    action = '오늘 바로 ① 게시글 1개(공지/사진) ② 2주 이내 일정 1개를 등록하세요. 이 두 가지만으로 "비활성" 신호가 즉시 풀려요.';
+  } else if (!hasPost) {
+    action = '오늘 게시글 1개부터 올려보세요. 공지·사진 하나면 충분해요.';
+  } else if (!hasSched) {
+    action = '2주 이내 가벼운 일정 1개를 등록하세요. 날짜만 잡아도 노출이 회복돼요.';
+  } else if (postCount < 3 && meetingFreq < 1) {
+    action = '주 1회 게시글 + 월 1회 일정을 최소선으로 유지하세요.';
+  } else {
+    action = '현재 활동을 유지하고, 게시글 다양성(공지·후기·사진)을 늘리면 상위권 굳히기에 좋아요.';
+  }
+
+  card.style.display = 'block';
+  el.innerHTML =
+    '<div style="background:' + bg + ';border:1.5px solid ' + color + '55;border-radius:14px;padding:16px 16px 14px;">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">' +
+        '<div style="font-size:1.8rem;line-height:1;">' + emoji + '</div>' +
+        '<div style="font-weight:800;font-size:0.98rem;color:' + color + ';">' + title + '</div>' +
+      '</div>' +
+      '<div style="font-size:0.83rem;color:#555;line-height:1.7;">' + sub + '</div>' +
+      (missing.length ? '<div style="margin-top:8px;font-size:0.8rem;color:' + color + ';font-weight:700;">비어있는 항목: ' + missing.join(' · ') + '</div>' : '') +
+      benchLine +
+      '<div style="margin-top:12px;padding:11px 13px;background:' + color + '14;border-radius:10px;font-size:0.82rem;color:#333;line-height:1.65;"><strong style="color:' + color + ';">👉 지금 할 일</strong><br>' + action + '</div>' +
+    '</div>';
+}
+
 function renderBenchmark(category, memberCount, meetingFreq, attendRate, postCount) {
   const catKr  = CAT_MAP[category];
   const bench  = catKr ? BENCHMARK_DATA[catKr] : null;
