@@ -477,6 +477,19 @@
 
 <!-- 결과 -->
 <div id="result">
+  <div id="partNav" style="display:none;position:sticky;top:0;z-index:100;background:#fff;padding:10px 0 0;margin-bottom:10px;border-bottom:1.5px solid #f0f0f0;">
+    <div style="max-width:720px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:0 4px 10px;">
+      <style>
+        .p-btn{display:inline-flex;align-items:center;gap:5px;border:1.5px solid #e5e7eb;background:#f9fafb;color:#555;border-radius:99px;padding:7px 15px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;margin-right:6px;white-space:nowrap;}
+        .p-btn.active{background:linear-gradient(135deg,#E53E3E,#FC8181);color:#fff;border-color:transparent;}
+        .p-btn:hover:not(.active){background:#fff0f0;border-color:#E53E3E;color:#E53E3E;}
+      </style>
+      <button class="p-btn active" onclick="setPartFilter('all',this)">전체</button>
+      <button class="p-btn" onclick="setPartFilter('overview',this)">📊 종합</button>
+      <button class="p-btn" onclick="setPartFilter('data',this)">📊 데이터</button>
+      <button class="p-btn" onclick="setPartFilter('strategy',this)">💡 전략</button>
+    </div>
+  </div>
 
   <!-- PDF 바 -->
   <div id="pdf-bar">
@@ -485,7 +498,7 @@
   </div>
 
   <!-- 종합 점수 -->
-  <div class="result-card">
+  <div class="result-card" data-part="overview">
     <h2>🎯 종합 진단 결과</h2>
     <div class="score-big-box">
       <div class="score-number" id="scoreNum">--</div>
@@ -542,7 +555,7 @@
   </div>
 
   <!-- 📡 레이더 차트 -->
-  <div class="result-card" id="e-radar-card" style="display:none;">
+  <div class="result-card" data-part="overview" id="e-radar-card" style="display:none;">
     <h2>📡 4차원 노출 분석 레이더</h2>
     <div class="radar-wrap">
       <canvas id="e-radar" width="300" height="300"></canvas>
@@ -551,7 +564,7 @@
   </div>
 
   <!-- 🎯 알고리즘 노출 게이지 -->
-  <div class="result-card" id="e-gauge-card" style="display:none;">
+  <div class="result-card" data-part="overview" id="e-gauge-card" style="display:none;">
     <h2>🎯 홍보 효과 예측</h2>
     <div class="algo-gauge-ttl"><span>에브리타임 홍보게시판 효과 예측</span><span id="e-gauge-pct">—</span></div>
     <div class="algo-gauge-bar"><div class="algo-gauge-fill" id="e-gauge-fill"></div></div>
@@ -564,27 +577,47 @@
   </div>
 
   <!-- 진단 분석 -->
-  <div class="result-card">
+  <div class="result-card" data-part="data">
     <h2>📈 항목별 진단</h2>
     <div id="statBars"></div>
   </div>
 
   <!-- 로드맵 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>🗺️ 개인화 개선 로드맵</h2>
     <div id="roadmapArea"></div>
   </div>
 
   <!-- 체크리스트 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>✅ 홍보게시판 최적화 체크리스트</h2>
     <div id="checklistArea"></div>
   </div>
 
   <!-- 팁 박스 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>💡 에브리타임 홍보 핵심 인사이트</h2>
     <div class="tip-box" id="tipBox"></div>
+  </div>
+
+  <!-- 에브리타임 알고리즘 고정 가이드 -->
+  <div class="result-card" data-part="strategy">
+    <h2>📌 에브리타임 홍보 알고리즘, 이건 꼭 알고 가세요</h2>
+    <div style="display:grid;gap:11px;">
+      <div style="background:#fff7f7;border:1.5px solid #E53E3E33;border-radius:12px;padding:13px 14px;">
+        <div style="font-weight:800;font-size:0.9rem;color:#E53E3E;margin-bottom:5px;">🏫 학교별로 게시판이 완전히 분리돼요</div>
+        <div style="font-size:0.82rem;color:#555;line-height:1.7;">홍보글은 그 학교 학생에게만 노출돼요. 그래서 "어느 학교에 올리느냐"가 ROI의 절반을 결정해요. 학생 수 많은 중·대규모 학교에서 먼저 검증하고, 반응 좋은 글을 인근 학교로 복제하는 게 가장 빠른 확장법이에요.</div>
+      </div>
+      <div style="background:#fff8f0;border:1.5px solid #ED893633;border-radius:12px;padding:13px 14px;">
+        <div style="font-weight:800;font-size:0.9rem;color:#ED8936;margin-bottom:5px;">⏱️ 게시글 수명이 짧아요 — 골든타임이 전부</div>
+        <div style="font-size:0.82rem;color:#555;line-height:1.7;">홍보게시판은 최신순이라 새 글이 올라오면 금방 아래로 밀려요. 글 하나의 실질 노출은 몇 시간이에요. 학생 접속이 몰리는 <strong>목요일 오후 2~6시</strong>에 올리고, 효과가 좋았던 글은 일정 간격으로 재포스팅하세요.</div>
+      </div>
+      <div style="background:#f7fff9;border:1.5px solid #48BB7833;border-radius:12px;padding:13px 14px;">
+        <div style="font-weight:800;font-size:0.9rem;color:#38A169;margin-bottom:5px;">🙊 익명·학생 커뮤니티라 "영업 톤"은 반감을 사요</div>
+        <div style="font-size:0.82rem;color:#555;line-height:1.7;">대놓고 광고하는 말투는 무시되거나 비추천을 받아요. 학생 눈높이의 솔직한 말투("혹시 ~해본 적 있어?")와 실제 혜택을 앞세우면 공감·댓글 반응률이 확 올라가요. 같은 글을 도배하면 신고·삭제 위험이 커지니 빈도와 변형에 신경 쓰세요.</div>
+      </div>
+    </div>
+    <div style="margin-top:11px;font-size:0.74rem;color:#aaa;text-align:right;">※ 에브리타임은 외부 수집이 막혀 있어, 위 내용은 플랫폼 구조·홍보 실무 기준의 가이드예요.</div>
   </div>
 
 </div>
@@ -595,7 +628,7 @@
   <button class="scroll-btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="맨 아래로">▼</button>
 </div>
 
-<footer>© 2026 longchiri — 에브리타임 홍보게시판 분석기 Ver 1.3.0</footer>
+<footer>© 2026 longchiri — 에브리타임 홍보게시판 분석기 Ver 1.5.0</footer>
 
 <script>
   // 스크롤 버튼 표시/숨김
@@ -1177,6 +1210,7 @@
 
     // ── 결과 표시 & PDF 바 + 카드 등장 애니메이션 ──
     document.getElementById('result').style.display = 'block';
+  var _pn=document.getElementById('partNav'); if(_pn)_pn.style.display='';
     document.getElementById('pdf-bar').style.display = 'flex';
     revealCards('result');
 
@@ -1290,6 +1324,24 @@
     if(pEl)pEl.textContent=tierLabel;
     tierIds.forEach(function(id,i){var el=document.getElementById(id);if(el)el.classList.toggle(activeClass,i===tierIdx);});
   }
+</script>
+<script>
+function setPartFilter(part, btn){
+  document.querySelectorAll('.p-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var items=document.querySelectorAll('#result .result-card');
+  items.forEach(function(c){
+    if(!c.hasAttribute('data-nat')) c.setAttribute('data-nat', c.style.display||'');
+    var nat=c.getAttribute('data-nat');
+    if(nat==='none'){ c.style.display='none'; return; }
+    var cp=c.getAttribute('data-part');
+    c.style.display=(part==='all'||cp===part)?nat:'none';
+  });
+  var w=document.getElementById('result');
+  if(w){ var nav=document.getElementById('partNav'); var nh=nav?nav.offsetHeight:0;
+    var top=w.getBoundingClientRect().top+window.scrollY-nh-8;
+    window.scrollTo({top:top,behavior:'smooth'}); }
+}
 </script>
 </body>
 </html>

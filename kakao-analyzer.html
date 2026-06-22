@@ -835,6 +835,19 @@
 
 <!-- ══════════ 결과 ══════════ -->
 <div id="result">
+  <div id="partNav" style="display:none;position:sticky;top:0;z-index:100;background:#fff;padding:10px 0 0;margin-bottom:10px;border-bottom:1.5px solid #f0f0f0;">
+    <div style="max-width:720px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:0 4px 10px;">
+      <style>
+        .p-btn{display:inline-flex;align-items:center;gap:5px;border:1.5px solid #e5e7eb;background:#f9fafb;color:#555;border-radius:99px;padding:7px 15px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;margin-right:6px;white-space:nowrap;}
+        .p-btn.active{background:linear-gradient(135deg,#FEE500,#FFD700);color:#3a2e00;border-color:transparent;}
+        .p-btn:hover:not(.active){background:#fffde7;border-color:#c8a800;color:#c8a800;}
+      </style>
+      <button class="p-btn active" onclick="setPartFilter('all',this)">전체</button>
+      <button class="p-btn" onclick="setPartFilter('overview',this)">📊 종합</button>
+      <button class="p-btn" onclick="setPartFilter('data',this)">📊 데이터</button>
+      <button class="p-btn" onclick="setPartFilter('strategy',this)">💡 전략</button>
+    </div>
+  </div>
 
   <!-- 용어 링크 -->
   <div style="text-align:center;margin-bottom:14px;">
@@ -843,7 +856,7 @@
     </a>
   </div>
   <!-- 종합 점수 -->
-  <div class="result-card">
+  <div class="result-card" data-part="overview">
     <h2>📊 종합 알고리즘 점수</h2>
     <div class="score-big-box">
       <div class="score-number" id="totalScore">0</div>
@@ -874,7 +887,7 @@
   </div>
 
   <!-- 📡 레이더 차트 -->
-  <div class="result-card" id="k-radar-card" style="display:none;">
+  <div class="result-card" data-part="overview" id="k-radar-card" style="display:none;">
     <h2>📡 4차원 노출 분석 레이더</h2>
     <div class="radar-wrap">
       <canvas id="k-radar" width="300" height="300"></canvas>
@@ -883,7 +896,7 @@
   </div>
 
   <!-- 🎯 알고리즘 노출 게이지 -->
-  <div class="result-card" id="k-gauge-card" style="display:none;">
+  <div class="result-card" data-part="overview" id="k-gauge-card" style="display:none;">
     <h2>🎯 알고리즘 노출 예측</h2>
     <div class="algo-gauge-ttl"><span>카카오 오픈채팅 알고리즘 상위 노출 예측</span><span id="k-gauge-pct">—</span></div>
     <div class="algo-gauge-bar"><div class="algo-gauge-fill" id="k-gauge-fill"></div></div>
@@ -896,19 +909,19 @@
   </div>
 
   <!-- 노출 알고리즘 지표 -->
-  <div class="result-card">
+  <div class="result-card" data-part="data">
     <h2>🔍 노출 알고리즘 지표</h2>
     <div id="kakaoExpList"></div>
   </div>
 
   <!-- 운영완성도 -->
-  <div class="result-card">
+  <div class="result-card" data-part="data">
     <h2>⚙️ 운영완성도</h2>
     <div id="kakaoOpList"></div>
   </div>
 
   <!-- 검색 노출 공식 -->
-  <div class="result-card">
+  <div class="result-card" data-part="data">
     <h2>⚙️ 종합 점수 공식 (알고리즘 구조)</h2>
     <div class="formula-box">
       <div class="formula-text">
@@ -920,37 +933,41 @@
   </div>
 
   <!-- SEO 분석 -->
-  <div class="result-card">
+  <div class="result-card" data-part="data">
     <h2>🔍 검색 노출 SEO 분석</h2>
     <div id="seoSection"></div>
   </div>
 
   <!-- 활성도 분석 -->
-  <div class="result-card">
+  <div class="result-card" data-part="data">
     <h2>📈 동적 활성도 분석</h2>
     <div id="activitySection"></div>
   </div>
 
+  <div class="result-card" data-part="strategy" id="k-ghost-card" style="display:none;">
+    <div id="k-ghost-body"></div>
+  </div>
+
   <!-- 소셜/신뢰도 -->
-  <div class="result-card">
+  <div class="result-card" data-part="data">
     <h2>🏆 소셜 신뢰도 분석</h2>
     <div id="socialSection"></div>
   </div>
 
   <!-- 페널티 진단 -->
-  <div class="result-card" id="penaltyCard">
+  <div class="result-card" data-part="strategy" id="penaltyCard">
     <h2>⚠️ 페널티 진단</h2>
     <div id="penaltySection"></div>
   </div>
 
   <!-- 전략 추천 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>💡 알고리즘 상승 전략</h2>
     <div id="strategySection"></div>
   </div>
 
   <!-- 30일 로드맵 -->
-  <div class="result-card">
+  <div class="result-card" data-part="strategy">
     <h2>🗓️ 30일 운영 로드맵</h2>
     <div id="roadmapSection"></div>
   </div>
@@ -961,7 +978,7 @@
 
 <footer>
   <p>by <b style="color:#c8a800;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.7.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.9.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -2377,11 +2394,46 @@ function analyze() {
 
   renderSNSKit('kakao-sns-kit', 'kakao');
 
+  renderGhostKakao(dailyMsgs, dailyUniq, currentMem, exitRate);
+
   showResultsView();
+}
+
+function renderGhostKakao(dailyMsgs, dailyUniq, currentMem, exitRate){
+  const card=document.getElementById('k-ghost-card');
+  const el=document.getElementById('k-ghost-body');
+  if(!card||!el) return;
+  const activeRatio = currentMem>0 ? (dailyUniq/currentMem*100) : 0;
+  let color,bg,emoji,title,sub,action;
+  if(dailyMsgs===0){
+    color='#ef4444';bg='#fef2f2';emoji='🚨';
+    title='유령방 위험 — 노출 사실상 제외';
+    sub='하루 메시지가 0이에요. 카카오는 대화 없는 방을 "비활성"으로 보고 검색·지금탭 노출에서 사실상 빼버려요. 죽은 방으로 보이면 신규 유입도 끊겨요.';
+    action='방장이 먼저 "오늘의 질문"·인사로 대화 물꼬를 트세요. 매일 1개 대화 트리거 + 환영 공지로 활성 신호를 되살리는 게 1순위예요.';
+  } else if(dailyMsgs<10 || activeRatio<10){
+    color='#f97316';bg='#fff7ed';emoji='⚠️';
+    title='저활성 — 유령화 진행 중';
+    sub='하루 메시지 '+dailyMsgs+'개'+(currentMem>0?(' · 활성 멤버 비율 '+Math.round(activeRatio)+'%'):'')+'. 멤버 수 대비 실제 대화가 적어요. 이대로 두면 노출이 점점 떨어져요.'+(exitRate>=10?(' 게다가 이탈률 '+exitRate+'%로 빠져나가는 사람도 많아요.'):'');
+    action='활동 시간대(주로 저녁)에 방장이 주제·질문을 던지고, 조용한 멤버를 호명해 참여를 유도하세요. 이모지·반응 버튼으로 대화 진입장벽을 낮추는 것도 효과적이에요.';
+  } else {
+    color='#22c55e';bg='#f0fdf4';emoji='✅';
+    title='활성 채팅방 — 유령 위험 없음';
+    sub='하루 메시지 '+dailyMsgs+'개로 대화가 살아있어요'+(currentMem>0?(' (활성 멤버 비율 '+Math.round(activeRatio)+'%)'):'')+'. 지금 페이스를 유지하세요.';
+    action='활성 시간대 집중 + 정기 이벤트로 지금 활성도를 더 끌어올리면 지금탭·검색 상위 노출까지 노릴 수 있어요.';
+  }
+  card.style.display='block';
+  el.innerHTML='<h2>👻 유령방 진단</h2>'+
+    '<div style="background:'+bg+';border:1.5px solid '+color+'55;border-radius:14px;padding:16px 16px 14px;">'+
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="font-size:1.8rem;line-height:1;">'+emoji+'</div>'+
+      '<div style="font-weight:800;font-size:0.98rem;color:'+color+';">'+title+'</div></div>'+
+      '<div style="font-size:0.83rem;color:#555;line-height:1.7;">'+sub+'</div>'+
+      '<div style="margin-top:12px;padding:11px 13px;background:'+color+'14;border-radius:10px;font-size:0.82rem;color:#333;line-height:1.65;"><strong style="color:'+color+';">👉 지금 할 일</strong><br>'+action+'</div>'+
+    '</div>';
 }
 
 function showResultsView() {
   document.getElementById('result').style.display = 'block';
+  var _pn=document.getElementById('partNav'); if(_pn)_pn.style.display='';
   document.getElementById('pdf-bar').style.display = 'flex';
   const iv = document.getElementById('inputView');
   const rv = document.getElementById('resultsView');
@@ -2787,5 +2839,23 @@ window.addEventListener('scroll',()=>{
 </script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8f8a4525d9ac4010bc4bd44ddb28b9aa"}'></script><!-- End Cloudflare Web Analytics -->
 </div><!-- #resultsView -->
+<script>
+function setPartFilter(part, btn){
+  document.querySelectorAll('.p-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var items=document.querySelectorAll('#result .result-card');
+  items.forEach(function(c){
+    if(!c.hasAttribute('data-nat')) c.setAttribute('data-nat', c.style.display||'');
+    var nat=c.getAttribute('data-nat');
+    if(nat==='none'){ c.style.display='none'; return; }
+    var cp=c.getAttribute('data-part');
+    c.style.display=(part==='all'||cp===part)?nat:'none';
+  });
+  var w=document.getElementById('result');
+  if(w){ var nav=document.getElementById('partNav'); var nh=nav?nav.offsetHeight:0;
+    var top=w.getBoundingClientRect().top+window.scrollY-nh-8;
+    window.scrollTo({top:top,behavior:'smooth'}); }
+}
+</script>
 </body>
 </html>

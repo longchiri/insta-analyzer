@@ -631,6 +631,19 @@
 
   <!-- 문토 결과 -->
   <div id="munto-result" class="result-section">
+  <div id="partNav" style="display:none;position:sticky;top:0;z-index:100;background:#fff;padding:10px 0 0;margin-bottom:10px;border-bottom:1.5px solid #f0f0f0;">
+    <div style="max-width:720px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:0 4px 10px;">
+      <style>
+        .p-btn{display:inline-flex;align-items:center;gap:5px;border:1.5px solid #e5e7eb;background:#f9fafb;color:#555;border-radius:99px;padding:7px 15px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;margin-right:6px;white-space:nowrap;}
+        .p-btn.active{background:linear-gradient(135deg,#ff4628,#f97316);color:#fff;border-color:transparent;}
+        .p-btn:hover:not(.active){background:#fff7ed;border-color:#f97316;color:#f97316;}
+      </style>
+      <button class="p-btn active" onclick="setPartFilter('all',this)">전체</button>
+      <button class="p-btn" onclick="setPartFilter('overview',this)">📊 종합</button>
+      <button class="p-btn" onclick="setPartFilter('data',this)">📊 데이터</button>
+      <button class="p-btn" onclick="setPartFilter('strategy',this)">💡 전략</button>
+    </div>
+  </div>
     <div id="pdf-bar-munto" style="display:flex;">
       <span style="font-size:0.9rem; font-weight:700; color:#7C2D12;">📄 분석 결과 저장</span>
       <div style="display:flex; gap:8px;">
@@ -639,7 +652,7 @@
       </div>
     </div>
 
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="overview">
       <h2>🏆 문토 클럽 종합 점수</h2>
       <div class="score-big-box munto-sb">
         <div class="score-number munto-num" id="t-totalScore">—</div>
@@ -672,7 +685,7 @@
     </div>
 
     <!-- 📡 레이더 (문토) -->
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="overview">
       <h2>📡 6차원 노출 분석</h2>
       <div class="radar-wrap">
         <canvas id="t-radar" width="300" height="300"></canvas>
@@ -681,7 +694,7 @@
     </div>
 
     <!-- 🎯 알고리즘 게이지 (문토) -->
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="overview">
       <h2>🎯 알고리즘 노출 예측</h2>
       <div class="algo-gauge-ttl"><span>문토 알고리즘 상위 노출 예측</span><span id="t-gauge-pct" style="color:#ff4628;font-weight:900;font-size:1rem;">—%</span></div>
       <div class="algo-gauge-bar"><div class="algo-gauge-fill munto-g" id="t-gauge-fill"></div></div>
@@ -693,7 +706,7 @@
       </div>
     </div>
 
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="overview">
       <h2>📐 문토 노출 공식</h2>
       <div class="formula-box munto-fb">
         <div class="formula-text">노출 점수 = SEO(20%) + 활성도(20%) + 신뢰도(20%) + 전환율(15%) + 매력도(15%) + LTV(10%)</div>
@@ -701,17 +714,17 @@
       </div>
     </div>
 
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="data">
       <h2>📊 지표별 상세 분석</h2>
       <div id="t-statRows"></div>
     </div>
 
-    <div class="result-card munto-res" id="t-ghost-card" style="display:none;">
+    <div class="result-card munto-res" data-part="strategy" id="t-ghost-card" style="display:none;">
       <div id="t-ghost-body"></div>
     </div>
 
     <!-- 📊 실데이터 기반 상위노출 가이드 (2026.06 실측) -->
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="data">
       <h2>📊 실데이터 상위노출 가이드 <span style="font-size:.72rem;font-weight:400;color:#94a3b8;">2026.06 실측 · 클럽 799 · 소셜링 1,216개</span></h2>
 
       <div style="background:#fff7ed;border:1.5px solid #ff462855;border-radius:14px;padding:16px;margin-bottom:14px;">
@@ -754,17 +767,17 @@
       </div>
     </div>
 
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="data">
       <h2>🔍 노출 알고리즘 지표</h2>
       <div id="t-expList"></div>
     </div>
 
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="data">
       <h2>⚙️ 운영완성도</h2>
       <div id="t-opList"></div>
     </div>
 
-    <div class="result-card munto-res">
+    <div class="result-card munto-res" data-part="strategy">
       <h2>🗺️ 이번 주 실행 로드맵</h2>
       <div id="t-roadmap"></div>
     </div>
@@ -777,7 +790,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.8.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.9.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -862,6 +875,7 @@ function showMuntoResultView() {
   const ia = document.getElementById('munto-inputArea');
   const res = document.getElementById('munto-result');
   document.getElementById('munto-result').style.display = 'block';
+  var _pn=document.getElementById('partNav'); if(_pn)_pn.style.display='';
   document.getElementById('pdf-bar-munto').style.display = 'flex';
   ia.style.transition = 'opacity 0.2s';
   ia.style.opacity = '0';
@@ -1763,5 +1777,23 @@ window.addEventListener('scroll',()=>{
 </script>
 
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8f8a4525d9ac4010bc4bd44ddb28b9aa"}'></script><!-- End Cloudflare Web Analytics -->
+<script>
+function setPartFilter(part, btn){
+  document.querySelectorAll('.p-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var items=document.querySelectorAll('#munto-result .result-card');
+  items.forEach(function(c){
+    if(!c.hasAttribute('data-nat')) c.setAttribute('data-nat', c.style.display||'');
+    var nat=c.getAttribute('data-nat');
+    if(nat==='none'){ c.style.display='none'; return; }
+    var cp=c.getAttribute('data-part');
+    c.style.display=(part==='all'||cp===part)?nat:'none';
+  });
+  var w=document.getElementById('munto-result');
+  if(w){ var nav=document.getElementById('partNav'); var nh=nav?nav.offsetHeight:0;
+    var top=w.getBoundingClientRect().top+window.scrollY-nh-8;
+    window.scrollTo({top:top,behavior:'smooth'}); }
+}
+</script>
 </body>
 </html>

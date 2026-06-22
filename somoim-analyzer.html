@@ -737,6 +737,19 @@
 
   <!-- 소모임 결과 -->
   <div id="moim-result" class="result-section">
+  <div id="partNav" style="display:none;position:sticky;top:0;z-index:100;background:#fff;padding:10px 0 0;margin-bottom:10px;border-bottom:1.5px solid #f0f0f0;">
+    <div style="max-width:720px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:0 4px 10px;">
+      <style>
+        .p-btn{display:inline-flex;align-items:center;gap:5px;border:1.5px solid #e5e7eb;background:#f9fafb;color:#555;border-radius:99px;padding:7px 15px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;margin-right:6px;white-space:nowrap;}
+        .p-btn.active{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border-color:transparent;}
+        .p-btn:hover:not(.active){background:#f0fdf4;border-color:#16a34a;color:#16a34a;}
+      </style>
+      <button class="p-btn active" onclick="setPartFilter('all',this)">전체</button>
+      <button class="p-btn" onclick="setPartFilter('overview',this)">📊 종합</button>
+      <button class="p-btn" onclick="setPartFilter('data',this)">📊 데이터</button>
+      <button class="p-btn" onclick="setPartFilter('strategy',this)">💡 전략</button>
+    </div>
+  </div>
     <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 4px 2px;">
       <button onclick="showMoimInputView()" style="background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:99px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;color:#555;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.15s;" onmouseover="this.style.background='#eef3f7';this.style.borderColor='#202020';this.style.color='#202020'" onmouseout="this.style.background='#f3f4f6';this.style.borderColor='#e5e7eb';this.style.color='#555'">← 다시 분석</button>
       <span style="font-size:0.75rem;color:#aaa;font-weight:600;">소모임 분석 완료 ✅</span>
@@ -755,7 +768,7 @@
       </div>
     </div>
 
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="overview">
       <h2>🏆 소모임 노출 종합 점수</h2>
       <div class="score-big-box moim-sb">
         <div class="score-number moim-num" id="m-totalScore">—</div>
@@ -788,7 +801,7 @@
     </div>
 
     <!-- 📡 레이더 (소모임) -->
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="overview">
       <h2>📡 6차원 노출 분석</h2>
       <div class="radar-wrap">
         <canvas id="m-radar" width="300" height="300"></canvas>
@@ -797,7 +810,7 @@
     </div>
 
     <!-- 🎯 알고리즘 게이지 (소모임) -->
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="overview">
       <h2>🎯 알고리즘 노출 예측</h2>
       <div class="algo-gauge-ttl"><span>소모임 알고리즘 상위 노출 예측</span><span id="m-gauge-pct" style="color:#202020;font-weight:900;font-size:1rem;">—%</span></div>
       <div class="algo-gauge-bar"><div class="algo-gauge-fill moim-g" id="m-gauge-fill"></div></div>
@@ -809,7 +822,7 @@
       </div>
     </div>
 
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="overview">
       <h2>📐 소모임 노출 공식</h2>
       <div class="formula-box moim-fb">
         <div class="formula-text">노출 점수 = SEO(25%) + 활성도(25%) + 신뢰도(20%) + 전환율(15%) + LTV(10%) + 성장(5%)</div>
@@ -817,20 +830,20 @@
       </div>
     </div>
 
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="data">
       <h2>📊 지표별 상세 분석</h2>
       <div id="m-statRows"></div>
     </div>
 
-    <div class="result-card moim-res" id="m-ghost-card" style="display:none;">
+    <div class="result-card moim-res" data-part="strategy" id="m-ghost-card" style="display:none;">
       <div id="m-ghost-body"></div>
     </div>
-    <div class="result-card moim-res" id="m-bench-card" style="display:none;">
+    <div class="result-card moim-res" data-part="data" id="m-bench-card" style="display:none;">
       <div id="m-bench-body"></div>
     </div>
 
     <!-- 📊 실데이터 상위노출 가이드 (2026.06 실측 전국 6,498개) -->
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="data">
       <h2>📊 실데이터 상위노출 가이드 <span style="font-size:.72rem;font-weight:400;color:#94a3b8;">2026.06 실측 · 전국 6,498개</span></h2>
 
       <div style="background:#f0fdf4;border:1.5px solid #22c55e55;border-radius:14px;padding:16px;margin-bottom:14px;">
@@ -870,17 +883,17 @@
       </div>
     </div>
 
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="data">
       <h2>🔍 노출 알고리즘 지표</h2>
       <div id="m-expList"></div>
     </div>
 
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="data">
       <h2>⚙️ 운영완성도</h2>
       <div id="m-opList"></div>
     </div>
 
-    <div class="result-card moim-res">
+    <div class="result-card moim-res" data-part="strategy">
       <h2>🗺️ 이번 주 실행 로드맵</h2>
       <div id="m-roadmap"></div>
     </div>
@@ -893,7 +906,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.8.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.9.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -977,6 +990,7 @@ function showMoimResultView() {
   const ia = document.getElementById('moim-inputArea');
   const res = document.getElementById('moim-result');
   document.getElementById('moim-result').style.display = 'block';
+  var _pn=document.getElementById('partNav'); if(_pn)_pn.style.display='';
   document.getElementById('pdf-bar-moim').style.display = 'flex';
   ia.style.transition = 'opacity 0.2s';
   ia.style.opacity = '0';
@@ -2608,5 +2622,23 @@ function renderMoimBenchmark(formCat, city) {
 }
 
 </script><!-- End Cloudflare Web Analytics -->
+<script>
+function setPartFilter(part, btn){
+  document.querySelectorAll('.p-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var items=document.querySelectorAll('#moim-result .result-card');
+  items.forEach(function(c){
+    if(!c.hasAttribute('data-nat')) c.setAttribute('data-nat', c.style.display||'');
+    var nat=c.getAttribute('data-nat');
+    if(nat==='none'){ c.style.display='none'; return; }
+    var cp=c.getAttribute('data-part');
+    c.style.display=(part==='all'||cp===part)?nat:'none';
+  });
+  var w=document.getElementById('moim-result');
+  if(w){ var nav=document.getElementById('partNav'); var nh=nav?nav.offsetHeight:0;
+    var top=w.getBoundingClientRect().top+window.scrollY-nh-8;
+    window.scrollTo({top:top,behavior:'smooth'}); }
+}
+</script>
 </body>
 </html>
