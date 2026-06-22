@@ -723,6 +723,11 @@
       <div id="t-ghost-body"></div>
     </div>
 
+    <!-- 📊 내 클럽 vs 인기클럽 실데이터 벤치마크 -->
+    <div class="result-card munto-res" data-part="data" id="t-bench-card" style="display:none;">
+      <div id="t-bench-body"></div>
+    </div>
+
     <!-- 📊 실데이터 기반 상위노출 가이드 (2026.06 실측) -->
     <div class="result-card munto-res" data-part="data">
       <h2>📊 실데이터 상위노출 가이드 <span style="font-size:.72rem;font-weight:400;color:#94a3b8;">2026.06 실측 · 클럽 799 · 소셜링 1,216개</span></h2>
@@ -790,7 +795,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.9.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.10.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -920,6 +925,90 @@ function revealCards(containerId) {
     void card.offsetWidth; // reflow
     card.classList.add('card-reveal');
   });
+}
+
+// ════════════ 문토 실데이터 벤치마크 (2026.06 실측 · 클럽 799개) ════════════
+const MUNTO_BENCH = {
+  '사진':  {n:423, top:67,  p30:35,  med:18, r1n:'00년생 친구할사람',         r1m:99,  r1r:'1시간 전'},
+  '독서':  {n:16,  top:157, p30:138, med:56, r1n:'🌡온도, 온전히 도달할 때까지', r1m:114, r1r:'5시간 전'},
+  '드로잉':{n:270, top:33,  p30:23,  med:11, r1n:'문래동 지적인고양이',        r1m:272, r1r:'5시간 전'},
+  '_ALL':  {n:799, top:60,  p30:34,  med:18, r1n:'',                          r1m:0,   r1r:''}
+};
+const MUNTO_CMAP = {'사진':'사진','독서':'독서','미술':'드로잉','아트':'드로잉','공예':'드로잉'};
+// 전역 노출순위 ↔ 최근대화 경과 (실측, Spearman 1.000)
+const MUNTO_RECENCY = '상위 10% = 최근 대화 15시간 이내 · 상위 35% = 12일 이내 · 상위 50% = 30일 이내 · 하위권 = 51일+';
+
+function renderMuntoBenchmark(formCat, members, activity, content, attend) {
+  const card = document.getElementById('t-bench-card');
+  const body = document.getElementById('t-bench-body');
+  if (!card || !body) return;
+  const dataCat = MUNTO_CMAP[formCat] || '_ALL';
+  const b = MUNTO_BENCH[dataCat] || MUNTO_BENCH['_ALL'];
+  const catLabel = (dataCat === '_ALL') ? '전체' : dataCat;
+
+  // 멤버 규모 포지션 (카테고리 내 실측 기준선 대비)
+  let pColor, pBg, pTitle, pSub;
+  if (members <= 0) {
+    pColor='#94a3b8'; pBg='#f8fafc'; pTitle='멤버 수를 입력하면 비교돼요';
+    pSub='현재 멤버 수를 넣으면 같은 카테고리 인기클럽과 규모를 비교해 드려요.';
+  } else if (members >= b.top) {
+    pColor='#16a34a'; pBg='#f0fdf4'; pTitle='상위 10%권 규모 — 멤버 기반 탄탄';
+    pSub='같은 '+catLabel+' 카테고리 상위 10% 클럽 평균('+b.top+'명) 수준이에요. 규모는 이미 충분해요.';
+  } else if (members >= b.p30) {
+    pColor='#22c55e'; pBg='#f0fdf4'; pTitle='상위 30% 이내 — 우수한 멤버 규모';
+    pSub='상위 30% 진입선('+b.p30+'명)을 넘었어요. 규모 면에서 경쟁력이 있어요.';
+  } else if (members >= b.med) {
+    pColor='#f59e0b'; pBg='#fffbeb'; pTitle='평균 이상 — 무난한 규모';
+    pSub='카테고리 중위값('+b.med+'명)보다 많아요. 상위 30% 선('+b.p30+'명)까지 '+(b.p30-members)+'명 남았어요.';
+  } else {
+    pColor='#f97316'; pBg='#fff7ed'; pTitle='평균 이하 — 멤버 확보 여지';
+    pSub='카테고리 중위('+b.med+'명)보다 적어요. 다만 문토는 멤버보다 최근 활동이 노출을 좌우하니 규모는 약점이 아니에요.';
+  }
+
+  // 최근 활동(노출 관문) 판정 — activity/피드 = recency 프록시
+  let aColor, aBg, aEmoji, aTitle, aSub;
+  if (activity > 0 && content > 0) {
+    aColor='#16a34a'; aBg='#f0fdf4'; aEmoji='✅'; aTitle='최근 활동 유지 — 노출 자격 OK';
+    aSub='액티비티·피드가 살아있어요. 문토 노출의 1순위인 "대화 최신성"을 충족 중이에요. 이 페이스를 유지하세요.';
+  } else if (activity > 0 || content > 0) {
+    aColor='#f59e0b'; aBg='#fffbeb'; aEmoji='⚠️'; aTitle='반쪽 활동 — 노출 하락 위험';
+    aSub='한쪽(액티비티 또는 피드)만 돌고 있어요. 둘 다 꾸준해야 상위 노출이 유지돼요.';
+  } else {
+    aColor='#ef4444'; aBg='#fef2f2'; aEmoji='🚨'; aTitle='휴면 위험 — 노출 제외 가능';
+    aSub='최근 액티비티·피드가 0이에요. 문토는 대화가 끊긴 클럽을 노출에서 빼버려요(하위권은 51일+ 미활동).';
+  }
+
+  // 멤버 비교 바
+  const maxRef = Math.max(b.top, members, b.med*2, 1);
+  const bar = (v,col)=>'<div style="height:9px;border-radius:99px;background:'+col+';width:'+Math.max(2,Math.min(100,v/maxRef*100))+'%;"></div>';
+
+  card.style.display = 'block';
+  body.innerHTML =
+    '<h2>📊 내 '+catLabel+' 클럽 vs 인기클럽 <span style="font-size:.72rem;font-weight:400;color:#94a3b8;">실측 '+b.n+'개 기준</span></h2>'
+    + '<div style="background:'+pBg+';border:1.5px solid '+pColor+'55;border-radius:14px;padding:15px 16px;margin-bottom:12px;">'
+      + '<div style="font-weight:800;font-size:.95rem;color:'+pColor+';margin-bottom:6px;">'+pTitle+'</div>'
+      + '<div style="font-size:.83rem;color:#555;line-height:1.7;">'+pSub+'</div>'
+      + (members>0 ? (
+        '<div style="margin-top:12px;display:grid;gap:7px;font-size:.76rem;color:#475569;">'
+        + '<div style="display:flex;align-items:center;gap:8px;"><span style="width:74px;flex:none;font-weight:700;color:'+pColor+';">내 클럽 '+members+'</span>'+bar(members,pColor)+'</div>'
+        + '<div style="display:flex;align-items:center;gap:8px;"><span style="width:74px;flex:none;">중위 '+b.med+'</span>'+bar(b.med,'#cbd5e1')+'</div>'
+        + '<div style="display:flex;align-items:center;gap:8px;"><span style="width:74px;flex:none;">상위30% '+b.p30+'</span>'+bar(b.p30,'#94a3b8')+'</div>'
+        + '<div style="display:flex;align-items:center;gap:8px;"><span style="width:74px;flex:none;">상위10% '+b.top+'</span>'+bar(b.top,'#64748b')+'</div>'
+        + '</div>') : '')
+    + '</div>'
+    + '<div style="background:'+aBg+';border:1.5px solid '+aColor+'55;border-radius:14px;padding:15px 16px;margin-bottom:12px;">'
+      + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:1.4rem;line-height:1;">'+aEmoji+'</span>'
+      + '<span style="font-weight:800;font-size:.92rem;color:'+aColor+';">'+aTitle+'</span></div>'
+      + '<div style="font-size:.83rem;color:#555;line-height:1.7;">'+aSub+'</div>'
+    + '</div>'
+    + '<div style="background:#fff7ed;border:1.5px solid #ff462833;border-radius:12px;padding:14px 15px;">'
+      + '<div style="font-weight:800;color:#ff4628;font-size:.88rem;margin-bottom:6px;">🔑 핵심 — 노출은 멤버보다 "최근 대화 최신성"</div>'
+      + '<div style="font-size:.81rem;color:#475569;line-height:1.75;">'
+        + '실측상 클럽 노출순위는 최근 대화 시각과 거의 1:1(상관 0.996)이에요. '
+        + (b.r1m>0 ? ('실제 '+catLabel+' <strong>노출 1위 「'+b.r1n+'」</strong>도 멤버 '+b.r1m+'명·'+b.r1r+' 활동일 만큼, 멤버가 적어도 매일 대화가 돌면 상위에 올라가요.<br>') : '')
+        + '<span style="color:#94a3b8;">'+MUNTO_RECENCY+'</span>'
+      + '</div>'
+    + '</div>';
 }
 
 // ════════════ 문토 분석 ════════════
@@ -1457,6 +1546,7 @@ function analyzeMunto() {
 
   document.getElementById('t-roadmap').innerHTML = roadmapHtml(roads, 'munto');
   renderGhostClub(activity, content, reaction, members);
+  renderMuntoBenchmark((document.getElementById('t-category')||{}).value||'', members, activity, content, attend);
   renderSNSKit('t-sns-kit', 'munto');
 
   showMuntoResultView();
