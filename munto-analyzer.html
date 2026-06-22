@@ -706,19 +706,8 @@
       <div id="t-statRows"></div>
     </div>
 
-    <div class="result-card munto-res">
-      <h2>🔍 노출 알고리즘 지표</h2>
-      <div id="t-expList"></div>
-    </div>
-
-    <div class="result-card munto-res">
-      <h2>⚙️ 운영완성도</h2>
-      <div id="t-opList"></div>
-    </div>
-
-    <div class="result-card munto-res">
-      <h2>🗺️ 이번 주 실행 로드맵</h2>
-      <div id="t-roadmap"></div>
+    <div class="result-card munto-res" id="t-ghost-card" style="display:none;">
+      <div id="t-ghost-body"></div>
     </div>
 
     <!-- 📊 실데이터 기반 상위노출 가이드 (2026.06 실측) -->
@@ -765,6 +754,21 @@
       </div>
     </div>
 
+    <div class="result-card munto-res">
+      <h2>🔍 노출 알고리즘 지표</h2>
+      <div id="t-expList"></div>
+    </div>
+
+    <div class="result-card munto-res">
+      <h2>⚙️ 운영완성도</h2>
+      <div id="t-opList"></div>
+    </div>
+
+    <div class="result-card munto-res">
+      <h2>🗺️ 이번 주 실행 로드맵</h2>
+      <div id="t-roadmap"></div>
+    </div>
+
     <div id="t-sns-kit"></div>
 
   </div>
@@ -773,7 +777,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.6.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 2.7.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -905,6 +909,57 @@ function revealCards(containerId) {
 }
 
 // ════════════ 문토 분석 ════════════
+function renderGhostClub(activity, content, reaction, members) {
+  const card = document.getElementById('t-ghost-card');
+  const el   = document.getElementById('t-ghost-body');
+  if (!card || !el) return;
+  const hasAct = activity > 0;
+  const hasFeed = content > 0;
+  let color, bg, emoji, title, sub;
+  if (!hasAct && !hasFeed) {
+    color = '#ef4444'; bg = '#fef2f2'; emoji = '🚨';
+    title = '유령클럽 위험 — 노출 추락';
+    sub = '최근 액티비티·피드가 0이에요. 문토 클럽 노출은 "최근 활동"이 거의 전부예요(실측 상관 0.996). 활동이 끊기면 노출이 바닥으로 떨어져요 — 상위 클럽은 9시간 전, 하위권은 51일 전 활동.';
+  } else if (!hasAct || !hasFeed) {
+    color = '#f97316'; bg = '#fff7ed'; emoji = '⚠️';
+    title = !hasFeed ? '반쪽 활성 — 피드(게시글) 0' : '반쪽 활성 — 액티비티 0';
+    sub = !hasFeed
+      ? '액티비티는 있지만 피드(게시글)가 비어 있어요. 멤버 대화·게시가 노출을 유지해요.'
+      : '피드는 있지만 액티비티(소셜링·모임)가 없어요. 정기 활동이 노출의 핵심이에요.';
+  } else if (activity < 3 && content < 3) {
+    color = '#d97706'; bg = '#fffbeb'; emoji = '🟡';
+    title = '활동 저조 — 유령화 진행 중';
+    sub = '최소 활동은 있지만 추세가 약해요. 문토는 매일 활동해야 노출이 유지돼요(하루만 쉬어도 순위 급락).';
+  } else {
+    color = '#22c55e'; bg = '#f0fdf4'; emoji = '✅';
+    title = '활성 클럽 — 유령 위험 없음';
+    sub = '액티비티·피드가 살아있어요. 지금 페이스(매일 대화·활동)를 유지하세요.';
+  }
+  const missing = [];
+  if (activity === 0) missing.push('액티비티');
+  if (content === 0) missing.push('피드');
+  if (reaction === 0) missing.push('반응');
+  let action;
+  if (!hasAct && !hasFeed) action = '오늘 ① 피드 글 1개 ② 소셜링/액티비티 1개를 등록하세요. 활동 신호가 살아나야 노출이 회복돼요.';
+  else if (!hasFeed) action = '오늘 피드에 글 1개(공지·후기·사진)부터 올려보세요.';
+  else if (!hasAct) action = '이번 주 소셜링·모임 1개를 열어보세요.';
+  else if (activity < 3 && content < 3) action = '주 2~3회 피드 + 정기 액티비티를 최소선으로 유지하세요.';
+  else action = '데일리 질문·인증 등으로 매일 대화가 오가게 유지하면 노출 상단을 굳힐 수 있어요.';
+
+  card.style.display = 'block';
+  el.innerHTML =
+    '<h2>👻 유령클럽 진단</h2>' +
+    '<div style="background:' + bg + ';border:1.5px solid ' + color + '55;border-radius:14px;padding:16px 16px 14px;">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">' +
+        '<div style="font-size:1.8rem;line-height:1;">' + emoji + '</div>' +
+        '<div style="font-weight:800;font-size:0.98rem;color:' + color + ';">' + title + '</div>' +
+      '</div>' +
+      '<div style="font-size:0.83rem;color:#555;line-height:1.7;">' + sub + '</div>' +
+      (missing.length ? '<div style="margin-top:8px;font-size:0.8rem;color:' + color + ';font-weight:700;">비어있는 항목: ' + missing.join(' · ') + '</div>' : '') +
+      '<div style="margin-top:12px;padding:11px 13px;background:' + color + '14;border-radius:10px;font-size:0.82rem;color:#333;line-height:1.65;"><strong style="color:' + color + ';">👉 지금 할 일</strong><br>' + action + '</div>' +
+    '</div>';
+}
+
 function analyzeMunto() {
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
   const title    = (document.getElementById('t-title').value || '').trim();
@@ -1336,6 +1391,7 @@ function analyzeMunto() {
     'A/B 테스트 결과를 기록하는 가장 간단한 방법: 노션에 "변경 날짜 / 변경 내용 / 2주 전 조회수 / 2주 후 조회수"를 표로 만들어두세요. 3개월이면 어떤 요소가 CTR을 올리는지 데이터가 쌓여요.'
   ]), why:'A/B 테스트 정기 실시 클럽의 6개월 전환율이 미실시 클럽 대비 40% 높아요' });
   document.getElementById('t-roadmap').innerHTML = roadmapHtml(roads, 'munto');
+  renderGhostClub(activity, content, reaction, members);
   renderSNSKit('t-sns-kit', 'munto');
 
   showMuntoResultView();
