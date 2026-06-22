@@ -322,6 +322,79 @@
   </p>
 </div>
 
+<!-- ───────────── 카테고리별 멤버 니즈 (인터랙티브) ───────────── -->
+<div class="section-title">🎯 카테고리별 멤버 니즈 — 내 모임 카테고리를 골라보세요</div>
+<div class="banner-card" id="catNeedsCard">
+  <div style="padding:20px 22px 24px;">
+    <p style="font-size:0.86rem; color:#555; line-height:1.7; margin:0 0 16px;">
+      카테고리마다 멤버가 모임에 오는 <strong>진짜 이유</strong>와 <strong>떠나는 이유</strong>가 달라요.
+      내 모임 카테고리를 누르면, 그 멤버들이 원하는 것과 모임장이 바로 해야 할 액션을 정리해드려요.
+    </p>
+    <div id="catChips" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;"></div>
+    <div id="catNeedsResult" style="font-size:0.84rem; color:#9ca3af; padding:18px; background:#f9fafb; border-radius:14px; border:1.5px dashed #e5e7eb; text-align:center;">
+      ↑ 카테고리를 선택하면 멤버 니즈가 여기에 표시돼요
+    </div>
+  </div>
+</div>
+
+<script>
+const CAT_NEEDS = {
+  '러닝/마라톤':{emoji:'🏃',motive:'혼자 뛰면 작심삼일 — 같이 뛰는 강제력과 페이스메이커를 원해서 와요.',needs:'꾸준함 유지 · 비슷한 실력대 페이스 그룹 · 기록 향상 · 러닝 후 친목',leave:'실력 차로 민폐 느낌 · 새벽/이른 시간 부담 · 매번 같은 코스 · 부상',action:'페이스별 그룹 분리 · "초보 환영" 명시 · 기록 인증·축하 · 러닝 후 카페 루틴'},
+  '헬스/피트니스':{emoji:'💪',motive:'혼자선 헬스장에 안 가게 돼요 — 운동 메이트와 동기부여가 목적이에요.',needs:'출석 자극 · 자세 피드백 · 식단/루틴 정보 · 변화 자랑(인바디)',leave:'수준 차 · 강압적 분위기 · 약속 부담',action:'인증 챌린지 · 초보 루틴 공유 · before/after 응원 · 자율 참여 허용'},
+  '등산/아웃도어':{emoji:'⛰️',motive:'혼자 산은 위험하고 외로워요 — 안전하게 같이, 풍경과 정복감을 원해요.',needs:'난이도 사전 공지 · 안전 · 동행 · 사진 · 하산 후 뒤풀이',leave:'난이도 미스매치 · 체력 부담 · 너무 빡센 페이스',action:'코스 난이도·소요시간 명확히 · 초보 코스 따로 · 단체사진 · 뒤풀이'},
+  '자전거/라이딩':{emoji:'🚲',motive:'같이 타는 재미와 안전, 새 코스 발견이 목적이에요.',needs:'실력별 라이딩 · 안전 가이드 · 코스 정보 · 정비 팁',leave:'속도 차 · 사고 위험 · 장비 부담',action:'그룹 페이스 구분 · 초보 코스 · 안전수칙 공지 · 정비 노하우 공유'},
+  '요가/필라테스':{emoji:'🧘',motive:'꾸준함과 바른 자세, 힐링을 원해서 와요.',needs:'차분한 분위기 · 자세 교정 · 작은 인원 · 꾸준한 루틴',leave:'경쟁적 분위기 · 큰 인원 부담 · 비용',action:'소규모 유지 · 초보 배려 · 호흡·이완 강조 · 편안한 톤'},
+  '독서/북클럽':{emoji:'📚',motive:'혼자선 안 읽어요 — 완독 강제력과 생각 나눔이 목적이에요.',needs:'완독 동기 · 깊은 대화 · 다양한 관점 · 책 추천',leave:'발제 부담 · 잡담만 함 · 책 난이도 · 소수의 발언 독점',action:'가벼운 발제 룰 · 발언 균형 · 책 난이도 조절 · 완독 인증'},
+  '스터디/자기계발':{emoji:'📝',motive:'혼자 작심삼일 — 같이 공부하는 강제력과 목표 달성이 목적이에요.',needs:'집중 환경 · 진도 체크 · 동료 자극 · 정보 공유',leave:'무임승차 · 목표 흐려짐 · 출석 저조',action:'출석·진도 인증 · 목표 공유 · 소수정예 · 보상/벌칙 룰'},
+  '언어/외국어':{emoji:'🌍',motive:'실전 회화 연습 상대와 꾸준함을 원해서 와요.',needs:'말할 기회 · 레벨 매칭 · 부담 없는 분위기 · 교정',leave:'레벨 차로 위축 · 말할 기회 적음 · 한국어로 흐름',action:'레벨 그룹 분리 · 발언 시간 배분 · 실수 환영 문화 · 주제 미리 공지'},
+  '맛집/미식':{emoji:'🍜',motive:'혼밥은 아쉬워요 — 같이 다양하게 먹고 새 맛집을 발견하려고 와요.',needs:'같이 먹을 사람 · 맛집 정보 · 부담 없는 더치 · 다양한 메뉴',leave:'비용 부담 · 취향 안 맞음 · 어색함',action:'1인 비용 명시 · 메뉴 다양화 · 소규모 · 후기·사진 공유'},
+  '카페/브런치':{emoji:'☕',motive:'감성 공간에서 같이 수다 떨고 힐링하려고 와요.',needs:'편한 대화 · 예쁜 공간 · 부담 없는 만남 · 취향 공유',leave:'어색함 · 대화 안 통함 · 너무 큰 인원',action:'소규모 · 가벼운 주제 · 감성 카페 큐레이션 · 사진 공유'},
+  '요리/베이킹':{emoji:'🍳',motive:'혼자 하면 재료 남고 심심해요 — 같이 만드는 재미가 목적이에요.',needs:'레시피 공유 · 같이 만드는 재미 · 결과물 나눔 · 비용 분담',leave:'재료비 부담 · 실력 차 · 장소 문제',action:'재료 분담 · 초보 레시피 · 결과물 시식·공유 · 사진'},
+  '사진/영상':{emoji:'📷',motive:'같이 출사하고 피드백받으며 실력을 키우려고 와요.',needs:'출사 동행 · 작품 피드백 · 장비/보정 정보 · 모델·피사체',leave:'실력 차로 위축 · 장비 경쟁 · 피드백 부재',action:'초보 환영 · 작품 공유·칭찬 · 출사 정기화 · 보정 노하우'},
+  '그림/미술/공예':{emoji:'🎨',motive:'같이 그리는 동기로 취미를 지속하려고 와요.',needs:'함께하는 시간 · 작품 공유 · 재료/기법 정보 · 비평보다 격려',leave:'실력 비교 · 재료비 · 혼자 하는 느낌',action:'격려 문화 · 작품 전시 · 재료 공동구매 · 모각작(모여서 각자 작업)'},
+  '음악/악기':{emoji:'🎵',motive:'합주하고 같이 연주하며 실력을 나누려고 와요.',needs:'합주 기회 · 비슷한 실력 · 공연/발표 · 장비·곡 정보',leave:'실력 차 · 연습 부담 · 합주 기회 적음',action:'파트·레벨 매칭 · 정기 합주 · 미니 공연 · 곡 미리 공유'},
+  '보드게임':{emoji:'🎲',motive:'같이 놀 사람과 새 게임 경험을 원해서 와요.',needs:'인원 모으기 · 다양한 게임 · 룰 설명 · 가벼운 분위기',leave:'승부욕 과열 · 룰 설명 부족 · 초보 소외',action:'초보 게임부터 · 룰 친절히 · 승부보다 재미 · 게임 다양화'},
+  '반려동물':{emoji:'🐾',motive:'양육 정보 공유와 같이 산책, 공감대가 목적이에요.',needs:'양육 정보 · 산책 메이트 · 공감 · 동반 가능 장소 정보',leave:'견종/크기 차 · 매너 문제 · 정보 없이 광고만',action:'견종/크기별 모임 · 매너 룰 · 산책 정기화 · 정보·고민 나눔'},
+  '동네친구/사교':{emoji:'🤝',motive:'동네 친구와 소속감, 외로움 해소가 목적이에요.',needs:'편한 친목 · 정기 만남 · 소속감 · 부담 없는 관계',leave:'어색함 · 끼리끼리 문화 · 목적 불분명',action:'신입 환영 의식 · 정기 루틴 · 소규모로 시작 · 공통 관심 활동'},
+  '가족/육아':{emoji:'👶',motive:'육아 정보 공유와 공감, 또래 양육자를 만나려고 와요.',needs:'육아 정보 · 공감·하소연 · 또래 아이 친구 · 동네 정보',leave:'비교·경쟁 · 광고성 · 시간 안 맞음',action:'비교 자제 문화 · 정보 나눔 · 아이 동반 모임 · 시간대 배려'},
+};
+
+(function(){
+  const chipWrap = document.getElementById('catChips');
+  Object.keys(CAT_NEEDS).forEach(function(k){
+    const b = document.createElement('button');
+    b.textContent = CAT_NEEDS[k].emoji + ' ' + k;
+    b.setAttribute('data-cat', k);
+    b.style.cssText = 'display:inline-flex;align-items:center;gap:5px;padding:8px 15px;border-radius:99px;border:2px solid #e5e7eb;background:#f9fafb;font-size:0.8rem;font-weight:700;color:#555;cursor:pointer;transition:all 0.18s;font-family:inherit;';
+    b.onclick = function(){ showCatNeeds(k, b); };
+    chipWrap.appendChild(b);
+  });
+})();
+
+function showCatNeeds(key, el){
+  document.querySelectorAll('#catChips button').forEach(function(b){
+    b.style.background='#f9fafb'; b.style.borderColor='#e5e7eb'; b.style.color='#555';
+  });
+  el.style.background='#ede9fe'; el.style.borderColor='#a78bfa'; el.style.color='#5b21b6';
+  const d = CAT_NEEDS[key];
+  const block = function(icon,label,color,bg,text){
+    return '<div style="display:flex;gap:11px;align-items:flex-start;background:'+bg+';border-radius:12px;padding:13px 15px;">'
+      +'<div style="font-size:1.15rem;line-height:1.2;flex-shrink:0;">'+icon+'</div>'
+      +'<div><div style="font-size:0.74rem;font-weight:800;color:'+color+';margin-bottom:4px;letter-spacing:0.02em;">'+label+'</div>'
+      +'<div style="font-size:0.82rem;color:#444;line-height:1.65;">'+text+'</div></div></div>';
+  };
+  document.getElementById('catNeedsResult').style.cssText='font-size:0.84rem;';
+  document.getElementById('catNeedsResult').innerHTML =
+    '<div style="font-size:1.02rem;font-weight:800;color:#5b21b6;margin-bottom:13px;">'+d.emoji+' '+key+' 모임 멤버는…</div>'
+    +'<div style="display:grid;gap:9px;">'
+    + block('🎯','왜 오는가 (동기)','#7c3aed','#f5f3ff', d.motive)
+    + block('💡','진짜 원하는 것 (니즈)','#2563eb','#eff6ff', d.needs)
+    + block('🚪','왜 떠나는가 (이탈)','#dc2626','#fef2f2', d.leave)
+    + block('✅','모임장이 할 일 (액션)','#16a34a','#f0fdf4', d.action)
+    +'</div>';
+}
+</script>
+
 <!-- ───────────── FRAME 1 ───────────── -->
 <div class="section-title">FRAME 01 · 가입 동기 3분류</div>
 <div class="banner-card" id="card1">
