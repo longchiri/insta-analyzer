@@ -906,6 +906,16 @@
       </label>
       <input type="number" id="totalSchedules" placeholder="예: 30" min="0"/>
     </div>
+    <div class="form-group">
+      <label>마지막 활동 (며칠 전)
+        <span class="info-wrap">
+          <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
+          <span class="info-tooltip"><span class="tooltip-where">📍 당근앱 → 모임 → 일정·게시판 탭 → 가장 최근 글/일정 날짜</span>대전 실측: 상위10% 6일 이내 vs 하위 120일</span>
+        </span>
+        <span class="tip">가장 최근 일정·게시글이 며칠 전?</span>
+      </label>
+      <input type="number" id="lastActivityDays" placeholder="예: 3" min="0"/>
+    </div>
   </div>
 </div>
 
@@ -1264,6 +1274,11 @@
     <div id="ghostContent"></div>
   </div>
 
+  <!-- 노출 진단 (실측 랭크 기반) -->
+  <div class="result-card" id="exposureDiagCard" data-part="benchmark" style="display:none;">
+    <div id="exposureDiagBody"></div>
+  </div>
+
   <!-- 카테고리 내 순위 & 경쟁 현황 -->
   <div class="result-card" id="rankCard" data-part="benchmark" style="display:none;"></div>
 
@@ -1353,7 +1368,7 @@
 
 <footer>
   <p>by <b style="color:#ff4628;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 4.0.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 4.1.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1506,6 +1521,7 @@ function analyze() {
   const challengeYn    = document.getElementById('challengeYn').value;
   const slotFillRate   = parseInt(document.getElementById('slotFillRate').value) || 0;
   const totalSchedules = parseInt(document.getElementById('totalSchedules').value) || 0;
+  const lastActivityDays = parseInt((document.getElementById('lastActivityDays')||{}).value) || -1;
 
   // 섹션 7 — 추가 노출 채널
   const photoCount   = parseInt(document.getElementById('photoCount').value) || 0;
@@ -3160,6 +3176,7 @@ function analyze() {
 
   // ── 👻 유령모임 진단 ──
   renderGhostDiagnosis(category, postCount, scheduleType, meetingFreq, totalSchedules, memberCount);
+  renderRankDiagnosis(memberCount, totalSchedules, attendRate, lastActivityDays);
 
   // ── 카테고리 내 순위 추정 ──
   renderCategoryRank(total, CAT_MAP[category] || '');
@@ -3186,6 +3203,79 @@ function analyze() {
 // ══════════════════════════════════════════════════
 // 📊 실제 데이터 벤치마크 비교
 // ══════════════════════════════════════════════════
+// ── 노출 진단 (대전 2,200개 실측 랭크 기반 · 전국 데이터로 갱신 예정) ──
+function renderRankDiagnosis(members, totalSchedules, attendRate, lastActivityDays) {
+  const card = document.getElementById('exposureDiagCard');
+  const el = document.getElementById('exposureDiagBody');
+  if (!card || !el) return;
+
+  const TINFO = {
+    4:{label:'상위 10%', color:'#16a34a', bg:'#f0fdf4'},
+    3:{label:'상위 30%', color:'#22c55e', bg:'#f0fdf4'},
+    2:{label:'중위',     color:'#f59e0b', bg:'#fffbeb'},
+    1:{label:'하위',     color:'#ef4444', bg:'#fef2f2'},
+  };
+  function tierHigh(v, t){ return v>=t[0]?4 : v>=t[1]?3 : v>=t[2]?2 : 1; }
+  function tierRecency(d, t){ return d<=t[0]?4 : d<=t[1]?3 : d<=t[2]?2 : 1; }
+
+  const factors = [
+    {name:'최근 활동 (최신성)', icon:'⏱️', w:0.32, val:lastActivityDays, unit:'일 전', skip:lastActivityDays<0,
+     tier: lastActivityDays<0?0:tierRecency(lastActivityDays,[6,30,60]),
+     refs:'상위10% 6일 · 상위30% 30일 · 하위 120일',
+     action:'지금 바로 일정·게시글을 올리세요. 당근은 최근 활동한 모임을 우선 노출해요 — 상위10%는 6일 이내 활동.'},
+    {name:'누적 일정 횟수', icon:'📅', w:0.24, val:totalSchedules, unit:'회',
+     tier:tierHigh(totalSchedules,[11,2,1]),
+     refs:'상위10% 11회 · 상위30% 2회 · 하위 0회',
+     action:'일정을 더 자주 여세요. 상위10% 진입의 가장 큰 갈림길 — 매주 정기 일정이 노출의 핵심이에요.'},
+    {name:'참여율', icon:'🙋', w:0.22, val:attendRate, unit:'%',
+     tier:tierHigh(attendRate,[50,25,2]),
+     refs:'상위10% 50% · 상위30% 25% · 중위 2%',
+     action:'실제 참여를 끌어올리세요 — 전날 리마인드 + 소수 확정 인원제로 노쇼를 줄이면 참여율이 올라가요.'},
+    {name:'멤버 수', icon:'👥', w:0.22, val:members, unit:'명',
+     tier:tierHigh(members,[40,22,10]),
+     refs:'상위10% 40명 · 상위30% 22명 · 하위 8명',
+     action:'멤버는 활동의 결과예요. 위 항목(활동·일정·참여)을 살리면 자연 유입으로 함께 늘어나요.'},
+  ];
+
+  const active = factors.filter(f=>!f.skip);
+  const wsum = active.reduce((s,f)=>s+f.w,0);
+  const score = active.reduce((s,f)=>s+f.tier*f.w,0)/wsum;  // 1~4
+  let g;
+  if (score>=3.5) g={label:'🏆 상위 10% 노출 경쟁력', color:'#16a34a', desc:'알고리즘이 적극 노출할 조건을 갖췄어요. 지금 페이스를 유지하세요.'};
+  else if (score>=2.7) g={label:'🥈 상위 30% 수준', color:'#22c55e', desc:'경쟁력은 있어요. 약한 항목 1~2개만 보강하면 상위권 진입이 가능해요.'};
+  else if (score>=1.8) g={label:'📌 중위권', color:'#f59e0b', desc:'노출이 제한적이에요. 아래 보강 포인트부터 실행하면 빠르게 올라가요.'};
+  else g={label:'⚠️ 노출 부족', color:'#ef4444', desc:'지금은 거의 노출되지 않는 상태예요. 활동 살리기가 1순위예요.'};
+
+  const strong = active.filter(f=>f.tier>=3);
+  const weak = active.filter(f=>f.tier<=2).sort((a,b)=>b.w-a.w);
+
+  const valStr = f => f.unit==='일 전' ? (f.val+'일 전') : (f.val+f.unit);
+  const rows = active.map(f=>{
+    const t=TINFO[f.tier];
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:'+t.bg+';border-radius:11px;margin-bottom:7px;">'
+      +'<span style="font-size:1.1rem;">'+f.icon+'</span>'
+      +'<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:0.85rem;color:#333;">'+f.name+'</div>'
+      +'<div style="font-size:0.72rem;color:#999;">'+f.refs+'</div></div>'
+      +'<div style="text-align:right;flex-shrink:0;"><div style="font-weight:800;font-size:0.9rem;color:#333;">'+valStr(f)+'</div>'
+      +'<span style="font-size:0.72rem;font-weight:800;color:'+t.color+';">'+t.label+'</span></div></div>';
+  }).join('');
+
+  card.style.display='block';
+  el.innerHTML =
+    '<h2>📍 노출 진단 <span style="font-size:0.7rem;font-weight:400;color:#94a3b8;">대전 2,200개 실측 랭크 기반</span></h2>'
+    + '<div style="background:'+g.color+'14;border:1.5px solid '+g.color+'55;border-radius:13px;padding:14px 16px;margin-bottom:14px;">'
+      + '<div style="font-weight:800;font-size:1rem;color:'+g.color+';margin-bottom:4px;">'+g.label+'</div>'
+      + '<div style="font-size:0.82rem;color:#555;line-height:1.6;">'+g.desc+'</div></div>'
+    + '<div style="font-weight:700;font-size:0.8rem;color:#666;margin-bottom:8px;">항목별 위치 (노출 요인 강→약 순)</div>'
+    + rows
+    + (lastActivityDays<0 ? '<div style="font-size:0.74rem;color:#f59e0b;margin-top:8px;">⏱️ "마지막 활동" 일수를 입력하면 가장 중요한 최신성까지 진단돼요.</div>' : '')
+    + (strong.length ? ('<div style="margin-top:14px;padding:11px 13px;background:#f0fdf4;border-radius:10px;"><strong style="color:#16a34a;font-size:0.82rem;">💪 강세</strong><div style="font-size:0.8rem;color:#444;margin-top:4px;line-height:1.6;">'+strong.map(f=>f.name).join(' · ')+' — 잘하고 있어요. 유지하세요.</div></div>') : '')
+    + (weak.length ? ('<div style="margin-top:9px;padding:11px 13px;background:#fef2f2;border-radius:10px;"><strong style="color:#ef4444;font-size:0.82rem;">🔧 보강 포인트 (중요도 순)</strong><div style="margin-top:6px;display:grid;gap:8px;">'
+        + weak.map(f=>'<div style="font-size:0.8rem;color:#444;line-height:1.6;"><strong style="color:#dc2626;">'+f.icon+' '+f.name+'</strong><br>'+f.action+'</div>').join('')
+        + '</div></div>') : '<div style="margin-top:9px;font-size:0.82rem;color:#16a34a;">✅ 약점 없음 — 모든 노출 요인이 상위권이에요!</div>')
+    + '<div style="margin-top:12px;font-size:0.72rem;color:#aaa;text-align:right;">※ 대전 실측 잠정 기준 · 전국 데이터 수집 완료 시 카테고리별로 정밀 갱신</div>';
+}
+
 function renderGhostDiagnosis(category, postCount, scheduleType, meetingFreq, totalSchedules, memberCount) {
   const card = document.getElementById('ghostCard');
   const el   = document.getElementById('ghostContent');
