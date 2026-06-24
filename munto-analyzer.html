@@ -727,6 +727,9 @@
     <div class="result-card munto-res" data-part="data" id="t-bench-card" style="display:none;">
       <div id="t-bench-body"></div>
     </div>
+    <div class="result-card munto-res" data-part="data" id="t-rankdiag-card" style="display:none;">
+      <div id="t-rankdiag-body"></div>
+    </div>
 
     <!-- 📊 실데이터 기반 상위노출 가이드 (2026.06 실측) -->
     <div class="result-card munto-res" data-part="data">
@@ -795,7 +798,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.0.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.1.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -937,6 +940,48 @@ const MUNTO_BENCH = {
 const MUNTO_CMAP = {'사진':'사진','독서':'독서','미술':'드로잉','아트':'드로잉','공예':'드로잉'};
 // 전역 노출순위 ↔ 최근대화 경과 (실측, Spearman 1.000)
 const MUNTO_RECENCY = '상위 10% = 최근 대화 15시간 이내 · 상위 35% = 12일 이내 · 상위 50% = 30일 이내 · 하위권 = 51일+';
+
+// ── 문토 노출진단 (실측: 최근 대화 활동 상관 0.996 > 피드 > 멤버 > 참여율) ──
+function renderMuntoRankDiag(activity, content, members, attend) {
+  const card=document.getElementById('t-rankdiag-card');
+  const el=document.getElementById('t-rankdiag-body');
+  if(!card||!el) return;
+  const hi=(v,t)=>v>=t[0]?4:v>=t[1]?3:v>=t[2]?2:1;
+  const F=[
+    {n:'최근 활동(액티비티)',i:'⏱️',w:0.40,tier:hi(activity,[4,2,1]),val:activity+'회/월',
+     refs:'상위10% 4회+ · 상위30% 2회 · 0회 휴면',
+     act:'매주 액티비티(소셜링·모임)를 열어 "최근 활동"을 유지하세요. 문토 노출은 대화 최신성이 거의 전부(상관 0.996)예요.'},
+    {n:'피드(콘텐츠)',i:'📝',w:0.25,tier:hi(content,[8,4,2]),val:content+'개/월',
+     refs:'상위10% 8개 · 상위30% 4개 · 중위 2개',
+     act:'주 2회 이상 피드 글(공지·후기·사진)로 클럽이 살아있다는 신호를 주세요.'},
+    {n:'멤버 수',i:'👥',w:0.20,tier:hi(members,[90,40,20]),val:members+'명',
+     refs:'상위10% 90명 · 상위30% 40명 · 하위 20명-',
+     act:'멤버는 활동의 결과예요. 액티비티·피드를 살리면 자연 유입으로 함께 늘어나요.'},
+    {n:'참여율',i:'🙋',w:0.15,tier:hi(attend,[60,40,20]),val:attend+'%',
+     refs:'상위10% 60% · 상위30% 40% · 중위 20%',
+     act:'전날 리마인드 + 소수 확정 인원제로 노쇼를 줄여 참여율을 끌어올리세요.'},
+  ];
+  muntoDiagRender(card, el, F, '클럽 799·소셜링 1,216개');
+}
+
+function muntoDiagRender(card, el, F, basis){
+  const T={4:{l:'상위 10%',c:'#16a34a',b:'#f0fdf4'},3:{l:'상위 30%',c:'#22c55e',b:'#f0fdf4'},2:{l:'중위',c:'#f59e0b',b:'#fffbeb'},1:{l:'하위',c:'#ef4444',b:'#fef2f2'}};
+  const act=F.filter(f=>!f.skip), ws=act.reduce((s,f)=>s+f.w,0);
+  const score=act.reduce((s,f)=>s+f.tier*f.w,0)/ws;
+  let g;
+  if(score>=3.5)g={l:'🏆 상위 10% 노출 경쟁력',c:'#16a34a',d:'알고리즘이 적극 노출할 조건을 갖췄어요. 지금 페이스를 유지하세요.'};
+  else if(score>=2.7)g={l:'🥈 상위 30% 수준',c:'#22c55e',d:'경쟁력은 있어요. 약한 항목 1~2개만 보강하면 상위권 진입이 가능해요.'};
+  else if(score>=1.8)g={l:'📌 중위권',c:'#f59e0b',d:'노출이 제한적이에요. 아래 보강 포인트부터 실행하면 빠르게 올라가요.'};
+  else g={l:'⚠️ 노출 부족',c:'#ef4444',d:'지금은 거의 노출되지 않는 상태예요. 활동 살리기가 1순위예요.'};
+  const strong=act.filter(f=>f.tier>=3), weak=act.filter(f=>f.tier<=2).sort((a,b)=>b.w-a.w);
+  const rows=act.map(f=>{const t=T[f.tier];return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:'+t.b+';border-radius:11px;margin-bottom:7px;"><span style="font-size:1.1rem;">'+f.i+'</span><div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:0.85rem;color:#333;">'+f.n+'</div><div style="font-size:0.72rem;color:#999;">'+f.refs+'</div></div><div style="text-align:right;flex-shrink:0;"><div style="font-weight:800;font-size:0.9rem;color:#333;">'+f.val+'</div><span style="font-size:0.72rem;font-weight:800;color:'+t.c+';">'+t.l+'</span></div></div>';}).join('');
+  card.style.display='block';
+  el.innerHTML='<h2>📍 노출 진단 <span style="font-size:0.7rem;font-weight:400;color:#94a3b8;">'+basis+' 실측 기반</span></h2>'
+    +'<div style="background:'+g.c+'14;border:1.5px solid '+g.c+'55;border-radius:13px;padding:14px 16px;margin-bottom:14px;"><div style="font-weight:800;font-size:1rem;color:'+g.c+';margin-bottom:4px;">'+g.l+'</div><div style="font-size:0.82rem;color:#555;line-height:1.6;">'+g.d+'</div></div>'
+    +'<div style="font-weight:700;font-size:0.8rem;color:#666;margin-bottom:8px;">항목별 위치 (노출 요인 강→약 순)</div>'+rows
+    +(strong.length?('<div style="margin-top:14px;padding:11px 13px;background:#f0fdf4;border-radius:10px;"><strong style="color:#16a34a;font-size:0.82rem;">💪 강세</strong><div style="font-size:0.8rem;color:#444;margin-top:4px;line-height:1.6;">'+strong.map(f=>f.n).join(' · ')+' — 잘하고 있어요. 유지하세요.</div></div>'):'')
+    +(weak.length?('<div style="margin-top:9px;padding:11px 13px;background:#fef2f2;border-radius:10px;"><strong style="color:#ef4444;font-size:0.82rem;">🔧 보강 포인트 (중요도 순)</strong><div style="margin-top:6px;display:grid;gap:8px;">'+weak.map(f=>'<div style="font-size:0.8rem;color:#444;line-height:1.6;"><strong style="color:#dc2626;">'+f.i+' '+f.n+'</strong><br>'+f.act+'</div>').join('')+'</div></div>'):'<div style="margin-top:9px;font-size:0.82rem;color:#16a34a;">✅ 약점 없음 — 모든 노출 요인이 상위권이에요!</div>');
+}
 
 function renderMuntoBenchmark(formCat, members, activity, content, attend) {
   const card = document.getElementById('t-bench-card');
@@ -1547,6 +1592,7 @@ function analyzeMunto() {
   document.getElementById('t-roadmap').innerHTML = roadmapHtml(roads, 'munto');
   renderGhostClub(activity, content, reaction, members);
   renderMuntoBenchmark((document.getElementById('t-category')||{}).value||'', members, activity, content, attend);
+  renderMuntoRankDiag(activity, content, members, attend);
   renderSNSKit('t-sns-kit', 'munto');
 
   showMuntoResultView();
