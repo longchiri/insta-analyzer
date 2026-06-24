@@ -1430,6 +1430,11 @@ function setPartFilter(part, btn) {
     <div id="diffusionStageSection"></div>
   </div>
 
+  <!-- 유령 계정 진단 -->
+  <div class="result-card" id="insta-ghost-card" data-part="overview" style="display:none;">
+    <div id="insta-ghost-body"></div>
+  </div>
+
   <!-- Hidden Score -->
   <div class="result-card" data-part="overview">
     <h2>🔒 계정 신뢰도 (Hidden Score)</h2>
@@ -1550,7 +1555,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.0.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.1.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -2839,6 +2844,45 @@ function renderAIDiagInsta(total, erScore, ssScore, grScore, conScore) {
 // ══════════════════════════════════════════════════
 // 🎯 알고리즘 노출 게이지 (인스타)
 // ══════════════════════════════════════════════════
+// ── 인스타 유령 계정 진단 (유령 팔로워 / 저활성 계정) ──
+function renderInstaGhost(D) {
+  const card = document.getElementById('insta-ghost-card');
+  const el = document.getElementById('insta-ghost-body');
+  if (!card || !el) return;
+  if (!D || !D.followers || !D.avgLikes) { card.style.display = 'none'; return; }
+  const er = D.engagementRate || 0;                 // 참여율 %
+  const wp = (typeof D.weeklyPosts === 'number') ? D.weeklyPosts : -1;  // 주간 게시
+  const fr = (D.followers > 0 && D.avgReach > 0) ? (D.avgReach / D.followers * 100) : -1; // 도달률 %
+  const dormant = (wp >= 0 && wp < 1);
+  let color, bg, emoji, title, sub, action;
+  if (er < 1 && (dormant || (fr >= 0 && fr < 15))) {
+    color = '#ef4444'; bg = '#fef2f2'; emoji = '🚨';
+    title = '유령 계정 위험 — 팔로워가 잠들었어요';
+    sub = '참여율 ' + er.toFixed(1) + '%로 매우 낮아요. 팔로워 수 대비 좋아요·댓글이 거의 없어, "유령 팔로워"가 많거나 계정 활동이 멈춘 상태예요.'
+        + (dormant ? ' 게시 빈도도 거의 없어요.' : '')
+        + (fr >= 0 && fr < 15 ? ' 도달률도 ' + fr.toFixed(0) + '%로 낮아 노출이 막힌 신호예요.' : '');
+    action = '① 잠든 팔로워를 깨우는 콘텐츠(질문·투표 스토리, 댓글 유도)로 상호작용부터 늘리고 ② 주 3회 이상 꾸준히 게시하세요. 유령 팔로워가 많으면 참여하는 팔로워로 전환하거나 정리해야 알고리즘 노출이 살아나요.';
+  } else if (er < 2 || dormant) {
+    color = '#f97316'; bg = '#fff7ed'; emoji = '⚠️';
+    title = '저활성 — 유령화 진행 중';
+    sub = '참여율 ' + er.toFixed(1) + '%' + (dormant ? ' · 게시 빈도 낮음' : '') + '. 팔로워가 점점 비활성으로 굳고 있어요. 이대로면 도달이 계속 줄어요.';
+    action = '고정 게시 요일을 정해 주 3회 이상 올리고, 릴스+스토리로 상호작용을 끌어올리세요. 저장·공유를 부르는 정보형 콘텐츠가 참여율 회복에 가장 효과적이에요.';
+  } else {
+    color = '#22c55e'; bg = '#f0fdf4'; emoji = '✅';
+    title = '활성 계정 — 유령 위험 없음';
+    sub = '참여율 ' + er.toFixed(1) + '%로 팔로워가 살아있어요' + (fr >= 0 ? ' (도달률 ' + fr.toFixed(0) + '%)' : '') + '. 상호작용이 건강해요.';
+    action = '지금 페이스를 유지하면서 잘 되는 콘텐츠 유형을 반복하고, 비팔로워 도달을 늘려 성장에 집중하세요.';
+  }
+  card.style.display = 'block';
+  el.innerHTML = '<h2>👻 유령 계정 진단</h2>'
+    + '<div style="background:' + bg + ';border:1.5px solid ' + color + '55;border-radius:14px;padding:16px 16px 14px;">'
+      + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="font-size:1.8rem;line-height:1;">' + emoji + '</div>'
+      + '<div style="font-weight:800;font-size:0.98rem;color:' + color + ';">' + title + '</div></div>'
+      + '<div style="font-size:0.83rem;color:#555;line-height:1.7;">' + sub + '</div>'
+      + '<div style="margin-top:12px;padding:11px 13px;background:' + color + '14;border-radius:10px;font-size:0.82rem;color:#333;line-height:1.65;"><strong style="color:' + color + ';">👉 지금 할 일</strong><br>' + action + '</div>'
+    + '</div>';
+}
+
 function renderAlgoGaugeInsta(total) {
   let fillPct, tierIdx, tierPctLabel;
   if (total >= 75)      { fillPct = 85 + (total - 75) * 0.6; tierIdx = 3; tierPctLabel = '상위 10%'; }
@@ -3079,6 +3123,7 @@ function analyze() {
   // 🤖 AI 종합 진단 + 🎯 알고리즘 노출 예측
   renderAIDiagInsta(total, erScore, ssScore, grScore, conScore);
   renderAlgoGaugeInsta(total);
+  renderInstaGhost(D);
 
   // 세부 점수 4칸
   document.getElementById('subScoreGrid').innerHTML = [
