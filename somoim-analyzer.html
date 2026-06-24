@@ -2180,7 +2180,17 @@ function renderMoimBenchmark(formCat, city) {
   const card = document.getElementById('m-bench-card');
   const body = document.getElementById('m-bench-body');
   if (!card || !body) return;
-  if (!city) { card.style.display = 'none'; return; }
+  if (!city) {
+    card.style.display = 'block';
+    body.innerHTML = '<h2>📊 내 모임 vs 같은 지역 인기 모임</h2>'
+      + '<div style="background:#f0fdf4;border:1.5px solid #22c55e55;border-radius:14px;padding:18px 16px;text-align:center;">'
+      + '<div style="font-size:1.6rem;margin-bottom:8px;">📍</div>'
+      + '<div style="font-weight:800;color:#16a34a;font-size:0.95rem;margin-bottom:6px;">지역(시/도)을 선택하면 실제 비교가 나와요</div>'
+      + '<div style="font-size:0.84rem;color:#555;line-height:1.7;">위 입력 폼의 <strong>지역(시/도)</strong> 칸을 고르면, 그 지역의 같은 카테고리 인기 모임들과 '
+      + '<strong>멤버 수·업데이트 최신성·예상 노출순위</strong>를 비교해 드려요. (전국 5,473개 실측 기준)</div>'
+      + '</div>';
+    return;
+  }
 
   const lastUpdateVal = (document.getElementById('m-last-update') || {}).value || '';
   const myMembers = parseInt((document.getElementById('m-members') || {}).value) || 0;
