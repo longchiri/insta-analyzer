@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.longchiri.daangn-national</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>PYTHON_PATH</string>
+    <string>TRACKER_PATH/daangn_national_tracker.py</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>TRACKER_PATH</string>
+  <!-- 매일 새벽 4시 (전국은 여러 밤에 걸쳐 이어받음). 월요일 패널 작업과 시간차 -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>4</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>StandardOutPath</key>
+  <string>TRACKER_PATH/tracker-daangn-national.log</string>
+  <key>StandardErrorPath</key>
+  <string>TRACKER_PATH/tracker-daangn-national-error.log</string>
+</dict>
+</plist>

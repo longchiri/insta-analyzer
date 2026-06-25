@@ -33,5 +33,25 @@ crawler_log.txt
 *.png
 daangn_detail_progress.xlsx
 
+# ── 소모임 크롤러 (깃허브 업로드 금지!) ───────────────────
+somoim/소모임_크롤러.py
+somoim/소모임_마스터.xlsx
+somoim/소모임_리포트_*.html
+somoim/소모임_체크포인트.json
+somoim/소모임_크롤러_로그.txt
+somoim/소모임_API_탐색.py
+somoim/소모임_API_탐색2.py
+somoim/소모임_API_탐색_결과.txt
+somoim/소모임_API_상세.json
+somoim/소모임_API_로그.json
+somoim/소모임_카테고리코드.json
+somoim/소모임_크롤러.pid
+
+# ── 인스타 크롤러 (깃허브 업로드 금지!) ──────────────────
+insta/인스타_크롤러.py
+insta/인스타_해시태그_데이터.json
+insta/인스타_크롤러_체크포인트.json
+insta/인스타_크롤러_로그.txt
+
 # ── Claude 내부 폴더 ────────────────────────────────────
 .claude/

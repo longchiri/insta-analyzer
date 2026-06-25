@@ -924,7 +924,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.1.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.2.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -2096,6 +2096,7 @@ function renderAIDiagGeneric(total,scores,labels,emojiId,nameId,scoreLineId,twId
   if(tagsEl)tagsEl.innerHTML=allTags.slice(0,6).map(t=>`<span class="ai-tag">${t}</span>`).join('');
 }
 function renderAlgoGaugeGeneric(total,fillId,pctId,tierIds,activeClass){
+  if(window.MyRecord){try{MyRecord.note(total);}catch(e){}}
   let fillPct,tierIdx,tierLabel;
   if(total>=75){fillPct=85+(total-75)*0.6;tierIdx=3;tierLabel='상위 10%';}
   else if(total>=55){fillPct=55+(total-55)*1.5;tierIdx=2;tierLabel='상위 25%';}
@@ -2736,6 +2737,25 @@ function setPartFilter(part, btn){
     var top=w.getBoundingClientRect().top+window.scrollY-nh-8;
     window.scrollTo({top:top,behavior:'smooth'}); }
 }
+</script>
+<script>
+/* 내 기록 추적 (localStorage) — 분석 점수 저장 + 추이 */
+(function(){
+  var APP="somoim", CONT="moim-result", KEY="lc_rec_"+APP, last=null;
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+  function save(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+  function today(){var d=new Date();return d.getFullYear()+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+("0"+d.getDate()).slice(-2);}
+  function card(){var c=document.getElementById("myrec-card");if(c)return c;var h=document.getElementById(CONT);if(!h)return null;c=document.createElement("div");c.id="myrec-card";c.style.cssText="margin-top:18px;background:#fff;border:1.5px solid #e8ecef;border-radius:16px;padding:18px 20px;";h.appendChild(c);return c;}
+  function spark(rows){if(rows.length<2)return"";var vals=rows.map(function(r){return r.s;}),mn=Math.min.apply(0,vals),mx=Math.max.apply(0,vals),rg=mx-mn||1,W=Math.max(rows.length-1,1);var pts=rows.map(function(r,i){var x=(i/W)*100,y=24-((r.s-mn)/rg)*22-1;return x.toFixed(1)+","+y.toFixed(1);}).join(" ");return '<svg viewBox="0 0 100 24" preserveAspectRatio="none" style="width:100%;height:36px;margin:6px 0 2px;"><polyline points="'+pts+'" fill="none" stroke="#ff4628" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>';}
+  function render(){var c=card();if(!c)return;var rows=load(),body,best=rows.length?Math.max.apply(0,rows.map(function(r){return r.s;})):null;
+    if(!rows.length){body='<p style="color:#94a3b8;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 내 점수 변화를 추적할 수 있어요.</p>';}
+    else{body=spark(rows)+'<div>'+rows.slice(-8).map(function(r,i,arr){var prev=i>0?arr[i-1].s:null,dv=prev==null?null:r.s-prev;var arrow=dv==null?"":(dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#aaa;">–</span>'));var crown=r.s===best?" 👑":"";return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.84rem;border-bottom:1px solid #f4f6f8;padding:6px 0;"><span style="color:#64748b;">'+r.d+'</span><span style="font-weight:800;">'+r.s+'점'+crown+' '+arrow+'</span></div>';}).join("")+'</div>';}
+    var can=last!=null;
+    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#cbd5e1;font-size:0.74rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#94a3b8")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+last+"점)":"먼저 분석을 실행하세요")+'</button>';
+    var sb=document.getElementById("myrec-save");if(sb&&can)sb.onclick=function(){var a=load(),t=today();if(a.length&&a[a.length-1].d===t)a[a.length-1].s=last;else a.push({d:t,s:last});if(a.length>30)a.shift();save(a);render();};
+    var cb=document.getElementById("myrec-clr");if(cb)cb.onclick=function(){if(confirm("내 기록을 모두 삭제할까요?")){save([]);render();}};}
+  window.MyRecord={note:function(s){last=Math.round(s);render();}};
+})();
 </script>
 </body>
 </html>

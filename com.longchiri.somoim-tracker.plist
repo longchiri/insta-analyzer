@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.longchiri.somoim-tracker</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>PYTHON_PATH</string>
+    <string>TRACKER_PATH/somoim_tracker.py</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>TRACKER_PATH</string>
+  <!-- 매주 월요일 새벽 1시 (빠름) -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>1</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>StandardOutPath</key>
+  <string>TRACKER_PATH/tracker-somoim.log</string>
+  <key>StandardErrorPath</key>
+  <string>TRACKER_PATH/tracker-somoim-error.log</string>
+</dict>
+</plist>

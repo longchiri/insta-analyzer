@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- 서비스 이름 -->
+  <key>Label</key>
+  <string>com.longchiri.daangn-tracker</string>
+
+  <!-- 실행 명령 — 경로는 install-tracker.sh 가 자동으로 치환합니다 -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>PYTHON_PATH</string>
+    <string>TRACKER_PATH/daangn_rank_tracker.py</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>TRACKER_PATH</string>
+
+  <!-- 실행 시각: 매주 월요일 새벽 3시 (인터넷 가장 안정적인 시간대) -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>3</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <!-- 백그라운드 우선순위 -->
+  <key>ProcessType</key>
+  <string>Background</string>
+
+  <!-- 로그 -->
+  <key>StandardOutPath</key>
+  <string>TRACKER_PATH/tracker.log</string>
+  <key>StandardErrorPath</key>
+  <string>TRACKER_PATH/tracker-error.log</string>
+</dict>
+</plist>

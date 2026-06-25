@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <link rel="icon" href="logo.png" type="image/png"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>플랫폼 추천 마법사 | Longchiri</title>
+  <meta name="description" content="내 모임·계정에 어떤 플랫폼이 노출 쉬운지 추천"/>
+  <style>
+    :root{ --red:#ff4628; --black:#202020; --steel-bg:#eef3f7; --steel-mid:#7a9bba; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;background:#f7f9fb;color:var(--black);
+      padding:40px 16px 80px;word-break:keep-all;-webkit-text-size-adjust:100%;}
+    .wrap{max-width:680px;margin:0 auto;}
+    header{text-align:center;margin-bottom:28px;}
+    .logo{display:inline-flex;align-items:center;gap:9px;margin-bottom:8px;}
+    .logo-icon{width:40px;height:40px;background:var(--black);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:3px 3px 0 var(--red);}
+    .logo-text{font-size:1.5rem;font-weight:900;background:linear-gradient(90deg,var(--black),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    h1{font-size:1.35rem;font-weight:900;margin-bottom:6px;}
+    .sub{color:var(--steel-mid);font-size:0.88rem;}
+    .q-card{background:#fff;border:1.5px solid #e8ecef;border-radius:16px;padding:20px 22px;margin-bottom:16px;}
+    .q-title{font-size:1rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .q-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:99px;background:var(--red);color:#fff;font-size:0.78rem;font-weight:800;}
+    .opts{display:grid;gap:9px;}
+    @media(min-width:520px){.opts{grid-template-columns:1fr 1fr;}}
+    .opt{padding:13px 15px;border:2px solid #e5e7eb;background:#fafbfc;border-radius:12px;font-size:0.86rem;font-weight:700;color:#555;cursor:pointer;transition:all .15s;text-align:left;font-family:inherit;}
+    .opt:hover{border-color:#ffb3a6;background:#fff8f3;}
+    .opt.sel{border-color:var(--red);background:#fff1ee;color:var(--red);}
+    .go{display:block;width:100%;margin-top:8px;padding:16px;border:none;border-radius:14px;background:var(--black);color:#fff;font-size:1rem;font-weight:800;cursor:pointer;transition:background .2s;font-family:inherit;}
+    .go:hover{background:var(--red);}
+    .go:disabled{background:#cbd5e1;cursor:not-allowed;}
+    #result{margin-top:26px;}
+    .res-card{background:#fff;border-radius:16px;padding:20px 22px;margin-bottom:14px;border:1.5px solid #e8ecef;position:relative;overflow:hidden;}
+    .res-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;}
+    .res-rank{font-size:0.72rem;font-weight:800;color:var(--steel-mid);letter-spacing:.05em;}
+    .res-head{display:flex;align-items:center;gap:11px;margin:6px 0 10px;}
+    .res-icon{font-size:1.9rem;}
+    .res-name{font-size:1.2rem;font-weight:900;}
+    .res-fit{margin-left:auto;font-size:0.78rem;font-weight:800;padding:4px 11px;border-radius:99px;}
+    .res-why{font-size:0.86rem;color:#555;line-height:1.7;}
+    .res-tip{margin-top:10px;font-size:0.8rem;color:#475569;background:#f8fafc;border-radius:10px;padding:10px 12px;line-height:1.6;}
+    .res-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:0.84rem;font-weight:800;color:#fff;padding:9px 18px;border-radius:99px;text-decoration:none;}
+    .home{display:block;text-align:center;margin-top:24px;}
+    .home a{color:var(--red);font-weight:700;font-size:0.85rem;text-decoration:none;}
+    .retry{display:block;margin:18px auto 0;padding:10px 22px;border:1.5px solid #e5e7eb;background:#fff;border-radius:99px;font-weight:700;color:#555;cursor:pointer;font-family:inherit;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><div class="logo-icon">🧭</div><span class="logo-text">Longchiri</span></div>
+    <h1>어디에 열어야 노출이 쉬울까?</h1>
+    <p class="sub">4가지만 고르면, 내게 맞는 플랫폼을 추천해드려요</p>
+  </header>
+
+  <div id="quiz"></div>
+  <button class="go" id="goBtn" disabled onclick="recommend()">🎯 추천 받기</button>
+
+  <div id="result"></div>
+  <div class="home"><a href="index.html">← 분석기 홈으로</a></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  { key:'goal', q:'무엇을 키우려고 하세요?', opts:[
+    {v:'community', t:'🤝 모임·커뮤니티 운영'},
+    {v:'content',   t:'📸 개인 계정·브랜드 콘텐츠'},
+    {v:'promo',     t:'📣 일회성 홍보·모집'},
+  ]},
+  { key:'target', q:'주요 타겟은 누구예요?', opts:[
+    {v:'local',    t:'🏘️ 우리 동네 사람'},
+    {v:'univ',     t:'🎓 대학생'},
+    {v:'2030',     t:'✨ 2030 전국'},
+    {v:'interest', t:'🌍 관심사 커뮤니티(전국)'},
+  ]},
+  { key:'activity', q:'핵심 활동은 무엇인가요?', opts:[
+    {v:'offline', t:'📅 오프라인 정모·모임'},
+    {v:'chat',    t:'💬 실시간 채팅·소통'},
+    {v:'visual',  t:'🎬 사진·영상 콘텐츠'},
+    {v:'info',    t:'📚 정보·글 공유'},
+  ]},
+  { key:'region', q:'주 활동 지역은? (선택)', opts:[
+    {v:'metro',    t:'🏙️ 서울·수도권'},
+    {v:'province', t:'🌳 지방'},
+  ]},
+];
+
+const PLAT = {
+  daangn:{name:'당근 모임',icon:'🥕',color:'#ff4628',link:'daangn-analyzer.html',
+    why:'동네 기반(하이퍼로컬)이라 우리 동네 오프라인 모임에 최강. 노출은 일정 개최·최근 활동이 좌우.'},
+  somoim:{name:'소모임',icon:'🌿',color:'#16a34a',link:'somoim-analyzer.html',
+    why:'관심사별 정기 모임의 본진. "1일 이내 업데이트"가 노출 관문이라 꾸준히만 하면 상위 노출 쉬움.'},
+  munto:{name:'문토',icon:'🔥',color:'#ff6a3d',link:'munto-analyzer.html',
+    why:'2030 트렌디한 소셜·클럽. 클럽은 최근 대화 활동이, 소셜링은 별점·승인제가 노출을 좌우.'},
+  kakao:{name:'카카오 오픈채팅',icon:'💬',color:'#caa600',link:'kakao-analyzer.html',
+    why:'익명·대규모 실시간 채팅 커뮤니티에 최적. 활성도(메시지·참여)가 노출의 핵심.'},
+  insta:{name:'인스타그램',icon:'📸',color:'#c0146a',link:'insta-analyzer.html',
+    why:'사진·영상 콘텐츠와 개인 브랜드에 최강. 해시태그·릴스·초기 반응 속도가 노출을 결정.'},
+  everytime:{name:'에브리타임',icon:'🎓',color:'#E53E3E',link:'everytime-analyzer.html',
+    why:'대학생 타겟 홍보의 정답. 학교별 게시판이라 타겟 학교만 정확히 노릴 수 있음.'},
+};
+
+// 답변 → 플랫폼 점수
+const SCORE = {
+  goal:{ community:{daangn:2,somoim:2,munto:2,kakao:2}, content:{insta:3}, promo:{everytime:2,insta:1,kakao:1} },
+  target:{ local:{daangn:3,somoim:1}, univ:{everytime:3,insta:1}, '2030':{munto:3,insta:1}, interest:{kakao:2,somoim:2,insta:1} },
+  activity:{ offline:{daangn:2,somoim:2,munto:2}, chat:{kakao:3}, visual:{insta:3}, info:{kakao:1,somoim:1,insta:1} },
+  region:{ metro:{}, province:{daangn:1,somoim:1} },
+};
+
+const answers = {};
+function buildQuiz(){
+  const wrap = document.getElementById('quiz');
+  QUESTIONS.forEach((Q,i)=>{
+    const card = document.createElement('div'); card.className='q-card';
+    card.innerHTML = '<div class="q-title"><span class="q-num">'+(i+1)+'</span>'+Q.q+'</div>';
+    const opts = document.createElement('div'); opts.className='opts';
+    Q.opts.forEach(o=>{
+      const b = document.createElement('button'); b.className='opt'; b.textContent=o.t;
+      b.onclick=()=>{
+        answers[Q.key]=o.v;
+        opts.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+        b.classList.add('sel');
+        document.getElementById('goBtn').disabled = !(answers.goal&&answers.target&&answers.activity);
+      };
+      opts.appendChild(b);
+    });
+    card.appendChild(opts); wrap.appendChild(card);
+  });
+}
+buildQuiz();
+
+function recommend(){
+  const score = {}; Object.keys(PLAT).forEach(k=>score[k]=0);
+  for(const key in answers){
+    const add = (SCORE[key]||{})[answers[key]] || {};
+    for(const p in add) score[p]+=add[p];
+  }
+  const ranked = Object.keys(PLAT).sort((a,b)=>score[b]-score[a]);
+  const max = score[ranked[0]] || 1;
+  const top = ranked.filter((k,i)=> i<3 && score[k]>0);
+
+  const medal=['🥇 1순위','🥈 2순위','🥉 3순위'];
+  let html = '<div style="font-size:1.05rem;font-weight:900;margin:6px 0 14px;text-align:center;">✨ 추천 결과</div>';
+  top.forEach((k,i)=>{
+    const P=PLAT[k]; const fit=Math.round(score[k]/max*100);
+    let tip='';
+    if((k==='daangn'||k==='somoim') && answers.region==='province')
+      tip='🌳 <strong>지방은 블루오션!</strong> 서울보다 경쟁 모임이 4~5배 적어서 같은 노력으로 상위 노출이 훨씬 쉬워요.';
+    else if((k==='daangn'||k==='somoim') && answers.region==='metro')
+      tip='🏙️ 서울·수도권은 경쟁이 치열해요. 활동량(일정·업데이트)을 경쟁자보다 확실히 앞서야 상위에 떠요.';
+    else if(k==='insta') tip='⚡ 올린 직후 첫 1시간 반응 속도가 노출을 결정해요. 팔로워 활동 시간대에 발행하세요.';
+    else if(k==='everytime') tip='🏫 학생 수 많은 중·대규모 학교부터 검증하고, 반응 좋은 글을 인근 학교로 복제하세요.';
+    html += '<div class="res-card" style="border-color:'+P.color+'33;">'
+      + '<div class="res-card-bar" style="position:absolute;top:0;left:0;right:0;height:4px;background:'+P.color+';"></div>'
+      + '<div class="res-rank">'+medal[i]+'</div>'
+      + '<div class="res-head"><span class="res-icon">'+P.icon+'</span><span class="res-name">'+P.name+'</span>'
+      + '<span class="res-fit" style="background:'+P.color+'1a;color:'+P.color+';">적합도 '+fit+'%</span></div>'
+      + '<div class="res-why">'+P.why+'</div>'
+      + (tip?'<div class="res-tip">'+tip+'</div>':'')
+      + '<a class="res-link" style="background:'+P.color+';" href="'+P.link+'">'+P.name+' 분석기 열기 →</a>'
+      + '</div>';
+  });
+  if(top.length===0) html += '<div class="res-card">선택 조합에 딱 맞는 추천이 약해요. 활동/타겟을 다시 골라보세요.</div>';
+  html += '<button class="retry" onclick="location.reload()">↻ 다시 진단</button>';
+  const r=document.getElementById('result'); r.innerHTML=html;
+  r.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
