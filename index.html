@@ -311,6 +311,30 @@
   <p style="margin-top:8px; font-size:0.78rem; color:#e53e3e; font-weight:600;">⚠️ 해당 결과 값은 <b>참고만</b> 부탁드립니다.</p>
 </header>
 
+<!-- 플랫폼 추천 마법사 배너 -->
+<div onclick="openFinder()" style="max-width:1020px;margin:0 auto 22px;cursor:pointer;background:linear-gradient(100deg,#ff4628,#ff8c5a);border-radius:16px;padding:15px 20px;display:flex;align-items:center;gap:13px;box-shadow:0 6px 20px rgba(255,70,40,0.22);position:relative;z-index:1;">
+  <div style="font-size:1.7rem;">🧭</div>
+  <div style="flex:1;color:#fff;min-width:0;">
+    <div style="font-weight:900;font-size:0.98rem;">어디에 열어야 노출이 쉬울까?</div>
+    <div style="font-size:0.78rem;opacity:0.92;margin-top:2px;">4가지만 고르면 내게 맞는 플랫폼을 추천해드려요</div>
+  </div>
+  <div style="background:#fff;color:#ff4628;font-weight:800;font-size:0.8rem;padding:8px 15px;border-radius:99px;white-space:nowrap;flex-shrink:0;">추천받기 →</div>
+</div>
+
+<!-- 마법사 모달 -->
+<div id="finderModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(20,20,30,0.55);padding:20px 14px;overflow-y:auto;" onclick="if(event.target===this)closeFinder()">
+  <div style="max-width:600px;margin:14px auto;background:#fff;border-radius:20px;padding:24px 20px 26px;position:relative;">
+    <button onclick="closeFinder()" aria-label="닫기" style="position:absolute;top:13px;right:15px;border:none;background:#f1f5f9;width:32px;height:32px;border-radius:99px;font-size:1.05rem;cursor:pointer;color:#64748b;">✕</button>
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:1.18rem;font-weight:900;">🧭 어디에 열어야 노출이 쉬울까?</div>
+      <div style="font-size:0.82rem;color:#7a9bba;margin-top:4px;">4가지만 고르면 추천해드려요</div>
+    </div>
+    <div id="finderQuiz"></div>
+    <button id="finderGo" disabled onclick="finderRecommend()" style="display:block;width:100%;margin-top:6px;padding:15px;border:none;border-radius:13px;background:#202020;color:#fff;font-size:0.98rem;font-weight:800;cursor:pointer;font-family:inherit;">🎯 추천 받기</button>
+    <div id="finderResult"></div>
+  </div>
+</div>
+
 <!-- 가이드 배너 2개 나란히 -->
 <div class="banner-grid">
 
@@ -577,5 +601,82 @@
 </footer>
 
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8f8a4525d9ac4010bc4bd44ddb28b9aa"}'></script><!-- End Cloudflare Web Analytics -->
+<script>
+/* ── 플랫폼 추천 마법사 (모달) ── */
+(function(){
+  const QUESTIONS = [
+    { key:'goal', q:'무엇을 키우려고 하세요?', opts:[
+      {v:'community', t:'🤝 모임·커뮤니티 운영'}, {v:'content', t:'📸 개인 계정·브랜드 콘텐츠'}, {v:'promo', t:'📣 일회성 홍보·모집'} ]},
+    { key:'target', q:'주요 타겟은 누구예요?', opts:[
+      {v:'local', t:'🏘️ 우리 동네 사람'}, {v:'univ', t:'🎓 대학생'}, {v:'2030', t:'✨ 2030 전국'}, {v:'interest', t:'🌍 관심사 커뮤니티(전국)'} ]},
+    { key:'activity', q:'핵심 활동은 무엇인가요?', opts:[
+      {v:'offline', t:'📅 오프라인 정모·모임'}, {v:'chat', t:'💬 실시간 채팅·소통'}, {v:'visual', t:'🎬 사진·영상 콘텐츠'}, {v:'info', t:'📚 정보·글 공유'} ]},
+    { key:'region', q:'주 활동 지역은? (선택)', opts:[
+      {v:'metro', t:'🏙️ 서울·수도권'}, {v:'province', t:'🌳 지방'} ]},
+  ];
+  const PLAT = {
+    daangn:{name:'당근 모임',icon:'🥕',color:'#ff4628',link:'daangn-analyzer.html',why:'동네 기반(하이퍼로컬)이라 우리 동네 오프라인 모임에 최강. 노출은 일정 개최·최근 활동이 좌우.'},
+    somoim:{name:'소모임',icon:'🌿',color:'#16a34a',link:'somoim-analyzer.html',why:'관심사별 정기 모임의 본진. "1일 이내 업데이트"가 노출 관문이라 꾸준히만 하면 상위 노출 쉬움.'},
+    munto:{name:'문토',icon:'🔥',color:'#ff6a3d',link:'munto-analyzer.html',why:'2030 트렌디한 소셜·클럽. 클럽은 최근 대화 활동이, 소셜링은 별점·승인제가 노출을 좌우.'},
+    kakao:{name:'카카오 오픈채팅',icon:'💬',color:'#caa600',link:'kakao-analyzer.html',why:'익명·대규모 실시간 채팅 커뮤니티에 최적. 활성도(메시지·참여)가 노출의 핵심.'},
+    insta:{name:'인스타그램',icon:'📸',color:'#c0146a',link:'insta-analyzer.html',why:'사진·영상 콘텐츠와 개인 브랜드에 최강. 해시태그·릴스·초기 반응 속도가 노출을 결정.'},
+    everytime:{name:'에브리타임',icon:'🎓',color:'#E53E3E',link:'everytime-analyzer.html',why:'대학생 타겟 홍보의 정답. 학교별 게시판이라 타겟 학교만 정확히 노릴 수 있음.'},
+  };
+  const SCORE = {
+    goal:{ community:{daangn:2,somoim:2,munto:2,kakao:2}, content:{insta:3}, promo:{everytime:2,insta:1,kakao:1} },
+    target:{ local:{daangn:3,somoim:1}, univ:{everytime:3,insta:1}, '2030':{munto:3,insta:1}, interest:{kakao:2,somoim:2,insta:1} },
+    activity:{ offline:{daangn:2,somoim:2,munto:2}, chat:{kakao:3}, visual:{insta:3}, info:{kakao:1,somoim:1,insta:1} },
+    region:{ metro:{}, province:{daangn:1,somoim:1} },
+  };
+  const answers = {};
+  function buildQuiz(){
+    const wrap = document.getElementById('finderQuiz'); if(!wrap||wrap.dataset.built) return; wrap.dataset.built='1';
+    QUESTIONS.forEach((Q,i)=>{
+      const card=document.createElement('div'); card.style.cssText='background:#fafbfc;border:1px solid #eef1f4;border-radius:14px;padding:15px 16px;margin-bottom:12px;';
+      card.innerHTML='<div style="font-size:0.92rem;font-weight:800;margin-bottom:11px;display:flex;align-items:center;gap:7px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:99px;background:#ff4628;color:#fff;font-size:0.74rem;font-weight:800;">'+(i+1)+'</span>'+Q.q+'</div>';
+      const opts=document.createElement('div'); opts.style.cssText='display:grid;gap:8px;grid-template-columns:1fr 1fr;';
+      Q.opts.forEach(o=>{
+        const b=document.createElement('button'); b.textContent=o.t;
+        b.style.cssText='padding:11px 13px;border:2px solid #e5e7eb;background:#fff;border-radius:11px;font-size:0.82rem;font-weight:700;color:#555;cursor:pointer;text-align:left;font-family:inherit;transition:all .15s;';
+        b.onclick=()=>{ answers[Q.key]=o.v;
+          opts.querySelectorAll('button').forEach(x=>{x.style.borderColor='#e5e7eb';x.style.background='#fff';x.style.color='#555';});
+          b.style.borderColor='#ff4628'; b.style.background='#fff1ee'; b.style.color='#ff4628';
+          document.getElementById('finderGo').disabled=!(answers.goal&&answers.target&&answers.activity);
+        };
+        opts.appendChild(b);
+      });
+      card.appendChild(opts); wrap.appendChild(card);
+    });
+  }
+  window.openFinder=function(){ document.getElementById('finderModal').style.display='block'; buildQuiz(); document.body.style.overflow='hidden'; };
+  window.closeFinder=function(){ document.getElementById('finderModal').style.display='none'; document.body.style.overflow=''; };
+  window.finderRecommend=function(){
+    const score={}; Object.keys(PLAT).forEach(k=>score[k]=0);
+    for(const key in answers){ const add=(SCORE[key]||{})[answers[key]]||{}; for(const p in add) score[p]+=add[p]; }
+    const ranked=Object.keys(PLAT).sort((a,b)=>score[b]-score[a]);
+    const max=score[ranked[0]]||1; const top=ranked.filter((k,i)=>i<3&&score[k]>0);
+    const medal=['🥇 1순위','🥈 2순위','🥉 3순위'];
+    let html='<div style="font-size:1.02rem;font-weight:900;margin:18px 0 12px;text-align:center;">✨ 추천 결과</div>';
+    top.forEach((k,i)=>{
+      const P=PLAT[k]; const fit=Math.round(score[k]/max*100); let tip='';
+      if((k==='daangn'||k==='somoim')&&answers.region==='province') tip='🌳 <strong>지방은 블루오션!</strong> 서울보다 경쟁 모임이 4~5배 적어서 같은 노력으로 상위 노출이 훨씬 쉬워요.';
+      else if((k==='daangn'||k==='somoim')&&answers.region==='metro') tip='🏙️ 서울·수도권은 경쟁이 치열해요. 활동량(일정·업데이트)을 경쟁자보다 확실히 앞서야 상위에 떠요.';
+      else if(k==='insta') tip='⚡ 올린 직후 첫 1시간 반응 속도가 노출을 결정해요. 팔로워 활동 시간대에 발행하세요.';
+      else if(k==='everytime') tip='🏫 학생 수 많은 중·대규모 학교부터 검증하고, 반응 좋은 글을 인근 학교로 복제하세요.';
+      html+='<div style="background:#fff;border:1.5px solid '+P.color+'33;border-radius:15px;padding:16px 18px;margin-bottom:12px;position:relative;overflow:hidden;">'
+        +'<div style="position:absolute;top:0;left:0;right:0;height:4px;background:'+P.color+';"></div>'
+        +'<div style="font-size:0.72rem;font-weight:800;color:#7a9bba;">'+medal[i]+'</div>'
+        +'<div style="display:flex;align-items:center;gap:10px;margin:5px 0 9px;"><span style="font-size:1.8rem;">'+P.icon+'</span><span style="font-size:1.15rem;font-weight:900;">'+P.name+'</span>'
+        +'<span style="margin-left:auto;font-size:0.76rem;font-weight:800;padding:4px 11px;border-radius:99px;background:'+P.color+'1a;color:'+P.color+';">적합도 '+fit+'%</span></div>'
+        +'<div style="font-size:0.85rem;color:#555;line-height:1.7;">'+P.why+'</div>'
+        +(tip?'<div style="margin-top:10px;font-size:0.79rem;color:#475569;background:#f8fafc;border-radius:10px;padding:10px 12px;line-height:1.6;">'+tip+'</div>':'')
+        +'<a style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:0.83rem;font-weight:800;color:#fff;padding:9px 18px;border-radius:99px;text-decoration:none;background:'+P.color+';" href="'+P.link+'">'+P.name+' 분석기 열기 →</a>'
+        +'</div>';
+    });
+    if(top.length===0) html+='<div style="padding:16px;color:#888;">선택 조합에 딱 맞는 추천이 약해요. 다시 골라보세요.</div>';
+    const r=document.getElementById('finderResult'); r.innerHTML=html; r.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+})();
+</script>
 </body>
 </html>
