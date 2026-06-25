@@ -1560,7 +1560,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.3.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.4.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -6592,12 +6592,28 @@ function renderSNSKitInsta(){
     +'</div>'
     +'</div>';
 
+  // ── 프로필 bio 추천 3종 ──
+  var bioCands=[
+    '📍'+regionStr+kw+(benefit?' | '+benefit:''),
+    kw+' 일상 기록 ✨ | 매일 업데이트 | DM 환영',
+    (kwData?kwData.hook.replace(/[!?✨🔥\s]+$/,''):kw+' 함께 성장')+' 🌱 팔로우는 사랑'
+  ];
+  var bioHtml='<div style="background:#f8f8f8;border-radius:10px;padding:14px;margin-bottom:16px;">'
+    +'<div style="font-weight:800;font-size:0.85rem;color:'+bc+';margin-bottom:10px;">🪪 프로필 한 줄 소개 추천</div>';
+  for(var b=0;b<bioCands.length;b++){
+    bioHtml+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
+      +'<span id="isk-bio-'+b+'" style="flex:1;background:#fff;border-radius:7px;padding:8px 11px;font-size:0.82rem;color:#333;">'+bioCands[b]+'</span>'
+      +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-bio-'+b+'\').innerText).then(function(){alert(\'복사됐어요!\')})" style="flex-shrink:0;padding:5px 12px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.74rem;font-weight:700;cursor:pointer;">복사</button>'
+      +'</div>';
+  }
+  bioHtml+='<div style="font-size:0.7rem;color:#aaa;margin-top:4px;">💡 첫 줄에 핵심 키워드+지역을 넣으면 검색 노출에 유리해요</div></div>';
   var kitHtml='<div style="border:2px solid '+bc+';border-radius:16px;padding:20px;background:#fff;">'
     +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">'
     +'<h3 style="color:'+bc+';margin:0;font-size:1.05rem;">📱 SNS 홍보 키트</h3>'
     +'<span style="font-size:0.78rem;color:#aaa;">'+regionStr+nameStr+'</span>'
     +'</div>'
     +tagsHtml
+    +bioHtml
     +'<div style="font-weight:800;font-size:0.85rem;color:#555;margin-bottom:10px;">✍️ 캡션 6종 (복사해서 바로 사용)</div>'
     +cHtml
     +hooksHtml+ideasHtml+storyHtml+strategyHtml

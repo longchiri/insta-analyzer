@@ -924,7 +924,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.2.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.3.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1974,6 +1974,32 @@ ${htText}`}
     ...niche.map(h=>`<span style="background:#f3f0ff;color:#7c3aed;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`),
     ...extras.map(h=>`<span style="background:#fff3e0;color:#e65100;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;">${h}</span>`)
   ].join('');
+  // ── 콘텐츠 도우미 확장: 이름 추천 + 환영 메시지 ──
+  const _tl=cat.label, _rg=region||'우리동네';
+  const titleCands=[...new Set([
+    `${_rg} ${_tl} 모임`,
+    `${_tl} 초보 환영 · ${_rg}`,
+    `${scheduleStr?scheduleStr+' ':''}${_tl} 같이해요`,
+    `${_rg} ${_tl}${sizeStr?' | '+sizeStr:' 멤버 모집중'}`,
+    `${_tl} 함께할 사람 (${_rg})`
+  ].map(s=>s.replace(/\s+/g,' ').trim()).filter(Boolean))].slice(0,5);
+  const welcomeMsg=`안녕하세요! 「${moimLabel}」에 오신 걸 환영해요 😊\n\n`
+    +`${cat.benefit?'✨ '+cat.benefit+'\n':''}${scheduleStr?'⏰ '+scheduleStr+'\n':''}${region?'📍 '+regionStr+'\n':''}`
+    +`\n궁금한 점은 편하게 물어봐 주세요! ${_platCTA.join}`;
+  const _esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const _extraKit=`<div style="margin-bottom:22px;">
+      <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:10px;">✏️ 모임 이름 추천 ${titleCands.length}개</div>
+      ${titleCands.map((t,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span id="${targetId}-tt-${i}" style="flex:1;background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:8px 12px;font-size:0.83rem;font-weight:600;">${_esc(t)}</span>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-tt-${i}').innerText).then(()=>alert('복사됐어요!'))" style="padding:6px 12px;background:#fff;color:${borderColor};border:1.5px solid ${borderColor};border-radius:7px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">복사</button>
+      </div>`).join('')}
+      <div style="font-size:0.7rem;color:#aaa;margin-top:4px;">💡 지역·일정·혜택을 넣은 이름이 검색·클릭에 유리해요</div>
+    </div>
+    <div style="margin-bottom:22px;">
+      <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:8px;">👋 첫 환영 메시지</div>
+      <pre id="${targetId}-wel" style="background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:12px;font-size:0.81rem;line-height:1.7;white-space:pre-wrap;font-family:inherit;margin:0 0 6px;">${_esc(welcomeMsg)}</pre>
+      <button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-wel').innerText).then(()=>alert('환영 메시지 복사됐어요!'))" style="padding:5px 14px;background:#fff;color:${borderColor};border:1.5px solid ${borderColor};border-radius:7px;font-size:0.77rem;font-weight:700;cursor:pointer;">📋 복사</button>
+    </div>`;
   const _kitHtml=`<div style="margin-top:28px;padding:22px;background:#f8fffe;border-radius:16px;border:2px dashed ${borderColor}44;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
       <span style="font-size:1.1rem;">📱</span>
@@ -1986,6 +2012,7 @@ ${htText}`}
       <div style="font-size:0.7rem;color:#aaa;margin-bottom:10px;">🔵 대형(100만+) · 🟢 중형(10만~100만) · 🟣 니치(1만~10만, 핵심!) · 🟠 지역조합/플랫폼</div>
       <span id="${targetId}-ht" style="display:none;">${htText}</span><button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-ht').innerText).then(()=>alert('해시태그 15개 복사됐어요!'))" style="padding:6px 16px;background:${borderColor};color:#fff;border:none;border-radius:8px;font-size:0.79rem;font-weight:700;cursor:pointer;">📋 해시태그 전체 복사</button>
     </div>
+    ${_extraKit}
     <div>
       <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:10px;">✍️ 캡션 초안 3종 (저장·공유 유도 포함)</div>
       ${caps.map((c,i)=>`<div style="margin-bottom:14px;">
