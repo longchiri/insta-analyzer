@@ -1435,6 +1435,11 @@ function setPartFilter(part, btn) {
     <div id="insta-ghost-body"></div>
   </div>
 
+  <!-- 알고리즘 메커니즘 (신규 부스트 + 초기 반응 속도) -->
+  <div class="result-card" id="insta-algo-card" data-part="overview" style="display:none;">
+    <div id="insta-algo-body"></div>
+  </div>
+
   <!-- Hidden Score -->
   <div class="result-card" data-part="overview">
     <h2>🔒 계정 신뢰도 (Hidden Score)</h2>
@@ -1555,7 +1560,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.1.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.2.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -2845,6 +2850,46 @@ function renderAIDiagInsta(total, erScore, ssScore, grScore, conScore) {
 // 🎯 알고리즘 노출 게이지 (인스타)
 // ══════════════════════════════════════════════════
 // ── 인스타 유령 계정 진단 (유령 팔로워 / 저활성 계정) ──
+// ── 인스타 알고리즘 메커니즘: 신규 부스트(콜드스타트) + 초기 반응 속도 ──
+function renderInstaAlgo(D) {
+  const card = document.getElementById('insta-algo-card');
+  const el = document.getElementById('insta-algo-body');
+  if (!card || !el) return;
+  const days = (typeof D.opDays === 'number' && D.opDays > 0) ? D.opDays : -1;
+
+  // 1) 신규 부스트 (콜드스타트)
+  let bColor, bBg, bEmoji, bTitle, bSub;
+  if (days < 0) {
+    bColor='#94a3b8'; bBg='#f8fafc'; bEmoji='📅'; bTitle='운영 기간을 입력하면 진단돼요';
+    bSub='"계정 운영 기간(일)"을 넣으면 신규 부스트 구간인지 알려드려요.';
+  } else if (days <= 30) {
+    bColor='#7c3aed'; bBg='#f5f3ff'; bEmoji='🚀'; bTitle='신규 골든타임 — 초기 노출 부스트 구간';
+    bSub='운영 '+days+'일. 인스타는 새 계정에 초기 노출 가산점을 줘요. 지금 첫 30일이 황금기 — 게시 빈도를 몰아서 초반 참여 지표(저장·공유)를 빠르게 쌓으면 부스트를 최대한 활용할 수 있어요.';
+  } else if (days <= 90) {
+    bColor='#2563eb'; bBg='#eff6ff'; bEmoji='📈'; bTitle='성장기 — 부스트는 끝, 이제 실력으로';
+    bSub='운영 '+days+'일. 신규 부스트는 끝났어요. 이제 참여율·저장률 같은 실제 지표가 노출을 좌우해요. 잘 되는 콘텐츠 유형을 찾아 반복하세요.';
+  } else {
+    bColor='#0ea5e9'; bBg='#f0f9ff'; bEmoji='🏛️'; bTitle='안정기 — 신선함 유지가 관건';
+    bSub='운영 '+days+'일. 누적 신뢰도는 쌓였지만, 알고리즘은 최근 활동을 봐요. 새 포맷(릴스·신규 시리즈)으로 신선함을 유지하세요.';
+  }
+
+  card.style.display = 'block';
+  el.innerHTML =
+    '<h2>⚙️ 알고리즘 메커니즘 <span style="font-size:0.7rem;font-weight:400;color:#94a3b8;">인스타 노출 작동 원리</span></h2>'
+    // 신규 부스트
+    + '<div style="background:'+bBg+';border:1.5px solid '+bColor+'55;border-radius:14px;padding:15px 16px;margin-bottom:11px;">'
+      + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="font-size:1.4rem;">'+bEmoji+'</span>'
+      + '<span style="font-weight:800;font-size:0.94rem;color:'+bColor+';">신규 부스트 — '+bTitle+'</span></div>'
+      + '<div style="font-size:0.83rem;color:#555;line-height:1.7;">'+bSub+'</div></div>'
+    // 초기 반응 속도 (velocity, 권고형)
+    + '<div style="background:#fff7ed;border:1.5px solid #f9731633;border-radius:14px;padding:15px 16px;">'
+      + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="font-size:1.4rem;">⚡</span>'
+      + '<span style="font-weight:800;font-size:0.94rem;color:#ea580c;">초기 반응 속도 — 첫 1시간이 노출을 결정</span></div>'
+      + '<div style="font-size:0.83rem;color:#555;line-height:1.7;">알고리즘은 <strong>올린 직후 첫 1시간의 반응 속도</strong>를 강한 노출 트리거로 써요. 총 좋아요보다 "얼마나 빨리"가 중요해요.'
+      + '<br>👉 <strong>팔로워가 가장 많이 접속하는 시간대에 발행</strong>하고, 올린 직후 스토리 공유·질문 댓글 유도로 초반 반응을 끌어올리세요. 첫 반응이 빠르면 비팔로워 탐색 노출로 이어져요.</div></div>'
+    + '<div style="margin-top:10px;font-size:0.72rem;color:#aaa;text-align:right;">※ 플랫폼 알고리즘 작동 원리 기반 (신규 부스트는 운영기간 입력 기준)</div>';
+}
+
 function renderInstaGhost(D) {
   const card = document.getElementById('insta-ghost-card');
   const el = document.getElementById('insta-ghost-body');
@@ -3124,6 +3169,7 @@ function analyze() {
   renderAIDiagInsta(total, erScore, ssScore, grScore, conScore);
   renderAlgoGaugeInsta(total);
   renderInstaGhost(D);
+  renderInstaAlgo(D);
 
   // 세부 점수 4칸
   document.getElementById('subScoreGrid').innerHTML = [

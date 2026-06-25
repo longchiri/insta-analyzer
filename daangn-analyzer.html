@@ -481,6 +481,18 @@
       <input type="number" id="memberCount" placeholder="예: 45" min="0"/>
     </div>
     <div class="form-group">
+      <label>모임 개설 경과
+        <span class="tip">신규 모임은 초기 노출 부스트가 있어요</span>
+      </label>
+      <select id="moimAge">
+        <option value="">— 선택 —</option>
+        <option value="new">개설 1개월 이내 (신규)</option>
+        <option value="grow">1~3개월</option>
+        <option value="mid">3~12개월</option>
+        <option value="old">1년 이상</option>
+      </select>
+    </div>
+    <div class="form-group">
       <label>최근 30일 신규 멤버
         <span class="info-wrap">
           <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
@@ -1279,6 +1291,11 @@
     <div id="exposureDiagBody"></div>
   </div>
 
+  <!-- 신규 부스트 (알고리즘 메커니즘) -->
+  <div class="result-card" id="boostCard" data-part="strategy" style="display:none;">
+    <div id="boostBody"></div>
+  </div>
+
   <!-- 실데이터 상위노출 가이드 -->
   <div class="result-card" data-part="benchmark">
     <h2>📊 실데이터 상위노출 가이드 <span style="font-size:.72rem;font-weight:400;color:#94a3b8;">2026.06 실측 · 대전 2,200개</span></h2>
@@ -1395,7 +1412,7 @@
 
 <footer>
   <p>by <b style="color:#ff4628;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 4.2.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 4.3.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1513,6 +1530,7 @@ function analyze() {
   const category    = document.getElementById('category').value;
   const areaRange   = document.getElementById('areaRange').value;
   const memberCount = parseInt(document.getElementById('memberCount').value) || 0;
+  const moimAge = (document.getElementById('moimAge')||{}).value || '';
   const newMembers  = parseInt(document.getElementById('newMembers30').value) || 0;
   const meetingFreq = parseInt(document.getElementById('meetingFreq').value) || 0;
   const attendRate  = parseInt(document.getElementById('attendRate').value) || 0;
@@ -3204,6 +3222,7 @@ function analyze() {
   // ── 👻 유령모임 진단 ──
   renderGhostDiagnosis(category, postCount, scheduleType, meetingFreq, totalSchedules, memberCount);
   renderRankDiagnosis(memberCount, totalSchedules, attendRate, lastActivityDays);
+  renderDaangnBoost(moimAge);
 
   // ── 카테고리 내 순위 추정 ──
   renderCategoryRank(total, CAT_MAP[category] || '');
@@ -3231,6 +3250,33 @@ function analyze() {
 // 📊 실제 데이터 벤치마크 비교
 // ══════════════════════════════════════════════════
 // ── 노출 진단 (대전 2,200개 실측 랭크 기반 · 전국 데이터로 갱신 예정) ──
+// ── 신규 부스트 진단 (콜드스타트 알고리즘 메커니즘) ──
+function renderDaangnBoost(stage) {
+  const card = document.getElementById('boostCard');
+  const el = document.getElementById('boostBody');
+  if (!card || !el) return;
+  if (!stage) { card.style.display = 'none'; return; }
+  let c, bg, emoji, title, sub;
+  if (stage === 'new') {
+    c='#7c3aed'; bg='#f5f3ff'; emoji='🚀'; title='신규 골든타임 — 초기 노출 부스트 구간';
+    sub='당근은 새로 개설된 모임에 초기 노출 가산점을 줘요. 지금 첫 1개월이 황금기예요 — 일정·게시글을 몰아서 올려 초반 활동 지표를 빠르게 만들면, 부스트를 최대한 받아 빠르게 자리잡을 수 있어요.';
+  } else if (stage === 'grow') {
+    c='#2563eb'; bg='#eff6ff'; emoji='⏳'; title='부스트 막바지 — 지금이 고비';
+    sub='신규 부스트가 곧 끝나가요(1~3개월). 이 구간에 정기 일정·꾸준한 게시로 "활동하는 모임" 신호를 확실히 만들어두면, 부스트가 끝나도 실력으로 노출이 유지돼요.';
+  } else if (stage === 'mid') {
+    c='#0ea5e9'; bg='#f0f9ff'; emoji='📈'; title='성장기 — 이제 실력으로 노출';
+    sub='부스트는 끝났어요(3~12개월). 이제 일정 개최·참여율·최신성 같은 실제 지표가 노출을 좌우해요. 위 "노출 진단"의 약한 항목부터 보강하세요.';
+  } else {
+    c='#16a34a'; bg='#f0fdf4'; emoji='🏛️'; title='안정기 — 신선함 유지가 관건';
+    sub='개설 1년 이상. 누적 신뢰는 쌓였지만 당근은 최근 활동을 봐요. 정기 일정·최신 게시로 "지금도 활발한 모임"임을 계속 보여주세요.';
+  }
+  card.style.display = 'block';
+  el.innerHTML = '<h2>⚙️ 신규 부스트 진단 <span style="font-size:0.7rem;font-weight:400;color:#94a3b8;">알고리즘 메커니즘</span></h2>'
+    + '<div style="background:'+bg+';border:1.5px solid '+c+'55;border-radius:14px;padding:15px 16px;">'
+    + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="font-size:1.5rem;">'+emoji+'</span><span style="font-weight:800;font-size:0.95rem;color:'+c+';">'+title+'</span></div>'
+    + '<div style="font-size:0.83rem;color:#555;line-height:1.7;">'+sub+'</div></div>';
+}
+
 function renderRankDiagnosis(members, totalSchedules, attendRate, lastActivityDays) {
   const card = document.getElementById('exposureDiagCard');
   const el = document.getElementById('exposureDiagBody');

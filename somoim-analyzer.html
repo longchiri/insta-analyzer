@@ -511,6 +511,18 @@
         <input type="number" id="m-members" placeholder="예: 38" min="0"/>
       </div>
       <div class="form-group">
+        <label>모임 개설 경과
+          <span class="tip-moim" style="font-size:0.72rem;color:#94a3b8;">신규 모임은 초기 노출 부스트가 있어요</span>
+        </label>
+        <select id="m-moimAge" style="border-color:#bbf7d0;">
+          <option value="">— 선택 —</option>
+          <option value="new">개설 1개월 이내 (신규)</option>
+          <option value="grow">1~3개월</option>
+          <option value="mid">3~12개월</option>
+          <option value="old">1년 이상</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label>최근 30일 신규 멤버 <span style="color:#6b7280;font-size:0.8em;">(성장률 계산)</span>
           <span class="info-wrap">
             <button class="info-btn moim-ib" onclick="toggleTip(this)">ⓘ</button>
@@ -844,6 +856,9 @@
     <div class="result-card moim-res" data-part="data" id="m-rankdiag-card" style="display:none;">
       <div id="m-rankdiag-body"></div>
     </div>
+    <div class="result-card moim-res" data-part="strategy" id="m-boost-card" style="display:none;">
+      <div id="m-boost-body"></div>
+    </div>
 
     <!-- 📊 실데이터 상위노출 가이드 (2026.06 실측 전국 6,498개) -->
     <div class="result-card moim-res" data-part="data">
@@ -909,7 +924,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.0.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.1.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1793,6 +1808,7 @@ function analyzeMoim() {
     var luv=(document.getElementById('m-last-update')||{}).value||'';
     var ud=luv?Math.max(0,Math.round((new Date(new Date().toISOString().slice(0,10))-new Date(luv))/86400000)):-1;
     renderSomoimRankDiag(ud, freq, members, posts);
+    renderSomoimBoost((document.getElementById('m-moimAge')||{}).value||'');
   })();
 
   showMoimResultView();
@@ -2185,6 +2201,27 @@ function renderGhostMoim(posts, freq, flash, members, category) {
 }
 
 // ── 소모임 노출진단 (실측 5,473개: 업데이트 최신성 관문 > 정모 > 멤버 > 게시글) ──
+// ── 소모임 신규 부스트 진단 (콜드스타트) ──
+function renderSomoimBoost(stage) {
+  const card=document.getElementById('m-boost-card'), el=document.getElementById('m-boost-body');
+  if(!card||!el) return;
+  if(!stage){ card.style.display='none'; return; }
+  let c,bg,emoji,title,sub;
+  if(stage==='new'){ c='#7c3aed';bg='#f5f3ff';emoji='🚀';title='신규 골든타임 — 초기 노출 부스트';
+    sub='소모임도 새 모임에 초기 노출 가산점을 줘요. 지금 첫 1개월이 황금기 — 매일 게시글·정모로 "1일 이내 업데이트" 관문을 확실히 통과하면서 초반 활동을 몰아주면 빠르게 자리잡아요.';}
+  else if(stage==='grow'){ c='#2563eb';bg='#eff6ff';emoji='⏳';title='부스트 막바지 — 지금이 고비';
+    sub='신규 부스트가 곧 끝나가요(1~3개월). 정기 정모·꾸준한 업데이트로 "활동 모임" 신호를 굳혀두면 부스트 후에도 노출이 유지돼요.';}
+  else if(stage==='mid'){ c='#0ea5e9';bg='#f0f9ff';emoji='📈';title='성장기 — 이제 실력으로';
+    sub='부스트는 끝났어요(3~12개월). 업데이트 최신성·정모 빈도가 노출을 좌우해요. 위 노출 진단의 약점부터 보강하세요.';}
+  else { c='#16a34a';bg='#f0fdf4';emoji='🏛️';title='안정기 — 신선함 유지';
+    sub='개설 1년 이상. 누적 활동은 쌓였지만 노출 관문은 "1일 이내 업데이트"예요. 매일 업데이트로 항상 피드에 살아있게 하세요.';}
+  card.style.display='block';
+  el.innerHTML='<h2>⚙️ 신규 부스트 진단 <span style="font-size:0.7rem;font-weight:400;color:#94a3b8;">알고리즘 메커니즘</span></h2>'
+    +'<div style="background:'+bg+';border:1.5px solid '+c+'55;border-radius:14px;padding:15px 16px;">'
+    +'<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="font-size:1.5rem;">'+emoji+'</span><span style="font-weight:800;font-size:0.95rem;color:'+c+';">'+title+'</span></div>'
+    +'<div style="font-size:0.83rem;color:#555;line-height:1.7;">'+sub+'</div></div>';
+}
+
 function renderSomoimRankDiag(updateDays, freq, members, posts) {
   const card=document.getElementById('m-rankdiag-card');
   const el=document.getElementById('m-rankdiag-body');
