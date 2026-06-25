@@ -237,7 +237,7 @@
     /* ── 배너 그리드 (2×2) ── */
     .banner-grid {
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:1fr 1fr 1fr;
       gap:12px;
       position:relative;
       z-index:1;
@@ -311,16 +311,6 @@
   <p style="margin-top:8px; font-size:0.78rem; color:#e53e3e; font-weight:600;">⚠️ 해당 결과 값은 <b>참고만</b> 부탁드립니다.</p>
 </header>
 
-<!-- 플랫폼 추천 마법사 배너 -->
-<div onclick="openFinder()" style="max-width:1020px;margin:0 auto 22px;cursor:pointer;background:linear-gradient(100deg,#ff4628,#ff8c5a);border-radius:16px;padding:15px 20px;display:flex;align-items:center;gap:13px;box-shadow:0 6px 20px rgba(255,70,40,0.22);position:relative;z-index:1;">
-  <div style="font-size:1.7rem;">🧭</div>
-  <div style="flex:1;color:#fff;min-width:0;">
-    <div style="font-weight:900;font-size:0.98rem;">어디에 열어야 노출이 쉬울까?</div>
-    <div style="font-size:0.78rem;opacity:0.92;margin-top:2px;">4가지만 고르면 내게 맞는 플랫폼을 추천해드려요</div>
-  </div>
-  <div style="background:#fff;color:#ff4628;font-weight:800;font-size:0.8rem;padding:8px 15px;border-radius:99px;white-space:nowrap;flex-shrink:0;">추천받기 →</div>
-</div>
-
 <!-- 마법사 모달 -->
 <div id="finderModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(20,20,30,0.55);padding:20px 14px;overflow-y:auto;" onclick="if(event.target===this)closeFinder()">
   <div style="max-width:600px;margin:14px auto;background:#fff;border-radius:20px;padding:24px 20px 26px;position:relative;">
@@ -335,8 +325,28 @@
   </div>
 </div>
 
-<!-- 가이드 배너 2개 나란히 -->
+<!-- 가이드 배너 (3 + 2) -->
 <div class="banner-grid">
+
+  <!-- 플랫폼 추천 마법사 -->
+  <a href="#" onclick="openFinder();return false;" style="
+    display:flex; align-items:center; gap:10px;
+    background:#202020;
+    border-radius:99px; padding:10px 16px 10px 14px;
+    text-decoration:none; color:#fff;
+    box-shadow:0 3px 14px rgba(32,32,32,0.18);
+    transition:transform 0.18s, box-shadow 0.18s;
+    " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 22px rgba(32,32,32,0.30)'"
+       onmouseout="this.style.transform='';this.style.boxShadow='0 3px 14px rgba(32,32,32,0.18)'">
+    <span style="font-size:1.1rem; line-height:1; flex-shrink:0;">🧭</span>
+    <span style="font-size:0.8rem; font-weight:700; color:#b8c8d7; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">플랫폼 추천받기</span>
+    <span style="
+      background:#ff4628;
+      border-radius:99px; padding:5px 12px;
+      font-size:0.7rem; font-weight:800; color:#fff;
+      white-space:nowrap; flex-shrink:0;
+    ">추천 →</span>
+  </a>
 
   <!-- 용어백과 -->
   <a href="glossary.html" style="
@@ -605,6 +615,12 @@
 /* ── 플랫폼 추천 마법사 (모달) ── */
 (function(){
   const QUESTIONS = [
+    { key:'category', q:'어떤 모임·주제인가요?', opts:[
+      {v:'sport',  t:'🏃 운동·건강'}, {v:'study', t:'📚 독서·스터디·자기계발'},
+      {v:'hobby',  t:'🎨 취미·공예·예술'}, {v:'food', t:'🍽️ 맛집·요리·카페'},
+      {v:'music',  t:'🎵 음악·공연'}, {v:'game', t:'🎮 게임·오락'},
+      {v:'pet',    t:'🐾 반려동물'}, {v:'social', t:'🤝 사교·친목·네트워킹'},
+      {v:'brand',  t:'📸 콘텐츠·개인 브랜드'} ]},
     { key:'goal', q:'무엇을 키우려고 하세요?', opts:[
       {v:'community', t:'🤝 모임·커뮤니티 운영'}, {v:'content', t:'📸 개인 계정·브랜드 콘텐츠'}, {v:'promo', t:'📣 일회성 홍보·모집'} ]},
     { key:'target', q:'주요 타겟은 누구예요?', opts:[
@@ -623,6 +639,12 @@
     everytime:{name:'에브리타임',icon:'🎓',color:'#E53E3E',link:'everytime-analyzer.html',why:'대학생 타겟 홍보의 정답. 학교별 게시판이라 타겟 학교만 정확히 노릴 수 있음.'},
   };
   const SCORE = {
+    category:{
+      sport:{daangn:3,somoim:3,munto:1}, study:{somoim:3,munto:1,kakao:1},
+      hobby:{somoim:3,insta:2,munto:1}, food:{munto:3,daangn:1,insta:1},
+      music:{somoim:2,munto:1,insta:1}, game:{kakao:3,somoim:1,munto:1},
+      pet:{daangn:3,somoim:1}, social:{munto:3,daangn:1,kakao:1}, brand:{insta:3},
+    },
     goal:{ community:{daangn:2,somoim:2,munto:2,kakao:2}, content:{insta:3}, promo:{everytime:2,insta:1,kakao:1} },
     target:{ local:{daangn:3,somoim:1}, univ:{everytime:3,insta:1}, '2030':{munto:3,insta:1}, interest:{kakao:2,somoim:2,insta:1} },
     activity:{ offline:{daangn:2,somoim:2,munto:2}, chat:{kakao:3}, visual:{insta:3}, info:{kakao:1,somoim:1,insta:1} },
@@ -641,7 +663,7 @@
         b.onclick=()=>{ answers[Q.key]=o.v;
           opts.querySelectorAll('button').forEach(x=>{x.style.borderColor='#e5e7eb';x.style.background='#fff';x.style.color='#555';});
           b.style.borderColor='#ff4628'; b.style.background='#fff1ee'; b.style.color='#ff4628';
-          document.getElementById('finderGo').disabled=!(answers.goal&&answers.target&&answers.activity);
+          document.getElementById('finderGo').disabled=!(answers.category&&answers.goal&&answers.target&&answers.activity);
         };
         opts.appendChild(b);
       });
