@@ -19,7 +19,7 @@
       background:linear-gradient(90deg,#E53E3E,#FC8181);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     }
-    header p { color:#aaa; margin-top:6px; font-size:0.9rem; }
+    header p { color:#7d7d7d; margin-top:6px; font-size:0.9rem; }
 
     /* ── 카드 ── */
     .card {
@@ -38,7 +38,7 @@
     .form-group { display:flex; flex-direction:column; gap:6px; }
     .form-group.full { grid-column:1/-1; }
     label { font-size:0.82rem; font-weight:700; color:#666; display:flex; align-items:center; gap:4px; }
-    label .tip { font-size:0.72rem; font-weight:400; color:#aaa; margin-left:4px; }
+    label .tip { font-size:0.79rem; font-weight:400; color:#7d7d7d; margin-left:4px; }
     input, textarea, select {
       border:1.5px solid #e5e5e5; border-radius:10px;
       padding:10px 12px; font-size:0.93rem; outline:none;
@@ -73,7 +73,7 @@
       max-width:720px; margin-left:auto; margin-right:auto;
       border:1.5px solid #FFC8C8;
     }
-    .result-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:16px; color:#7a0000; display:flex; align-items:center; gap:8px; }
+    .result-card h2 { font-size:1.13rem; font-weight:800; margin-bottom:17px; color:#7a0000; display:flex; align-items:center; gap:8px; }
 
     /* 종합 점수 */
     .score-big-box {
@@ -98,14 +98,14 @@
       border:1.5px solid #FFC8C8;
     }
     .sub-item .sv { font-size:1.4rem; font-weight:900; color:#E53E3E; }
-    .sub-item .sn { font-size:0.72rem; color:#888; margin-top:4px; font-weight:700; }
-    .sub-item .sm { font-size:0.68rem; color:#bbb; margin-top:2px; }
+    .sub-item .sn { font-size:0.79rem; color:#888; margin-top:4px; font-weight:700; }
+    .sub-item .sm { font-size:0.75rem; color:#8a8a8a; margin-top:2px; }
 
     /* 진행 바 */
     .stat-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
     .stat-name-wrap { width:120px; flex-shrink:0; }
     .stat-name { font-size:0.83rem; color:#555; font-weight:600; }
-    .stat-desc { font-size:0.72rem; color:#aaa; margin-top:2px; line-height:1.4; }
+    .stat-desc { font-size:0.79rem; color:#7d7d7d; margin-top:2px; line-height:1.4; }
     .bar-wrap { flex:1; background:#f0f0f0; border-radius:99px; height:10px; min-width:80px; }
     .bar-fill { height:10px; border-radius:99px; transition:width 0.6s; }
     .bar-good { background:linear-gradient(90deg,#22c55e,#86efac); }
@@ -123,7 +123,7 @@
     .check-bad  { background:#fff5f5; border-left:3px solid #ef4444; }
     .check-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
     .check-title { font-size:0.84rem; font-weight:700; }
-    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.5; }
+    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.65; }
 
     /* 팁 박스 */
     .tip-box {
@@ -142,7 +142,7 @@
     .roadmap-item.p2 { border-left:4px solid #ED8936; }
     .roadmap-item.p3 { border-left:4px solid #48BB78; }
     .roadmap-badge {
-      display:inline-block; font-size:0.68rem; font-weight:800;
+      display:inline-block; font-size:0.75rem; font-weight:800;
       padding:2px 8px; border-radius:99px; margin-bottom:6px;
     }
     .badge-p1 { background:#FFF0F0; color:#E53E3E; }
@@ -157,7 +157,7 @@
     @media(max-width:500px){ .metric-grid { grid-template-columns:repeat(2,1fr); } }
     .metric-box { background:linear-gradient(135deg,#FFF0F0,#FFE0E0); border-radius:12px; padding:14px 10px; text-align:center; border:1px solid #FFC8C8; }
     .metric-box .m-val { font-size:1.3rem; font-weight:800; color:#E53E3E; }
-    .metric-box .m-label { font-size:0.72rem; color:#888; margin-top:4px; }
+    .metric-box .m-label { font-size:0.79rem; color:#888; margin-top:4px; }
 
     /* 섹션 구분 */
     .divider { border:none; border-top:1px solid #FFC8C8; margin:16px 0; }
@@ -166,7 +166,7 @@
     .info-wrap { position:relative; display:inline-block; vertical-align:middle; margin-left:5px; }
     .info-btn {
       width:16px; height:16px; background:#FFC8C8; color:#E53E3E;
-      border-radius:50%; border:none; cursor:pointer; font-size:0.62rem;
+      border-radius:50%; border:none; cursor:pointer; font-size:0.78rem;
       font-weight:800; line-height:16px; text-align:center; padding:0;
       display:inline-flex; align-items:center; justify-content:center;
       flex-shrink:0;
@@ -178,10 +178,10 @@
       bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
       background:#fff; border:1.5px solid #FFC8C8; border-radius:12px;
       padding:10px 12px; font-size:0.78rem; color:#444; z-index:999;
-      box-shadow:0 6px 24px rgba(229,62,62,0.15); line-height:1.6;
+      box-shadow:0 6px 24px rgba(229,62,62,0.15); line-height:1.72;
       font-weight:400; text-align:left; pointer-events:none;
     }
-    .tooltip-where { background:#FFF0F0; color:#E53E3E; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
+    .tooltip-where { background:#FFF0F0; color:#E53E3E; font-size:0.78rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
 
     /* PDF 바 */
     #pdf-bar {
@@ -200,10 +200,10 @@
     }
     .pdf-btn:hover { opacity:0.88; }
 
-    footer { text-align:center; color:#bbb; font-size:0.8rem; margin-top:10px; padding-bottom:20px; }
+    footer { text-align:center; color:#8a8a8a; font-size:0.8rem; margin-top:10px; padding-bottom:20px; }
     .back-btn {
       display:inline-flex; align-items:center; gap:6px; text-decoration:none;
-      color:#999; font-size:0.82rem; font-weight:600; background:#fff;
+      color:#6e7682; font-size:0.82rem; font-weight:600; background:#fff;
       border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px;
     }
     .back-btn:hover { border-color:#E53E3E; color:#E53E3E; }
@@ -227,7 +227,7 @@
     /* 배지 */
     .algo-badge {
       display:inline-block; background:linear-gradient(90deg,#E53E3E,#FC8181);
-      color:#fff; font-size:0.72rem; font-weight:800;
+      color:#fff; font-size:0.79rem; font-weight:800;
       padding:3px 12px; border-radius:99px; margin-top:8px;
     }
 
@@ -244,14 +244,14 @@
 .ai-grade-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
 .ai-grade-emoji{font-size:2.8rem;line-height:1;}
 .ai-grade-info{flex:1;}
-.ai-grade-lbl{font-size:0.72rem;color:#aaa;font-weight:600;margin-bottom:2px;}
+.ai-grade-lbl{font-size:0.79rem;color:#7d7d7d;font-weight:600;margin-bottom:2px;}
 .ai-grade-name{font-size:1.15rem;font-weight:900;color:#FC8181;}
 .ai-grade-score-line{font-size:0.78rem;color:#ccc;margin-top:3px;}
 .typewriter-box{background:rgba(0,0,0,0.38);border-radius:12px;padding:16px 18px;font-size:0.87rem;line-height:1.9;color:#e0e0e0;min-height:48px;word-break:keep-all;overflow-wrap:break-word;margin-bottom:14px;}
 .tw-cursor{display:inline-block;width:2px;height:1em;background:#E53E3E;animation:tw-blink 0.8s infinite;vertical-align:text-bottom;margin-left:1px;}
 @keyframes tw-blink{0%,100%{opacity:1}50%{opacity:0}}
 .ai-tags{display:flex;flex-wrap:wrap;gap:8px;}
-.ai-tag{background:rgba(229,62,62,0.12);color:#FC8181;font-size:0.71rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid rgba(229,62,62,0.25);}
+.ai-tag{background:rgba(229,62,62,0.12);color:#FC8181;font-size:0.78rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid rgba(229,62,62,0.25);}
 .radar-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
 .radar-wrap canvas{max-width:300px;width:100%;}
 .radar-legend{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;}
@@ -261,7 +261,7 @@
 .algo-gauge-bar{background:#f0f0f0;border-radius:99px;overflow:hidden;height:14px;margin-bottom:14px;}
 .algo-gauge-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#E53E3E,#FC8181);transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1);width:0%;}
 .algo-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.algo-tier{background:#f8f8f8;border-radius:10px;padding:10px 6px;text-align:center;font-size:0.73rem;font-weight:700;color:#888;border:1.5px solid #e8e8e8;transition:all 0.4s;}
+.algo-tier{background:#f8f8f8;border-radius:10px;padding:10px 6px;text-align:center;font-size:0.8rem;font-weight:700;color:#888;border:1.5px solid #e8e8e8;transition:all 0.4s;}
 .algo-tier.eact{background:linear-gradient(135deg,#E53E3E,#FC8181);border-color:transparent;color:#fff;transform:scale(1.04);}
 @keyframes score-pop{0%{transform:scale(0.55);opacity:0}70%{transform:scale(1.09)}100%{transform:scale(1);opacity:1}}
 .score-number.popped{animation:score-pop 0.75s cubic-bezier(0.34,1.56,0.64,1) both;}
@@ -617,7 +617,7 @@
         <div style="font-size:0.82rem;color:#555;line-height:1.7;">대놓고 광고하는 말투는 무시되거나 비추천을 받아요. 학생 눈높이의 솔직한 말투("혹시 ~해본 적 있어?")와 실제 혜택을 앞세우면 공감·댓글 반응률이 확 올라가요. 같은 글을 도배하면 신고·삭제 위험이 커지니 빈도와 변형에 신경 쓰세요.</div>
       </div>
     </div>
-    <div style="margin-top:11px;font-size:0.74rem;color:#aaa;text-align:right;">※ 에브리타임은 외부 수집이 막혀 있어, 위 내용은 플랫폼 구조·홍보 실무 기준의 가이드예요.</div>
+    <div style="margin-top:11px;font-size:0.8rem;color:#7d7d7d;text-align:right;">※ 에브리타임은 외부 수집이 막혀 있어, 위 내용은 플랫폼 구조·홍보 실무 기준의 가이드예요.</div>
   </div>
 
   <!-- 알고리즘 메커니즘: 초기 반응 속도 -->
@@ -629,7 +629,7 @@
         <br>👉 <strong>학생 접속 피크(목요일 오후 2~6시)에 발행</strong>하고, 제목을 질문형·혜택형으로 강하게 만들어 초반 클릭·공감이 빨리 붙게 하세요. 효과 좋았던 글은 같은 피크 시간대에 재포스팅하면 초기 반응을 다시 만들 수 있어요.
       </div>
     </div>
-    <div style="margin-top:9px;font-size:0.74rem;color:#aaa;text-align:right;">※ 플랫폼 알고리즘 작동 원리 기반</div>
+    <div style="margin-top:9px;font-size:0.8rem;color:#7d7d7d;text-align:right;">※ 플랫폼 알고리즘 작동 원리 기반</div>
   </div>
 
 </div>
@@ -640,7 +640,7 @@
   <button class="scroll-btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="맨 아래로">▼</button>
 </div>
 
-<footer>© 2026 longchiri — 에브리타임 홍보게시판 분석기 Ver 1.9.0</footer>
+<footer>© 2026 longchiri — 에브리타임 홍보게시판 분석기 Ver 2.0.0</footer>
 
 <script>
   // 스크롤 버튼 표시/숨김
@@ -1330,9 +1330,9 @@
       +'</div>';}).join('');
     var kit=document.createElement('div'); kit.id='evt-kit';
     kit.style.cssText='margin-top:18px;background:#fff;border:1.5px solid #e8ecef;border-radius:16px;padding:20px;';
-    kit.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;"><span style="font-size:1.1rem;">📝</span><strong style="font-size:0.97rem;">콘텐츠 도우미 — 게시글 제목·본문</strong><span style="font-size:0.7rem;background:'+bc+'22;color:'+bc+';padding:2px 9px;border-radius:99px;font-weight:700;">에타 최적화</span></div>'
+    kit.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;"><span style="font-size:1.1rem;">📝</span><strong style="font-size:0.97rem;">콘텐츠 도우미 — 게시글 제목·본문</strong><span style="font-size:0.78rem;background:'+bc+'22;color:'+bc+';padding:2px 9px;border-radius:99px;font-weight:700;">에타 최적화</span></div>'
       +'<div style="margin-bottom:18px;"><div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:10px;">✏️ 게시글 제목 추천 '+picked.length+'개</div>'+tHtml
-      +'<div style="font-size:0.7rem;color:#aaa;margin-top:4px;">💡 혜택·질문형 제목이 단순 광고형보다 클릭률이 높아요</div></div>'
+      +'<div style="font-size:0.78rem;color:#7d7d7d;margin-top:4px;">💡 혜택·질문형 제목이 단순 광고형보다 클릭률이 높아요</div></div>'
       +'<div><div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:8px;">📄 본문 템플릿</div>'
       +'<pre id="evt-body" style="background:#fafafa;border:1px solid #eee;border-radius:8px;padding:12px;font-size:0.81rem;line-height:1.7;white-space:pre-wrap;font-family:inherit;margin:0 0 6px;">'+esc(body)+'</pre>'
       +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'evt-body\').innerText).then(function(){alert(\'본문 복사됐어요!\')})" style="padding:5px 14px;background:'+bc+';color:#fff;border:none;border-radius:7px;font-size:0.77rem;font-weight:700;cursor:pointer;">📋 본문 복사</button></div>';
@@ -1411,12 +1411,12 @@ function setPartFilter(part, btn){
   function now(){var d=new Date();return{d:d.getFullYear()+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+("0"+d.getDate()).slice(-2),t:("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)};}
   function card(){var c=document.getElementById("myrec-card");if(c)return c;var h=document.getElementById(CONT);if(!h)return null;c=document.createElement("div");c.id="myrec-card";c.style.cssText="margin-top:18px;background:#fff;border:1.5px solid #e8ecef;border-radius:16px;padding:18px 20px;";h.appendChild(c);return c;}
   function spark(rows){if(rows.length<2)return"";var vals=rows.map(function(r){return r.s;}),mn=Math.min.apply(0,vals),mx=Math.max.apply(0,vals),rg=mx-mn||1,W=Math.max(rows.length-1,1);var pts=rows.map(function(r,i){var x=(i/W)*100,y=24-((r.s-mn)/rg)*22-1;return x.toFixed(1)+","+y.toFixed(1);}).join(" ");return '<svg viewBox="0 0 100 24" preserveAspectRatio="none" style="width:100%;height:36px;margin:6px 0 2px;"><polyline points="'+pts+'" fill="none" stroke="#ff4628" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>';}
-  function dlt(cur,prev){if(prev==null||cur==null)return"";var dv=cur-prev;return dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#aaa;">–</span>');}
+  function dlt(cur,prev){if(prev==null||cur==null)return"";var dv=cur-prev;return dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#7d7d7d;">–</span>');}
   function render(){var c=card();if(!c)return;var rows=load(),body,best=rows.length?Math.max.apply(0,rows.map(function(r){return r.s;})):null,hasExp=rows.some(function(r){return r.e!=null;});
-    if(!rows.length){body='<p style="color:#94a3b8;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 종합점수·노출 경쟁력 변화를 추적할 수 있어요. (하루에 여러 번 저장하면 그 사이 변화도 보여요.)</p>';}
-    else{var view=rows.slice(-10);body=spark(rows)+'<div>'+view.map(function(r,i,arr){var prev=i>0?arr[i-1]:null;var sd=dlt(r.s,prev?prev.s:null);var crown=r.s===best?" 👑":"";var expStr=(r.e!=null)?' · <span style="color:#7c3aed;">노출 '+r.e+'</span> '+dlt(r.e,prev?prev.e:null):'';return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.83rem;border-bottom:1px solid #f4f6f8;padding:6px 0;gap:8px;"><span style="color:#64748b;white-space:nowrap;">'+r.d+' <span style="color:#b6c2cf;">'+(r.t||'')+'</span></span><span style="font-weight:800;text-align:right;">'+r.s+'점'+crown+' '+sd+expStr+'</span></div>';}).join("")+'</div>'+(hasExp?'<div style="font-size:0.68rem;color:#b6c2cf;margin-top:5px;">종합점수(검정) · 노출 경쟁력(보라, 0~100) — 노출은 노출진단 기준</div>':'');}
+    if(!rows.length){body='<p style="color:#647488;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 종합점수·노출 경쟁력 변화를 추적할 수 있어요. (하루에 여러 번 저장하면 그 사이 변화도 보여요.)</p>';}
+    else{var view=rows.slice(-10);body=spark(rows)+'<div>'+view.map(function(r,i,arr){var prev=i>0?arr[i-1]:null;var sd=dlt(r.s,prev?prev.s:null);var crown=r.s===best?" 👑":"";var expStr=(r.e!=null)?' · <span style="color:#7c3aed;">노출 '+r.e+'</span> '+dlt(r.e,prev?prev.e:null):'';return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.83rem;border-bottom:1px solid #f4f6f8;padding:6px 0;gap:8px;"><span style="color:#64748b;white-space:nowrap;">'+r.d+' <span style="color:#8a99ab;">'+(r.t||'')+'</span></span><span style="font-weight:800;text-align:right;">'+r.s+'점'+crown+' '+sd+expStr+'</span></div>';}).join("")+'</div>'+(hasExp?'<div style="font-size:0.75rem;color:#8a99ab;margin-top:5px;">종합점수(검정) · 노출 경쟁력(보라, 0~100) — 노출은 노출진단 기준</div>':'');}
     var can=last!=null;var sl=can?('종합 '+last+'점'+(lastExp!=null?' · 노출 '+lastExp:'')):'먼저 분석을 실행하세요';
-    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#cbd5e1;font-size:0.74rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#94a3b8")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+sl+")":sl)+'</button>';
+    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#94a3b8;font-size:0.8rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#647488")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+sl+")":sl)+'</button>';
     var sb=document.getElementById("myrec-save");if(sb&&can)sb.onclick=function(){var a=load(),n=now();a.push({d:n.d,t:n.t,s:last,e:lastExp});if(a.length>40)a.shift();save(a);render();};
     var cb=document.getElementById("myrec-clr");if(cb)cb.onclick=function(){if(confirm("내 기록을 모두 삭제할까요?")){save([]);render();}};}
   window.MyRecord={note:function(s){last=Math.round(s);render();},setExposure:function(v){lastExp=Math.round((v-1)/3*100);render();}};

@@ -10,7 +10,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Apple SD Gothic Neo','Segoe UI', sans-serif;
       background: linear-gradient(135deg, #f5f0ff 0%, #fff0f5 100%);
       min-height: 100vh;
       padding: 30px 16px;
@@ -25,16 +25,16 @@
       font-weight: 800;
     }
     header p { color: #777; margin-top: 8px; font-size: 0.95rem; }
-    .algo-ver { display:inline-block; background:#f3f3f6; color:#aaa; font-size:0.67rem; font-weight:700; padding:3px 10px; border-radius:99px; margin-left:6px; vertical-align:middle; }
+    .algo-ver { display:inline-block; background:#f3f3f6; color:#7d7d7d; font-size:0.8rem; font-weight:700; padding:3px 10px; border-radius:99px; margin-left:6px; vertical-align:middle; }
     .algo-badge {
       display:inline-block;
       background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045);
-      color:#fff; font-size:0.72rem; font-weight:800;
+      color:#fff; font-size:0.79rem; font-weight:800;
       padding:3px 12px; border-radius:99px; margin-top:8px;
     }
     .ver-badge {
-      display:inline-block; background:#f3f3f6; color:#aaa;
-      font-size:0.67rem; font-weight:700;
+      display:inline-block; background:#f3f3f6; color:#7d7d7d;
+      font-size:0.8rem; font-weight:700;
       padding:3px 10px; border-radius:99px; margin-left:6px;
     }
 
@@ -71,7 +71,7 @@
     .upload-zone.dragover { border-color: #833ab4; background: #f0e0ff; }
     .upload-zone .icon { font-size: 2.5rem; margin-bottom: 12px; }
     .upload-zone h3 { font-size: 1rem; font-weight: 700; color: #555; margin-bottom: 6px; }
-    .upload-zone p { font-size: 0.85rem; color: #999; line-height: 1.6; }
+    .upload-zone p { font-size: 0.85rem; color: #6e7682; line-height: 1.72; }
     #fileInput { display: none; }
 
     .file-loaded {
@@ -123,7 +123,7 @@
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1 / -1; }
     label { font-size: 0.82rem; font-weight: 600; color: #666; }
-    .field-desc { font-size: 0.71rem; color: #bbb; line-height: 1.55; margin-top: -2px; }
+    .field-desc { font-size: 0.78rem; color: #8a8a8a; line-height: 1.55; margin-top: -2px; }
     input, textarea, select {
       border: 1.5px solid #e5e5e5; border-radius: 10px;
       padding: 10px 12px; font-size: 0.95rem; outline: none;
@@ -135,7 +135,7 @@
 
     .auto-badge {
       display: inline-block; background: #68d391; color: #fff;
-      font-size: 0.7rem; font-weight: 700; padding: 2px 7px;
+      font-size: 0.78rem; font-weight: 700; padding: 2px 7px;
       border-radius: 99px; margin-left: 6px; vertical-align: middle;
     }
 
@@ -157,7 +157,7 @@
     @media (max-width: 500px) { .parsed-grid { grid-template-columns: repeat(2, 1fr); } }
     .parsed-item { text-align: center; background: #fff; border-radius: 8px; padding: 10px 6px; }
     .parsed-item .p-val { font-size: 1.05rem; font-weight: 800; color: #c13584; }
-    .parsed-item .p-label { font-size: 0.72rem; color: #888; margin-top: 2px; }
+    .parsed-item .p-label { font-size: 0.79rem; color: #888; margin-top: 2px; }
 
     /* ── 결과 ── */
     #result { display: none; }
@@ -195,14 +195,14 @@
     .sub-score-item .ss-val {
       font-size: 1.4rem; font-weight: 800; color: #c13584;
     }
-    .sub-score-item .ss-name { font-size: 0.72rem; color: #888; margin-top: 4px; font-weight: 600; }
-    .sub-score-item .ss-pct { font-size: 0.68rem; color: #bbb; margin-top: 2px; }
+    .sub-score-item .ss-name { font-size: 0.79rem; color: #888; margin-top: 4px; font-weight: 600; }
+    .sub-score-item .ss-pct { font-size: 0.75rem; color: #8a8a8a; margin-top: 2px; }
 
     /* 진행 바 */
     .stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
     .stat-name-wrap { width: 130px; flex-shrink: 0; }
     .stat-name { font-size: 0.85rem; color: #555; display: flex; align-items: center; gap: 4px; }
-    .stat-desc { font-size: 0.75rem; color: #aaa; margin-top: 2px; line-height: 1.4; }
+    .stat-desc { font-size: 0.75rem; color: #7d7d7d; margin-top: 2px; line-height: 1.4; }
     .bar-wrap { flex: 1; background: #f0f0f0; border-radius: 99px; height: 10px; min-width: 80px; }
     .bar-fill { height: 10px; border-radius: 99px; transition: width 0.6s ease; }
     .bar-good { background: linear-gradient(90deg, #56ab2f, #a8e063); }
@@ -215,12 +215,12 @@
     .tooltip-icon {
       display: inline-flex; align-items: center; justify-content: center;
       width: 15px; height: 15px; border-radius: 50%;
-      background: #e2e8f0; color: #888; font-size: 0.65rem; font-weight: 700;
+      background: #e2e8f0; color: #888; font-size: 0.79rem; font-weight: 700;
       cursor: pointer; flex-shrink: 0;
     }
     .tooltip-box {
       display: none; position: absolute; left: 20px; top: -6px;
-      background: #2d3748; color: #fff; font-size: 0.78rem; line-height: 1.6;
+      background: #2d3748; color: #fff; font-size: 0.78rem; line-height: 1.72;
       padding: 10px 13px; border-radius: 10px; width: 220px; z-index: 99;
       box-shadow: 0 4px 16px rgba(0,0,0,0.18);
     }
@@ -235,16 +235,16 @@
     @media (max-width: 500px) { .metric-grid { grid-template-columns: repeat(2, 1fr); } }
     .metric-box { background: linear-gradient(135deg, #f9f0ff, #fff0f5); border-radius: 12px; padding: 14px 10px; text-align: center; }
     .metric-box .m-val { font-size: 1.3rem; font-weight: 800; color: #833ab4; }
-    .metric-box .m-label { font-size: 0.72rem; color: #888; margin-top: 4px; }
+    .metric-box .m-label { font-size: 0.79rem; color: #888; margin-top: 4px; }
 
     /* 요일 히트맵 */
     .weekday-grid {
       display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px;
     }
     .wd-cell { text-align: center; }
-    .wd-label { font-size: 0.72rem; color: #888; margin-bottom: 4px; font-weight: 600; }
+    .wd-label { font-size: 0.79rem; color: #888; margin-bottom: 4px; font-weight: 600; }
     .wd-bar { border-radius: 8px; transition: height 0.5s; margin: 0 auto; width: 30px; }
-    .wd-val { font-size: 0.72rem; color: #666; margin-top: 4px; font-weight: 700; }
+    .wd-val { font-size: 0.79rem; color: #666; margin-top: 4px; font-weight: 700; }
     .wd-best { border: 2px solid #c13584; border-radius: 8px; }
 
     /* 성별/연령 바 */
@@ -274,7 +274,7 @@
     .reco-item {
       display: flex; align-items: flex-start; gap: 10px;
       padding: 12px 14px; border-radius: 10px; margin-bottom: 8px;
-      font-size: 0.9rem; line-height: 1.5;
+      font-size: 0.9rem; line-height: 1.65;
     }
     .reco-keep   { background: #f0fff4; color: #276749; }
     .reco-fix    { background: #fffbeb; color: #744210; }
@@ -338,14 +338,14 @@
     /* 섹션 구분선 */
     .section-divider { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; }
 
-    footer { text-align: center; color: #bbb; font-size: 0.8rem; margin-top: 10px; }
+    footer { text-align: center; color: #8a8a8a; font-size: 0.8rem; margin-top: 10px; }
 
     /* ── ⓘ 인포 버튼 + 툴팁 ── */
     .info-wrap { position: relative; display: inline-block; vertical-align: middle; margin-left: 5px; }
     .info-btn {
       display: inline-flex; align-items: center; justify-content: center;
       width: 16px; height: 16px; background: #ede0ff; color: #833ab4;
-      border-radius: 50%; font-size: 0.62rem; font-weight: 900;
+      border-radius: 50%; font-size: 0.78rem; font-weight: 900;
       cursor: pointer; border: none; font-family: serif;
       transition: background 0.15s, color 0.15s; line-height: 1;
     }
@@ -370,7 +370,7 @@
     .tooltip-where {
       margin-top: 6px; padding: 4px 8px;
       background: #f5f0ff; border-radius: 6px;
-      font-size: 0.71rem; color: #7c3aed; font-weight: 600;
+      font-size: 0.78rem; color: #7c3aed; font-weight: 600;
     }
   /* 스크롤 버튼 */
   .scroll-btns { position:fixed; bottom:24px; right:20px; display:flex; flex-direction:column; gap:8px; z-index:1000; }
@@ -398,7 +398,7 @@
     animation:ai-shimmer 2.8s infinite;
   }
   @keyframes ai-shimmer { to { left:220%; } }
-  .ai-diag-card h2 { color:#fff; font-size:1.05rem; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .ai-diag-card h2 { color:#fff; font-size:1.13rem; font-weight:800; margin-bottom:17px; display:flex; align-items:center; gap:8px; }
   .ai-grade-row {
     display:flex; align-items:center; gap:16px; margin-bottom:18px;
     background:rgba(255,255,255,0.06); border-radius:14px; padding:16px 18px;
@@ -406,7 +406,7 @@
   }
   .ai-grade-emoji { font-size:2.8rem; flex-shrink:0; }
   .ai-grade-info { flex:1; min-width:0; }
-  .ai-grade-lbl { font-size:0.7rem; color:#888; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
+  .ai-grade-lbl { font-size:0.78rem; color:#888; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
   .ai-grade-name { font-size:1.25rem; font-weight:900; background:linear-gradient(90deg,#a855f7,#fd1d1d,#fcb045); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
   .ai-grade-score-line { font-size:0.82rem; color:#777; margin-top:4px; }
   .typewriter-box {
@@ -418,7 +418,7 @@
   .tw-cursor { display:inline-block; width:2px; height:1em; background:#a855f7; animation:tw-blink 0.8s infinite; vertical-align:text-bottom; margin-left:1px; border-radius:1px; }
   @keyframes tw-blink { 0%,100%{opacity:1} 50%{opacity:0} }
   .ai-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
-  .ai-tag { background:rgba(168,85,247,0.14); color:#c084fc; font-size:0.71rem; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid rgba(168,85,247,0.28); }
+  .ai-tag { background:rgba(168,85,247,0.14); color:#c084fc; font-size:0.78rem; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid rgba(168,85,247,0.28); }
 
   /* ── 알고리즘 노출 게이지 ── */
   .algo-gauge-ttl { font-size:0.82rem; font-weight:700; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
@@ -430,9 +430,9 @@
   .algo-tier.active-tier { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); border-color:transparent; transform:scale(1.04); box-shadow:0 4px 16px rgba(131,58,180,0.35); }
   .at-num { font-size:0.9rem; font-weight:900; color:#833ab4; }
   .algo-tier.active-tier .at-num { color:#fff; }
-  .at-lbl { font-size:0.62rem; color:#aaa; margin-top:3px; line-height:1.4; word-break:keep-all; }
+  .at-lbl { font-size:0.78rem; color:#7d7d7d; margin-top:3px; line-height:1.4; word-break:keep-all; }
   .algo-tier.active-tier .at-lbl { color:rgba(255,255,255,0.88); }
-  .at-now { display:none; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.25); border-radius:4px; padding:1px 5px; color:#fff; margin-bottom:3px; }
+  .at-now { display:none; font-size:0.75rem; font-weight:800; background:rgba(255,255,255,0.25); border-radius:4px; padding:1px 5px; color:#fff; margin-bottom:3px; }
   .algo-tier.active-tier .at-now { display:block; }
   </style>
 </head>
@@ -448,7 +448,7 @@
 </header>
 
 <div style="max-width:720px; margin:0 auto 10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-  <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#999; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px;">← 홈으로 돌아가기</a>
+  <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#6e7682; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px;">← 홈으로 돌아가기</a>
 </div>
 
 <!-- ══════ 입력 뷰 ══════ -->
@@ -468,7 +468,7 @@
   <div style="display:flex; align-items:center; gap:14px;">
     <div style="font-size:2rem; line-height:1;">📖</div>
     <div>
-      <div style="font-size:0.72rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
+      <div style="font-size:0.79rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
       <div style="font-size:1rem; font-weight:800; color:#fff;">릴스·CTR·Collab이 뭔지 모르겠다면?</div>
       <div style="font-size:0.78rem; color:#8080b0; margin-top:2px;">분석기에 나오는 핵심 용어를 한 번에 정리했어요</div>
     </div>
@@ -497,9 +497,9 @@
       <h3>파일을 드래그하거나 클릭해서 선택하세요</h3>
       <p>ZIP + HTML 동시 업로드 가능 — 미디어 ZIP ＋ 인사이트 HTML을 같이 올리면 좋아요·도달·저장까지 자동 분석</p>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;">
-        <span style="font-size:0.72rem;background:#ede9fe;color:#5b21b6;padding:3px 10px;border-radius:20px;font-weight:600;">📦 미디어 ZIP</span>
-        <span style="font-size:0.72rem;color:#aaa;">＋</span>
-        <span style="font-size:0.72rem;background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:20px;font-weight:600;">📄 인사이트 HTML <span style="font-weight:400;opacity:0.7;">(선택)</span></span>
+        <span style="font-size:0.79rem;background:#ede9fe;color:#5b21b6;padding:3px 10px;border-radius:20px;font-weight:600;">📦 미디어 ZIP</span>
+        <span style="font-size:0.79rem;color:#7d7d7d;">＋</span>
+        <span style="font-size:0.79rem;background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:20px;font-weight:600;">📄 인사이트 HTML <span style="font-weight:400;opacity:0.7;">(선택)</span></span>
       </div>
     </div>
     <input type="file" id="fileInput" accept=".json,.zip,.html" multiple onchange="handleFileSelect(event)" />
@@ -573,8 +573,8 @@
 
   <!-- 업로드 후 추가 입력 -->
   <div class="card" id="extraInputCard" style="display:none;">
-    <h2>📝 추가 정보 <span style="font-size:0.8rem;color:#999;font-weight:400">(ZIP에 없는 항목 · 비즈니스 인사이트 기반)</span></h2>
-    <p style="font-size:0.78rem;color:#aaa;margin-bottom:14px;">💡 ZIP에서 자동으로 채워진 항목은 비워두셔도 됩니다. 인스타 인사이트 앱에서 확인 가능한 수치만 입력하세요.</p>
+    <h2>📝 추가 정보 <span style="font-size:0.8rem;color:#6e7682;font-weight:400">(ZIP에 없는 항목 · 비즈니스 인사이트 기반)</span></h2>
+    <p style="font-size:0.78rem;color:#7d7d7d;margin-bottom:14px;">💡 ZIP에서 자동으로 채워진 항목은 비워두셔도 됩니다. 인스타 인사이트 앱에서 확인 가능한 수치만 입력하세요.</p>
 
     <!-- 기본 -->
     <div style="font-size:0.78rem;font-weight:700;color:#833ab4;margin-bottom:8px;">👤 기본 정보</div>
@@ -646,7 +646,7 @@
     </div>
 
     <!-- 릴스 채널 -->
-    <div style="font-size:0.78rem;font-weight:700;color:#833ab4;margin-bottom:8px;">🎬 릴스 채널 성과 <span style="font-size:0.72rem;color:#aaa;font-weight:400">(인스타 인사이트 → 각 릴스 → 평균)</span></div>
+    <div style="font-size:0.78rem;font-weight:700;color:#833ab4;margin-bottom:8px;">🎬 릴스 채널 성과 <span style="font-size:0.79rem;color:#7d7d7d;font-weight:400">(인스타 인사이트 → 각 릴스 → 평균)</span></div>
     <div class="form-grid" style="margin-bottom:18px;">
       <div class="form-group">
         <label>릴스 시청 유지율 (%) <span class="hint">★알고리즘 #1</span></label>
@@ -876,7 +876,7 @@
   </div>
 
   <div class="card">
-    <h2>🎬 릴스 성과 지표 <span style="font-size:0.78rem;color:#999;font-weight:400">(알고 있으면 입력)</span></h2>
+    <h2>🎬 릴스 성과 지표 <span style="font-size:0.78rem;color:#6e7682;font-weight:400">(알고 있으면 입력)</span></h2>
     <div class="form-grid">
       <div class="form-group">
         <label>평균 완주율 (%)
@@ -958,7 +958,7 @@
   </div>
 
   <div class="card">
-    <h2>📊 인사이트 정보 <span style="font-size:0.78rem;color:#999;font-weight:400">(알고 있으면 입력)</span></h2>
+    <h2>📊 인사이트 정보 <span style="font-size:0.78rem;color:#6e7682;font-weight:400">(알고 있으면 입력)</span></h2>
     <div class="form-grid">
       <div class="form-group">
         <label>팔로워 성장률 (%)</label>
@@ -987,7 +987,7 @@
 
   <!-- 프로필 & 캡션 SEO 카드 -->
   <div class="card seo-card-wrap">
-    <h2>📝 프로필 & 캡션 SEO <span style="font-size:0.78rem;color:#999;font-weight:400">(ZIP 자동 입력 · 수정 가능)</span></h2>
+    <h2>📝 프로필 & 캡션 SEO <span style="font-size:0.78rem;color:#6e7682;font-weight:400">(ZIP 자동 입력 · 수정 가능)</span></h2>
     <div class="form-grid">
       <div class="form-group full">
         <label>프로필 소개글 (바이오) <span class="hint">현재 프로필에 적힌 소개글 그대로 입력</span></label>
@@ -1291,7 +1291,7 @@
 <!-- 결과 상단 바 -->
 <div id="resultsTopBar" style="max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 4px 2px;">
   <button onclick="showInputView()" style="background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:99px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;color:#555;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.15s;" onmouseover="this.style.background='#e9d5ff';this.style.borderColor='#c4b5fd';this.style.color='#6d28d9'" onmouseout="this.style.background='#f3f4f6';this.style.borderColor='#e5e7eb';this.style.color='#555'">← 다시 분석</button>
-  <span style="font-size:0.75rem;color:#aaa;font-weight:600;">분석 완료 ✅</span>
+  <span style="font-size:0.75rem;color:#7d7d7d;font-weight:600;">분석 완료 ✅</span>
 </div>
 
 <!-- ══════════════ 결과 ══════════════ -->
@@ -1414,7 +1414,7 @@ function setPartFilter(part, btn) {
 
   <!-- 채널별 점수 -->
   <div class="result-card" id="channelScoreCard" data-part="overview" style="display:none;">
-    <h2>📡 채널별 점수 <span style="font-size:0.78rem;color:#aaa;font-weight:400">(피드 · 릴스 · 스토리 별도 AI 기반)</span></h2>
+    <h2>📡 채널별 점수 <span style="font-size:0.78rem;color:#7d7d7d;font-weight:400">(피드 · 릴스 · 스토리 별도 AI 기반)</span></h2>
     <div id="channelScoreGrid"></div>
   </div>
 
@@ -1448,7 +1448,7 @@ function setPartFilter(part, btn) {
 
   <!-- 콘텐츠 심층 인사이트 -->
   <div class="result-card" id="contentInsightsCard" data-part="overview" style="display:none;">
-    <h2>🔬 콘텐츠 심층 인사이트 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP 데이터 기반</span></h2>
+    <h2>🔬 콘텐츠 심층 인사이트 <span style="font-size:0.79rem;font-weight:400;color:#7d7d7d;">ZIP 데이터 기반</span></h2>
     <div id="contentInsightsSection"></div>
   </div>
 
@@ -1456,7 +1456,7 @@ function setPartFilter(part, btn) {
   <!-- 릴스 노출 진단 -->
   <div class="result-card" id="reelsDiagCard" data-part="reels" style="display:none">
     <h2>🎬 릴스 노출 진단 TOP 3</h2>
-    <p style="font-size:0.78rem;color:#999;margin-bottom:14px;">최근 게시물 기준 · 저장율·공유율로 알고리즘 배포 상태 진단</p>
+    <p style="font-size:0.78rem;color:#6e7682;margin-bottom:14px;">최근 게시물 기준 · 저장율·공유율로 알고리즘 배포 상태 진단</p>
     <div id="reelsDiagSection"></div>
   </div>
 
@@ -1468,7 +1468,7 @@ function setPartFilter(part, btn) {
 
   <!-- 릴스 분석 -->
   <div class="result-card" id="reelsCaptionCard" data-part="reels" style="display:none;">
-    <h2>🎬 릴스 분석 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP에서 자동 추출</span></h2>
+    <h2>🎬 릴스 분석 <span style="font-size:0.79rem;font-weight:400;color:#7d7d7d;">ZIP에서 자동 추출</span></h2>
     <div id="reelsCaptionSection"></div>
   </div>
 
@@ -1488,7 +1488,7 @@ function setPartFilter(part, btn) {
 
   <!-- 피드 분석 -->
   <div class="result-card" id="feedPostsCard" data-part="feed" style="display:none;">
-    <h2>📸 피드 분석 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">ZIP 인사이트 기준</span></h2>
+    <h2>📸 피드 분석 <span style="font-size:0.79rem;font-weight:400;color:#7d7d7d;">ZIP 인사이트 기준</span></h2>
     <div id="feedPostsSection"></div>
   </div>
 
@@ -1560,7 +1560,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.6.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.7.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -1658,7 +1658,7 @@ async function processFiles(files) {
                 : '📋 JSON';
       const color = ext === 'zip' ? '#ede9fe' : ext === 'html' ? '#d1fae5' : '#fef3c7';
       const tcol  = ext === 'zip' ? '#5b21b6' : ext === 'html' ? '#065f46' : '#92400e';
-      return `<span style="display:inline-flex;align-items:center;gap:5px;background:${color};color:${tcol};font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:20px;margin:3px;">${tag}: ${f.name}</span>`;
+      return `<span style="display:inline-flex;align-items:center;gap:5px;background:${color};color:${tcol};font-size:0.79rem;font-weight:600;padding:4px 10px;border-radius:20px;margin:3px;">${tag}: ${f.name}</span>`;
     }).join('');
   } else {
     listEl.style.display = 'none';
@@ -1921,18 +1921,18 @@ function renderZipFileMap(matched) {
         <span style="font-size:1rem;flex-shrink:0;color:#22c55e;">✅</span>
         <div style="flex:1;">
           <div style="font-size:0.82rem;font-weight:700;color:#166534;">${icon} ${label}</div>
-          <div style="font-size:0.7rem;color:#4ade80;">${desc}</div>
+          <div style="font-size:0.78rem;color:#4ade80;">${desc}</div>
         </div>
-        <span style="font-size:0.65rem;font-weight:700;background:#22c55e;color:#fff;padding:2px 8px;border-radius:99px;white-space:nowrap;">파싱 완료</span>
+        <span style="font-size:0.79rem;font-weight:700;background:#22c55e;color:#fff;padding:2px 8px;border-radius:99px;white-space:nowrap;">파싱 완료</span>
       </div>`;
     } else {
       return `<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;background:#fff5f5;margin-bottom:5px;">
         <span style="font-size:1rem;flex-shrink:0;color:#ef4444;">❌</span>
         <div style="flex:1;">
           <div style="font-size:0.82rem;font-weight:700;color:#991b1b;">${icon} ${label}</div>
-          <div style="font-size:0.7rem;color:#f87171;">파일없음</div>
+          <div style="font-size:0.78rem;color:#f87171;">파일없음</div>
         </div>
-        <span style="font-size:0.65rem;font-weight:700;background:#fca5a5;color:#7f1d1d;padding:2px 8px;border-radius:99px;white-space:nowrap;">미포함</span>
+        <span style="font-size:0.79rem;font-weight:700;background:#fca5a5;color:#7f1d1d;padding:2px 8px;border-radius:99px;white-space:nowrap;">미포함</span>
       </div>`;
     }
   }).join('');
@@ -1941,12 +1941,12 @@ function renderZipFileMap(matched) {
     <div style="background:#fafafa;border:1px solid #ebebeb;border-radius:12px;padding:14px 16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div style="font-size:0.78rem;font-weight:700;color:#555;">📁 ZIP 탐색 결과</div>
-        <div style="font-size:0.72rem;font-weight:700;color:#22c55e;">
+        <div style="font-size:0.79rem;font-weight:700;color:#22c55e;">
           ${foundCount}/${totalCount} 파일 탐지
         </div>
       </div>
       ${rows}
-      ${foundCount < totalCount ? `<div style="margin-top:8px;padding:8px 10px;background:#fffbeb;border-radius:8px;font-size:0.72rem;color:#92400e;">
+      ${foundCount < totalCount ? `<div style="margin-top:8px;padding:8px 10px;background:#fffbeb;border-radius:8px;font-size:0.79rem;color:#92400e;">
         💡 <b>파일없음</b> 항목은 인스타그램 데이터 내보내기에 포함되지 않은 항목이에요. 릴스·스토리·게시물 수는 media 폴더에서 자동 집계됩니다. 핵심 인사이트(팔로워·게시물 지표·오디언스)가 있으면 분석에 충분해요.
       </div>` : ''}
     </div>`;
@@ -2645,7 +2645,7 @@ function autoFillSEO(data) {
     const seoCard = document.querySelector('.seo-card-wrap');
     if (seoCard) {
       const banner = document.createElement('div');
-      banner.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:0.72rem;color:#7a9bba;background:#eef3f7;border:1px solid #d0dfe9;border-radius:8px;padding:7px 12px;margin-bottom:12px;';
+      banner.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:0.79rem;color:#7a9bba;background:#eef3f7;border:1px solid #d0dfe9;border-radius:8px;padding:7px 12px;margin-bottom:12px;';
       banner.innerHTML = '✅ ZIP에서 ' + filled.join('·') + ' 자동 입력됨 — 수정 후 분석하세요';
       seoCard.insertBefore(banner, seoCard.firstChild);
     }
@@ -2659,7 +2659,7 @@ function markAutoFill(el, label) {
   if (!wrap.querySelector('.autofill-badge')) {
     const badge = document.createElement('span');
     badge.className = 'autofill-badge';
-    badge.style.cssText = 'display:inline-block;font-size:0.62rem;color:#7a9bba;font-weight:700;margin-left:6px;vertical-align:middle;';
+    badge.style.cssText = 'display:inline-block;font-size:0.78rem;color:#7a9bba;font-weight:700;margin-left:6px;vertical-align:middle;';
     badge.textContent = '✓ ' + label;
     wrap.querySelector('label').appendChild(badge);
   }
@@ -2860,7 +2860,7 @@ function renderInstaAlgo(D) {
   // 1) 신규 부스트 (콜드스타트)
   let bColor, bBg, bEmoji, bTitle, bSub;
   if (days < 0) {
-    bColor='#94a3b8'; bBg='#f8fafc'; bEmoji='📅'; bTitle='운영 기간을 입력하면 진단돼요';
+    bColor='#647488'; bBg='#f8fafc'; bEmoji='📅'; bTitle='운영 기간을 입력하면 진단돼요';
     bSub='"계정 운영 기간(일)"을 넣으면 신규 부스트 구간인지 알려드려요.';
   } else if (days <= 30) {
     bColor='#7c3aed'; bBg='#f5f3ff'; bEmoji='🚀'; bTitle='신규 골든타임 — 초기 노출 부스트 구간';
@@ -2875,7 +2875,7 @@ function renderInstaAlgo(D) {
 
   card.style.display = 'block';
   el.innerHTML =
-    '<h2>⚙️ 알고리즘 메커니즘 <span style="font-size:0.7rem;font-weight:400;color:#94a3b8;">인스타 노출 작동 원리</span></h2>'
+    '<h2>⚙️ 알고리즘 메커니즘 <span style="font-size:0.78rem;font-weight:400;color:#647488;">인스타 노출 작동 원리</span></h2>'
     // 신규 부스트
     + '<div style="background:'+bBg+';border:1.5px solid '+bColor+'55;border-radius:14px;padding:15px 16px;margin-bottom:11px;">'
       + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="font-size:1.4rem;">'+bEmoji+'</span>'
@@ -2887,7 +2887,7 @@ function renderInstaAlgo(D) {
       + '<span style="font-weight:800;font-size:0.94rem;color:#ea580c;">초기 반응 속도 — 첫 1시간이 노출을 결정</span></div>'
       + '<div style="font-size:0.83rem;color:#555;line-height:1.7;">알고리즘은 <strong>올린 직후 첫 1시간의 반응 속도</strong>를 강한 노출 트리거로 써요. 총 좋아요보다 "얼마나 빨리"가 중요해요.'
       + '<br>👉 <strong>팔로워가 가장 많이 접속하는 시간대에 발행</strong>하고, 올린 직후 스토리 공유·질문 댓글 유도로 초반 반응을 끌어올리세요. 첫 반응이 빠르면 비팔로워 탐색 노출로 이어져요.</div></div>'
-    + '<div style="margin-top:10px;font-size:0.72rem;color:#aaa;text-align:right;">※ 플랫폼 알고리즘 작동 원리 기반 (신규 부스트는 운영기간 입력 기준)</div>';
+    + '<div style="margin-top:10px;font-size:0.79rem;color:#7d7d7d;text-align:right;">※ 플랫폼 알고리즘 작동 원리 기반 (신규 부스트는 운영기간 입력 기준)</div>';
 }
 
 function renderInstaGhost(D) {
@@ -3286,14 +3286,14 @@ function analyze() {
           <div style="font-size:1.6rem;">${c.icon}</div>
           <div style="font-size:0.85rem;font-weight:800;color:#333;margin:4px 0 2px;">${c.name} 채널</div>
           <div style="font-size:2rem;font-weight:900;color:${c.color};line-height:1.1;">${c.score}</div>
-          <div style="font-size:0.65rem;color:#999;margin-bottom:8px;">/ 100점 · ${g}</div>
-          ${c.items.map(it => `<div style="display:flex;justify-content:space-between;font-size:0.72rem;padding:3px 0;border-top:1px solid #f3f3f6;">
-            <span style="color:#aaa;">${it.label}</span><span style="font-weight:700;color:#555;">${it.val}</span>
+          <div style="font-size:0.79rem;color:#6e7682;margin-bottom:8px;">/ 100점 · ${g}</div>
+          ${c.items.map(it => `<div style="display:flex;justify-content:space-between;font-size:0.79rem;padding:3px 0;border-top:1px solid #f3f3f6;">
+            <span style="color:#7d7d7d;">${it.label}</span><span style="font-weight:700;color:#555;">${it.val}</span>
           </div>`).join('')}
         </div>`;
       }).join('')}
       </div>
-      <p style="font-size:0.72rem;color:#bbb;text-align:center;margin-top:6px;">💡 인스타그램은 피드·릴스·스토리·탐색탭에 별도 AI 시스템을 운영합니다 (2026)</p>`;
+      <p style="font-size:0.79rem;color:#8a8a8a;text-align:center;margin-top:6px;">💡 인스타그램은 피드·릴스·스토리·탐색탭에 별도 AI 시스템을 운영합니다 (2026)</p>`;
   } else {
     channelCard.style.display = 'none';
   }
@@ -3317,7 +3317,7 @@ function analyze() {
     <div class="metric-box">
       <div class="m-val">${m.val}</div>
       <div class="m-label">${m.label}</div>
-      ${m.sub ? `<div style="font-size:0.65rem;color:#aaa;margin-top:2px;">${m.sub}</div>` : ''}
+      ${m.sub ? `<div style="font-size:0.79rem;color:#7d7d7d;margin-top:2px;">${m.sub}</div>` : ''}
     </div>`).join('');
 
   // 탑 게시물
@@ -3373,29 +3373,29 @@ function analyze() {
           <div style="background:linear-gradient(135deg,#833ab4,#e1306c);color:#fff;font-weight:900;font-size:13px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${i+1}</div>
           <div style="flex:1;min-width:0;">
             <div style="font-weight:700;font-size:13px;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">🎬 ${title}</div>
-            ${date ? `<div style="font-size:11px;color:#94a3b8;margin-top:1px;">${date}</div>` : ''}
+            ${date ? `<div style="font-size:11px;color:#647488;margin-top:1px;">${date}</div>` : ''}
           </div>
           <div style="background:${statusBg};color:${statusColor};font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;">${status}</div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
           <div style="text-align:center;background:#fff;border:1px solid #e8ecf4;border-radius:8px;padding:8px 4px;">
             <div style="font-size:15px;font-weight:800;color:#1a1a2e;">${p.reach ? p.reach.toLocaleString() : '—'}</div>
-            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">도달</div>
+            <div style="font-size:10px;color:#647488;margin-top:2px;">도달</div>
           </div>
           <div style="text-align:center;background:#fff;border:1px solid #e8ecf4;border-radius:8px;padding:8px 4px;">
             <div style="font-size:15px;font-weight:800;color:#833ab4;">${p.saves}</div>
-            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">저장 ${saveRate > 0 ? saveRate.toFixed(1)+'%' : ''}</div>
+            <div style="font-size:10px;color:#647488;margin-top:2px;">저장 ${saveRate > 0 ? saveRate.toFixed(1)+'%' : ''}</div>
           </div>
           <div style="text-align:center;background:#fff;border:1px solid #e8ecf4;border-radius:8px;padding:8px 4px;">
             <div style="font-size:15px;font-weight:800;color:#e1306c;">${p.shares}</div>
-            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">공유 ${shareRate > 0 ? shareRate.toFixed(1)+'%' : ''}</div>
+            <div style="font-size:10px;color:#647488;margin-top:2px;">공유 ${shareRate > 0 ? shareRate.toFixed(1)+'%' : ''}</div>
           </div>
           <div style="text-align:center;background:#fff;border:1px solid #e8ecf4;border-radius:8px;padding:8px 4px;">
             <div style="font-size:15px;font-weight:800;color:#fd1d1d;">${p.likes}</div>
-            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">좋아요</div>
+            <div style="font-size:10px;color:#647488;margin-top:2px;">좋아요</div>
           </div>
         </div>
-        <div style="background:${statusBg};border-radius:8px;padding:10px 12px;font-size:12px;color:${statusColor};line-height:1.6;">
+        <div style="background:${statusBg};border-radius:8px;padding:10px 12px;font-size:12px;color:${statusColor};line-height:1.72;">
           💡 ${advice}
         </div>
       </div>`;
@@ -3425,24 +3425,24 @@ function analyze() {
       : 'ℹ️ 비팔 도달 비율 데이터가 없어요. 수동 입력 탭에서 비팔로워 도달 비율(%)을 입력하면 상세 진단이 가능합니다.';
 
     audHTML += `
-    <p class="tag-section-title">📡 도달 분석 <span style="font-size:0.7rem;color:#aaa;font-weight:400;">— 게시물 평균 기준</span></p>
+    <p class="tag-section-title">📡 도달 분석 <span style="font-size:0.78rem;color:#7d7d7d;font-weight:400;">— 게시물 평균 기준</span></p>
 
     <!-- 3분할 수치 -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
       <div style="text-align:center;background:#f5f3ff;border-radius:10px;padding:12px 4px;">
         <div style="font-size:1.15rem;font-weight:800;color:#7c3aed;">${D.avgReach ? D.avgReach.toLocaleString() : '—'}</div>
-        <div style="font-size:0.7rem;color:#666;margin-top:2px;">총 도달</div>
-        <div style="font-size:0.62rem;color:#aaa;">팔+비팔 합산</div>
+        <div style="font-size:0.78rem;color:#666;margin-top:2px;">총 도달</div>
+        <div style="font-size:0.78rem;color:#7d7d7d;">팔+비팔 합산</div>
       </div>
       <div style="text-align:center;background:#eef3f7;border-radius:10px;padding:12px 4px;">
         <div style="font-size:1.15rem;font-weight:800;color:#7a9bba;">${nfCnt ? nfCnt.toLocaleString() : (nfrPct?nfrPct+'%':'—')}</div>
-        <div style="font-size:0.7rem;color:#666;margin-top:2px;">비팔 도달</div>
-        <div style="font-size:0.62rem;color:#7a9bba;font-weight:700;">${nfrPct ? nfrPct+'%' : ''}</div>
+        <div style="font-size:0.78rem;color:#666;margin-top:2px;">비팔 도달</div>
+        <div style="font-size:0.78rem;color:#7a9bba;font-weight:700;">${nfrPct ? nfrPct+'%' : ''}</div>
       </div>
       <div style="text-align:center;background:#eff6ff;border-radius:10px;padding:12px 4px;">
         <div style="font-size:1.15rem;font-weight:800;color:#2563eb;">${fCnt && nfCnt ? fCnt.toLocaleString() : '—'}</div>
-        <div style="font-size:0.7rem;color:#666;margin-top:2px;">팔로워 도달</div>
-        <div style="font-size:0.62rem;color:#2563eb;font-weight:700;">${nfrPct ? (100-nfrPct)+'%' : ''}</div>
+        <div style="font-size:0.78rem;color:#666;margin-top:2px;">팔로워 도달</div>
+        <div style="font-size:0.78rem;color:#2563eb;font-weight:700;">${nfrPct ? (100-nfrPct)+'%' : ''}</div>
       </div>
     </div>
 
@@ -3451,12 +3451,12 @@ function analyze() {
     <div style="background:#f3f4f6;border-radius:99px;height:18px;overflow:hidden;position:relative;">
       <div style="position:absolute;left:0;top:0;height:100%;width:${nfrPct}%;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:99px;transition:width 0.8s;"></div>
     </div>
-    <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:0.68rem;color:#aaa;">
+    <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:0.75rem;color:#7d7d7d;">
       <span>비팔로워 ${nfrPct}%</span><span>팔로워 ${100-nfrPct}%</span>
     </div>` : ''}
 
     <!-- 진단 -->
-    <div style="margin-top:10px;padding:9px 12px;background:${diagBg};border-radius:8px;font-size:0.75rem;color:${diagColor};line-height:1.5;">
+    <div style="margin-top:10px;padding:9px 12px;background:${diagBg};border-radius:8px;font-size:0.75rem;color:${diagColor};line-height:1.65;">
       ${diagMsg}
     </div>
     <hr class="section-divider"/>`;
@@ -3589,18 +3589,18 @@ function analyze() {
       else if (pM<20){ fbc='#d97706'; fb='🟡 <b>중형 해시태그가 부족해요.</b> 중형(1~100만)은 노출량과 경쟁의 균형이 좋은 핵심 구간이에요 — 더 섞어보세요.'; }
       else { fbc='#16a34a'; fb='✅ <b>티어 밸런스가 좋아요.</b> 대형·중형·소형이 고르게 섞여 다양한 규모의 오디언스에 노출돼요.'; }
       htHTML += `<div style="margin-top:14px;background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:12px;padding:14px;">
-        <p style="font-weight:800;font-size:0.9rem;margin:0 0 10px;">📊 해시태그 티어 밸런스 <span style="font-size:0.72rem;color:#bbb;font-weight:400;">(분류 ${known}개${nU?` · 미분류 ${nU}개`:''})</span></p>
+        <p style="font-weight:800;font-size:0.9rem;margin:0 0 10px;">📊 해시태그 티어 밸런스 <span style="font-size:0.79rem;color:#8a8a8a;font-weight:400;">(분류 ${known}개${nU?` · 미분류 ${nU}개`:''})</span></p>
         <div style="display:flex;height:22px;border-radius:7px;overflow:hidden;margin-bottom:10px;background:#f1f5f9;">
           <div style="width:${pB}%;background:#9333ea;"></div><div style="width:${pM}%;background:#c084fc;"></div><div style="width:${pS}%;background:#e9d5ff;"></div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font-size:0.78rem;margin-bottom:10px;">
           <span>🟪 대형 <b>${nB}개</b> (${pB}%)</span><span>🟣 중형 <b>${nM}개</b> (${pM}%)</span><span>⚪ 소형 <b>${nS}개</b> (${pS}%)</span>
         </div>
-        <div style="font-size:0.82rem;color:${fbc};line-height:1.6;">${fb}</div>
-        <div style="font-size:0.74rem;color:#999;margin-top:8px;">💡 권장 비율: <b>대형 20% · 중형 40% · 소형 40%</b> — 대형은 발견용, 중형·소형이 실제 상위 노출(인기 게시물) 채널이에요.</div>
+        <div style="font-size:0.82rem;color:${fbc};line-height:1.72;">${fb}</div>
+        <div style="font-size:0.8rem;color:#6e7682;margin-top:8px;">💡 권장 비율: <b>대형 20% · 중형 40% · 소형 40%</b> — 대형은 발견용, 중형·소형이 실제 상위 노출(인기 게시물) 채널이에요.</div>
       </div>`;
     } else if (nU>0) {
-      htHTML += `<div style="margin-top:14px;font-size:0.78rem;color:#999;background:#fafafa;border-radius:8px;padding:10px;">📊 티어 밸런스: 사용 중인 해시태그가 DB에 없어 분류하지 못했어요(미분류 ${nU}개). 카테고리 대표 해시태그를 쓰면 티어 분석이 가능해요.</div>`;
+      htHTML += `<div style="margin-top:14px;font-size:0.78rem;color:#6e7682;background:#fafafa;border-radius:8px;padding:10px;">📊 티어 밸런스: 사용 중인 해시태그가 DB에 없어 분류하지 못했어요(미분류 ${nU}개). 카테고리 대표 해시태그를 쓰면 티어 분석이 가능해요.</div>`;
     }
   }
   // ── 티어 밸런스 추천 ──
@@ -3612,7 +3612,7 @@ function analyze() {
     pool.forEach(function(p){ if(!usedSet[p[0]]) grp[p[1]].push(p[0]); });
     var pickB=grp.B.slice(0,3), pickM=grp.M.slice(0,5), pickS=grp.S.slice(0,5);
     function _chips(arr){ return '<div class="tag-chips">'+arr.map(function(t){return '<span class="kw-tag kw-tag-suggest">'+t+'</span>';}).join('')+'</div>'; }
-    htHTML += '<p class="tag-section-title" style="margin-top:16px;">✨ 티어 밸런스 추천 <span style="font-size:0.75rem;color:#bbb;">('+recCat+' 기반 · 권장 비율로 골랐어요)</span></p>';
+    htHTML += '<p class="tag-section-title" style="margin-top:16px;">✨ 티어 밸런스 추천 <span style="font-size:0.75rem;color:#8a8a8a;">('+recCat+' 기반 · 권장 비율로 골랐어요)</span></p>';
     if(pickB.length) htHTML += '<div style="font-size:0.78rem;color:#9333ea;font-weight:700;margin:8px 0 4px;">🟪 대형 (발견용)</div>'+_chips(pickB);
     if(pickM.length) htHTML += '<div style="font-size:0.78rem;color:#a855f7;font-weight:700;margin:8px 0 4px;">🟣 중형 (균형)</div>'+_chips(pickM);
     if(pickS.length) htHTML += '<div style="font-size:0.78rem;color:#7c3aed;font-weight:700;margin:8px 0 4px;">⚪ 소형 (상위 노출용)</div>'+_chips(pickS);
@@ -3621,9 +3621,9 @@ function analyze() {
     if(ek>0 && eB/ek>=0.5 && (pickM.length||pickS.length)) addMsg='⚠️ 지금 대형에 치우쳐 있어요. 위 <b>중형·소형</b>을 추가하면 상위 노출(인기 게시물) 기회가 생겨요.';
     else if(ek>0 && eS/ek<0.2 && pickS.length) addMsg='🟡 소형이 부족해요. 위 <b>소형 태그</b>를 더 섞어 초기 도달을 노리세요.';
     else addMsg='💡 매 게시물 5~15개, <b>대형·중형·소형을 고루</b> 섞는 게 이상적이에요 (권장 대형20·중형40·소형40).';
-    htHTML += '<div style="margin-top:12px;font-size:0.82rem;color:#555;background:#faf5ff;border-radius:8px;padding:10px;line-height:1.6;">'+addMsg+'</div>';
+    htHTML += '<div style="margin-top:12px;font-size:0.82rem;color:#555;background:#faf5ff;border-radius:8px;padding:10px;line-height:1.72;">'+addMsg+'</div>';
   } else {
-    htHTML += `<p class="tag-section-title" style="margin-top:16px;">✨ 분야별 추천 해시태그 <span style="font-size:0.75rem;color:#bbb;">(${niche} 기반)</span></p>
+    htHTML += `<p class="tag-section-title" style="margin-top:16px;">✨ 분야별 추천 해시태그 <span style="font-size:0.75rem;color:#8a8a8a;">(${niche} 기반)</span></p>
     <div class="tag-chips">${suggestTags.map(t => `<span class="kw-tag kw-tag-suggest">${t}</span>`).join('')}</div>`;
   }
   document.getElementById('hashtagSection').innerHTML = htHTML;
@@ -4026,7 +4026,7 @@ function analyze() {
       <div style="background:linear-gradient(135deg,#f9f0ff,#fff0f5);border-radius:14px;padding:20px;text-align:center;margin-bottom:16px;">
         <div style="font-size:2.8rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${Math.round(reelsIdx)}</div>
         <div style="font-weight:700;color:${reelsGrade.color};margin-top:6px;font-size:1rem;">${reelsGrade.label}</div>
-        <div style="font-size:0.75rem;color:#aaa;margin-top:4px;">공식: (완주율×3) + (재시청×5) + (공유율×10) + (저장률×7) - (초반이탈×2)</div>
+        <div style="font-size:0.75rem;color:#7d7d7d;margin-top:4px;">공식: (완주율×3) + (재시청×5) + (공유율×10) + (저장률×7) - (초반이탈×2)</div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
         ${[
@@ -4035,16 +4035,16 @@ function analyze() {
           { label:'초반 이탈', val:edr+'%', score:-Math.round(edr*2), target:'30%↓', ok: edr<=30 },
         ].map(f => `
           <div style="background:#fff;border-radius:10px;padding:12px 8px;text-align:center;border:1.5px solid ${f.ok?'#68d391':'#fbd38d'};">
-            <div style="font-size:0.72rem;color:#aaa;font-weight:600;">${f.label}</div>
+            <div style="font-size:0.79rem;color:#7d7d7d;font-weight:600;">${f.label}</div>
             <div style="font-size:1.2rem;font-weight:800;color:${f.score>=0?'#833ab4':'#e53e3e'};margin-top:4px;">${f.score>0?'+':''}${f.score}</div>
-            <div style="font-size:0.7rem;color:#aaa;">${f.val} (목표 ${f.target})</div>
+            <div style="font-size:0.78rem;color:#7d7d7d;">${f.val} (목표 ${f.target})</div>
           </div>`).join('')}
       </div>
       ${D.storyDM || D.storyStickerClicks ? `
       <div style="background:#f8f9ff;border-radius:12px;padding:14px 16px;">
         <div style="font-size:0.82rem;font-weight:700;color:#4a5568;margin-bottom:8px;">📖 스토리 노출 지수: <b style="color:#833ab4">${Math.round(storyIdx)}</b></div>
         <div style="font-size:0.78rem;color:#888;">공식: (DM답장×5) + (스티커 클릭×3) + (프로필 방문×2)</div>
-        <div style="font-size:0.8rem;color:#555;margin-top:6px;line-height:1.6;">
+        <div style="font-size:0.8rem;color:#555;margin-top:6px;line-height:1.72;">
           💡 스토리 지수가 높을수록 팔로워와의 친밀도가 높아져 피드 우선 노출이 증가해요.
         </div>
       </div>` : ''}`;
@@ -4052,7 +4052,7 @@ function analyze() {
     document.getElementById('reelsScoreSection').innerHTML = `
       <div style="padding:16px;background:#f8f9ff;border-radius:12px;font-size:0.85rem;color:#666;">
         수동 입력 탭의 <b>릴스 성과 지표</b>에 완주율·재시청율·초반 이탈율을 입력하면 릴스 떡상 지수를 계산해 드려요.<br/>
-        <span style="color:#aaa;font-size:0.78rem;">공식: (완주율×3) + (재시청×5) + (공유율×10) + (저장률×7) - (초반이탈×2)</span>
+        <span style="color:#7d7d7d;font-size:0.78rem;">공식: (완주율×3) + (재시청×5) + (공유율×10) + (저장률×7) - (초반이탈×2)</span>
       </div>`;
   }
 
@@ -4068,7 +4068,7 @@ function analyze() {
     { label:'인게이지먼트율', val: er.toFixed(1), unit:'%', target:3, desc:'3%↑ 목표', good: er>=3, hasData: er>0 },
   ];
   document.getElementById('kpiSection').innerHTML = `
-    <p style="font-size:0.8rem;color:#aaa;margin-bottom:14px;">2026 인스타그램 알고리즘 기준 KPI 목표 대비 현황이에요.</p>
+    <p style="font-size:0.8rem;color:#7d7d7d;margin-bottom:14px;">2026 인스타그램 알고리즘 기준 KPI 목표 대비 현황이에요.</p>
     ${kpiItems.map(k => `
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
       <div style="width:80px;font-size:0.82rem;color:#555;font-weight:600;">${k.label}</div>
@@ -4078,7 +4078,7 @@ function analyze() {
       <div style="width:80px;text-align:right;font-size:0.82rem;font-weight:700;color:${k.hasData?(k.good?'#56ab2f':'#f7971e'):'#ccc'};">
         ${k.hasData ? k.val+k.unit : '—'} ${k.hasData?(k.good?'✅':'⚠️'):''}
       </div>
-      <div style="width:70px;text-align:right;font-size:0.75rem;color:#aaa;">${k.desc}</div>
+      <div style="width:70px;text-align:right;font-size:0.75rem;color:#7d7d7d;">${k.desc}</div>
     </div>`).join('')}
     <div style="margin-top:12px;padding:10px 14px;background:#fffbeb;border-radius:8px;font-size:0.82rem;color:#744210;">
       💡 <b>좋아요율은 낮게 측정</b>: 인스타 알고리즘은 저장·공유·재시청에 각각 7배·10배·5배의 가중치를 부여해요. 좋아요는 가중치 0.5로 가장 낮아요.
@@ -4100,15 +4100,15 @@ function analyze() {
     { n:5, range:'100,000+ 노출',     cond:'전체 지표 안정', next:'콜라보, 트렌드 사운드 활용', color:'#833ab4' },
   ];
   document.getElementById('diffusionStageSection').innerHTML = `
-    <p style="font-size:0.82rem;color:#aaa;margin-bottom:14px;">현재 추정 단계: <b style="color:#833ab4">${diffStage}단계</b> (평균 노출 ${avgReachVal.toLocaleString()}회 기준)</p>
+    <p style="font-size:0.82rem;color:#7d7d7d;margin-bottom:14px;">현재 추정 단계: <b style="color:#833ab4">${diffStage}단계</b> (평균 노출 ${avgReachVal.toLocaleString()}회 기준)</p>
     ${diffStages.map(s => `
     <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;padding:12px 14px;border-radius:10px;background:${s.n===diffStage?'#f9f0ff':'#fafafa'};border:${s.n===diffStage?'2px solid '+s.color:'1.5px solid #f0f0f0'};">
-      <div style="width:28px;height:28px;border-radius:50%;background:${s.n<=diffStage?s.color:'#e2e8f0'};display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;color:${s.n<=diffStage?'#fff':'#aaa'};flex-shrink:0;">${s.n}</div>
+      <div style="width:28px;height:28px;border-radius:50%;background:${s.n<=diffStage?s.color:'#e2e8f0'};display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;color:${s.n<=diffStage?'#fff':'#7d7d7d'};flex-shrink:0;">${s.n}</div>
       <div style="flex:1;">
         <div style="font-weight:700;font-size:0.85rem;color:${s.n===diffStage?s.color:'#888'};">${s.range} · 조건: ${s.cond}</div>
-        <div style="font-size:0.78rem;color:${s.n===diffStage?'#555':'#bbb'};margin-top:2px;">다음 전략: ${s.next}</div>
+        <div style="font-size:0.78rem;color:${s.n===diffStage?'#555':'#8a8a8a'};margin-top:2px;">다음 전략: ${s.next}</div>
       </div>
-      ${s.n===diffStage?`<div style="font-size:0.7rem;font-weight:700;background:${s.color};color:#fff;padding:3px 8px;border-radius:99px;white-space:nowrap;">현재</div>`:''}
+      ${s.n===diffStage?`<div style="font-size:0.78rem;font-weight:700;background:${s.color};color:#fff;padding:3px 8px;border-radius:99px;white-space:nowrap;">현재</div>`:''}
     </div>`).join('')}`;
 
   // ── Hidden Score (계정 신뢰도) ──
@@ -4119,7 +4119,7 @@ function analyze() {
   const hiddenTotal      = consistencyScore + engagementTrust + growthTrust + activityTrust;
 
   document.getElementById('hiddenScoreSection').innerHTML = `
-    <p style="font-size:0.82rem;color:#aaa;margin-bottom:14px;">인스타가 공개하지 않는 계정 품질 점수예요. 높을수록 같은 콘텐츠도 더 넓게 배포돼요.</p>
+    <p style="font-size:0.82rem;color:#7d7d7d;margin-bottom:14px;">인스타가 공개하지 않는 계정 품질 점수예요. 높을수록 같은 콘텐츠도 더 넓게 배포돼요.</p>
     <div style="background:linear-gradient(135deg,#f9f0ff,#fff0f5);border-radius:14px;padding:16px;text-align:center;margin-bottom:16px;">
       <div style="font-size:2.5rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#fd1d1d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${hiddenTotal}<span style="font-size:1rem;">/100</span></div>
       <div style="color:#888;font-size:0.85rem;margin-top:4px;">${hiddenTotal>=80?'🏆 최고 신뢰도 계정':hiddenTotal>=60?'⭐ 신뢰도 우수':hiddenTotal>=40?'📈 보통 수준':'🌱 신뢰도 낮음 — 관리 필요'}</div>
@@ -4426,11 +4426,11 @@ function analyze() {
   document.getElementById('bioSeoSection').innerHTML = `
     ${bioText.length > 0 ? `
     <div style="background:#f8f4ff;border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:0.88rem;color:#555;border-left:3px solid #c13584;">
-      <span style="color:#aaa;font-size:0.75rem;">분석 중인 바이오:</span><br/>
+      <span style="color:#7d7d7d;font-size:0.75rem;">분석 중인 바이오:</span><br/>
       <span style="color:#333;">${bioText}</span>
     </div>` : ''}
     <div style="text-align:center;padding:16px;background:linear-gradient(135deg,#fff0f8,#f5f0ff);border-radius:14px;margin-bottom:14px;">
-      <div style="font-size:2.8rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#c13584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${bioScore}<span style="font-size:1rem;color:#aaa;">/${bioChecks.length}</span></div>
+      <div style="font-size:2.8rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#c13584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${bioScore}<span style="font-size:1rem;color:#7d7d7d;">/${bioChecks.length}</span></div>
       <div style="font-size:1rem;font-weight:700;color:${bioGrade.c};margin-top:4px;">${bioGrade.g}</div>
     </div>
     <div style="display:grid;gap:8px;margin-bottom:14px;">
@@ -4469,16 +4469,16 @@ function analyze() {
   document.getElementById('captionSection').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
       <div style="background:#f5f0ff;border-radius:12px;padding:14px;text-align:center;">
-        <div style="font-size:0.75rem;color:#aaa;margin-bottom:4px;">훅 유형</div>
+        <div style="font-size:0.75rem;color:#7d7d7d;margin-bottom:4px;">훅 유형</div>
         <div style="font-size:0.95rem;font-weight:700;color:#833ab4;">${hookLabels[hookType]}</div>
-        <div style="font-size:0.72rem;color:#aaa;margin-top:4px;">점수 +${hookScores[hookType]}</div>
+        <div style="font-size:0.79rem;color:#7d7d7d;margin-top:4px;">점수 +${hookScores[hookType]}</div>
       </div>
       <div style="background:#f5f0ff;border-radius:12px;padding:14px;text-align:center;">
-        <div style="font-size:0.75rem;color:#aaa;margin-bottom:4px;">CTA 강도</div>
+        <div style="font-size:0.75rem;color:#7d7d7d;margin-bottom:4px;">CTA 강도</div>
         <div style="font-size:0.95rem;font-weight:700;color:#c13584;">${ctaLabel}</div>
       </div>
     </div>
-    <div style="padding:12px 14px;background:#fffbeb;border-radius:10px;font-size:0.84rem;color:#744210;margin-bottom:14px;line-height:1.6;">
+    <div style="padding:12px 14px;background:#fffbeb;border-radius:10px;font-size:0.84rem;color:#744210;margin-bottom:14px;line-height:1.72;">
       🎣 <b>훅 평가:</b> ${hookRatings[hookType]}
     </div>
     ${latestCaption.length > 0 ? `
@@ -4510,9 +4510,9 @@ function analyze() {
   function fbHtml({goods,bads,tips}) {
     if(!goods.length&&!bads.length&&!tips.length) return '';
     return `<div style="margin-top:9px;border-top:1px solid #e5e7eb;padding-top:9px;display:grid;gap:4px;">
-      ${goods.map(g=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#166534;line-height:1.5;"><span style="flex-shrink:0;">✅</span><span>${g}</span></div>`).join('')}
-      ${bads.map(b=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#b91c1c;line-height:1.5;"><span style="flex-shrink:0;">❌</span><span>${b}</span></div>`).join('')}
-      ${tips.map(t=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#1d4ed8;line-height:1.5;"><span style="flex-shrink:0;">💡</span><span>${t}</span></div>`).join('')}
+      ${goods.map(g=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#166534;line-height:1.65;"><span style="flex-shrink:0;">✅</span><span>${g}</span></div>`).join('')}
+      ${bads.map(b=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#b91c1c;line-height:1.65;"><span style="flex-shrink:0;">❌</span><span>${b}</span></div>`).join('')}
+      ${tips.map(t=>`<div style="display:flex;gap:6px;font-size:0.77rem;color:#1d4ed8;line-height:1.65;"><span style="flex-shrink:0;">💡</span><span>${t}</span></div>`).join('')}
     </div>`;
   }
 
@@ -4644,9 +4644,9 @@ function analyze() {
           { label:'평균 캡션 길이', val: avgLen+'자', sub: avgLen>=80&&avgLen<=600?'✅ 적정':'⚠️ '+(avgLen<80?'너무 짧음':'너무 길수도'), color: avgLen>=80&&avgLen<=600?'#276749':'#c53030' },
         ].map(s=>`
           <div style="background:#f5f0ff;border-radius:12px;padding:13px;text-align:center;">
-            <div style="font-size:0.72rem;color:#aaa;margin-bottom:4px;">${s.label}</div>
+            <div style="font-size:0.79rem;color:#7d7d7d;margin-bottom:4px;">${s.label}</div>
             <div style="font-size:1.3rem;font-weight:900;color:${s.color};">${s.val}</div>
-            <div style="font-size:0.72rem;color:${s.color};margin-top:2px;">${s.sub}</div>
+            <div style="font-size:0.79rem;color:${s.color};margin-top:2px;">${s.sub}</div>
           </div>`).join('')}
       </div>
 
@@ -4686,7 +4686,7 @@ function analyze() {
       <!-- 릴스 성과 분석 (인사이트 데이터 있을 때) -->
       ${rlHasPerf ? `
       <div style="background:#fafafa;border-radius:14px;padding:16px;margin-bottom:18px;border:1px solid #ede9fe;">
-        <div style="font-size:0.85rem;font-weight:800;color:#6b21a8;margin-bottom:14px;">📊 릴스 성과 분석 <span style="font-size:0.72rem;font-weight:500;color:#999;">(ZIP 인사이트 기준)</span></div>
+        <div style="font-size:0.85rem;font-weight:800;color:#6b21a8;margin-bottom:14px;">📊 릴스 성과 분석 <span style="font-size:0.79rem;font-weight:500;color:#6e7682;">(ZIP 인사이트 기준)</span></div>
 
         <!-- 상단 요약 카드 4종 -->
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;">
@@ -4697,7 +4697,7 @@ function analyze() {
             rlAvgPlays>0 ? { label:'평균 재생수', val: rlAvgPlays.toLocaleString()+'회', color:'#1d4ed8', bg:'#eff6ff' } : null,
           ].filter(Boolean).map(s => `
             <div style="background:${s.bg};border-radius:10px;padding:11px;text-align:center;">
-              <div style="font-size:0.7rem;color:#aaa;margin-bottom:3px;">${s.label}</div>
+              <div style="font-size:0.78rem;color:#7d7d7d;margin-bottom:3px;">${s.label}</div>
               <div style="font-size:1.2rem;font-weight:900;color:${s.color};">${s.val}</div>
             </div>`).join('')}
         </div>
@@ -4708,7 +4708,7 @@ function analyze() {
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
             <span style="color:#555;">
               <span style="font-weight:700;">노출→도달 효율 (도달률)</span><br>
-              <span style="font-size:0.72rem;color:#999;">노출 중 실제 도달로 이어진 비율 — 50%+이면 알고리즘 친화적</span>
+              <span style="font-size:0.79rem;color:#6e7682;">노출 중 실제 도달로 이어진 비율 — 50%+이면 알고리즘 친화적</span>
             </span>
             <span style="font-weight:900;color:${+rlDrR>=50?'#276749':+rlDrR>=30?'#744210':'#9b2c2c'};font-size:1rem;">${rlDrR}%</span>
           </div>` : ''}
@@ -4726,7 +4726,7 @@ function analyze() {
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
             <span style="color:#555;">
               <span style="font-weight:700;">평균 저장율</span><br>
-              <span style="font-size:0.72rem;color:#999;">릴스 평균 1~2% 이상이면 우수</span>
+              <span style="font-size:0.79rem;color:#6e7682;">릴스 평균 1~2% 이상이면 우수</span>
             </span>
             <span style="font-weight:900;color:${+rlAvgSvR>=2?'#276749':+rlAvgSvR>=1?'#744210':'#9b2c2c'};font-size:1rem;">${rlAvgSvR}%</span>
           </div>` : ''}
@@ -4734,7 +4734,7 @@ function analyze() {
       </div>` : `
       <div style="background:#faf5ff;border-radius:12px;padding:13px 16px;margin-bottom:16px;border:1px dashed #d8b4fe;text-align:center;">
         <div style="font-size:0.78rem;color:#7c3aed;font-weight:600;">📊 릴스 성과 데이터 없음</div>
-        <div style="font-size:0.72rem;color:#aaa;margin-top:4px;">인사이트 포함 ZIP을 업로드하면 도달·노출·인게이지먼트율을 볼 수 있어요</div>
+        <div style="font-size:0.79rem;color:#7d7d7d;margin-top:4px;">인사이트 포함 ZIP을 업로드하면 도달·노출·인게이지먼트율을 볼 수 있어요</div>
       </div>`}
 
       <!-- 릴스 개별 분석 — 핀 + 펼치기 -->
@@ -4997,7 +4997,7 @@ function analyze() {
               plays>0&&reach>0?{label:'조회/도달',val:plR,color:'#7c3aed'}:null,
               reach>0&&impr>0?{label:'도달률',val:drR,color:'#1e40af'}:null,
             ].filter(Boolean);
-            return ms.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px;">${ms.map(m=>`<div style="background:white;border-radius:7px;padding:5px 7px;text-align:center;border:1px solid #e9d5ff;"><div style="font-size:0.65rem;color:#aaa;">${m.label}</div><div style="font-size:0.82rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`:'';
+            return ms.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px;">${ms.map(m=>`<div style="background:white;border-radius:7px;padding:5px 7px;text-align:center;border:1px solid #e9d5ff;"><div style="font-size:0.79rem;color:#7d7d7d;">${m.label}</div><div style="font-size:0.82rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`:'';
           })() : (() => {
             // 인사이트 없어도 ZIP 좋아요·댓글 표시
             const ms = [
@@ -5005,21 +5005,21 @@ function analyze() {
               zipComments>0?{label:'댓글',val:zipComments.toLocaleString(),color:'#0f766e'}:null,
             ].filter(Boolean);
             return ms.length
-              ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px;">${ms.map(m=>`<div style="background:white;border-radius:7px;padding:5px 7px;text-align:center;border:1px solid #e9d5ff;"><div style="font-size:0.65rem;color:#aaa;">${m.label}</div><div style="font-size:0.82rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`
+              ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px;">${ms.map(m=>`<div style="background:white;border-radius:7px;padding:5px 7px;text-align:center;border:1px solid #e9d5ff;"><div style="font-size:0.79rem;color:#7d7d7d;">${m.label}</div><div style="font-size:0.82rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`
               : '';
           })();
           const rFb = fbHtml(getReelFb(a, insEff, { cap, ts: showTimes[i], zipLikes, zipComments }));
           return `
           <div style="background:${scoreBg(a.score)};border:1.5px solid ${scoreBorder(a.score)};border-radius:12px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;">
-            <div id="reel-thumb-${i}" style="width:72px;height:128px;flex-shrink:0;border-radius:10px;background:#e8e0f5;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:4px;"><span style="font-size:1.6rem;">🎬</span><span style="font-size:0.6rem;color:#888;">#${i+1}</span></div>
+            <div id="reel-thumb-${i}" style="width:72px;height:128px;flex-shrink:0;border-radius:10px;background:#e8e0f5;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:4px;"><span style="font-size:1.6rem;">🎬</span><span style="font-size:0.72rem;color:#888;">#${i+1}</span></div>
             <div style="flex:1;min-width:0;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="font-size:0.72rem;color:#888;">${dateStr?dateStr+' · ':''}릴스 ${i+1}번${isTopBadge?' <span style="background:#fbbf24;color:#78350f;font-size:0.65rem;padding:1px 6px;border-radius:20px;font-weight:700;">⭐ 최고 점수</span>':''}</span>
+                <span style="font-size:0.79rem;color:#888;">${dateStr?dateStr+' · ':''}릴스 ${i+1}번${isTopBadge?' <span style="background:#fbbf24;color:#78350f;font-size:0.79rem;padding:1px 6px;border-radius:20px;font-weight:700;">⭐ 최고 점수</span>':''}</span>
                 <span style="font-size:0.78rem;font-weight:700;color:${scoreBorder(a.score)};">${scoreLabel(a.score)} (${a.score}/6)</span>
               </div>
-              <div style="font-size:0.8rem;color:#555;background:white;border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.5;word-break:break-all;">${preview}</div>
-              ${rlImpr>0?`<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:0.68rem;color:#888;margin-bottom:2px;"><span>📢 노출 ${rlImpr.toLocaleString()}회</span><span>${rlImprBarW}%</span></div><div style="height:5px;background:#e5e7eb;border-radius:99px;overflow:hidden;"><div style="width:${rlImprBarW}%;height:100%;background:linear-gradient(90deg,#818cf8,#6d28d9);border-radius:99px;"></div></div></div>`:''}
-              <div style="display:flex;flex-wrap:wrap;gap:5px;">${checks.map(c=>`<span style="padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}</div>
+              <div style="font-size:0.8rem;color:#555;background:white;border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.65;word-break:break-all;">${preview}</div>
+              ${rlImpr>0?`<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#888;margin-bottom:2px;"><span>📢 노출 ${rlImpr.toLocaleString()}회</span><span>${rlImprBarW}%</span></div><div style="height:5px;background:#e5e7eb;border-radius:99px;overflow:hidden;"><div style="width:${rlImprBarW}%;height:100%;background:linear-gradient(90deg,#818cf8,#6d28d9);border-radius:99px;"></div></div></div>`:''}
+              <div style="display:flex;flex-wrap:wrap;gap:5px;">${checks.map(c=>`<span style="padding:3px 9px;border-radius:20px;font-size:0.79rem;font-weight:600;background:${c.ok?'#ede9fe':'#fee2e2'};color:${c.ok?'#6d28d9':'#b91c1c'};">${c.ok?'✅':'❌'} ${c.label}</span>`).join('')}</div>
               ${insHtml}
               ${rFb}
             </div>
@@ -5135,15 +5135,15 @@ function analyze() {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
             <div style="background:#faf5ff;border-radius:10px;padding:10px 10px 9px;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="font-size:0.73rem;font-weight:700;color:#555;">📈 월별 ${metricLabel}</span>
-                <span style="font-size:0.66rem;font-weight:700;color:#7c3aed;">${trend}</span>
+                <span style="font-size:0.8rem;font-weight:700;color:#555;">📈 월별 ${metricLabel}</span>
+                <span style="font-size:0.8rem;font-weight:700;color:#7c3aed;">${trend}</span>
               </div>
-              ${months.length>=2 ? rBarSVG(mVals,months,mMax,'#a78bfa',32) : '<div style="font-size:0.72rem;color:#ccc;text-align:center;padding:10px 0;">2개월 이상 필요</div>'}
+              ${months.length>=2 ? rBarSVG(mVals,months,mMax,'#a78bfa',32) : '<div style="font-size:0.79rem;color:#ccc;text-align:center;padding:10px 0;">2개월 이상 필요</div>'}
             </div>
             <div style="background:#faf5ff;border-radius:10px;padding:10px 10px 9px;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="font-size:0.73rem;font-weight:700;color:#555;">📅 요일별 ${metricLabel}</span>
-                <span style="font-size:0.63rem;background:#ede9fe;color:#5b21b6;padding:1px 6px;border-radius:20px;font-weight:700;">${bestDay}요일↑</span>
+                <span style="font-size:0.8rem;font-weight:700;color:#555;">📅 요일별 ${metricLabel}</span>
+                <span style="font-size:0.78rem;background:#ede9fe;color:#5b21b6;padding:1px 6px;border-radius:20px;font-weight:700;">${bestDay}요일↑</span>
               </div>
               ${rBarSVG(dayVals,days,dayMax,'#8b5cf6',32)}
             </div>
@@ -5152,20 +5152,20 @@ function analyze() {
           <!-- 2열: 콘텐츠 타입 + 캡션 길이 -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div style="background:#faf5ff;border-radius:10px;padding:10px;">
-              <div style="font-size:0.73rem;font-weight:700;color:#555;margin-bottom:8px;">🎭 타입별 ${metricLabel}</div>
+              <div style="font-size:0.8rem;font-weight:700;color:#555;margin-bottom:8px;">🎭 타입별 ${metricLabel}</div>
               <div style="display:grid;gap:5px;">
                 ${typeArr.map(({t,avg,cnt})=>`
                 <div style="display:flex;align-items:center;gap:5px;">
-                  <span style="font-size:0.66rem;color:#777;width:34px;flex-shrink:0;">${t}</span>
+                  <span style="font-size:0.8rem;color:#777;width:34px;flex-shrink:0;">${t}</span>
                   <div style="flex:1;height:10px;background:#ede9fe;border-radius:99px;overflow:hidden;">
                     <div style="width:${Math.round(avg/typeMax*100)}%;height:100%;background:linear-gradient(90deg,#c084fc,#7c3aed);border-radius:99px;"></div>
                   </div>
-                  <span style="font-size:0.63rem;color:#999;width:32px;text-align:right;flex-shrink:0;">${avg}${metricUnit}</span>
+                  <span style="font-size:0.78rem;color:#6e7682;width:32px;text-align:right;flex-shrink:0;">${avg}${metricUnit}</span>
                 </div>`).join('')}
               </div>
             </div>
             <div style="background:#faf5ff;border-radius:10px;padding:10px 10px 9px;">
-              <div style="font-size:0.73rem;font-weight:700;color:#555;margin-bottom:6px;">✍️ 캡션 길이별 ${metricLabel}</div>
+              <div style="font-size:0.8rem;font-weight:700;color:#555;margin-bottom:6px;">✍️ 캡션 길이별 ${metricLabel}</div>
               ${rBarSVG(lenBands.map(b=>b.avg),lenBands.map(b=>b.label),lenMax,'#c084fc',32)}
             </div>
           </div>
@@ -5271,7 +5271,7 @@ function analyze() {
       <div class="missing-box">
         <div class="missing-title">ℹ️ 릴스 캡션 데이터를 찾지 못했어요</div>
         <div style="margin-bottom:6px;">ZIP 파일 안에 릴스 게시물이 없거나 캡션이 비어 있을 수 있어요. 릴스에 캡션을 입력 후 새로 ZIP을 내려받아 업로드해 주세요.</div>
-        <div style="font-size:0.7rem;color:#999;background:#f9f9f9;border-radius:6px;padding:6px 10px;margin-top:6px;">
+        <div style="font-size:0.78rem;color:#6e7682;background:#f9f9f9;border-radius:6px;padding:6px 10px;margin-top:6px;">
           🔍 진단: 릴스 게시물 수=${_dbgReelsPosts} | _reelsCaptions=${Array.isArray(_dbgRaw) ? _dbgRaw.length+'개' : String(_dbgRaw)}
         </div>
       </div>`;
@@ -5336,7 +5336,7 @@ function analyze() {
 
     // 성과 등급
     const fpGrade = (p) => {
-      const r = p.reach || 0; if (r === 0) return { g:'—', c:'#aaa' };
+      const r = p.reach || 0; if (r === 0) return { g:'—', c:'#7d7d7d' };
       const eng = (p.likes+p.saves+p.shares+(p.comments||0)) / r * 100;
       const sv  = p.saves  / r * 100;
       const sh  = p.shares / r * 100;
@@ -5546,13 +5546,13 @@ function analyze() {
         <div id="feed-thumb-${i}" style="width:70px;height:70px;flex-shrink:0;border-radius:10px;background:#e8e0f5;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:1.5rem;">📸</div>
         <div style="flex:1;min-width:0;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-            <span style="font-size:0.72rem;color:#888;">${dateStr?dateStr+' · ':''}게시물 ${i+1}번${isTopBadge?' <span style="background:#fbbf24;color:#78350f;font-size:0.65rem;padding:1px 6px;border-radius:20px;font-weight:700;">⭐ 최고 성과</span>':''}</span>
+            <span style="font-size:0.79rem;color:#888;">${dateStr?dateStr+' · ':''}게시물 ${i+1}번${isTopBadge?' <span style="background:#fbbf24;color:#78350f;font-size:0.79rem;padding:1px 6px;border-radius:20px;font-weight:700;">⭐ 최고 성과</span>':''}</span>
             <span style="font-size:0.78rem;font-weight:700;color:${grade.c};">${grade.g}</span>
           </div>
           <div style="font-size:0.79rem;color:#555;margin-bottom:7px;word-break:break-all;">${capPrev}</div>
-          ${impr>0?`<div style="margin-bottom:7px;"><div style="display:flex;justify-content:space-between;font-size:0.68rem;color:#888;margin-bottom:2px;"><span>📢 노출 ${impr.toLocaleString()}회</span><span>${imprBarW}%</span></div><div style="height:5px;background:#e5e7eb;border-radius:99px;overflow:hidden;"><div style="width:${imprBarW}%;height:100%;background:linear-gradient(90deg,#818cf8,#6d28d9);border-radius:99px;"></div></div></div>`:''}
-          ${metrics.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px;margin-bottom:6px;">${metrics.map(m=>`<div style="background:white;border-radius:7px;padding:4px 6px;text-align:center;border:1px solid #e5e7eb;"><div style="font-size:0.63rem;color:#aaa;">${m.label}</div><div style="font-size:0.8rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`:''}
-          ${rates.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;">${rates.map(rt=>`<span style="padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:600;background:${rt.good?'#ede9fe':rt.warn?'#fee2e2':'#fefce8'};color:${rt.good?'#6d28d9':rt.warn?'#b91c1c':'#854d0e'};">${rt.label} ${rt.val}</span>`).join('')}</div>`:''}
+          ${impr>0?`<div style="margin-bottom:7px;"><div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#888;margin-bottom:2px;"><span>📢 노출 ${impr.toLocaleString()}회</span><span>${imprBarW}%</span></div><div style="height:5px;background:#e5e7eb;border-radius:99px;overflow:hidden;"><div style="width:${imprBarW}%;height:100%;background:linear-gradient(90deg,#818cf8,#6d28d9);border-radius:99px;"></div></div></div>`:''}
+          ${metrics.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px;margin-bottom:6px;">${metrics.map(m=>`<div style="background:white;border-radius:7px;padding:4px 6px;text-align:center;border:1px solid #e5e7eb;"><div style="font-size:0.78rem;color:#7d7d7d;">${m.label}</div><div style="font-size:0.8rem;font-weight:700;color:${m.color};">${m.val}</div></div>`).join('')}</div>`:''}
+          ${rates.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;">${rates.map(rt=>`<span style="padding:2px 8px;border-radius:20px;font-size:0.78rem;font-weight:600;background:${rt.good?'#ede9fe':rt.warn?'#fee2e2':'#fefce8'};color:${rt.good?'#6d28d9':rt.warn?'#b91c1c':'#854d0e'};">${rt.label} ${rt.val}</span>`).join('')}</div>`:''}
           ${fb}
         </div>
       </div>`;
@@ -5566,7 +5566,7 @@ function analyze() {
           {bg:'#eef3f7',c:'#166534',label:'평균 도달',val:fpAvgReach.toLocaleString()+'명'},
           {bg:'#fdf4ff',c:'#7e22ce',label:'평균 인게이지먼트율',val:isNaN(fpAvgEng)?'—':fpAvgEng.toFixed(1)+'%'},
           {bg:'#eff6ff',c:'#1e40af',label:'평균 노출',val:fpAvgImpr?fpAvgImpr.toLocaleString()+'회':'—'},
-        ].map(s=>`<div style="background:${s.bg};border-radius:12px;padding:11px;text-align:center;"><div style="font-size:0.7rem;color:#aaa;margin-bottom:3px;">${s.label}</div><div style="font-size:1.2rem;font-weight:900;color:${s.c};">${s.val}</div></div>`).join('')}
+        ].map(s=>`<div style="background:${s.bg};border-radius:12px;padding:11px;text-align:center;"><div style="font-size:0.78rem;color:#7d7d7d;margin-bottom:3px;">${s.label}</div><div style="font-size:1.2rem;font-weight:900;color:${s.c};">${s.val}</div></div>`).join('')}
       </div>
 
       <!-- 노출 분석 요약 -->
@@ -5581,7 +5581,7 @@ function analyze() {
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
             <div>
               <div style="font-size:0.78rem;color:#444;font-weight:600;">${item.label}</div>
-              ${item.tip?`<div style="font-size:0.68rem;color:#9ca3af;">${item.tip}</div>`:''}
+              ${item.tip?`<div style="font-size:0.75rem;color:#6b7280;">${item.tip}</div>`:''}
             </div>
             <span style="font-size:0.9rem;font-weight:800;color:${item.good?'#5b21b6':'#b91c1c'};">${item.val}</span>
           </div>`).join('')}
@@ -5706,7 +5706,7 @@ function analyze() {
     ];
     document.getElementById('followerFunnelSection').innerHTML = `
       <div style="text-align:center;padding:16px;background:linear-gradient(135deg,#fff0f8,#f5f0ff);border-radius:14px;margin-bottom:16px;">
-        <div style="font-size:0.82rem;color:#aaa;">프로필 방문 → 팔로우 전환율</div>
+        <div style="font-size:0.82rem;color:#7d7d7d;">프로필 방문 → 팔로우 전환율</div>
         <div style="font-size:2.8rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#c13584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${followConvRate}%</div>
         <div style="font-size:1rem;font-weight:700;color:${fGrade.c};">${fGrade.g}</div>
       </div>
@@ -5714,7 +5714,7 @@ function analyze() {
         <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:#fafafa;border-radius:10px;margin-bottom:8px;">
           <div style="text-align:center;flex-shrink:0;width:60px;">
             <div style="font-size:1.1rem;font-weight:900;color:${s.color};">${typeof s.val === 'number' ? s.val.toLocaleString() : s.val}</div>
-            <div style="font-size:0.68rem;color:#aaa;">${s.unit}</div>
+            <div style="font-size:0.75rem;color:#7d7d7d;">${s.unit}</div>
           </div>
           <div style="font-size:0.85rem;font-weight:600;color:#444;">${s.label}</div>
         </div>
@@ -5762,7 +5762,7 @@ function analyze() {
 
   document.getElementById('reelsCheckSection').innerHTML = `
     <div style="text-align:center;padding:16px;background:linear-gradient(135deg,#fff0f8,#f5f0ff);border-radius:14px;margin-bottom:16px;">
-      <div style="font-size:2.8rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#fd1d1d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${reelsTotal}<span style="font-size:1rem;color:#aaa;">/${reelsMax}</span></div>
+      <div style="font-size:2.8rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#fd1d1d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${reelsTotal}<span style="font-size:1rem;color:#7d7d7d;">/${reelsMax}</span></div>
       <div style="font-size:1rem;font-weight:700;color:${reelsGrade.c};">${reelsGrade.g}</div>
     </div>
     <div style="display:grid;gap:8px;margin-bottom:14px;">
@@ -5770,7 +5770,7 @@ function analyze() {
         <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:10px;background:${c.ok?'#f5f0ff':'#fff5f5'};border-left:3px solid ${c.ok?'#c13584':'#fc8181'};">
           <span style="flex-shrink:0;">${c.ok?'✅':'❌'}</span>
           <div style="flex:1;">
-            <div style="font-weight:700;font-size:0.84rem;color:${c.ok?'#833ab4':'#742a2a'};">${c.label}${c.score > 0 ? ` <span style="font-size:0.72rem;color:#aaa;font-weight:400;">(+${c.score}점)</span>` : ''}</div>
+            <div style="font-weight:700;font-size:0.84rem;color:${c.ok?'#833ab4':'#742a2a'};">${c.label}${c.score > 0 ? ` <span style="font-size:0.79rem;color:#7d7d7d;font-weight:400;">(+${c.score}점)</span>` : ''}</div>
             <div style="font-size:0.78rem;color:#888;margin-top:2px;">${c.tip}</div>
           </div>
         </div>`).join('')}
@@ -5817,7 +5817,7 @@ function analyze() {
   const instaWkIcons  = ['🌱','📈','🔥','🏆'];
 
   document.getElementById('instaCalendarSection').innerHTML = `
-    <p style="font-size:0.82rem;color:#aaa;margin-bottom:16px;">
+    <p style="font-size:0.82rem;color:#7d7d7d;margin-bottom:16px;">
       <b style="color:#c13584">${nicheSel}</b> 계정 기준 — 릴스·카드뉴스·스토리를 주 1~2회 믹스하는 게 알고리즘 신뢰 축적에 가장 빨라요.
     </p>
     <div style="display:grid;gap:12px;">
@@ -5825,10 +5825,10 @@ function analyze() {
         <div style="border-radius:12px;border-left:4px solid ${instaWkColors[i]};background:#fafafa;padding:14px 16px;">
           <div style="font-weight:700;color:${instaWkColors[i]};font-size:0.88rem;margin-bottom:6px;">${instaWkIcons[i]} ${w}</div>
           <div style="margin-bottom:4px;">
-            <span style="background:${instaWkColors[i]}22;color:${instaWkColors[i]};font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:99px;">${instaItems[i].type}</span>
+            <span style="background:${instaWkColors[i]}22;color:${instaWkColors[i]};font-size:0.79rem;font-weight:700;padding:2px 8px;border-radius:99px;">${instaItems[i].type}</span>
           </div>
           <div style="font-size:0.88rem;font-weight:600;color:#333;margin:6px 0 3px;">${instaItems[i].title}</div>
-          <div style="font-size:0.78rem;color:#aaa;">목표: ${instaItems[i].goal}</div>
+          <div style="font-size:0.78rem;color:#7d7d7d;">목표: ${instaItems[i].goal}</div>
         </div>`).join('')}
     </div>
     <div style="margin-top:16px;padding:14px 16px;background:linear-gradient(135deg,#fff0f8,#f5f0ff);border-radius:12px;font-size:0.83rem;color:#555;line-height:1.8;">
@@ -5857,8 +5857,8 @@ function analyze() {
     // 카드 헤더 서브타이틀 업데이트
     const ciCardH2 = ciCard.querySelector('h2');
     if(ciCardH2) ciCardH2.innerHTML = hasLikes
-      ? '🔬 콘텐츠 심층 인사이트 <span style="font-size:0.72rem;font-weight:400;color:#aaa;">좋아요 기반 분석</span>'
-      : '🔬 콘텐츠 심층 인사이트 <span style="font-size:0.72rem;font-weight:400;color:#e58a00;">⚠️ 게시물 수 기준 (좋아요 없음)</span>';
+      ? '🔬 콘텐츠 심층 인사이트 <span style="font-size:0.79rem;font-weight:400;color:#7d7d7d;">좋아요 기반 분석</span>'
+      : '🔬 콘텐츠 심층 인사이트 <span style="font-size:0.79rem;font-weight:400;color:#e58a00;">⚠️ 게시물 수 기준 (좋아요 없음)</span>';
     // ZIP 전용 모드: 게시물 수 기준 차트, 좋아요 있으면 평균 좋아요 기준 차트
     const metricLabel = hasLikes ? '평균 좋아요' : '게시물 수';
     const metricUnit  = hasLikes ? '❤️' : '개';
@@ -5946,7 +5946,7 @@ function analyze() {
         <span style="font-size:0.95rem;flex-shrink:0;margin-top:1px;">⚠️</span>
         <div>
           <div style="font-size:0.77rem;font-weight:700;color:#92400e;margin-bottom:2px;">좋아요 데이터 없음 — 게시물 수 기준 표시 중</div>
-          <div style="font-size:0.71rem;color:#a16207;line-height:1.55;">ZIP 파일에는 좋아요·저장·댓글 수가 없어요. 인스타그램 <b>설정 → 내 활동 → 다운로드</b>에서 <b>인사이트(HTML)</b>를 같이 올려주시면 좋아요 기준으로 분석해드려요.</div>
+          <div style="font-size:0.78rem;color:#a16207;line-height:1.55;">ZIP 파일에는 좋아요·저장·댓글 수가 없어요. 인스타그램 <b>설정 → 내 활동 → 다운로드</b>에서 <b>인사이트(HTML)</b>를 같이 올려주시면 좋아요 기준으로 분석해드려요.</div>
         </div>
       </div>` : '';
 
@@ -6025,21 +6025,21 @@ function analyze() {
         <!-- 성장 추이 -->
         <div style="background:#f9f9fb;border-radius:10px;padding:10px 10px 9px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span style="font-size:0.74rem;font-weight:700;color:#555;">📈 월별 ${metricLabel}</span>
-            <span style="font-size:0.67rem;font-weight:700;color:#6d28d9;">${trend}</span>
+            <span style="font-size:0.8rem;font-weight:700;color:#555;">📈 월별 ${metricLabel}</span>
+            <span style="font-size:0.8rem;font-weight:700;color:#6d28d9;">${trend}</span>
           </div>
-          ${months.length>=2 ? barSVG(mVals,months,mMax,'#818cf8',36) : '<div style="font-size:0.72rem;color:#ccc;text-align:center;padding:10px 0;">2개월 이상 필요</div>'}
-          ${growthFb ? `<div style="font-size:0.68rem;color:#7c6fcd;margin-top:6px;line-height:1.4;">${growthFb}</div>` : ''}
+          ${months.length>=2 ? barSVG(mVals,months,mMax,'#818cf8',36) : '<div style="font-size:0.79rem;color:#ccc;text-align:center;padding:10px 0;">2개월 이상 필요</div>'}
+          ${growthFb ? `<div style="font-size:0.75rem;color:#7c6fcd;margin-top:6px;line-height:1.4;">${growthFb}</div>` : ''}
         </div>
 
         <!-- 요일별 -->
         <div style="background:#f9f9fb;border-radius:10px;padding:10px 10px 9px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span style="font-size:0.74rem;font-weight:700;color:#555;">📅 요일별 ${metricLabel}</span>
-            <span style="font-size:0.64rem;background:#d1fae5;color:#065f46;padding:1px 6px;border-radius:20px;font-weight:700;">${bestDay}요일↑</span>
+            <span style="font-size:0.8rem;font-weight:700;color:#555;">📅 요일별 ${metricLabel}</span>
+            <span style="font-size:0.78rem;background:#d1fae5;color:#065f46;padding:1px 6px;border-radius:20px;font-weight:700;">${bestDay}요일↑</span>
           </div>
           ${barSVG(dayVals,days,dayMax,'#34d399',36)}
-          ${dayFb ? `<div style="font-size:0.68rem;color:#059669;margin-top:6px;line-height:1.4;">${dayFb}</div>` : ''}
+          ${dayFb ? `<div style="font-size:0.75rem;color:#059669;margin-top:6px;line-height:1.4;">${dayFb}</div>` : ''}
         </div>
 
       </div>
@@ -6049,25 +6049,25 @@ function analyze() {
 
         <!-- 콘텐츠 타입 -->
         <div style="background:#f9f9fb;border-radius:10px;padding:10px;">
-          <div style="font-size:0.74rem;font-weight:700;color:#555;margin-bottom:8px;">🎭 타입별 ${metricLabel}</div>
+          <div style="font-size:0.8rem;font-weight:700;color:#555;margin-bottom:8px;">🎭 타입별 ${metricLabel}</div>
           <div style="display:grid;gap:5px;">
             ${typeArr.map(({t,avg,cnt})=>`
             <div style="display:flex;align-items:center;gap:5px;">
-              <span style="font-size:0.67rem;color:#777;width:34px;flex-shrink:0;">${t}</span>
+              <span style="font-size:0.8rem;color:#777;width:34px;flex-shrink:0;">${t}</span>
               <div style="flex:1;height:11px;background:#ececec;border-radius:99px;overflow:hidden;">
                 <div style="width:${Math.round(avg/typeMax*100)}%;height:100%;background:linear-gradient(90deg,#f472b6,#a78bfa);border-radius:99px;"></div>
               </div>
-              <span style="font-size:0.64rem;color:#999;width:32px;text-align:right;flex-shrink:0;">${avg}${metricUnit}</span>
+              <span style="font-size:0.78rem;color:#6e7682;width:32px;text-align:right;flex-shrink:0;">${avg}${metricUnit}</span>
             </div>`).join('')}
           </div>
-          ${typeFb ? `<div style="font-size:0.68rem;color:#be185d;margin-top:8px;line-height:1.4;">${typeFb}</div>` : ''}
+          ${typeFb ? `<div style="font-size:0.75rem;color:#be185d;margin-top:8px;line-height:1.4;">${typeFb}</div>` : ''}
         </div>
 
         <!-- 캡션 길이 -->
         <div style="background:#f9f9fb;border-radius:10px;padding:10px 10px 9px;">
-          <div style="font-size:0.74rem;font-weight:700;color:#555;margin-bottom:6px;">✍️ 캡션 길이별 ${metricLabel}</div>
+          <div style="font-size:0.8rem;font-weight:700;color:#555;margin-bottom:6px;">✍️ 캡션 길이별 ${metricLabel}</div>
           ${barSVG(lenBands.map(b=>b.avg),lenBands.map(b=>b.label),lenMax,'#fb923c',36)}
-          ${lenFb ? `<div style="font-size:0.68rem;color:#c2410c;margin-top:6px;line-height:1.4;">${lenFb}</div>` : ''}
+          ${lenFb ? `<div style="font-size:0.75rem;color:#c2410c;margin-top:6px;line-height:1.4;">${lenFb}</div>` : ''}
         </div>
 
       </div>
@@ -6528,7 +6528,7 @@ function renderSNSKitInsta(){
     cHtml+='<div style="background:#f8f8f8;border-radius:10px;padding:14px;margin-bottom:10px;">'
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">'
       +'<div><span style="font-weight:800;font-size:0.85rem;color:'+bc+';">'+capLabels[j]+'</span>'
-      +'<span style="font-size:0.72rem;color:#999;margin-left:7px;">'+capDescs[j]+'</span></div>'
+      +'<span style="font-size:0.79rem;color:#6e7682;margin-left:7px;">'+capDescs[j]+'</span></div>'
       +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-cap-'+j+'\').innerText).then(function(){this.textContent=\'✅ 복사됨\';setTimeout(function(){document.querySelectorAll(\'.isk-copy-btn\')['+j+'].textContent=\'📋 복사\'},1500)}.bind(this))" class="isk-copy-btn" style="flex-shrink:0;padding:4px 12px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 복사</button>'
       +'</div>'
       +'<pre id="isk-cap-'+j+'" style="white-space:pre-wrap;font-size:0.84rem;line-height:1.7;color:#333;margin:0;font-family:inherit;background:#fff;border-radius:7px;padding:10px;">'+caps[j]+'</pre>'
@@ -6541,10 +6541,10 @@ function renderSNSKitInsta(){
     +'<div style="font-weight:800;font-size:0.85rem;color:#555;">🏷️ 추천 해시태그 ('+allTags.length+'개)</div>'
     +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-tags-box\').innerText).then(function(){alert(\'태그 '+allTags.length+'개 복사됐어요!\');})" style="padding:4px 12px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 전체 복사</button>'
     +'</div>'
-    +(largeFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#fee2e2;color:#991b1b;padding:2px 7px;border-radius:20px;font-weight:700;">대형 (100만+)</span> <span style="font-size:0.82rem;color:#555;">'+largeFinal.join(' ')+'</span></div>':'')
-    +(mediumFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#fef9c3;color:#854d0e;padding:2px 7px;border-radius:20px;font-weight:700;">중형 (10~100만)</span> <span style="font-size:0.82rem;color:#555;">'+mediumFinal.join(' ')+'</span></div>':'')
-    +(nicheFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#d0dfe9;color:#166534;padding:2px 7px;border-radius:20px;font-weight:700;">소형 (틈새)</span> <span style="font-size:0.82rem;color:#555;">'+nicheFinal.join(' ')+'</span></div>':'')
-    +(regionFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.72rem;background:#dbeafe;color:#1d4ed8;padding:2px 7px;border-radius:20px;font-weight:700;">지역</span> <span style="font-size:0.82rem;color:#555;">'+regionFinal.join(' ')+'</span></div>':'')
+    +(largeFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.79rem;background:#fee2e2;color:#991b1b;padding:2px 7px;border-radius:20px;font-weight:700;">대형 (100만+)</span> <span style="font-size:0.82rem;color:#555;">'+largeFinal.join(' ')+'</span></div>':'')
+    +(mediumFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.79rem;background:#fef9c3;color:#854d0e;padding:2px 7px;border-radius:20px;font-weight:700;">중형 (10~100만)</span> <span style="font-size:0.82rem;color:#555;">'+mediumFinal.join(' ')+'</span></div>':'')
+    +(nicheFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.79rem;background:#d0dfe9;color:#166534;padding:2px 7px;border-radius:20px;font-weight:700;">소형 (틈새)</span> <span style="font-size:0.82rem;color:#555;">'+nicheFinal.join(' ')+'</span></div>':'')
+    +(regionFinal.length?'<div style="margin-bottom:6px;"><span style="font-size:0.79rem;background:#dbeafe;color:#1d4ed8;padding:2px 7px;border-radius:20px;font-weight:700;">지역</span> <span style="font-size:0.82rem;color:#555;">'+regionFinal.join(' ')+'</span></div>':'')
     +'<div id="isk-tags-box" style="display:none;">'+tagsLine+'</div>'
     +'</div>';
 
@@ -6552,12 +6552,12 @@ function renderSNSKitInsta(){
   var hooksHtml='<div style="background:#fdf4ff;border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid #e9d5ff;">'
     +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
     +'<div style="font-weight:800;font-size:0.85rem;color:#7c3aed;">🎬 릴스 훅 문구 5종</div>'
-    +'<span style="font-size:0.72rem;color:#aaa;">첫 1~3초에 사용</span>'
+    +'<span style="font-size:0.79rem;color:#7d7d7d;">첫 1~3초에 사용</span>'
     +'</div>'
     +reelsHooks.map(function(h,idx){
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:#fff;border-radius:8px;margin-bottom:6px;">'
         +'<span style="font-size:0.83rem;color:#333;">'+h+'</span>'
-        +'<button onclick="navigator.clipboard.writeText(\''+h.replace(/'/g,"\\'")+'\')" style="flex-shrink:0;margin-left:8px;padding:3px 10px;background:#fff;color:#7c3aed;border:1.5px solid #7c3aed;border-radius:6px;font-size:0.72rem;font-weight:700;cursor:pointer;">복사</button>'
+        +'<button onclick="navigator.clipboard.writeText(\''+h.replace(/'/g,"\\'")+'\')" style="flex-shrink:0;margin-left:8px;padding:3px 10px;background:#fff;color:#7c3aed;border:1.5px solid #7c3aed;border-radius:6px;font-size:0.79rem;font-weight:700;cursor:pointer;">복사</button>'
         +'</div>';
     }).join('')
     +'</div>';
@@ -6603,14 +6603,14 @@ function renderSNSKitInsta(){
   for(var b=0;b<bioCands.length;b++){
     bioHtml+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
       +'<span id="isk-bio-'+b+'" style="flex:1;background:#fff;border-radius:7px;padding:8px 11px;font-size:0.82rem;color:#333;">'+bioCands[b]+'</span>'
-      +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-bio-'+b+'\').innerText).then(function(){alert(\'복사됐어요!\')})" style="flex-shrink:0;padding:5px 12px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.74rem;font-weight:700;cursor:pointer;">복사</button>'
+      +'<button onclick="navigator.clipboard.writeText(document.getElementById(\'isk-bio-'+b+'\').innerText).then(function(){alert(\'복사됐어요!\')})" style="flex-shrink:0;padding:5px 12px;background:#fff;color:'+bc+';border:1.5px solid '+bc+';border-radius:7px;font-size:0.8rem;font-weight:700;cursor:pointer;">복사</button>'
       +'</div>';
   }
-  bioHtml+='<div style="font-size:0.7rem;color:#aaa;margin-top:4px;">💡 첫 줄에 핵심 키워드+지역을 넣으면 검색 노출에 유리해요</div></div>';
+  bioHtml+='<div style="font-size:0.78rem;color:#7d7d7d;margin-top:4px;">💡 첫 줄에 핵심 키워드+지역을 넣으면 검색 노출에 유리해요</div></div>';
   var kitHtml='<div style="border:2px solid '+bc+';border-radius:16px;padding:20px;background:#fff;">'
     +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">'
     +'<h3 style="color:'+bc+';margin:0;font-size:1.05rem;">📱 SNS 홍보 키트</h3>'
-    +'<span style="font-size:0.78rem;color:#aaa;">'+regionStr+nameStr+'</span>'
+    +'<span style="font-size:0.78rem;color:#7d7d7d;">'+regionStr+nameStr+'</span>'
     +'</div>'
     +tagsHtml
     +bioHtml
@@ -6647,12 +6647,12 @@ window.addEventListener('scroll',()=>{
   function now(){var d=new Date();return{d:d.getFullYear()+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+("0"+d.getDate()).slice(-2),t:("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)};}
   function card(){var c=document.getElementById("myrec-card");if(c)return c;var h=document.getElementById(CONT);if(!h)return null;c=document.createElement("div");c.id="myrec-card";c.style.cssText="margin-top:18px;background:#fff;border:1.5px solid #e8ecef;border-radius:16px;padding:18px 20px;";h.appendChild(c);return c;}
   function spark(rows){if(rows.length<2)return"";var vals=rows.map(function(r){return r.s;}),mn=Math.min.apply(0,vals),mx=Math.max.apply(0,vals),rg=mx-mn||1,W=Math.max(rows.length-1,1);var pts=rows.map(function(r,i){var x=(i/W)*100,y=24-((r.s-mn)/rg)*22-1;return x.toFixed(1)+","+y.toFixed(1);}).join(" ");return '<svg viewBox="0 0 100 24" preserveAspectRatio="none" style="width:100%;height:36px;margin:6px 0 2px;"><polyline points="'+pts+'" fill="none" stroke="#ff4628" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>';}
-  function dlt(cur,prev){if(prev==null||cur==null)return"";var dv=cur-prev;return dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#aaa;">–</span>');}
+  function dlt(cur,prev){if(prev==null||cur==null)return"";var dv=cur-prev;return dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#7d7d7d;">–</span>');}
   function render(){var c=card();if(!c)return;var rows=load(),body,best=rows.length?Math.max.apply(0,rows.map(function(r){return r.s;})):null,hasExp=rows.some(function(r){return r.e!=null;});
-    if(!rows.length){body='<p style="color:#94a3b8;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 종합점수·노출 경쟁력 변화를 추적할 수 있어요. (하루에 여러 번 저장하면 그 사이 변화도 보여요.)</p>';}
-    else{var view=rows.slice(-10);body=spark(rows)+'<div>'+view.map(function(r,i,arr){var prev=i>0?arr[i-1]:null;var sd=dlt(r.s,prev?prev.s:null);var crown=r.s===best?" 👑":"";var expStr=(r.e!=null)?' · <span style="color:#7c3aed;">노출 '+r.e+'</span> '+dlt(r.e,prev?prev.e:null):'';return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.83rem;border-bottom:1px solid #f4f6f8;padding:6px 0;gap:8px;"><span style="color:#64748b;white-space:nowrap;">'+r.d+' <span style="color:#b6c2cf;">'+(r.t||'')+'</span></span><span style="font-weight:800;text-align:right;">'+r.s+'점'+crown+' '+sd+expStr+'</span></div>';}).join("")+'</div>'+(hasExp?'<div style="font-size:0.68rem;color:#b6c2cf;margin-top:5px;">종합점수(검정) · 노출 경쟁력(보라, 0~100) — 노출은 노출진단 기준</div>':'');}
+    if(!rows.length){body='<p style="color:#647488;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 종합점수·노출 경쟁력 변화를 추적할 수 있어요. (하루에 여러 번 저장하면 그 사이 변화도 보여요.)</p>';}
+    else{var view=rows.slice(-10);body=spark(rows)+'<div>'+view.map(function(r,i,arr){var prev=i>0?arr[i-1]:null;var sd=dlt(r.s,prev?prev.s:null);var crown=r.s===best?" 👑":"";var expStr=(r.e!=null)?' · <span style="color:#7c3aed;">노출 '+r.e+'</span> '+dlt(r.e,prev?prev.e:null):'';return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.83rem;border-bottom:1px solid #f4f6f8;padding:6px 0;gap:8px;"><span style="color:#64748b;white-space:nowrap;">'+r.d+' <span style="color:#8a99ab;">'+(r.t||'')+'</span></span><span style="font-weight:800;text-align:right;">'+r.s+'점'+crown+' '+sd+expStr+'</span></div>';}).join("")+'</div>'+(hasExp?'<div style="font-size:0.75rem;color:#8a99ab;margin-top:5px;">종합점수(검정) · 노출 경쟁력(보라, 0~100) — 노출은 노출진단 기준</div>':'');}
     var can=last!=null;var sl=can?('종합 '+last+'점'+(lastExp!=null?' · 노출 '+lastExp:'')):'먼저 분석을 실행하세요';
-    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#cbd5e1;font-size:0.74rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#94a3b8")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+sl+")":sl)+'</button>';
+    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#94a3b8;font-size:0.8rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#647488")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+sl+")":sl)+'</button>';
     var sb=document.getElementById("myrec-save");if(sb&&can)sb.onclick=function(){var a=load(),n=now();a.push({d:n.d,t:n.t,s:last,e:lastExp});if(a.length>40)a.shift();save(a);render();};
     var cb=document.getElementById("myrec-clr");if(cb)cb.onclick=function(){if(confirm("내 기록을 모두 삭제할까요?")){save([]);render();}};}
   window.MyRecord={note:function(s){last=Math.round(s);render();},setExposure:function(v){lastExp=Math.round((v-1)/3*100);render();}};

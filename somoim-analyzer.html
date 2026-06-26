@@ -19,11 +19,11 @@
       background:linear-gradient(90deg,#202020,#ff4628);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     }
-    header p { color:#aaa; margin-top:6px; font-size:0.9rem; }
+    header p { color:#7d7d7d; margin-top:6px; font-size:0.9rem; }
     .algo-badge {
       display:inline-block;
       background:linear-gradient(90deg,#202020,#ff4628);
-      color:#fff; font-size:0.72rem; font-weight:800;
+      color:#fff; font-size:0.79rem; font-weight:800;
       padding:3px 12px; border-radius:99px; margin-top:8px;
     }
 
@@ -35,7 +35,7 @@
     .tab-btn {
       flex:1; padding:11px 0; border-radius:12px; border:2px solid #e5e5e5;
       background:#fff; font-size:0.9rem; font-weight:800; cursor:pointer;
-      transition:all 0.2s; color:#aaa;
+      transition:all 0.2s; color:#7d7d7d;
     }
     .tab-btn.active-moim  { border-color:#202020; background:#eef3f7; color:#202020; }
     .tab-btn.active-munto { border-color:#ff4628; background:#fff7ed; color:#ff4628; }
@@ -61,7 +61,7 @@
     .form-group { display:flex; flex-direction:column; gap:6px; }
     .form-group.full { grid-column:1/-1; }
     label { font-size:0.82rem; font-weight:700; color:#666; display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
-    label .tip { font-size:0.72rem; font-weight:400; color:#aaa; margin-left:4px; }
+    label .tip { font-size:0.79rem; font-weight:400; color:#7d7d7d; margin-left:4px; }
     input, textarea, select {
       border:1.5px solid #e5e5e5; border-radius:10px;
       padding:10px 12px; font-size:0.93rem; outline:none;
@@ -111,7 +111,7 @@
     }
     .result-card.moim-res  { box-shadow:0 4px 20px rgba(32,32,32,0.1);  border:1.5px solid #BBF7D0; }
     .result-card.munto-res { box-shadow:0 4px 20px rgba(255,70,40,0.1);  border:1.5px solid #FED7AA; }
-    .result-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+    .result-card h2 { font-size:1.13rem; font-weight:800; margin-bottom:17px; display:flex; align-items:center; gap:8px; }
     .result-card.moim-res  h2 { color:#14532D; }
     .result-card.munto-res h2 { color:#7C2D12; }
 
@@ -141,14 +141,14 @@
     .sub-item .sv { font-size:1.4rem; font-weight:900; }
     .sub-item.moim-si  .sv { color:#202020; }
     .sub-item.munto-si .sv { color:#ff4628; }
-    .sub-item .sn { font-size:0.72rem; color:#888; margin-top:4px; font-weight:700; }
-    .sub-item .sm { font-size:0.68rem; color:#bbb; margin-top:2px; }
+    .sub-item .sn { font-size:0.79rem; color:#888; margin-top:4px; font-weight:700; }
+    .sub-item .sm { font-size:0.75rem; color:#8a8a8a; margin-top:2px; }
 
     /* 진행 바 */
     .stat-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
     .stat-name-wrap { width:120px; flex-shrink:0; }
     .stat-name { font-size:0.83rem; color:#555; font-weight:600; }
-    .stat-desc { font-size:0.72rem; color:#aaa; margin-top:2px; line-height:1.4; }
+    .stat-desc { font-size:0.79rem; color:#7d7d7d; margin-top:2px; line-height:1.4; }
     .bar-wrap { flex:1; background:#f0f0f0; border-radius:99px; height:10px; min-width:80px; }
     .bar-fill { height:10px; border-radius:99px; transition:width 0.6s; }
     .bar-good  { background:linear-gradient(90deg,#22c55e,#86efac); }
@@ -167,7 +167,7 @@
     .check-bad  { background:#fff5f5; border-left:3px solid #ef4444; }
     .check-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
     .check-title { font-size:0.84rem; font-weight:700; }
-    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.5; }
+    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.65; }
 
     /* 팁 박스 */
     .tip-box {
@@ -207,7 +207,7 @@
     .metric-box .m-val { font-size:1.3rem; font-weight:800; }
     .metric-box.moim-mb  .m-val { color:#202020; }
     .metric-box.munto-mb .m-val { color:#ff4628; }
-    .metric-box .m-label { font-size:0.72rem; color:#888; margin-top:4px; }
+    .metric-box .m-label { font-size:0.79rem; color:#888; margin-top:4px; }
 
     /* 섹션 구분 */
     .divider { border:none; border-top:1px solid #e5e5e5; margin:16px 0; }
@@ -216,7 +216,7 @@
     .info-wrap { position:relative; display:inline-block; vertical-align:middle; margin-left:5px; }
     .info-btn {
       width:16px; height:16px; border-radius:50%; border:none; cursor:pointer;
-      font-size:0.62rem; font-weight:800; line-height:16px; text-align:center; padding:0;
+      font-size:0.78rem; font-weight:800; line-height:16px; text-align:center; padding:0;
       display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
     }
     .info-btn.moim-ib  { background:#BBF7D0; color:#202020; }
@@ -229,14 +229,14 @@
       bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
       background:#fff; border-radius:12px; padding:10px 12px;
       font-size:0.78rem; color:#444; z-index:999;
-      box-shadow:0 6px 24px rgba(0,0,0,0.12); line-height:1.6;
+      box-shadow:0 6px 24px rgba(0,0,0,0.12); line-height:1.72;
       font-weight:400; text-align:left; pointer-events:none;
     }
     .info-tooltip.moim-tt  { border:1.5px solid #BBF7D0; }
     .info-tooltip.munto-tt { border:1.5px solid #FED7AA; }
     .info-tooltip.active { display:block; }
-    .tooltip-where-moim  { background:#F0FDF4; color:#202020; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
-    .tooltip-where-munto { background:#FFF7ED; color:#ff4628; font-size:0.71rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
+    .tooltip-where-moim  { background:#F0FDF4; color:#202020; font-size:0.78rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
+    .tooltip-where-munto { background:#FFF7ED; color:#ff4628; font-size:0.78rem; padding:4px 8px; border-radius:6px; margin-top:6px; display:block; }
 
     /* PDF 바 */
     #pdf-bar-moim, #pdf-bar-munto {
@@ -247,9 +247,9 @@
     #pdf-bar-moim  { box-shadow:0 4px 20px rgba(32,32,32,0.15); border:1.5px solid #BBF7D0; }
     #pdf-bar-munto { box-shadow:0 4px 20px rgba(255,70,40,0.15); border:1.5px solid #FED7AA; }
 
-    footer { text-align:center; color:#bbb; font-size:0.8rem; margin-top:10px; }
+    footer { text-align:center; color:#8a8a8a; font-size:0.8rem; margin-top:10px; }
     .tg-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:9px 20px; background:#229ED9; border-radius:99px; text-decoration:none; color:#fff; font-size:0.8rem; font-weight:700; }
-    .back-btn { display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#999; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px; }
+    .back-btn { display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#6e7682; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px; }
     .back-wrap { max-width:720px; margin:0 auto 10px; }
 
     .hidden { display:none !important; }
@@ -268,11 +268,11 @@
 .ai-diag-card.moim-ai::before  { background:linear-gradient(90deg,transparent,rgba(34,197,94,0.09),transparent); }
 .ai-diag-card.munto-ai::before { background:linear-gradient(90deg,transparent,rgba(255,70,40,0.09),transparent); }
 @keyframes ai-shimmer { to { left:220%; } }
-.ai-diag-card h2 { color:#fff; font-size:1.05rem; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.ai-diag-card h2 { color:#fff; font-size:1.13rem; font-weight:800; margin-bottom:17px; display:flex; align-items:center; gap:8px; }
 .ai-grade-row { display:flex; align-items:center; gap:16px; margin-bottom:18px; background:rgba(255,255,255,0.06); border-radius:14px; padding:16px 18px; }
 .ai-grade-emoji { font-size:2.8rem; flex-shrink:0; }
 .ai-grade-info { flex:1; min-width:0; }
-.ai-grade-lbl { font-size:0.7rem; color:#888; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
+.ai-grade-lbl { font-size:0.78rem; color:#888; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
 .ai-grade-name { font-size:1.2rem; font-weight:900; }
 .ai-grade-name.moim-gn  { background:linear-gradient(90deg,#202020,#22c55e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 .ai-grade-name.munto-gn { background:linear-gradient(90deg,#ff4628,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
@@ -283,14 +283,14 @@
 .munto-ai .tw-cursor { background:#f97316; }
 @keyframes tw-blink { 0%,100%{opacity:1} 50%{opacity:0} }
 .ai-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
-.ai-tag { font-size:0.71rem; font-weight:700; padding:4px 10px; border-radius:99px; }
+.ai-tag { font-size:0.78rem; font-weight:700; padding:4px 10px; border-radius:99px; }
 .moim-ai .ai-tag  { background:rgba(32,32,32,0.14); color:#86efac; border:1px solid rgba(32,32,32,0.28); }
 .munto-ai .ai-tag { background:rgba(255,70,40,0.14); color:#fdba74; border:1px solid rgba(255,70,40,0.28); }
 /* ── 레이더 ── */
 .radar-wrap { display:flex; flex-direction:column; align-items:center; padding:10px 0 4px; }
 .radar-wrap canvas { max-width:300px; width:100%; }
 .radar-legend { display:flex; flex-wrap:wrap; justify-content:center; gap:8px 18px; margin-top:14px; }
-.radar-legend-item { display:flex; align-items:center; gap:5px; font-size:0.72rem; font-weight:700; color:#555; }
+.radar-legend-item { display:flex; align-items:center; gap:5px; font-size:0.79rem; font-weight:700; color:#555; }
 .radar-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 /* ── 게이지 ── */
 .algo-gauge-ttl { font-size:0.82rem; font-weight:700; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; }
@@ -305,9 +305,9 @@
 .algo-tier.munto-act { background:linear-gradient(135deg,#ff4628,#f97316); border-color:transparent; transform:scale(1.04); }
 .at-num { font-size:0.9rem; font-weight:900; color:#555; }
 .algo-tier.moim-act .at-num, .algo-tier.munto-act .at-num { color:#fff; }
-.at-lbl { font-size:0.62rem; color:#aaa; margin-top:3px; line-height:1.4; word-break:keep-all; }
+.at-lbl { font-size:0.78rem; color:#7d7d7d; margin-top:3px; line-height:1.4; word-break:keep-all; }
 .algo-tier.moim-act .at-lbl, .algo-tier.munto-act .at-lbl { color:rgba(255,255,255,0.88); }
-.at-now { display:none; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.25); border-radius:4px; padding:1px 5px; color:#fff; margin-bottom:3px; }
+.at-now { display:none; font-size:0.75rem; font-weight:800; background:rgba(255,255,255,0.25); border-radius:4px; padding:1px 5px; color:#fff; margin-bottom:3px; }
 .algo-tier.moim-act .at-now, .algo-tier.munto-act .at-now { display:block; }
 /* ── count-up pop ── */
 @keyframes score-pop { 0%{transform:scale(0.55);opacity:0} 70%{transform:scale(1.09)} 100%{transform:scale(1);opacity:1} }
@@ -348,7 +348,7 @@
   <div style="display:flex; align-items:center; gap:14px;">
     <div style="font-size:2rem; line-height:1;">📖</div>
     <div>
-      <div style="font-size:0.72rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
+      <div style="font-size:0.79rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
       <div style="font-size:1rem; font-weight:800; color:#fff;">활성도·정모·취향 연결이 뭔지 모르겠다면?</div>
       <div style="font-size:0.78rem; color:#8080b0; margin-top:2px;">분석기에 나오는 핵심 용어를 한 번에 정리했어요</div>
     </div>
@@ -512,7 +512,7 @@
       </div>
       <div class="form-group">
         <label>모임 개설 경과
-          <span class="tip-moim" style="font-size:0.72rem;color:#94a3b8;">신규 모임은 초기 노출 부스트가 있어요</span>
+          <span class="tip-moim" style="font-size:0.79rem;color:#647488;">신규 모임은 초기 노출 부스트가 있어요</span>
         </label>
         <select id="m-moimAge" style="border-color:#bbf7d0;">
           <option value="">— 선택 —</option>
@@ -764,7 +764,7 @@
   </div>
     <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 4px 2px;">
       <button onclick="showMoimInputView()" style="background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:99px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;color:#555;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.15s;" onmouseover="this.style.background='#eef3f7';this.style.borderColor='#202020';this.style.color='#202020'" onmouseout="this.style.background='#f3f4f6';this.style.borderColor='#e5e7eb';this.style.color='#555'">← 다시 분석</button>
-      <span style="font-size:0.75rem;color:#aaa;font-weight:600;">소모임 분석 완료 ✅</span>
+      <span style="font-size:0.75rem;color:#7d7d7d;font-weight:600;">소모임 분석 완료 ✅</span>
     </div>
     <!-- 용어 링크 -->
     <div style="text-align:center;margin-bottom:14px;">
@@ -862,7 +862,7 @@
 
     <!-- 📊 실데이터 상위노출 가이드 (2026.06 실측 전국 6,498개) -->
     <div class="result-card moim-res" data-part="data">
-      <h2>📊 실데이터 상위노출 가이드 <span style="font-size:.72rem;font-weight:400;color:#94a3b8;">2026.06 실측 · 전국 6,498개</span></h2>
+      <h2>📊 실데이터 상위노출 가이드 <span style="font-size:.72rem;font-weight:400;color:#647488;">2026.06 실측 · 전국 6,498개</span></h2>
 
       <div style="background:#f0fdf4;border:1.5px solid #22c55e55;border-radius:14px;padding:16px;margin-bottom:14px;">
         <div style="font-weight:800;color:#16a34a;font-size:.95rem;margin-bottom:8px;">🔑 노출의 관문 = 업데이트 최신성</div>
@@ -877,7 +877,7 @@
         <div style="font-weight:700;font-size:.88rem;color:#1e293b;margin-bottom:8px;">📈 피드 안에서의 순위 요인</div>
         <div style="font-size:.8rem;color:#475569;line-height:1.8;">
           관문 통과 후엔 <strong>정모를 자주 연 모임 → 멤버 많은 모임</strong> 순으로 약간 유리해요.<br>
-          <span style="color:#94a3b8;">의외: <strong>활동레벨(1~14)은 노출과 무관</strong>. 레벨 올리기보다 업데이트·정모에 집중하세요.</span>
+          <span style="color:#647488;">의외: <strong>활동레벨(1~14)은 노출과 무관</strong>. 레벨 올리기보다 업데이트·정모에 집중하세요.</span>
         </div>
       </div>
 
@@ -888,7 +888,7 @@
           · 🔴 <strong>서울 = 레드오션</strong> — 활성 모임 326개와 경쟁, 활성률 9%<br>
           · 🟢 <strong>지방 = 블루오션</strong> — 충남 48%·충북 39%·대전 35%·인천 32%로 활성 경쟁자 훨씬 적음<br>
           · 카테고리: <strong>운동·사교는 휴면률 85~89%</strong>(많아 보여도 죽은 모임 천지), 봉사·인문학은 살아있는 비율 높음<br>
-          <span style="color:#94a3b8;">→ 같은 카테고리면 서울보다 지방이 4~5배 노출 유리. 신규 모임도 나이는 불리하지 않아요(꾸준한 활동이 전부).</span>
+          <span style="color:#647488;">→ 같은 카테고리면 서울보다 지방이 4~5배 노출 유리. 신규 모임도 나이는 불리하지 않아요(꾸준한 활동이 전부).</span>
         </div>
       </div>
 
@@ -896,7 +896,7 @@
         <div style="font-weight:700;font-size:.88rem;color:#1e293b;margin-bottom:8px;">🏆 카테고리별 상위 30% 진입선 (멤버수)</div>
         <div style="font-size:.8rem;color:#475569;line-height:1.8;">
           운동 46명 · 인문학 42명 · 사교 29명 · 자기계발 35명 · <strong>게임 64명 · 봉사 70명 · 업종/직무 66명</strong><br>
-          <span style="color:#94a3b8;">→ 공통: 정모 2회 + 활동레벨 6~8. 게임·봉사·업종은 멤버 기준이 높은 편.</span>
+          <span style="color:#647488;">→ 공통: 정모 2회 + 활동레벨 6~8. 게임·봉사·업종은 멤버 기준이 높은 편.</span>
         </div>
       </div>
     </div>
@@ -924,7 +924,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.5.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.6.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1994,7 +1994,7 @@ ${htText}`}
         <span id="${targetId}-tt-${i}" style="flex:1;background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:8px 12px;font-size:0.83rem;font-weight:600;">${_esc(t)}</span>
         <button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-tt-${i}').innerText).then(()=>alert('복사됐어요!'))" style="padding:6px 12px;background:#fff;color:${borderColor};border:1.5px solid ${borderColor};border-radius:7px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">복사</button>
       </div>`).join('')}
-      <div style="font-size:0.7rem;color:#aaa;margin-top:4px;">💡 지역·일정·혜택을 넣은 이름이 검색·클릭에 유리해요</div>
+      <div style="font-size:0.78rem;color:#7d7d7d;margin-top:4px;">💡 지역·일정·혜택을 넣은 이름이 검색·클릭에 유리해요</div>
     </div>
     <div style="margin-bottom:22px;">
       <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:8px;">👋 첫 환영 메시지</div>
@@ -2005,12 +2005,12 @@ ${htText}`}
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
       <span style="font-size:1.1rem;">📱</span>
       <strong style="font-size:0.97rem;color:#111;">SNS 홍보 키트</strong>
-      <span style="font-size:0.71rem;background:${borderColor}22;color:${borderColor};padding:2px 10px;border-radius:99px;font-weight:700;">인스타 최적화 · 2026 알고리즘 반영</span>
+      <span style="font-size:0.78rem;background:${borderColor}22;color:${borderColor};padding:2px 10px;border-radius:99px;font-weight:700;">인스타 최적화 · 2026 알고리즘 반영</span>
     </div>
     <div style="margin-bottom:22px;">
       <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:8px;">🏷️ 해시태그 추천 15개</div>
       <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">${htHtml}</div>
-      <div style="font-size:0.7rem;color:#aaa;margin-bottom:10px;">🔵 대형(100만+) · 🟢 중형(10만~100만) · 🟣 니치(1만~10만, 핵심!) · 🟠 지역조합/플랫폼</div>
+      <div style="font-size:0.78rem;color:#7d7d7d;margin-bottom:10px;">🔵 대형(100만+) · 🟢 중형(10만~100만) · 🟣 니치(1만~10만, 핵심!) · 🟠 지역조합/플랫폼</div>
       <span id="${targetId}-ht" style="display:none;">${htText}</span><button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-ht').innerText).then(()=>alert('해시태그 15개 복사됐어요!'))" style="padding:6px 16px;background:${borderColor};color:#fff;border:none;border-radius:8px;font-size:0.79rem;font-weight:700;cursor:pointer;">📋 해시태그 전체 복사</button>
     </div>
     ${_extraKit}
@@ -2208,9 +2208,9 @@ function renderGhostMoim(posts, freq, flash, members, category) {
   if (luv) {
     const days = Math.max(0, Math.round((new Date().setHours(0,0,0,0) - new Date(luv).setHours(0,0,0,0)) / 86400000));
     if (days <= 1) {
-      gate = '<div style="margin-top:10px;padding:11px 13px;background:#f0fdf4;border-radius:10px;font-size:0.82rem;color:#166534;line-height:1.6;">✅ <strong>노출 관문 통과</strong> — ' + (days === 0 ? '오늘' : days + '일 전') + ' 업데이트. 소모임은 <strong>1일 이내 업데이트한 모임만 노출 피드</strong>에 떠요. 이 페이스 유지!</div>';
+      gate = '<div style="margin-top:10px;padding:11px 13px;background:#f0fdf4;border-radius:10px;font-size:0.82rem;color:#166534;line-height:1.72;">✅ <strong>노출 관문 통과</strong> — ' + (days === 0 ? '오늘' : days + '일 전') + ' 업데이트. 소모임은 <strong>1일 이내 업데이트한 모임만 노출 피드</strong>에 떠요. 이 페이스 유지!</div>';
     } else {
-      gate = '<div style="margin-top:10px;padding:11px 13px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;font-size:0.82rem;color:#b91c1c;line-height:1.6;">🚨 <strong>노출 피드 탈락 위험 (' + days + '일째 미업데이트)</strong> — 실측 결과 소모임은 <strong>1일 이내 업데이트한 모임만 노출</strong>되고, 미업데이트 모임 <strong>81%가 노출에서 제외</strong>됐어요. 오늘 게시글·정모를 등록해 업데이트하세요.</div>';
+      gate = '<div style="margin-top:10px;padding:11px 13px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;font-size:0.82rem;color:#b91c1c;line-height:1.72;">🚨 <strong>노출 피드 탈락 위험 (' + days + '일째 미업데이트)</strong> — 실측 결과 소모임은 <strong>1일 이내 업데이트한 모임만 노출</strong>되고, 미업데이트 모임 <strong>81%가 노출에서 제외</strong>됐어요. 오늘 게시글·정모를 등록해 업데이트하세요.</div>';
     }
   }
 
@@ -2245,7 +2245,7 @@ function renderSomoimBoost(stage) {
   else { c='#16a34a';bg='#f0fdf4';emoji='🏛️';title='안정기 — 신선함 유지';
     sub='개설 1년 이상. 누적 활동은 쌓였지만 노출 관문은 "1일 이내 업데이트"예요. 매일 업데이트로 항상 피드에 살아있게 하세요.';}
   card.style.display='block';
-  el.innerHTML='<h2>⚙️ 신규 부스트 진단 <span style="font-size:0.7rem;font-weight:400;color:#94a3b8;">알고리즘 메커니즘</span></h2>'
+  el.innerHTML='<h2>⚙️ 신규 부스트 진단 <span style="font-size:0.78rem;font-weight:400;color:#647488;">알고리즘 메커니즘</span></h2>'
     +'<div style="background:'+bg+';border:1.5px solid '+c+'55;border-radius:14px;padding:15px 16px;">'
     +'<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="font-size:1.5rem;">'+emoji+'</span><span style="font-weight:800;font-size:0.95rem;color:'+c+';">'+title+'</span></div>'
     +'<div style="font-size:0.83rem;color:#555;line-height:1.7;">'+sub+'</div></div>';
@@ -2283,13 +2283,13 @@ function somoimDiagRender(card, el, F, who, basis){
   else if(score>=1.8)g={l:'📌 중위권',c:'#f59e0b',d:'노출이 제한적이에요. 아래 보강 포인트부터 실행하면 빠르게 올라가요.'};
   else g={l:'⚠️ 노출 부족',c:'#ef4444',d:'지금은 거의 노출되지 않는 상태예요. 활동 살리기가 1순위예요.'};
   const strong=act.filter(f=>f.tier>=3), weak=act.filter(f=>f.tier<=2).sort((a,b)=>b.w-a.w);
-  const rows=act.map(f=>{const t=T[f.tier];return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:'+t.b+';border-radius:11px;margin-bottom:7px;"><span style="font-size:1.1rem;">'+f.i+'</span><div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:0.85rem;color:#333;">'+f.n+'</div><div style="font-size:0.72rem;color:#999;">'+f.refs+'</div></div><div style="text-align:right;flex-shrink:0;"><div style="font-weight:800;font-size:0.9rem;color:#333;">'+f.val+'</div><span style="font-size:0.72rem;font-weight:800;color:'+t.c+';">'+t.l+'</span></div></div>';}).join('');
+  const rows=act.map(f=>{const t=T[f.tier];return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:'+t.b+';border-radius:11px;margin-bottom:7px;"><span style="font-size:1.1rem;">'+f.i+'</span><div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:0.85rem;color:#333;">'+f.n+'</div><div style="font-size:0.79rem;color:#6e7682;">'+f.refs+'</div></div><div style="text-align:right;flex-shrink:0;"><div style="font-weight:800;font-size:0.9rem;color:#333;">'+f.val+'</div><span style="font-size:0.79rem;font-weight:800;color:'+t.c+';">'+t.l+'</span></div></div>';}).join('');
   card.style.display='block';
-  el.innerHTML='<h2>📍 노출 진단 <span style="font-size:0.7rem;font-weight:400;color:#94a3b8;">'+basis+' 실측 기반</span></h2>'
-    +'<div style="background:'+g.c+'14;border:1.5px solid '+g.c+'55;border-radius:13px;padding:14px 16px;margin-bottom:14px;"><div style="font-weight:800;font-size:1rem;color:'+g.c+';margin-bottom:4px;">'+g.l+'</div><div style="font-size:0.82rem;color:#555;line-height:1.6;">'+g.d+'</div></div>'
+  el.innerHTML='<h2>📍 노출 진단 <span style="font-size:0.78rem;font-weight:400;color:#647488;">'+basis+' 실측 기반</span></h2>'
+    +'<div style="background:'+g.c+'14;border:1.5px solid '+g.c+'55;border-radius:13px;padding:14px 16px;margin-bottom:14px;"><div style="font-weight:800;font-size:1rem;color:'+g.c+';margin-bottom:4px;">'+g.l+'</div><div style="font-size:0.82rem;color:#555;line-height:1.72;">'+g.d+'</div></div>'
     +'<div style="font-weight:700;font-size:0.8rem;color:#666;margin-bottom:8px;">항목별 위치 (노출 요인 강→약 순)</div>'+rows
-    +(strong.length?('<div style="margin-top:14px;padding:11px 13px;background:#f0fdf4;border-radius:10px;"><strong style="color:#16a34a;font-size:0.82rem;">💪 강세</strong><div style="font-size:0.8rem;color:#444;margin-top:4px;line-height:1.6;">'+strong.map(f=>f.n).join(' · ')+' — 잘하고 있어요. 유지하세요.</div></div>'):'')
-    +(weak.length?('<div style="margin-top:9px;padding:11px 13px;background:#fef2f2;border-radius:10px;"><strong style="color:#ef4444;font-size:0.82rem;">🔧 보강 포인트 (중요도 순)</strong><div style="margin-top:6px;display:grid;gap:8px;">'+weak.map(f=>'<div style="font-size:0.8rem;color:#444;line-height:1.6;"><strong style="color:#dc2626;">'+f.i+' '+f.n+'</strong><br>'+f.act+'</div>').join('')+'</div></div>'):'<div style="margin-top:9px;font-size:0.82rem;color:#16a34a;">✅ 약점 없음 — 모든 노출 요인이 상위권이에요!</div>');
+    +(strong.length?('<div style="margin-top:14px;padding:11px 13px;background:#f0fdf4;border-radius:10px;"><strong style="color:#16a34a;font-size:0.82rem;">💪 강세</strong><div style="font-size:0.8rem;color:#444;margin-top:4px;line-height:1.72;">'+strong.map(f=>f.n).join(' · ')+' — 잘하고 있어요. 유지하세요.</div></div>'):'')
+    +(weak.length?('<div style="margin-top:9px;padding:11px 13px;background:#fef2f2;border-radius:10px;"><strong style="color:#ef4444;font-size:0.82rem;">🔧 보강 포인트 (중요도 순)</strong><div style="margin-top:6px;display:grid;gap:8px;">'+weak.map(f=>'<div style="font-size:0.8rem;color:#444;line-height:1.72;"><strong style="color:#dc2626;">'+f.i+' '+f.n+'</strong><br>'+f.act+'</div>').join('')+'</div></div>'):'<div style="margin-top:9px;font-size:0.82rem;color:#16a34a;">✅ 약점 없음 — 모든 노출 요인이 상위권이에요!</div>');
 }
 
 function renderMoimBenchmark(formCat, city) {
@@ -2432,7 +2432,7 @@ function renderMoimBenchmark(formCat, city) {
     }
   } else {
     actions.push({
-      icon: '👥', priority: '확인 필요', pColor: '#94a3b8',
+      icon: '👥', priority: '확인 필요', pColor: '#647488',
       title: '멤버 수 입력하면 맞춤 전략이 나와요',
       desc: 'TOP10 최소 기준 <strong>' + top10Min + '명</strong> · 전체 평균 <strong>' + avgMem + '명</strong>. 위에 내 멤버 수를 입력하면 정확한 전략을 알 수 있어요.',
       steps: []
@@ -2483,7 +2483,7 @@ function renderMoimBenchmark(formCat, city) {
           '<div style="font-size:1.35rem;flex-shrink:0;">⚠️</div>' +
           '<div>' +
             '<div style="font-weight:700;font-size:.9rem;color:#fff;margin-bottom:3px;">프리미엄 여부를 먼저 확인하세요!</div>' +
-            '<div style="font-size:.74rem;color:#fde68a;line-height:1.6;">📍 소모임 앱 → 내 모임 → 유료 배지(P) 유무 확인<br>미전환이라면 전략 전에 프리미엄 전환이 먼저예요!</div>' +
+            '<div style="font-size:.74rem;color:#fde68a;line-height:1.72;">📍 소모임 앱 → 내 모임 → 유료 배지(P) 유무 확인<br>미전환이라면 전략 전에 프리미엄 전환이 먼저예요!</div>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -2503,7 +2503,7 @@ function renderMoimBenchmark(formCat, city) {
         '<span style="font-weight:700;font-size:.95rem;color:#1e293b;">🎯 상단 노출 예측</span>' +
         '<span style="font-weight:800;font-size:1.05rem;color:' + myTier.color + ';">' + myTier.topLabel + '</span>' +
       '</div>' +
-      '<div style="font-size:.75rem;color:#94a3b8;margin-bottom:10px;">현재 ' + (updDays===0 ? '오늘 업데이트 ✅' : updDays + '일 전 업데이트') + ' · 소모임 5,473개 실데이터 기반</div>' +
+      '<div style="font-size:.75rem;color:#647488;margin-bottom:10px;">현재 ' + (updDays===0 ? '오늘 업데이트 ✅' : updDays + '일 전 업데이트') + ' · 소모임 5,473개 실데이터 기반</div>' +
       '<div style="height:10px;background:#f1f5f9;border-radius:99px;overflow:hidden;margin-bottom:14px;">' +
         '<div style="height:100%;width:' + myTier.gauge + '%;background:' + myTier.color + ';border-radius:99px;"></div>' +
       '</div>' +
@@ -2573,7 +2573,7 @@ function renderMoimBenchmark(formCat, city) {
             : '<div style="font-size:.7rem;color:#86efac;margin-top:6px;">✅ TOP10 멤버 기준 달성!</div>'
           ) +
         '</div>'
-      : '<div style="font-size:.72rem;color:#94a3b8;margin-top:4px;font-style:italic;">멤버 수 입력 시 멤버 경쟁력 비교 표시</div>') +
+      : '<div style="font-size:.72rem;color:#647488;margin-top:4px;font-style:italic;">멤버 수 입력 시 멤버 경쟁력 비교 표시</div>') +
     '</div>' +
 
     // 📅 업데이트 전략 가이드 (포화도 + TOP10 주기 + decay 예측)
@@ -2603,9 +2603,9 @@ function renderMoimBenchmark(formCat, city) {
       '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">' +
         decayRows.map(function(r) {
           return '<div style="background:#f8fafc;border-radius:8px;padding:10px 5px;text-align:center;">' +
-            '<div style="font-size:.62rem;color:#94a3b8;margin-bottom:4px;">' + r.day + '</div>' +
+            '<div style="font-size:.62rem;color:#647488;margin-bottom:4px;">' + r.day + '</div>' +
             '<div style="font-weight:800;font-size:.9rem;color:' + r.color + ';">' + r.rank + '</div>' +
-            '<div style="font-size:.61rem;color:#94a3b8;margin-top:3px;">' + r.label + '</div>' +
+            '<div style="font-size:.61rem;color:#647488;margin-top:3px;">' + r.label + '</div>' +
           '</div>';
         }).join('') +
       '</div>' +
@@ -2614,7 +2614,7 @@ function renderMoimBenchmark(formCat, city) {
     // ② 실제 경쟁 현황 비교
     '<div style="font-weight:700;font-size:.9rem;color:#1e293b;margin-bottom:10px;">' +
       '📊 실제 경쟁 현황 비교 ' +
-      '<span style="font-size:.72rem;font-weight:400;color:#94a3b8;">' + realCat + ' · ' + city + ' · ' + st.total + '개 실제 모임 기준</span>' +
+      '<span style="font-size:.72rem;font-weight:400;color:#647488;">' + realCat + ' · ' + city + ' · ' + st.total + '개 실제 모임 기준</span>' +
     '</div>' +
 
     // 3개 지표 카드
@@ -2626,7 +2626,7 @@ function renderMoimBenchmark(formCat, city) {
         '<div style="margin-top:8px;height:4px;background:#e2e8f0;border-radius:99px;overflow:hidden;">' +
           '<div style="height:100%;width:' + myTier.gauge + '%;background:' + myTier.color + ';"></div>' +
         '</div>' +
-        '<div style="font-size:.67rem;color:#94a3b8;margin-top:4px;">' +
+        '<div style="font-size:.67rem;color:#647488;margin-top:4px;">' +
           (updDays===0 ? '✅ 최적 상태' : '⚠ ' + (updDays===1 ? '어제 업데이트' : updDays + '일 경과')) +
         '</div>' +
       '</div>' +
@@ -2637,7 +2637,7 @@ function renderMoimBenchmark(formCat, city) {
         '<div style="margin-top:8px;height:4px;background:#e2e8f0;border-radius:99px;overflow:hidden;">' +
           '<div style="height:100%;width:' + todayPct + '%;background:#6366f1;"></div>' +
         '</div>' +
-        '<div style="font-size:.67rem;color:#94a3b8;margin-top:4px;">전체 ' + st.total + '개 중 ' + todayPct + '%</div>' +
+        '<div style="font-size:.67rem;color:#647488;margin-top:4px;">전체 ' + st.total + '개 중 ' + todayPct + '%</div>' +
       '</div>' +
       // 예상 순위
       '<div style="background:#f8fafc;border-radius:10px;padding:14px;text-align:center;">' +
@@ -2646,7 +2646,7 @@ function renderMoimBenchmark(formCat, city) {
         '<div style="margin-top:8px;height:4px;background:#e2e8f0;border-radius:99px;overflow:hidden;">' +
           '<div style="height:100%;width:' + myTier.gauge + '%;background:' + myTier.color + ';"></div>' +
         '</div>' +
-        '<div style="font-size:.67rem;color:#94a3b8;margin-top:4px;">업데이트 시 ~106위로 상승</div>' +
+        '<div style="font-size:.67rem;color:#647488;margin-top:4px;">업데이트 시 ~106위로 상승</div>' +
       '</div>' +
     '</div>' +
 
@@ -2688,7 +2688,7 @@ function renderMoimBenchmark(formCat, city) {
                   a.steps.map(function(s, si) {
                     return '<div style="display:flex;gap:6px;margin-bottom:' + (si < a.steps.length - 1 ? '4' : '0') + 'px;">' +
                       '<span style="font-size:.73rem;color:' + a.pColor + ';font-weight:700;flex-shrink:0;min-width:14px;">' + (si + 1) + '.</span>' +
-                      '<span style="font-size:.76rem;color:#64748b;line-height:1.5;">' + s + '</span>' +
+                      '<span style="font-size:.76rem;color:#64748b;line-height:1.65;">' + s + '</span>' +
                     '</div>';
                   }).join('') +
                 '</div>'
@@ -2739,7 +2739,7 @@ function renderMoimBenchmark(formCat, city) {
               '<div style="font-size:.76rem;font-weight:700;color:' + (mUpd===0 ? '#22c55e' : '#f59e0b') + ';">' +
                 (mUpd===0 ? '✅ 오늘 업데이트' : '⏰ ' + mUpdLabel) +
               '</div>' +
-              '<div style="font-size:.7rem;color:#94a3b8;margin-top:1px;">' + m.rank + '위</div>' +
+              '<div style="font-size:.7rem;color:#647488;margin-top:1px;">' + m.rank + '위</div>' +
             '</div>' +
           '</div>';
         }).join('') +
@@ -2775,12 +2775,12 @@ function setPartFilter(part, btn){
   function now(){var d=new Date();return{d:d.getFullYear()+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+("0"+d.getDate()).slice(-2),t:("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)};}
   function card(){var c=document.getElementById("myrec-card");if(c)return c;var h=document.getElementById(CONT);if(!h)return null;c=document.createElement("div");c.id="myrec-card";c.style.cssText="margin-top:18px;background:#fff;border:1.5px solid #e8ecef;border-radius:16px;padding:18px 20px;";h.appendChild(c);return c;}
   function spark(rows){if(rows.length<2)return"";var vals=rows.map(function(r){return r.s;}),mn=Math.min.apply(0,vals),mx=Math.max.apply(0,vals),rg=mx-mn||1,W=Math.max(rows.length-1,1);var pts=rows.map(function(r,i){var x=(i/W)*100,y=24-((r.s-mn)/rg)*22-1;return x.toFixed(1)+","+y.toFixed(1);}).join(" ");return '<svg viewBox="0 0 100 24" preserveAspectRatio="none" style="width:100%;height:36px;margin:6px 0 2px;"><polyline points="'+pts+'" fill="none" stroke="#ff4628" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>';}
-  function dlt(cur,prev){if(prev==null||cur==null)return"";var dv=cur-prev;return dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#aaa;">–</span>');}
+  function dlt(cur,prev){if(prev==null||cur==null)return"";var dv=cur-prev;return dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#7d7d7d;">–</span>');}
   function render(){var c=card();if(!c)return;var rows=load(),body,best=rows.length?Math.max.apply(0,rows.map(function(r){return r.s;})):null,hasExp=rows.some(function(r){return r.e!=null;});
-    if(!rows.length){body='<p style="color:#94a3b8;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 종합점수·노출 경쟁력 변화를 추적할 수 있어요. (하루에 여러 번 저장하면 그 사이 변화도 보여요.)</p>';}
-    else{var view=rows.slice(-10);body=spark(rows)+'<div>'+view.map(function(r,i,arr){var prev=i>0?arr[i-1]:null;var sd=dlt(r.s,prev?prev.s:null);var crown=r.s===best?" 👑":"";var expStr=(r.e!=null)?' · <span style="color:#7c3aed;">노출 '+r.e+'</span> '+dlt(r.e,prev?prev.e:null):'';return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.83rem;border-bottom:1px solid #f4f6f8;padding:6px 0;gap:8px;"><span style="color:#64748b;white-space:nowrap;">'+r.d+' <span style="color:#b6c2cf;">'+(r.t||'')+'</span></span><span style="font-weight:800;text-align:right;">'+r.s+'점'+crown+' '+sd+expStr+'</span></div>';}).join("")+'</div>'+(hasExp?'<div style="font-size:0.68rem;color:#b6c2cf;margin-top:5px;">종합점수(검정) · 노출 경쟁력(보라, 0~100) — 노출은 노출진단 기준</div>':'');}
+    if(!rows.length){body='<p style="color:#647488;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 종합점수·노출 경쟁력 변화를 추적할 수 있어요. (하루에 여러 번 저장하면 그 사이 변화도 보여요.)</p>';}
+    else{var view=rows.slice(-10);body=spark(rows)+'<div>'+view.map(function(r,i,arr){var prev=i>0?arr[i-1]:null;var sd=dlt(r.s,prev?prev.s:null);var crown=r.s===best?" 👑":"";var expStr=(r.e!=null)?' · <span style="color:#7c3aed;">노출 '+r.e+'</span> '+dlt(r.e,prev?prev.e:null):'';return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.83rem;border-bottom:1px solid #f4f6f8;padding:6px 0;gap:8px;"><span style="color:#64748b;white-space:nowrap;">'+r.d+' <span style="color:#8a99ab;">'+(r.t||'')+'</span></span><span style="font-weight:800;text-align:right;">'+r.s+'점'+crown+' '+sd+expStr+'</span></div>';}).join("")+'</div>'+(hasExp?'<div style="font-size:0.75rem;color:#8a99ab;margin-top:5px;">종합점수(검정) · 노출 경쟁력(보라, 0~100) — 노출은 노출진단 기준</div>':'');}
     var can=last!=null;var sl=can?('종합 '+last+'점'+(lastExp!=null?' · 노출 '+lastExp:'')):'먼저 분석을 실행하세요';
-    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#cbd5e1;font-size:0.74rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#94a3b8")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+sl+")":sl)+'</button>';
+    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#94a3b8;font-size:0.8rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#647488")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+sl+")":sl)+'</button>';
     var sb=document.getElementById("myrec-save");if(sb&&can)sb.onclick=function(){var a=load(),n=now();a.push({d:n.d,t:n.t,s:last,e:lastExp});if(a.length>40)a.shift();save(a);render();};
     var cb=document.getElementById("myrec-clr");if(cb)cb.onclick=function(){if(confirm("내 기록을 모두 삭제할까요?")){save([]);render();}};}
   window.MyRecord={note:function(s){last=Math.round(s);render();},setExposure:function(v){lastExp=Math.round((v-1)/3*100);render();}};

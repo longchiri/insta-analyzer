@@ -19,10 +19,10 @@
       background:linear-gradient(90deg,#c8a800,#FFB700);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     }
-    header p { color:#aaa; margin-top:6px; font-size:0.9rem; }
+    header p { color:#7d7d7d; margin-top:6px; font-size:0.9rem; }
     .algo-badge {
       display:inline-block; background:linear-gradient(90deg,#FEE500,#FFD700);
-      color:#3C1E1E; font-size:0.72rem; font-weight:800;
+      color:#3C1E1E; font-size:0.79rem; font-weight:800;
       padding:3px 12px; border-radius:99px; margin-top:8px;
     }
 
@@ -43,13 +43,13 @@
     .form-group { display:flex; flex-direction:column; gap:6px; }
     .form-group.full { grid-column:1/-1; }
     label { font-size:0.82rem; font-weight:700; color:#666; }
-    label .tip { font-size:0.72rem; font-weight:400; color:#aaa; margin-left:6px; }
+    label .tip { font-size:0.79rem; font-weight:400; color:#7d7d7d; margin-left:6px; }
 /* ⓘ 인포 버튼 */
 .info-wrap { position:relative; display:inline-block; vertical-align:middle; margin-left:5px; }
 .info-btn {
   display:inline-flex; align-items:center; justify-content:center;
   width:16px; height:16px; background:#fff3b0; color:#c8a800;
-  border-radius:50%; font-size:0.62rem; font-weight:900;
+  border-radius:50%; font-size:0.78rem; font-weight:900;
   cursor:pointer; border:1px solid #f0d800; font-family:serif;
   transition:background 0.15s, color 0.15s; line-height:1;
 }
@@ -74,7 +74,7 @@
 .tooltip-where {
   margin-top:6px; padding:4px 8px;
   background:#fffde7; border-radius:6px;
-  font-size:0.71rem; color:#c8a800; font-weight:600; display:block;
+  font-size:0.78rem; color:#c8a800; font-weight:600; display:block;
 }
     input, textarea, select {
       border:1.5px solid #e5e5e5; border-radius:10px;
@@ -111,7 +111,7 @@
       max-width:720px; margin-left:auto; margin-right:auto;
       border:1.5px solid #FFF3B0;
     }
-    .result-card h2 { font-size:1.05rem; font-weight:800; margin-bottom:16px; color:#3C1E1E; display:flex; align-items:center; gap:8px; }
+    .result-card h2 { font-size:1.13rem; font-weight:800; margin-bottom:17px; color:#3C1E1E; display:flex; align-items:center; gap:8px; }
 
     /* 종합 점수 */
     .score-big-box {
@@ -137,14 +137,14 @@
       border:1.5px solid #FFF3B0;
     }
     .sub-item .sv { font-size:1.4rem; font-weight:900; color:#c8a800; }
-    .sub-item .sn { font-size:0.72rem; color:#888; margin-top:4px; font-weight:700; }
-    .sub-item .sm { font-size:0.68rem; color:#bbb; margin-top:2px; }
+    .sub-item .sn { font-size:0.79rem; color:#888; margin-top:4px; font-weight:700; }
+    .sub-item .sm { font-size:0.75rem; color:#8a8a8a; margin-top:2px; }
 
     /* 진행 바 */
     .stat-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
     .stat-name-wrap { width:120px; flex-shrink:0; }
     .stat-name { font-size:0.83rem; color:#555; font-weight:600; }
-    .stat-desc { font-size:0.72rem; color:#aaa; margin-top:2px; line-height:1.4; }
+    .stat-desc { font-size:0.79rem; color:#7d7d7d; margin-top:2px; line-height:1.4; }
     .bar-wrap { flex:1; background:#f0f0f0; border-radius:99px; height:10px; min-width:80px; }
     .bar-fill { height:10px; border-radius:99px; transition:width 0.6s; }
     .bar-good { background:linear-gradient(90deg,#22c55e,#86efac); }
@@ -162,7 +162,7 @@
     .check-bad  { background:#fff5f5; border-left:3px solid #ef4444; }
     .check-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
     .check-title { font-size:0.84rem; font-weight:700; }
-    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.5; }
+    .check-desc  { font-size:0.77rem; color:#888; margin-top:2px; line-height:1.65; }
 
     /* 팁 박스 */
     .tip-box {
@@ -197,7 +197,7 @@
     @media(max-width:500px){ .metric-grid { grid-template-columns:repeat(2,1fr); } }
     .metric-box { background:linear-gradient(135deg,#FFFDE7,#FFF9C4); border-radius:12px; padding:14px 10px; text-align:center; border:1px solid #FFF3B0; }
     .metric-box .m-val { font-size:1.3rem; font-weight:800; color:#c8a800; }
-    .metric-box .m-label { font-size:0.72rem; color:#888; margin-top:4px; }
+    .metric-box .m-label { font-size:0.79rem; color:#888; margin-top:4px; }
 
     /* 섹션 구분 */
     .divider { border:none; border-top:1px solid #FFF3B0; margin:16px 0; }
@@ -205,9 +205,9 @@
     /* PDF 바 */
     #pdf-bar { display:none; max-width:720px; margin:0 auto 18px; background:#fff; border-radius:14px; padding:14px 20px; box-shadow:0 4px 20px rgba(254,229,0,0.2); border:1.5px solid #FFF3B0; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
-    footer { text-align:center; color:#bbb; font-size:0.8rem; margin-top:10px; }
+    footer { text-align:center; color:#8a8a8a; font-size:0.8rem; margin-top:10px; }
     .tg-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:9px 20px; background:#229ED9; border-radius:99px; text-decoration:none; color:#fff; font-size:0.8rem; font-weight:700; }
-    .back-btn { display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; max-width:720px; margin-left:auto; margin-right:auto; text-decoration:none; color:#999; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px; }
+    .back-btn { display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; max-width:720px; margin-left:auto; margin-right:auto; text-decoration:none; color:#6e7682; font-size:0.82rem; font-weight:600; background:#fff; border:1.5px solid #e5e5e5; border-radius:99px; padding:7px 16px; }
     .back-wrap { max-width:720px; margin:0 auto 10px; }
 /* 스크롤 버튼 */
 .scroll-btns { position:fixed; bottom:24px; right:20px; display:flex; flex-direction:column; gap:8px; z-index:1000; }
@@ -224,14 +224,14 @@
 .ai-grade-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
 .ai-grade-emoji{font-size:2.8rem;line-height:1;}
 .ai-grade-info{flex:1;}
-.ai-grade-lbl{font-size:0.72rem;color:#aaa;font-weight:600;margin-bottom:2px;}
+.ai-grade-lbl{font-size:0.79rem;color:#7d7d7d;font-weight:600;margin-bottom:2px;}
 .ai-grade-name{font-size:1.15rem;font-weight:900;color:#FEE500;}
 .ai-grade-score-line{font-size:0.78rem;color:#ccc;margin-top:3px;}
 .typewriter-box{background:rgba(0,0,0,0.38);border-radius:12px;padding:16px 18px;font-size:0.87rem;line-height:1.9;color:#e0e0e0;min-height:48px;word-break:keep-all;overflow-wrap:break-word;margin-bottom:14px;}
 .tw-cursor{display:inline-block;width:2px;height:1em;background:#FEE500;animation:tw-blink 0.8s infinite;vertical-align:text-bottom;margin-left:1px;}
 @keyframes tw-blink{0%,100%{opacity:1}50%{opacity:0}}
 .ai-tags{display:flex;flex-wrap:wrap;gap:8px;}
-.ai-tag{background:rgba(254,229,0,0.12);color:#FFD700;font-size:0.71rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid rgba(254,229,0,0.25);}
+.ai-tag{background:rgba(254,229,0,0.12);color:#FFD700;font-size:0.78rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid rgba(254,229,0,0.25);}
 .radar-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
 .radar-wrap canvas{max-width:300px;width:100%;}
 .radar-legend{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;}
@@ -241,7 +241,7 @@
 .algo-gauge-bar{background:#f0f0f0;border-radius:99px;overflow:hidden;height:14px;margin-bottom:14px;}
 .algo-gauge-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#c8a800,#FEE500);transition:width 1.3s cubic-bezier(0.25,0.8,0.25,1);width:0%;}
 .algo-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.algo-tier{background:#f8f8f8;border-radius:10px;padding:10px 6px;text-align:center;font-size:0.73rem;font-weight:700;color:#888;border:1.5px solid #e8e8e8;transition:all 0.4s;}
+.algo-tier{background:#f8f8f8;border-radius:10px;padding:10px 6px;text-align:center;font-size:0.8rem;font-weight:700;color:#888;border:1.5px solid #e8e8e8;transition:all 0.4s;}
 .algo-tier.kact{background:linear-gradient(135deg,#c8a800,#FEE500);border-color:transparent;color:#3C1E1E;transform:scale(1.04);}
 @keyframes score-pop{0%{transform:scale(0.55);opacity:0}70%{transform:scale(1.09)}100%{transform:scale(1);opacity:1}}
 .score-number.popped{animation:score-pop 0.75s cubic-bezier(0.34,1.56,0.64,1) both;}
@@ -282,7 +282,7 @@
   <div style="display:flex; align-items:center; gap:14px;">
     <div style="font-size:2rem; line-height:1;">📖</div>
     <div>
-      <div style="font-size:0.72rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
+      <div style="font-size:0.79rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
       <div style="font-size:1rem; font-weight:800; color:#fff;">활성도·지금 뜨는·커뮤니티 피드가 뭔지 모르겠다면?</div>
       <div style="font-size:0.78rem; color:#8080b0; margin-top:2px;">분석기에 나오는 핵심 용어를 한 번에 정리했어요</div>
     </div>
@@ -447,7 +447,7 @@
       <div class="range-row">
         <input type="range" id="exitRateRange" min="0" max="100" value="0" oninput="syncRange('exitRate','exitRateRange')"/>
         <input type="number" id="exitRate" min="0" max="100" value="0" style="width:64px;padding:6px 8px;font-size:0.9rem;" oninput="syncRange('exitRateRange','exitRate')"/>
-        <span style="font-size:0.82rem;color:#aaa;">%</span>
+        <span style="font-size:0.82rem;color:#7d7d7d;">%</span>
       </div>
     </div>
   </div>
@@ -498,8 +498,8 @@
 
 <!-- 4-1. 지금탭 (2025 대개편 신규) -->
 <div class="card" style="border-color:#FEE50055;background:linear-gradient(135deg,#fff,#FFFDE7);">
-  <h2>⚡ 지금탭 활용 지표 <span style="font-size:0.72rem;font-weight:400;color:#c8a800;background:#FEE50022;padding:2px 10px;border-radius:99px;margin-left:6px;">2025 대개편 신규</span></h2>
-  <div style="font-size:0.78rem;color:#888;margin-bottom:14px;line-height:1.6;">2025년 9월 카카오톡 대개편으로 오픈채팅이 <b>숏폼과 통합된 "지금" 탭</b>으로 이동했어요. 피드 노출·숏폼 활용도가 새로운 핵심 지표예요.</div>
+  <h2>⚡ 지금탭 활용 지표 <span style="font-size:0.79rem;font-weight:400;color:#c8a800;background:#FEE50022;padding:2px 10px;border-radius:99px;margin-left:6px;">2025 대개편 신규</span></h2>
+  <div style="font-size:0.78rem;color:#888;margin-bottom:14px;line-height:1.72;">2025년 9월 카카오톡 대개편으로 오픈채팅이 <b>숏폼과 통합된 "지금" 탭</b>으로 이동했어요. 피드 노출·숏폼 활용도가 새로운 핵심 지표예요.</div>
   <div class="form-grid">
     <div class="form-group">
       <label>오픈채팅 커뮤니티 피드 노출 <span class="tip">★ 지금탭 핵심 신호</span>
@@ -526,7 +526,7 @@
         <option value="some">가끔 (주 1~2회)</option>
         <option value="active">자주 (주 3회 이상)</option>
       </select>
-      <div style="font-size:0.72rem;color:#aaa;margin-top:5px;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:6px 10px;">⚠️ 현재 카카오가 <b style="color:#888;">사전 초대한 크리에이터·채널 운영자만</b> 숏폼 업로드가 가능해요. 일반 방장은 직접 올릴 수 없으며, 카카오가 점차 일반 공개를 확대할 예정이에요.</div>
+      <div style="font-size:0.79rem;color:#7d7d7d;margin-top:5px;line-height:1.72;background:#f9f9f9;border-radius:8px;padding:6px 10px;">⚠️ 현재 카카오가 <b style="color:#888;">사전 초대한 크리에이터·채널 운영자만</b> 숏폼 업로드가 가능해요. 일반 방장은 직접 올릴 수 없으며, 카카오가 점차 일반 공개를 확대할 예정이에요.</div>
     </div>
     <div class="form-group">
       <label>"지금 뜨는" 탭 진입 경험 <span class="tip">인기 채팅방 매일 자동 선정</span>
@@ -817,7 +817,7 @@
 <div id="resultsView" style="display:none">
   <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 4px 2px;">
     <button onclick="showInputView()" style="background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:99px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;color:#555;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.15s;" onmouseover="this.style.background='#fffde7';this.style.borderColor='#FEE500';this.style.color='#c8a800'" onmouseout="this.style.background='#f3f4f6';this.style.borderColor='#e5e7eb';this.style.color='#555'">← 다시 분석</button>
-    <span style="font-size:0.75rem;color:#aaa;font-weight:600;">분석 완료 ✅</span>
+    <span style="font-size:0.75rem;color:#7d7d7d;font-weight:600;">분석 완료 ✅</span>
   </div>
 
 <!-- ── PDF 저장 바 ── -->
@@ -978,7 +978,7 @@
 
 <footer>
   <p>by <b style="color:#c8a800;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.3.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.4.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1335,8 +1335,8 @@ function analyze() {
       ].map(f => `
         <div style="background:${f.color}18;border-radius:12px;padding:12px 8px;text-align:center;border:1.5px solid ${f.color}33;">
           <div style="font-size:1.3rem;font-weight:900;color:${f.color};">${f.val>0?'':''}${f.val}</div>
-          <div style="font-size:0.72rem;font-weight:700;color:#555;margin-top:3px;">${f.label}</div>
-          <div style="font-size:0.65rem;color:#aaa;margin-top:2px;">${f.desc}</div>
+          <div style="font-size:0.79rem;font-weight:700;color:#555;margin-top:3px;">${f.label}</div>
+          <div style="font-size:0.79rem;color:#7d7d7d;margin-top:2px;">${f.desc}</div>
         </div>`).join('')}
     </div>
     <div style="margin-top:14px;padding:12px 16px;background:#3C1E1E;border-radius:12px;text-align:center;">
@@ -1545,9 +1545,9 @@ function analyze() {
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
             <span style="font-size:1.1rem;">${s.icon}</span>
             <span style="font-weight:700;font-size:0.88rem;color:#333;">${s.title}</span>
-            <span style="font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:99px;background:${s.color}18;color:${s.color};white-space:nowrap;">우선순위: ${s.priority}</span>
+            <span style="font-size:0.79rem;font-weight:700;padding:2px 8px;border-radius:99px;background:${s.color}18;color:${s.color};white-space:nowrap;">우선순위: ${s.priority}</span>
           </div>
-          <div style="font-size:0.82rem;color:#666;line-height:1.6;">${s.desc}</div>
+          <div style="font-size:0.82rem;color:#666;line-height:1.72;">${s.desc}</div>
         </div>`).join('')}
     </div>`;
 
@@ -2079,7 +2079,7 @@ function analyze() {
     const icon   = c.type === 'ok' ? '✅' : c.type === 'bad' ? '❌' : '⚠️';
     return `<div style="border-radius:10px;border-left:4px solid ${border};background:${bg};padding:12px 14px;margin-bottom:10px;">
       <div style="font-weight:700;font-size:0.88rem;color:#333;margin-bottom:4px;">${icon} ${c.title}</div>
-      <div style="font-size:0.82rem;color:#555;line-height:1.6;">${c.desc}</div>
+      <div style="font-size:0.82rem;color:#555;line-height:1.72;">${c.desc}</div>
     </div>`;
   }).join('');
 
@@ -2711,7 +2711,7 @@ ${htText}`}
         <span id="${targetId}-tt-${i}" style="flex:1;background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:8px 12px;font-size:0.83rem;font-weight:600;">${_esc(t)}</span>
         <button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-tt-${i}').innerText).then(()=>alert('복사됐어요!'))" style="padding:6px 12px;background:#fff;color:${borderColor};border:1.5px solid ${borderColor};border-radius:7px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">복사</button>
       </div>`).join('')}
-      <div style="font-size:0.7rem;color:#aaa;margin-top:4px;">💡 지역·일정·혜택을 넣은 이름이 검색·클릭에 유리해요</div>
+      <div style="font-size:0.78rem;color:#7d7d7d;margin-top:4px;">💡 지역·일정·혜택을 넣은 이름이 검색·클릭에 유리해요</div>
     </div>
     <div style="margin-bottom:22px;">
       <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:8px;">👋 첫 환영 메시지</div>
@@ -2722,12 +2722,12 @@ ${htText}`}
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
       <span style="font-size:1.1rem;">📱</span>
       <strong style="font-size:0.97rem;color:#111;">SNS 홍보 키트</strong>
-      <span style="font-size:0.71rem;background:${borderColor}22;color:${borderColor};padding:2px 10px;border-radius:99px;font-weight:700;">인스타 최적화 · 2026 알고리즘 반영</span>
+      <span style="font-size:0.78rem;background:${borderColor}22;color:${borderColor};padding:2px 10px;border-radius:99px;font-weight:700;">인스타 최적화 · 2026 알고리즘 반영</span>
     </div>
     <div style="margin-bottom:22px;">
       <div style="font-size:0.78rem;font-weight:700;color:#555;margin-bottom:8px;">🏷️ 해시태그 추천 15개</div>
       <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">${htHtml}</div>
-      <div style="font-size:0.7rem;color:#aaa;margin-bottom:10px;">🔵 대형(100만+) · 🟢 중형(10만~100만) · 🟣 니치(1만~10만, 핵심!) · 🟠 지역조합/플랫폼</div>
+      <div style="font-size:0.78rem;color:#7d7d7d;margin-bottom:10px;">🔵 대형(100만+) · 🟢 중형(10만~100만) · 🟣 니치(1만~10만, 핵심!) · 🟠 지역조합/플랫폼</div>
       <span id="${targetId}-ht" style="display:none;">${htText}</span><button onclick="navigator.clipboard.writeText(document.getElementById('${targetId}-ht').innerText).then(()=>alert('해시태그 15개 복사됐어요!'))" style="padding:6px 16px;background:${borderColor};color:#fff;border:none;border-radius:8px;font-size:0.79rem;font-weight:700;cursor:pointer;">📋 해시태그 전체 복사</button>
     </div>
     ${_extraKit}
@@ -2895,12 +2895,12 @@ function setPartFilter(part, btn){
   function now(){var d=new Date();return{d:d.getFullYear()+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+("0"+d.getDate()).slice(-2),t:("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)};}
   function card(){var c=document.getElementById("myrec-card");if(c)return c;var h=document.getElementById(CONT);if(!h)return null;c=document.createElement("div");c.id="myrec-card";c.style.cssText="margin-top:18px;background:#fff;border:1.5px solid #e8ecef;border-radius:16px;padding:18px 20px;";h.appendChild(c);return c;}
   function spark(rows){if(rows.length<2)return"";var vals=rows.map(function(r){return r.s;}),mn=Math.min.apply(0,vals),mx=Math.max.apply(0,vals),rg=mx-mn||1,W=Math.max(rows.length-1,1);var pts=rows.map(function(r,i){var x=(i/W)*100,y=24-((r.s-mn)/rg)*22-1;return x.toFixed(1)+","+y.toFixed(1);}).join(" ");return '<svg viewBox="0 0 100 24" preserveAspectRatio="none" style="width:100%;height:36px;margin:6px 0 2px;"><polyline points="'+pts+'" fill="none" stroke="#ff4628" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>';}
-  function dlt(cur,prev){if(prev==null||cur==null)return"";var dv=cur-prev;return dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#aaa;">–</span>');}
+  function dlt(cur,prev){if(prev==null||cur==null)return"";var dv=cur-prev;return dv>0?'<span style="color:#16a34a;font-weight:800;">▲'+dv+'</span>':(dv<0?'<span style="color:#ef4444;font-weight:800;">▼'+(-dv)+'</span>':'<span style="color:#7d7d7d;">–</span>');}
   function render(){var c=card();if(!c)return;var rows=load(),body,best=rows.length?Math.max.apply(0,rows.map(function(r){return r.s;})):null,hasExp=rows.some(function(r){return r.e!=null;});
-    if(!rows.length){body='<p style="color:#94a3b8;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 종합점수·노출 경쟁력 변화를 추적할 수 있어요. (하루에 여러 번 저장하면 그 사이 변화도 보여요.)</p>';}
-    else{var view=rows.slice(-10);body=spark(rows)+'<div>'+view.map(function(r,i,arr){var prev=i>0?arr[i-1]:null;var sd=dlt(r.s,prev?prev.s:null);var crown=r.s===best?" 👑":"";var expStr=(r.e!=null)?' · <span style="color:#7c3aed;">노출 '+r.e+'</span> '+dlt(r.e,prev?prev.e:null):'';return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.83rem;border-bottom:1px solid #f4f6f8;padding:6px 0;gap:8px;"><span style="color:#64748b;white-space:nowrap;">'+r.d+' <span style="color:#b6c2cf;">'+(r.t||'')+'</span></span><span style="font-weight:800;text-align:right;">'+r.s+'점'+crown+' '+sd+expStr+'</span></div>';}).join("")+'</div>'+(hasExp?'<div style="font-size:0.68rem;color:#b6c2cf;margin-top:5px;">종합점수(검정) · 노출 경쟁력(보라, 0~100) — 노출은 노출진단 기준</div>':'');}
+    if(!rows.length){body='<p style="color:#647488;font-size:0.82rem;margin:0;">아직 저장된 기록이 없어요. 분석할 때마다 저장하면 종합점수·노출 경쟁력 변화를 추적할 수 있어요. (하루에 여러 번 저장하면 그 사이 변화도 보여요.)</p>';}
+    else{var view=rows.slice(-10);body=spark(rows)+'<div>'+view.map(function(r,i,arr){var prev=i>0?arr[i-1]:null;var sd=dlt(r.s,prev?prev.s:null);var crown=r.s===best?" 👑":"";var expStr=(r.e!=null)?' · <span style="color:#7c3aed;">노출 '+r.e+'</span> '+dlt(r.e,prev?prev.e:null):'';return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.83rem;border-bottom:1px solid #f4f6f8;padding:6px 0;gap:8px;"><span style="color:#64748b;white-space:nowrap;">'+r.d+' <span style="color:#8a99ab;">'+(r.t||'')+'</span></span><span style="font-weight:800;text-align:right;">'+r.s+'점'+crown+' '+sd+expStr+'</span></div>';}).join("")+'</div>'+(hasExp?'<div style="font-size:0.75rem;color:#8a99ab;margin-top:5px;">종합점수(검정) · 노출 경쟁력(보라, 0~100) — 노출은 노출진단 기준</div>':'');}
     var can=last!=null;var sl=can?('종합 '+last+'점'+(lastExp!=null?' · 노출 '+lastExp:'')):'먼저 분석을 실행하세요';
-    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#cbd5e1;font-size:0.74rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#94a3b8")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+sl+")":sl)+'</button>';
+    c.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h3 style="font-size:1rem;font-weight:900;margin:0;">📌 내 기록 추적</h3>'+(rows.length?'<button id="myrec-clr" style="background:none;border:none;color:#94a3b8;font-size:0.8rem;cursor:pointer;">전체삭제</button>':'')+'</div>'+body+'<button id="myrec-save" '+(can?"":"disabled")+' style="margin-top:13px;width:100%;background:'+(can?"#202020":"#e2e8f0")+';color:'+(can?"#fff":"#647488")+';border:none;border-radius:99px;padding:11px;font-size:0.86rem;font-weight:800;cursor:'+(can?"pointer":"default")+';">'+(can?"이번 결과 저장 ("+sl+")":sl)+'</button>';
     var sb=document.getElementById("myrec-save");if(sb&&can)sb.onclick=function(){var a=load(),n=now();a.push({d:n.d,t:n.t,s:last,e:lastExp});if(a.length>40)a.shift();save(a);render();};
     var cb=document.getElementById("myrec-clr");if(cb)cb.onclick=function(){if(confirm("내 기록을 모두 삭제할까요?")){save([]);render();}};}
   window.MyRecord={note:function(s){last=Math.round(s);render();},setExposure:function(v){lastExp=Math.round((v-1)/3*100);render();}};
