@@ -34,8 +34,8 @@
 
   <!-- 로그 -->
   <key>StandardOutPath</key>
-  <string>TRACKER_PATH/tracker.log</string>
+  <string>TRACKER_PATH/tracker-daangn.log</string>
   <key>StandardErrorPath</key>
-  <string>TRACKER_PATH/tracker-error.log</string>
+  <string>TRACKER_PATH/tracker-daangn-error.log</string>
 </dict>
 </plist>

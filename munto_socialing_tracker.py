@@ -26,7 +26,8 @@ _spec.loader.exec_module(mt)
 def week_filename(app: str) -> str:
     now = datetime.now()
     week = (now.day - 1) // 7 + 1
-    return f'{app}_{now.month}월{week}주차_스크롤결과.xlsx'
+    # 날짜(MMDD)를 붙여 같은 주에 여러 번 돌려도 덮어쓰지 않음
+    return f'{app}_{now.month}월{week}주차_{now.strftime("%m%d")}_스크롤결과.xlsx'
 
 APP_DIR = os.path.join(_BASE, 'munto')
 os.makedirs(APP_DIR, exist_ok=True)
@@ -54,6 +55,25 @@ def _save_week(rows: list):
     print('  ❌ 저장 5회 실패')
 
 
+async def _check_net(page):
+    try:
+        await page.goto('https://www.munto.kr', timeout=8000, wait_until='domcontentloaded'); return True
+    except Exception:
+        return False
+
+async def wait_for_internet(page):
+    print('\n⚠️  인터넷 끊김 — 복구될 때까지 대기합니다.')
+    n = 0
+    while True:
+        n += 1; await asyncio.sleep(10)
+        if await _check_net(page):
+            print('✅ 연결 복구 — 이어서 진행'); await asyncio.sleep(2); return
+        if n % 3 == 0: print(f'   ({n}회째 대기 중... 복구되면 자동 재개)')
+
+def _is_net_err(msg):
+    return any(k in str(msg) for k in ('net::ERR','ERR_','Timeout','timeout','NS_ERROR','Connection','Target closed'))
+
+
 async def main():
     today = datetime.now().strftime('%Y-%m-%d')
     print(f'🌙 문토 소셜링 노출순위 주간 추적 — {today}')
@@ -67,7 +87,12 @@ async def main():
             viewport={'width': 1280, 'height': 900},
         )
         page = await context.new_page()
-        listed = await mt.collect_socialings_from_list(page)   # {sid: {노출순위, 좋아요수, ...}}
+        while True:
+            try:
+                listed = await mt.collect_socialings_from_list(page); break   # {sid: {노출순위, ...}}
+            except Exception as e:
+                if _is_net_err(e): await wait_for_internet(page)
+                else: raise
         await browser.close()
 
     rows = []

@@ -1412,7 +1412,7 @@
 
 <footer>
   <p>by <b style="color:#ff4628;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 4.9.0</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 5.0.0</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -3299,10 +3299,10 @@ function renderRankDiagnosis(members, totalSchedules, attendRate, lastActivityDa
   const noSignal = t => (t[0]<=0);
 
   const factors = [
-    {name:'최근 활동 (최신성)', icon:'⏱️', w:0.32, val:lastActivityDays, unit:'일 전', skip:lastActivityDays<0,
+    {name:'최근 활동 (최신성)', icon:'⏱️', w:0.40, val:lastActivityDays, unit:'일 전', skip:lastActivityDays<0,
      tier: lastActivityDays<0?0:tierRecency(lastActivityDays,T.rec),
      refs:`상위10% ${T.rec[0]}일 · 상위30% ${T.rec[1]}일 · 하위 ${T.rec[2]}일`,
-     action:`지금 바로 일정·게시글을 올리세요. 당근은 최근 활동한 모임을 우선 노출해요 — ${broadLabel}는 상위10%가 ${T.rec[0]}일 이내 활동.`},
+     action:`지금 바로 일정·게시글을 올리세요. 당근 노출은 활동 최신성이 1순위예요(스코프내 상관 0.34). 🎯 블루오션: 당근 모임의 60%가 30일+ 방치 상태라, 꾸준히 활동만 유지해도 대부분을 제치고 상위로 올라갑니다 — ${broadLabel} 상위10%는 ${T.rec[0]}일 이내 활동.`},
     {name:'누적 일정 횟수', icon:'📅', w:0.24, val:totalSchedules, unit:'회', skip:noSignal(T.sch),
      tier:tierHigh(totalSchedules,T.sch),
      refs:`상위10% ${T.sch[0]}회 · 상위30% ${T.sch[1]}회 · 하위 ${T.sch[2]}회`,

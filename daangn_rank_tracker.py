@@ -24,7 +24,8 @@ import daangn_rank_crawler as rc   # 크롤 함수/지역/카테고리 재사용
 def week_filename(app: str) -> str:
     now = datetime.now()
     week = (now.day - 1) // 7 + 1
-    return f'{app}_{now.month}월{week}주차_스크롤결과.xlsx'
+    # 날짜(MMDD)를 붙여 같은 주에 여러 번 돌려도 덮어쓰지 않음
+    return f'{app}_{now.month}월{week}주차_{now.strftime("%m%d")}_스크롤결과.xlsx'
 
 APP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'daangn')
 os.makedirs(APP_DIR, exist_ok=True)
@@ -105,6 +106,8 @@ async def main():
                         'URL':            item['URL'],
                     })
                     await page.wait_for_timeout(rc.DELAY_MS)
+                    if len(rows) % 200 == 0:
+                        _save_week(rows); print(f'   💾 중간 저장 ({len(rows)}개)')
         await browser.close()
 
     _save_week(rows)
