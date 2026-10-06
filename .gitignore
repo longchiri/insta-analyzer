@@ -55,3 +55,8 @@ insta/인스타_크롤러_로그.txt
 
 # ── Claude 내부 폴더 ────────────────────────────────────
 .claude/
+*_tracker.py
+crawl_utils.py
+run_all.py
+com.longchiri.*.plist
+install-tracker*.sh
