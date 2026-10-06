@@ -60,3 +60,17 @@ crawl_utils.py
 run_all.py
 com.longchiri.*.plist
 install-tracker*.sh
+# ── 크롤러 결과/대시보드/방법론 (업로드 금지) ──
+algorithm-agent/
+전체분석/
+당근모임_전체탐색기_*
+소모임_정렬확인.py
+추적_대시보드.*
+트래커_복구_가이드.md
+munto/*_진행상황.json
+munto/문토_분석_가능항목.md
+munto/실행방법.txt
+somoim/requirements.txt
+somoim/소모임_지역코드.json
+*.csv
+*.xlsx
