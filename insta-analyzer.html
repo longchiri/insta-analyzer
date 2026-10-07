@@ -7,6 +7,7 @@
   <title>Instagram 계정 분석기</title>
   <!-- AlgoChiri 업데이트: 2026.04.22 - 오디션 시스템·Human Content 우선·Freshness Score 반영 -->
   <!-- AlgoChiri 업데이트: 2026.05.19 - 릴스 노출 진단 TOP 3 추가 (최근 게시물 기준 저장율·공유율·알고리즘 배포 상태 자동 진단) -->
+  <!-- AlgoChiri 업데이트: 2026.10.07 - 2026 알고리즘 전면 반영: 배점 재설계(완주율·공유·저장 최상위/좋아요 비중↓), 해시태그 3~5개+캡션 키워드, 오리지널·리포스트 반영 -->
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -1052,9 +1053,9 @@
         </span>
       </label>
       <select id="s-hashtagStrategy">
-        <option value="optimized">30개 최적화</option>
-        <option value="moderate" selected>적당히 사용</option>
-        <option value="none">거의 안 씀</option>
+        <option value="optimized">3~5개 + 캡션 키워드 (2026 권장)</option>
+        <option value="moderate" selected>10~15개 사용</option>
+        <option value="none">거의 안 씀 (캡션 SEO로 대체)</option>
       </select>
     </div>
     <div class="form-group">
@@ -1408,7 +1409,7 @@ function setPartFilter(part, btn) {
       </div>
     </div>
     <div style="margin-top:14px;padding:12px 14px;background:#f9f0ff;border-radius:10px;font-size:0.78rem;color:#666;border:1px solid #e9d5ff;line-height:1.7;word-break:keep-all;">
-      <strong style="color:#833ab4;">💡 노출 예측 기준</strong> — 인스타 알고리즘은 ①인게이지먼트율 ②저장·공유율 ③릴스 시청 완료율 ④팔로워 성장률 ⑤캡션·해시태그 SEO 순으로 가중치를 적용해요. 2026년 Meta AI 추천 시스템 도입으로 오리지널 콘텐츠·크리에이터 다양성 평가가 강화됐어요.
+      <strong style="color:#833ab4;">💡 노출 예측 기준 (2026 Mosseri 공식)</strong> — 인스타 알고리즘은 ①릴스 완주율·시청시간 ②공유(sends·DM 보내기) ③저장 ④댓글 ⑤좋아요(비중↓) 순으로 가중치를 적용해요. 해시태그는 3~5개로 줄고 <strong>캡션 키워드(검색 SEO)</strong>가 발견을 좌우해요. 또 <strong>오리지널 콘텐츠</strong>를 밀어주고, 퍼온 리포스트(30일 10개↑)는 추천에서 제외돼요.
     </div>
   </div>
 
@@ -1560,7 +1561,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.7.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.8.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/long_c_hill" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -2794,31 +2795,31 @@ function renderAIDiagInsta(total, erScore, ssScore, grScore, conScore) {
 
   // 강점 파악
   const strongPoints = [];
-  if (erScore >= 28)  strongPoints.push('높은 인게이지먼트');
-  if (ssScore >= 17)  strongPoints.push('저장·공유율');
-  if (grScore >= 14)  strongPoints.push('팔로워 성장률');
-  if (conScore >= 12) strongPoints.push('꾸준한 업로드');
+  if (ssScore >= 24)  strongPoints.push('저장·공유율');
+  if (erScore >= 17)  strongPoints.push('참여·완주 품질');
+  if (grScore >= 18)  strongPoints.push('비팔로워 도달·성장');
+  if (conScore >= 12) strongPoints.push('꾸준함·오리지널');
 
   // 약점 파악
   const weakPoints = [];
-  if (erScore < 15)   weakPoints.push('인게이지먼트율');
-  if (ssScore < 8)    weakPoints.push('저장·공유율');
-  if (grScore < 6)    weakPoints.push('팔로워 성장률');
-  if (conScore < 5)   weakPoints.push('업로드 빈도');
+  if (ssScore < 11)   weakPoints.push('저장·공유율');
+  if (erScore < 11)   weakPoints.push('참여·완주');
+  if (grScore < 8)    weakPoints.push('비팔로워 도달');
+  if (conScore < 5)   weakPoints.push('업로드·오리지널');
 
-  // 패턴별 핵심 진단
-  if (erScore < 15 && grScore >= 10) {
-    lines.push('팔로워는 늘고 있는데 인게이지먼트가 낮아요. 댓글 답글 + 스토리 투표·질문 스티커로 기존 팔로워와 먼저 친밀도를 높이세요. 알고리즘은 도달보다 반응을 더 중요하게 봐요.');
-  } else if (ssScore < 8 && erScore >= 20) {
-    lines.push('좋아요·댓글은 잘 받고 있는데 저장률이 낮아요. "저장해두면 유용한 정보형" 콘텐츠(공지, 팁, 체크리스트)를 3개 중 1개 비율로 섞으면 저장률이 2배로 올라가요.');
-  } else if (conScore < 5 && erScore >= 20) {
-    lines.push('콘텐츠 퀄리티는 좋은데 업로드 빈도가 낮아요. 알고리즘은 꾸준한 계정을 더 신뢰해요. 주 3회 이상 릴스 위주로 올리면 탐색 탭 배정이 확 늘어나요.');
-  } else if (grScore < 6 && erScore >= 20) {
-    lines.push('팔로워 내부 반응은 좋은데 신규 유입이 적어요. 협업 콘텐츠(Collab Post) 또는 트라이얼 릴스를 활용하면 비팔로워 도달이 2배로 올라가요.');
+  // 패턴별 핵심 진단 (2026 우선순위)
+  if (ssScore < 11 && erScore >= 14) {
+    lines.push('좋아요·반응은 받는데 <b>저장·공유가 약해요</b> — 2026 최상위 신호가 바로 공유(sends)와 저장이에요. "친구에게 DM으로 보내고 싶은" 정보형(팁·체크리스트·공지)을 3개 중 1개 비율로 섞고, 캐러셀 끝에 "저장해두세요" CTA를 넣으세요. 공유 한 번이 좋아요 3~5개 값이에요.');
+  } else if (erScore < 11 && grScore >= 12) {
+    lines.push('도달은 나오는데 <b>완주율·반응이 낮아요</b>. 릴스 초반 1~2초 훅으로 이탈을 막고 7~15초로 짧게 — 완주율 70%를 넘기면 2차 확산풀에 들어가요. 좋아요보다 "끝까지 보게 만드는 것"이 지금 핵심이에요.');
+  } else if (conScore < 5 && erScore >= 14) {
+    lines.push('콘텐츠 퀄리티는 좋은데 업로드 빈도가 낮아요. 주 3회 이상 릴스 위주로 올리면 탐색 탭 배정이 늘어요. 단 <b>퍼온 리포스트는 비중을 낮추세요</b> — 30일에 10개 이상이면 추천에서 제외돼요.');
+  } else if (grScore < 8 && erScore >= 14) {
+    lines.push('팔로워 내부 반응은 좋은데 <b>신규 유입이 적어요</b>. 공유(sends)가 비팔로워 도달의 1순위예요. 협업(Collab Post)·트라이얼 릴스 + "공유각" 콘텐츠로 비팔로워 도달을 끌어올리세요.');
   } else if (total >= 80) {
-    lines.push('모든 핵심 지표가 우수해요! 2026년 Meta AI 업데이트로 "오리지널 콘텐츠 다양성·크리에이터 친밀도"가 더 중요해졌어요. 지금 수준을 꾸준히 유지하는 것 자체가 전략이에요.');
+    lines.push('모든 핵심 지표가 우수해요! 2026 인스타는 <b>완주율·공유·저장</b> 중심이고 <b>오리지널 콘텐츠</b>를 밀어줘요. 지금 수준을 꾸준히 유지하면서 퍼온 콘텐츠만 피하면 돼요.');
   } else if (total <= 34) {
-    lines.push('여러 지표를 한꺼번에 올리려 하지 말고, 인게이지먼트 하나만 먼저 잡으세요. 가장 반응 좋았던 게시물과 비슷한 포맷으로 주 3개씩 올리면 30일 안에 점수가 달라져요.');
+    lines.push('여러 지표를 한꺼번에 올리려 하지 말고, <b>저장·공유 하나만</b> 먼저 잡으세요. 가장 많이 저장/공유된 게시물과 비슷한 "정보형" 포맷으로 주 3개씩 올리면 30일 안에 점수가 달라져요.');
   } else {
     const strongStr = strongPoints.length > 0 ? strongPoints.slice(0,2).join('·')+'이 강점이에요' : '전반적으로 중위권이에요';
     const weakStr   = weakPoints.length > 0   ? weakPoints[0]+'을(를) 먼저 개선하면 가장 빠르게 올라가요' : '지금 상태를 꾸준히 유지하세요';
@@ -2826,7 +2827,7 @@ function renderAIDiagInsta(total, erScore, ssScore, grScore, conScore) {
   }
 
   // 2026 알고리즘 추가 진단
-  if (ssScore < 8) lines.push('저장률이 낮으면 알고리즘이 콘텐츠를 "확산 가치 낮음"으로 분류해요. 캐러셀 마지막 슬라이드에 "저장해두세요!" CTA를 넣으면 저장률이 즉시 올라가요.');
+  if (ssScore < 11) lines.push('저장·공유가 낮으면 알고리즘이 콘텐츠를 "확산 가치 낮음"으로 분류해요. 캐러셀 마지막 슬라이드에 "저장해두세요!", 캡션에 "친구 태그/공유" 유도를 넣으면 즉시 올라가요.');
 
   const diagText = lines.join('\n\n');
   const twEl = document.getElementById('aiTypewriter');
@@ -2834,14 +2835,14 @@ function renderAIDiagInsta(total, erScore, ssScore, grScore, conScore) {
 
   // AI 태그 생성
   const allTags = [];
-  if (erScore >= 28)  allTags.push('✅ 인게이지먼트 우수');
-  if (ssScore >= 17)  allTags.push('✅ 저장율 높음');
-  if (grScore >= 14)  allTags.push('✅ 빠른 성장');
+  if (ssScore >= 24)  allTags.push('✅ 저장·공유 우수');
+  if (erScore >= 17)  allTags.push('✅ 참여·완주 높음');
+  if (grScore >= 18)  allTags.push('✅ 빠른 성장·도달');
   if (total >= 70)    allTags.push('✅ 탐색 탭 추천 대상');
-  if (erScore < 15)   allTags.push('⚠️ 인게이지먼트 낮음');
-  if (ssScore < 8)    allTags.push('⚠️ 저장율 개선 필요');
-  if (grScore < 6)    allTags.push('⚠️ 성장률 낮음');
-  if (conScore < 5)   allTags.push('⚠️ 업로드 빈도 부족');
+  if (ssScore < 11)   allTags.push('⚠️ 저장·공유 개선 필요');
+  if (erScore < 11)   allTags.push('⚠️ 참여·완주 낮음');
+  if (grScore < 8)    allTags.push('⚠️ 비팔로워 도달 낮음');
+  if (conScore < 5)   allTags.push('⚠️ 업로드·오리지널 부족');
   const tagsEl = document.getElementById('aiTags');
   if (tagsEl) tagsEl.innerHTML = allTags.slice(0, 7).map(t => `<span class="ai-tag">${t}</span>`).join('');
 }
@@ -2885,8 +2886,8 @@ function renderInstaAlgo(D) {
     + '<div style="background:#fff7ed;border:1.5px solid #f9731633;border-radius:14px;padding:15px 16px;">'
       + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="font-size:1.4rem;">⚡</span>'
       + '<span style="font-weight:800;font-size:0.94rem;color:#ea580c;">초기 반응 속도 — 첫 1시간이 노출을 결정</span></div>'
-      + '<div style="font-size:0.83rem;color:#555;line-height:1.7;">알고리즘은 <strong>올린 직후 첫 1시간의 반응 속도</strong>를 강한 노출 트리거로 써요. 총 좋아요보다 "얼마나 빨리"가 중요해요.'
-      + '<br>👉 <strong>팔로워가 가장 많이 접속하는 시간대에 발행</strong>하고, 올린 직후 스토리 공유·질문 댓글 유도로 초반 반응을 끌어올리세요. 첫 반응이 빠르면 비팔로워 탐색 노출로 이어져요.</div></div>'
+      + '<div style="font-size:0.83rem;color:#555;line-height:1.7;">알고리즘은 <strong>올린 직후 첫 1시간의 반응 속도</strong>를 강한 노출 트리거로 써요. 2026엔 좋아요보다 <strong>공유(DM 보내기)·저장·완주</strong>가 빠르게 쌓이는지를 봐요.'
+      + '<br>👉 <strong>팔로워가 가장 많이 접속하는 시간대에 발행</strong>하고, 올린 직후 스토리로 "공유/저장각" 콘텐츠를 밀어 초반 공유·저장을 끌어올리세요. 첫 공유가 빠르면 비팔로워 탐색·릴스 탭 노출로 이어져요.</div></div>'
     + '<div style="margin-top:10px;font-size:0.79rem;color:#7d7d7d;text-align:right;">※ 플랫폼 알고리즘 작동 원리 기반 (신규 부스트는 운영기간 입력 기준)</div>';
 }
 
@@ -3100,32 +3101,36 @@ function analyze() {
   const gr        = D.growthRate     || 0;
   const nfr       = D.nonFollowerReach || 0;
 
-  // ① Engagement (40점)
-  const erScore = er >= 8 ? 40 : er >= 5 ? 34 : er >= 3 ? 26 : er >= 1.5 ? 18 : er > 0 ? 10 : 0;
+  // ═══════ 2026 알고리즘 배점 재설계 ═══════
+  //  Mosseri 공식 우선순위: 완주율/시청 · 공유(sends) · 저장 > 댓글 > 좋아요(최하위).
+  //  그래서 '좋아요 기반 ER'의 비중을 40→보조로 낮추고, 공유·완주·도달을 코어로 끌어올림.
+  const wr        = D.reelsWatchRate || D.completionRate || 0;   // 완주율/시청 유지 (Mosseri #1)
+  const origRatio = (D.originalRatio !== null && D.originalRatio !== undefined) ? D.originalRatio : -1;
+  const carRatio  = D.carouselRatio || 0;
 
-  // ② Save+Share (25점)
+  // ① 참여·완주 품질 (24점) — 릴스 완주율(Mosseri #1)이 핵심 / 좋아요는 보조
+  const watchPart = wr >= 70 ? 16 : wr >= 50 ? 12 : wr >= 30 ? 8 : wr > 0 ? 4 : 0;
+  const likePart  = er >= 8 ? 8 : er >= 5 ? 6 : er >= 3 ? 4 : er >= 1.5 ? 2 : er > 0 ? 1 : 0;
+  // 릴스 데이터 있으면 완주+좋아요 합산, 없으면 좋아요로 보완(과소평가 방지)
+  const erScore   = wr > 0 ? Math.min(watchPart + likePart, 24) : Math.min(likePart * 3, 24);
+
+  // ② 저장·공유 (34점) — 2026 최상위 신호. 공유(sends)=비팔로워 도달에 좋아요의 3~5배
   const ssScore_save  = sr  >= 5 ? 14 : sr  >= 3 ? 11 : sr  >= 1.5 ? 8  : sr  > 0 ? 5 : 0;
-  const ssScore_share = shr >= 8 ? 11 : shr >= 5 ? 9  : shr >= 3   ? 6  : shr > 0 ? 4 : 0;
-  const ssScore = Math.min(ssScore_save + ssScore_share, 25);
+  const ssScore_share = shr >= 8 ? 20 : shr >= 5 ? 15 : shr >= 3   ? 10 : shr > 0 ? 6 : 0;
+  const ssScore = Math.min(ssScore_save + ssScore_share, 34);
 
-  // ③ Growth (20점)
+  // ③ 도달·성장 (26점) — 비팔로워 도달 가중↑ (2026 핵심 목표)
+  const grScore_reach  = nfr >= 80 ? 16 : nfr >= 50 ? 12 : nfr >= 20 ? 7 : nfr > 0 ? 3 : 0;
   const grScore_growth = gr  >= 10 ? 10 : gr  >= 5 ? 8 : gr  >= 2 ? 5  : gr  > 0 ? 3 : 0;
-  const grScore_reach  = nfr >= 80 ? 10 : nfr >= 50 ? 7 : nfr >= 20 ? 4 : nfr > 0 ? 2 : 0;
-  const grScore = Math.min(grScore_growth + grScore_reach, 20);
+  const grScore = Math.min(grScore_reach + grScore_growth, 26);
 
-  // ④ Consistency (15점)
-  const conScore = wp >= 5 ? 15 : wp >= 3 ? 12 : wp >= 2 ? 8 : wp >= 1 ? 5 : 0;
+  // ④ 꾸준함·오리지널 (16점) — 업로드 빈도 + 오리지널 비율(리포스트 많으면 추천 제외)
+  const conScore_post = wp >= 5 ? 10 : wp >= 3 ? 8 : wp >= 2 ? 5 : wp >= 1 ? 3 : 0;
+  const conScore_orig = origRatio >= 80 ? 6 : origRatio >= 60 ? 4 : origRatio >= 40 ? 2 : origRatio >= 0 ? 0 : 3; // 미입력(-1)=중립3
+  const conScore = Math.min(conScore_post + conScore_orig, 16);
 
-  // ★추가: 2025 신규 알고리즘 보정 모디파이어
-  const watchRate    = D.reelsWatchRate || 0;
-  const origRatio    = D.originalRatio  !== null && D.originalRatio !== undefined ? D.originalRatio : -1;
-  const carRatio     = D.carouselRatio  || 0;
-  // 릴스 시청 유지율 보너스/패널티 (Mosseri #1 확인 지표)
-  const watchBonus   = watchRate >= 70 ? 4 : watchRate >= 50 ? 2 : watchRate >= 30 ? 0 : (watchRate > 0 ? -3 : 0);
-  // 오리지널 콘텐츠 패널티 (Dec 2025: 리포스트 많으면 추천 탭 제외)
-  const origPenalty  = origRatio >= 0 ? (origRatio >= 80 ? 0 : origRatio >= 60 ? -3 : origRatio >= 40 ? -6 : -10) : 0;
-  // 카루셀 보너스 (평균 ER 10.15% 최고)
-  const carBonus     = carRatio >= 50 ? 3 : carRatio >= 30 ? 2 : carRatio >= 15 ? 1 : 0;
+  // 카루셀 보너스 (저장·ER에 유리 — 2026 캐러셀 부활)
+  const carBonus  = carRatio >= 50 ? 3 : carRatio >= 30 ? 2 : carRatio >= 15 ? 1 : 0;
 
   // ★추가: 콘텐츠 전략 & 외부채널 보너스
   const reelsBonus    = reelsHeavy    ? 2 : 0;   // 릴스 위주 → reach 보너스
@@ -3151,7 +3156,7 @@ function analyze() {
   const commentReplyBonus = commentReply >= 70 ? 3 : commentReply >= 40 ? 2 : commentReply >= 10 ? 1 : 0;
   const stratBonus    = reelsBonus + hashtagBonus + collabBonus + collabPostBonus + altTextBonus + captionSEOBonus + goldenBonus + bioBonus + crossBonus + topicBonus + ratioBonus + trialBonus + musicBonus + trendAudioBonus + commentReplyBonus;
 
-  const total = Math.min(erScore + ssScore + grScore + conScore + watchBonus + origPenalty + carBonus + stratBonus, 100);
+  const total = Math.min(erScore + ssScore + grScore + conScore + carBonus + stratBonus, 100);
 
   let grade = '', gradeColor = '';
   if (total >= 85) { grade = '🔥 인플루언서급'; gradeColor = '#833ab4'; }
@@ -3164,7 +3169,7 @@ function analyze() {
   document.getElementById('totalScore').textContent = total;
   document.getElementById('scoreGrade').textContent = grade;
   document.getElementById('scoreGrade').style.color = gradeColor;
-  document.getElementById('scoreLabel').textContent = `인게이지먼트 ${erScore}/40 · 저장·공유 ${ssScore}/25 · 성장 ${grScore}/20 · 꾸준함 ${conScore}/15`;
+  document.getElementById('scoreLabel').textContent = `저장·공유 ${ssScore}/34 · 참여·완주 ${erScore}/24 · 도달·성장 ${grScore}/26 · 꾸준함·오리지널 ${conScore}/16`;
 
   // 🤖 AI 종합 진단 + 🎯 알고리즘 노출 예측
   renderAIDiagInsta(total, erScore, ssScore, grScore, conScore);
@@ -3174,10 +3179,10 @@ function analyze() {
 
   // 세부 점수 4칸
   document.getElementById('subScoreGrid').innerHTML = [
-    { name:'인게이지먼트', val:erScore,  max:40, desc:'40점' },
-    { name:'저장·공유',    val:ssScore,  max:25, desc:'25점' },
-    { name:'성장·도달',    val:grScore,  max:20, desc:'20점' },
-    { name:'꾸준함',       val:conScore, max:15, desc:'15점' },
+    { name:'저장·공유',     val:ssScore,  max:34, desc:'34점' },
+    { name:'참여·완주',     val:erScore,  max:24, desc:'24점' },
+    { name:'도달·성장',     val:grScore,  max:26, desc:'26점' },
+    { name:'꾸준함·오리지널', val:conScore, max:16, desc:'16점' },
   ].map(s => `
     <div class="sub-score-item">
       <div class="ss-val">${s.val}</div>
@@ -3187,16 +3192,18 @@ function analyze() {
 
   // 진행바
   const bars = [
-    { name:'인게이지먼트율', val:er.toFixed(2)+'%', score:erScore, max:40,
-      desc:'팔로워 대비 좋아요+댓글 비율. 3% 이상이면 우수', tip:'(좋아요+댓글)÷팔로워×100. 5%이상=우수, 3-5%=보통, 3%미만=개선필요' },
+    { name:'공유율 (sends)', val:shr.toFixed(2)+'%', score:ssScore_share, max:20,
+      desc:'노출 대비 공유 비율. 2026 최상위 신호 — 비팔로워 도달에 좋아요의 3~5배', tip:'공유÷노출×100. 5%이상=우수. "친구에게 DM으로 보내고 싶은" 콘텐츠가 핵심' },
     { name:'저장율',         val:sr.toFixed(2)+'%', score:ssScore_save,  max:14,
-      desc:'노출 대비 저장 비율. 저장은 고품질 지표', tip:'저장÷노출×100. 3%이상=우수' },
-    { name:'공유율',         val:shr.toFixed(2)+'%',score:ssScore_share, max:11,
-      desc:'노출 대비 공유 비율. 공유는 바이럴 핵심 지표', tip:'공유÷노출×100. 5%이상=우수' },
-    { name:'비팔로워 도달',  val:(nfr||'—')+(nfr?'%':''), score:grScore_reach, max:10,
-      desc:'팔로워 아닌 사람에게 콘텐츠가 닿는 비율', tip:'높을수록 알고리즘이 콘텐츠를 확산시키는 중' },
-    { name:'업로드 꾸준함',  val:wp+'회/주',         score:conScore, max:15,
-      desc:'주간 평균 업로드 횟수. 주 3~5회가 최적', tip:'주 1~2회:보통, 주 3~5회:최적, 주 6회이상:품질저하 위험' },
+      desc:'노출 대비 저장 비율. "다시 볼 가치" 신호 — 가이드·체크리스트형이 강해요', tip:'저장÷노출×100. 3%이상=우수' },
+    { name:'릴스 완주율',    val:(wr?wr+'%':'—'),    score:watchPart,     max:16,
+      desc:'릴스를 끝까지 보는 비율 (Mosseri #1 신호). 70%+ 목표', tip:'완주율 70~80%↑면 2차 확산풀 진입. 7~15초 길이가 유리' },
+    { name:'비팔로워 도달',  val:(nfr||'—')+(nfr?'%':''), score:grScore_reach, max:16,
+      desc:'팔로워 아닌 사람에게 닿는 비율. 2026 성장의 핵심', tip:'높을수록 알고리즘이 콘텐츠를 확산시키는 중' },
+    { name:'좋아요 참여율 (비중↓)', val:er.toFixed(2)+'%', score:likePart, max:8,
+      desc:'좋아요 기반 참여율. 2026엔 비중이 낮아졌어요(공유·완주·저장 우선)', tip:'(좋아요+댓글)÷팔로워×100. 이제 참고 지표 수준' },
+    { name:'업로드 꾸준함',  val:wp+'회/주',         score:conScore_post, max:10,
+      desc:'주간 평균 업로드 횟수. 주 3~5회가 최적', tip:'주 3~5회:최적, 주 6회이상:품질저하 위험' },
   ];
   document.getElementById('statBars').innerHTML = bars.map(b => {
     const pct    = Math.round((b.score / b.max) * 100);
@@ -3571,6 +3578,10 @@ function analyze() {
   const existingTags = D.topHashtags || [];
 
   let htHTML = '';
+  htHTML += `<div style="background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:13px 15px;margin-bottom:14px;line-height:1.72;">
+      <div style="font-weight:800;color:#c2410c;font-size:0.9rem;margin-bottom:6px;">⚠️ 2026 변화: 해시태그는 3~5개로 충분해요</div>
+      <div style="font-size:0.82rem;color:#7c2d12;">인스타가 "검색엔진"으로 바뀌면서 <b>캡션 키워드(검색 SEO)가 해시태그보다 발견에 더 중요</b>해졌어요. 30개 도배는 오히려 역효과 — <b>관련성 높은 3~5개 + 캡션 첫 줄 핵심 키워드</b> 조합이 정답이에요. 아래 티어 분석은 <b>그 3~5개를 고르는 참고용</b>으로 쓰세요.</div>
+    </div>`;
   if (existingTags.length > 0) {
     htHTML += `<p class="tag-section-title">🔎 내 게시물에서 발견된 해시태그</p><div class="tag-chips">` +
       existingTags.map(t => `<span class="kw-tag kw-tag-existing">${t}</span>`).join('') + `</div>`;
@@ -3610,7 +3621,7 @@ function analyze() {
     var usedSet = {}; existingTags.forEach(function(t){ usedSet[t]=1; });
     var grp = {B:[],M:[],S:[]};
     pool.forEach(function(p){ if(!usedSet[p[0]]) grp[p[1]].push(p[0]); });
-    var pickB=grp.B.slice(0,3), pickM=grp.M.slice(0,5), pickS=grp.S.slice(0,5);
+    var pickB=grp.B.slice(0,1), pickM=grp.M.slice(0,2), pickS=grp.S.slice(0,2);  // 2026: 3~5개로 압축
     function _chips(arr){ return '<div class="tag-chips">'+arr.map(function(t){return '<span class="kw-tag kw-tag-suggest">'+t+'</span>';}).join('')+'</div>'; }
     htHTML += '<p class="tag-section-title" style="margin-top:16px;">✨ 티어 밸런스 추천 <span style="font-size:0.75rem;color:#8a8a8a;">('+recCat+' 기반 · 권장 비율로 골랐어요)</span></p>';
     if(pickB.length) htHTML += '<div style="font-size:0.78rem;color:#9333ea;font-weight:700;margin:8px 0 4px;">🟪 대형 (발견용)</div>'+_chips(pickB);
@@ -3620,7 +3631,7 @@ function analyze() {
     var ek=eB+eM+eS, addMsg;
     if(ek>0 && eB/ek>=0.5 && (pickM.length||pickS.length)) addMsg='⚠️ 지금 대형에 치우쳐 있어요. 위 <b>중형·소형</b>을 추가하면 상위 노출(인기 게시물) 기회가 생겨요.';
     else if(ek>0 && eS/ek<0.2 && pickS.length) addMsg='🟡 소형이 부족해요. 위 <b>소형 태그</b>를 더 섞어 초기 도달을 노리세요.';
-    else addMsg='💡 매 게시물 5~15개, <b>대형·중형·소형을 고루</b> 섞는 게 이상적이에요 (권장 대형20·중형40·소형40).';
+    else addMsg='💡 2026 기준 <b>3~5개면 충분</b>해요 — 대형 1개(발견용) + 중형·소형 2~4개(상위 노출용)로 관련성 높게. 나머지는 캡션 키워드로 대체하세요.';
     htHTML += '<div style="margin-top:12px;font-size:0.82rem;color:#555;background:#faf5ff;border-radius:8px;padding:10px;line-height:1.72;">'+addMsg+'</div>';
   } else {
     htHTML += `<p class="tag-section-title" style="margin-top:16px;">✨ 분야별 추천 해시태그 <span style="font-size:0.75rem;color:#8a8a8a;">(${niche} 기반)</span></p>
