@@ -742,6 +742,9 @@
     <div class="result-card munto-res" data-part="data" id="t-rankdiag-card" style="display:none;">
       <div id="t-rankdiag-body"></div>
     </div>
+    <div class="result-card munto-res" data-part="data" id="t-tier-card" style="display:none;">
+      <div id="t-tier-body"></div>
+    </div>
     <div class="result-card munto-res" data-part="strategy" id="t-boost-card" style="display:none;">
       <div id="t-boost-body"></div>
     </div>
@@ -780,6 +783,12 @@
           · <strong>소개팅</strong> = 소규모(22명)·저가(2.8만) 가 상위<br>
           · <strong>컨셉파티</strong> = 대규모(47명)·고가(3.7만) 가 상위 (정반대!)<br>
           <span style="color:#647488;">→ 초반에 참여·좋아요를 빨리 모으는 게 핵심(초기 신청자·지인 좋아요 확보). 정원·가격은 카테고리 성격에 맞추세요.</span>
+          <div style="margin-top:12px;display:flex;gap:6px;">
+            <div style="flex:1;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:9px 6px;text-align:center;"><div style="font-weight:800;color:#16a34a;font-size:0.78rem;">🥇 상위</div><div style="font-size:0.74rem;color:#475569;margin-top:3px;">참여 <b>4명</b><br>좋아요 <b>11</b></div></div>
+            <div style="flex:1;background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:9px 6px;text-align:center;"><div style="font-weight:800;color:#d97706;font-size:0.78rem;">🥈 중간</div><div style="font-size:0.74rem;color:#475569;margin-top:3px;">참여 <b>2명</b><br>좋아요 <b>5</b></div></div>
+            <div style="flex:1;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;padding:9px 6px;text-align:center;"><div style="font-weight:800;color:#dc2626;font-size:0.78rem;">🥉 하위</div><div style="font-size:0.74rem;color:#475569;margin-top:3px;">참여 <b>2명</b><br>좋아요 <b>2</b></div></div>
+          </div>
+          <span style="color:#647488;font-size:0.76rem;">↑ 실측 소셜링 노출 상/중/하 중앙값 — 상위로 가는 레버는 <b>좋아요</b>(11 vs 2)예요.</span>
         </div>
       </div>
 
@@ -815,7 +824,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">longchiri</b></p>
-  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.9.2</p>
+  <p style="font-size:0.75rem; color:#888; margin-top:4px;">Ver 3.9.3</p>
   <a class="tg-btn" href="https://t.me/long_c_hill" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1020,6 +1029,53 @@ function muntoDiagRender(card, el, F, basis){
     +(strong.length?('<div style="margin-top:14px;padding:11px 13px;background:#f0fdf4;border-radius:10px;"><strong style="color:#16a34a;font-size:0.82rem;">💪 강세</strong><div style="font-size:0.8rem;color:#444;margin-top:4px;line-height:1.72;">'+strong.map(f=>f.n).join(' · ')+' — 잘하고 있어요. 유지하세요.</div></div>'):'')
     +(weak.length?('<div style="margin-top:9px;padding:11px 13px;background:#fef2f2;border-radius:10px;"><strong style="color:#ef4444;font-size:0.82rem;">🔧 보강 포인트 (중요도 순)</strong><div style="margin-top:6px;display:grid;gap:8px;">'+weak.map(f=>'<div style="font-size:0.8rem;color:#444;line-height:1.72;"><strong style="color:#dc2626;">'+f.i+' '+f.n+'</strong><br>'+f.act+'</div>').join('')+'</div></div>'):'<div style="margin-top:9px;font-size:0.82rem;color:#16a34a;">✅ 약점 없음 — 모든 노출 요인이 상위권이에요!</div>')
     +'<div style="margin-top:14px;padding:10px 12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;font-size:0.78rem;color:#7c3aed;line-height:1.7;">📋 <strong>문토 공식 가이드</strong>: "주기적으로 소셜링을 열어 클럽을 활발하게 유지하라"고 안내하고, 활발한 클럽을 배너·푸시로 밀어줘요. → 우리 실측에서도 <strong>클럽 노출순위는 "마지막 대화 시각"과 거의 1:1(상관 0.996)</strong>로, 공식이 강조하는 "활발함 유지"가 곧 최신성이라는 걸 데이터로 확인했어요.</div>';
+}
+
+function renderMuntoTiers(activity, content, members, attend) {
+  const card = document.getElementById('t-tier-card');
+  const el   = document.getElementById('t-tier-body');
+  if (!card || !el) return;
+  // 실측 티어 프로필 (2026.10 문토 클럽 — 노출순위 상/중/하 3등분 중앙값)
+  const T = [
+    {k:'🥇 상위', talk:'오늘 (0.2일 전)', soc:44, feed:8, mem:42, c:'#16a34a', bg:'#f0fdf4'},
+    {k:'🥈 중간', talk:'1일 전',          soc:15, feed:4, mem:27, c:'#d97706', bg:'#fffbeb'},
+    {k:'🥉 하위', talk:'4일+ 전',         soc:10, feed:2, mem:21, c:'#dc2626', bg:'#fef2f2'},
+  ];
+  const tierOf = (v, hi, mid) => (v >= hi ? 0 : v >= mid ? 1 : 2);
+  const names = ['상위', '중간', '하위'];
+  const tA = tierOf(activity, 4, 2);     // 대화·활동(회/월) — 드라이버
+  const tF = tierOf(content, 8, 4);      // 피드
+  const tM = tierOf(members, 42, 27);    // 멤버(영향 작음)
+  const myIdx = Math.round(tA * 0.65 + tF * 0.25 + tM * 0.10);
+  const my = names[myIdx];
+
+  const col = (t, i) => (
+    '<div style="flex:1;min-width:0;background:' + t.bg + ';border:' + (i===myIdx?'2px solid '+t.c:'1px solid #e5e7eb') +
+    ';border-radius:12px;padding:12px 10px;text-align:center;position:relative;">' +
+    (i===myIdx ? '<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:'+t.c+';color:#fff;font-size:0.68rem;font-weight:800;padding:2px 8px;border-radius:8px;white-space:nowrap;">여기 당신</div>' : '') +
+    '<div style="font-weight:800;color:' + t.c + ';font-size:0.9rem;margin-bottom:8px;">' + t.k + '</div>' +
+    '<div style="font-size:0.74rem;color:#475569;line-height:1.9;text-align:left;padding:0 4px;">' +
+    '⏱️ 최근대화 <b>' + t.talk + '</b><br>🎉 소셜링/월 <b>' + t.soc + '</b><br>📝 피드/월 <b>' + t.feed + '</b><br>👥 멤버 <b>' + t.mem + '</b></div></div>'
+  );
+
+  // 상위까지 갭
+  let gap = '';
+  if (myIdx === 0) {
+    gap = '✅ 이미 상위 티어예요! 매일 대화·소셜링으로 이 페이스를 유지하세요.';
+  } else {
+    const need = [];
+    if (tA > 0) need.push('<b>대화·활동</b>을 늘리세요 (지금 ' + activity + '회/월 → 상위는 거의 매일 대화)');
+    if (tF > 0) need.push('<b>피드</b> ' + content + ' → 8개/월');
+    need.push('멤버수는 노출 영향이 작으니 무리 안 해도 돼요');
+    gap = '당신은 종합 <b>' + my + ' 티어</b>예요. 상위로 가려면: ' + need.join(' · ');
+  }
+
+  card.style.display = 'block';
+  el.innerHTML =
+    '<h2>📊 노출 티어 벤치마크 <span style="font-size:0.78rem;font-weight:400;color:#647488;">실측 상·중·하 프로필</span></h2>' +
+    '<div style="font-size:0.8rem;color:#64748b;background:#f8fafc;border-radius:10px;padding:10px 12px;margin-bottom:16px;line-height:1.6;">📈 실제 노출 상위/중간/하위 클럽들의 지표 중앙값이에요. 당신 입력값 기준 어느 티어인지 표시했어요 — <b>최근 대화(최신성)</b>가 티어를 가르는 1순위예요.</div>' +
+    '<div style="display:flex;gap:8px;margin-top:8px;">' + T.map(col).join('') + '</div>' +
+    '<div style="margin-top:16px;padding:12px 14px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;font-size:0.84rem;color:#6b21a8;line-height:1.65;">🎯 ' + gap + '</div>';
 }
 
 function renderMuntoBenchmark(formCat, members, activity, content, attend) {
@@ -1632,6 +1688,7 @@ function analyzeMunto() {
   renderGhostClub(activity, content, reaction, members);
   renderMuntoBenchmark((document.getElementById('t-category')||{}).value||'', members, activity, content, attend);
   renderMuntoRankDiag(activity, content, members, attend);
+  renderMuntoTiers(activity, content, members, attend);
   renderMuntoBoost((document.getElementById('t-clubAge')||{}).value||'');
   renderSNSKit('t-sns-kit', 'munto');
 
