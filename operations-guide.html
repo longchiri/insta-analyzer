@@ -10,7 +10,9 @@
     a{text-decoration:none;color:inherit;}
 
     .page-header{background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);padding:18px 16px 22px;color:#fff;text-align:center;}
-    .back-btn{display:inline-flex;align-items:center;gap:5px;color:#c0c0e8;font-size:.78rem;margin-bottom:9px;}
+    .back-wrap{max-width:860px;margin:0 auto 12px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#555;font-size:0.82rem;font-weight:600;background:#fff;border:1.5px solid #e5e5e5;border-radius:99px;padding:7px 16px;white-space:nowrap;}
+.back-btn:hover{background:#f3f3f6;}
     .page-title{font-size:1.3rem;font-weight:800;margin-bottom:4px;}
     .page-sub{font-size:.76rem;color:#a5b4fc;}
 
@@ -113,8 +115,10 @@
 </head>
 <body>
 
+<div class="back-wrap"><a href="index.html" class="back-btn" id="backBtn">← 홈으로 돌아가기</a></div>
+<script>(function(){var r=document.referrer,b=document.getElementById('backBtn'),m=[['insta','insta-analyzer.html','← 인스타 분석기로'],['daangn','daangn-analyzer.html','← 당근 분석기로'],['munto','munto-analyzer.html','← 문토 분석기로'],['somoim','somoim-analyzer.html','← 소모임 분석기로'],['frip','frip-analyzer.html','← 프립 분석기로']];for(var i=0;i<m.length;i++){if(r.indexOf(m[i][0])>-1){b.href=m[i][1];b.textContent=m[i][2];break;}}})();</script>
+
 <div class="page-header">
-  <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
   <div class="page-title">🗓️ 모임 운영 가이드</div>
   <div class="page-sub">모임 종류 + 플랫폼별 맞춤 운영 전략</div>
 </div>
@@ -771,9 +775,11 @@ const PLT_DATA = {
       '후기 요청 체계 구축 — 종료 직후 후기 유도(후기수가 노출 1순위)',
     ],
     algo: [
-      {t:'⭐ 후기 수 = 노출', b:'카테고리 노출순위를 후기 수가 압도적으로 좌우(rho -0.915). 초기엔 지인·체험단으로 후기 시드 확보.'},
-      {t:'🏅 슈퍼호스트 등급', b:'상위 노출 상품의 다수가 슈퍼호스트. 응답률·평점·개설 꾸준함을 관리해 등급 상승.'},
-      {t:'📅 꾸준한 개설', b:'"활발한 호스트" 신호 유지. 가격·할인은 노출과 무관(rho≈0)하니 후기·품질에 투자.'},
+      {t:'⭐ 후기 수 = 노출', b:'카테고리 노출순위를 후기 수가 압도적으로 좌우(전국 3,912개 실측 rho -0.909). 초기엔 지인·체험단으로 후기 시드 확보.'},
+      {t:'🌊 후기 블루오션', b:'전체 상품의 52%가 후기 0개! 대부분 카테고리는 후기 2~7개만 넘겨도 상위 25%. 초반 몇 개가 판을 가름(모임·뷰티는 예외로 경쟁 치열).'},
+      {t:'🏅 호스트 파워', b:'호스트가 누적으로 쌓은 후기·찜(-0.58·-0.44)이 신규 상품 노출까지 끌어올림. 여러 상품 꾸준히 운영해 실적을 쌓으면 신상품도 출발이 유리.'},
+      {t:'🥇 슈퍼호스트', b:'보조 신호(rho -0.22). 응답률·평점·개설 꾸준함으로 등급 관리.'},
+      {t:'🚫 평점·가격은 무관', b:'평점(+0.10)·가격·할인(≈0)은 노출과 무관. 별점·가격 경쟁보다 후기 개수와 호스트 실적에 집중.'},
     ],
     routine_plt: [
       {t:'📅 매주', c:'다음 일정 등록·오픈 (호스트 활성 신호 유지)'},

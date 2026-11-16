@@ -28,6 +28,8 @@
       transition:background 0.2s;
     }
     .back-btn:hover { background:#f3f3f6; }
+    .back-wrap { max-width:720px; margin:0 auto 12px; }
+    .back-wrap .back-btn { margin-bottom:0; }
     header h1 {
       font-size:1.9rem; font-weight:900;
       background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045);
@@ -183,23 +185,9 @@
 </head>
 <body>
 
+<div class="back-wrap"><a class="back-btn" id="backBtn" href="index.html">← 홈으로 돌아가기</a></div>
+<script>(function(){var r=document.referrer,b=document.getElementById('backBtn'),m=[['insta','insta-analyzer.html','← 인스타 분석기로'],['daangn','daangn-analyzer.html','← 당근 분석기로'],['munto','munto-analyzer.html','← 문토 분석기로'],['somoim','somoim-analyzer.html','← 소모임 분석기로'],['frip','frip-analyzer.html','← 프립 분석기로']];for(var i=0;i<m.length;i++){if(r.indexOf(m[i][0])>-1){b.href=m[i][1];b.textContent=m[i][2];break;}}})();</script>
 <header>
-  <a class="back-btn" id="backBtn" href="index.html">← 홈으로 돌아가기</a>
-  <script>
-    (function(){
-      const ref = document.referrer;
-      const btn = document.getElementById('backBtn');
-      if (ref.includes('insta-analyzer.html') || ref.includes('instagram')) {
-        btn.href = 'index.html'; btn.textContent = '← 인스타 분석기로';
-      } else if (ref.includes('daangn')) {
-        btn.href = 'daangn-analyzer.html'; btn.textContent = '← 당근 분석기로';
-      } else if (ref.includes('moim')) {
-        btn.href = 'somoim-analyzer.html'; btn.textContent = '← 소모임 분석기로';
-      } else if (ref.includes('frip')) {
-        btn.href = 'frip-analyzer.html'; btn.textContent = '← 프립 분석기로';
-      }
-    })();
-  </script>
   <h1>📖 SNS 알고리즘 용어백과</h1>
   <p>인스타·당근·소모임·문토·프립 분석기에 나오는 핵심 용어 100개+를 한 번에 정리했어요</p>
 </header>
@@ -664,20 +652,32 @@ const TERMS = [
   /* ───────────── 프립 ───────────── */
   {
     cat:'frip', name:'후기 수', en:'Review Count',
-    desc:`프립 액티비티에 쌓인 <b>누적 후기 개수</b>예요. 카테고리 노출순위를 사실상 지배하는 1순위 신호(실측 rho -0.915)로, 후기가 많을수록 상위에 노출돼요.`,
-    tip:`초기엔 지인·체험단 참여로 후기 시드를 빠르게 확보하세요. 후기는 종료 직후 요청할 때 응답률이 가장 높아요.`,
+    desc:`프립 액티비티에 쌓인 <b>누적 후기 개수</b>예요. 카테고리 노출순위를 사실상 지배하는 1순위 신호(전국 3,912개 실측 rho -0.909)로, 후기가 많을수록 상위에 노출돼요. <b>전체 상품의 52%가 후기 0개</b>라, 대부분 카테고리는 후기 2~7개만 넘겨도 상위 25%에 들어요(블루오션).`,
+    tip:`과반이 후기 0개라 초반 몇 개가 판을 가릅니다. 지인·체험단으로 후기 시드를 빠르게 확보하세요 — 후기는 종료 직후 요청할 때 응답률이 가장 높아요.`,
+    tipColor:'orange'
+  },
+  {
+    cat:'frip', name:'호스트 파워', en:'Host Power',
+    desc:`호스트가 <b>누적으로 쌓은 후기·찜의 총량</b>이에요. 개별 상품 후기 다음가는 강력한 신호(누적 후기 rho -0.58·누적 찜 -0.44)로, <b>검증된 호스트가 올린 신규 상품은 출발부터 노출이 유리</b>해요.`,
+    tip:`여러 상품을 꾸준히 운영하며 호스트 단위 후기·찜을 쌓으면, 새 상품을 올려도 콜드스타트를 덜 겪어요. 응답률·평점·꾸준함이 슈퍼호스트 등급으로도 이어져요.`,
+    tipColor:'orange'
+  },
+  {
+    cat:'frip', name:'평점 (노출 무관)', en:'Rating',
+    desc:`상품의 <b>별점(5점 만점)</b>이에요. 품질 지표지만 <b>노출 순위와는 무관</b>해요(rho +0.10). 가격·할인율도 마찬가지로 노출과 무관(≈0)이에요. 프립은 "질(평점)"이 아니라 "양(후기 수·호스트 실적)"으로 랭크해요.`,
+    tip:`별점 관리나 가격 경쟁에 에너지를 쏟기보다 <b>후기 개수와 호스트 실적 누적</b>에 집중하는 게 노출엔 훨씬 효율적이에요.`,
     tipColor:'orange'
   },
   {
     cat:'frip', name:'슈퍼호스트', en:'Superhost',
-    desc:`응답률·평점·개설 꾸준함 등 <b>일정 기준을 충족한 호스트에게 부여되는 등급</b>이에요. 상위 노출 상품의 다수가 슈퍼호스트라, 후기 수 다음가는 보조 신호(rho -0.33)예요.`,
+    desc:`응답률·평점·개설 꾸준함 등 <b>일정 기준을 충족한 호스트에게 부여되는 등급</b>이에요. 상위 노출 상품에 슈퍼호스트가 많아 보조 신호(rho -0.22)로 작동하지만, 후기 수·호스트 파워만큼 결정적이진 않아요.`,
     tip:`빠른 문의 응답·높은 평점 유지·정기 개설 3박자를 관리하면 등급이 올라가요.`,
     tipColor:'orange'
   },
   {
     cat:'frip', name:'카테고리 노출순위', en:'Category Ranking',
-    desc:`각 카테고리 페이지에서 액티비티가 <b>노출되는 순서</b>예요. 후기 수·슈퍼호스트 등급이 주로 좌우하고, 가격·할인율은 순위와 거의 무관(rho≈0)해요.`,
-    tip:`상위로 가려면 가격을 낮추기보다 후기와 호스트 등급에 투자하는 게 효율적이에요.`,
+    desc:`각 카테고리 페이지에서 액티비티가 <b>노출되는 순서</b>예요. <b>상품 후기 수</b>(-0.909)가 압도적이고 <b>호스트 파워</b>(누적 후기·찜 -0.58·-0.44)·슈퍼호스트(-0.22)가 뒤를 잇고, 평점·가격·할인율은 순위와 무관(rho≈0)해요.`,
+    tip:`상위로 가려면 가격을 낮추기보다 후기 개수와 호스트 실적에 투자하는 게 효율적이에요.`,
     tipColor:'orange'
   },
   {

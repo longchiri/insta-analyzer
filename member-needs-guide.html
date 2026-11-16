@@ -264,8 +264,9 @@
 <body>
 
 <div class="back-wrap">
-  <a href="index.html" class="back-btn">← 홈으로</a>
+  <a href="index.html" class="back-btn" id="backBtn">← 홈으로 돌아가기</a>
 </div>
+<script>(function(){var r=document.referrer,b=document.getElementById('backBtn'),m=[['insta','insta-analyzer.html','← 인스타 분석기로'],['daangn','daangn-analyzer.html','← 당근 분석기로'],['munto','munto-analyzer.html','← 문토 분석기로'],['somoim','somoim-analyzer.html','← 소모임 분석기로'],['frip','frip-analyzer.html','← 프립 분석기로']];for(var i=0;i<m.length;i++){if(r.indexOf(m[i][0])>-1){b.href=m[i][1];b.textContent=m[i][2];break;}}})();</script>
 
 <header>
   <div class="logo">🎯</div>
