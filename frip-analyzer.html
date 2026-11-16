@@ -37,14 +37,61 @@
   .bar-fill{height:100%;border-radius:7px;}
   .bar-val{width:58px;text-align:right;font-size:0.82rem;font-weight:800;}
   .foot{text-align:center;font-size:0.75rem;color:#b79a8c;margin-top:20px;}
+  /* 결과 메뉴바 */
+  .menubar{position:sticky;top:0;z-index:20;display:flex;gap:6px;background:#fef6f1ee;backdrop-filter:blur(6px);padding:10px 0;margin-bottom:6px;}
+  .menubar button{flex:1;padding:9px 4px;border:1.5px solid #ffd9c9;border-radius:99px;background:#fff;color:#a06a52;font-size:0.8rem;font-weight:800;cursor:pointer;font-family:inherit;}
+  .menubar button.on{background:linear-gradient(135deg,#ff7a4d,#ff5a2c);color:#fff;border-color:transparent;}
+  /* 종합점수 게이지 */
+  .gauge-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;}
+  .gauge{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .gauge-in{width:116px;height:116px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .gauge-sc{font-size:2.3rem;font-weight:900;line-height:1;}
+  .gauge-lb{font-size:0.74rem;color:#8a6f63;margin-top:3px;font-weight:700;}
+  .mini{flex:1;min-width:180px;}
+  .mini .mrow{display:flex;justify-content:space-between;font-size:0.82rem;margin:6px 0;color:#5c4a40;}
+  .mini .mrow b{font-weight:800;}
+  /* 로드맵 */
+  .step{display:flex;gap:12px;margin:0 0 10px;}
+  .step-n{flex:none;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#ff7a4d,#ff5a2c);color:#fff;font-size:0.8rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .step-b{font-size:0.84rem;color:#5c4a40;line-height:1.6;}
+  .step-b b{color:#2b2320;}
+  /* 콘텐츠 도우미 복사박스 */
+  .copybox{position:relative;background:#fff7f2;border:1px solid #ffe0d2;border-radius:11px;padding:12px 13px;margin:8px 0;font-size:0.86rem;color:#2b2320;line-height:1.6;white-space:pre-wrap;}
+  .copybtn{position:absolute;top:8px;right:8px;background:#ff5a2c;color:#fff;border:none;border-radius:8px;font-size:0.72rem;font-weight:800;padding:4px 10px;cursor:pointer;}
+  .pill{display:inline-block;background:#ffe3d6;color:#c2410c;font-size:0.74rem;font-weight:800;padding:3px 10px;border-radius:99px;margin:3px 4px 0 0;}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+    <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:#9a7a6c; font-size:0.82rem; font-weight:700; background:#fff; border:1.5px solid #f0ddd3; border-radius:99px; padding:7px 16px;">← 홈으로 돌아가기</a>
+  </div>
   <div class="hero">
-    <h1>🎒 프립 노출 분석기 <span class="ver">Ver 3.0.0</span></h1>
+    <h1>🎒 프립 노출 분석기 <span class="ver">Ver 4.0.0</span></h1>
     <p>내 액티비티가 카테고리에서 상위 노출될까? 전국 3,912개 전수 실측 기반 진단</p>
   </div>
+
+  <!-- 용어백과사전 배너 -->
+  <a href="glossary.html" style="
+    display:flex; align-items:center; justify-content:space-between;
+    margin:0 0 18px;
+    background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);
+    border-radius:16px; padding:16px 22px;
+    text-decoration:none; color:#fff;
+    box-shadow:0 4px 20px rgba(26,26,46,0.18);
+    transition:transform 0.18s, box-shadow 0.18s;
+    " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(26,26,46,0.25)'"
+       onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(26,26,46,0.18)'">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div style="font-size:2rem; line-height:1;">📖</div>
+      <div>
+        <div style="font-size:0.79rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
+        <div style="font-size:1rem; font-weight:800; color:#fff;">후기수·슈퍼호스트·노출순위가 뭔지 모르겠다면?</div>
+        <div style="font-size:0.78rem; color:#8080b0; margin-top:2px;">분석기에 나오는 핵심 용어를 한 번에 정리했어요</div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(90deg,#ff5a2c,#ffa07a); border-radius:99px; padding:8px 16px; font-size:0.8rem; font-weight:800; color:#fff; flex-shrink:0; white-space:nowrap;">용어 보기 →</div>
+  </a>
 
   <div class="card">
     <h2>📝 내 액티비티 정보</h2>
@@ -64,36 +111,102 @@
       <div><label>호스트 누적 후기 <span class="hint">🆕 강력 2위</span></label><input type="number" id="f-hrv" placeholder="예: 320" min="0"/></div>
       <div><label>호스트 누적 찜 <span class="hint">🆕 강력 3위</span></label><input type="number" id="f-hwish" placeholder="예: 410" min="0"/></div>
     </div>
-    <label>슈퍼호스트 여부</label>
-    <select id="f-super"><option value="0">아니오</option><option value="1">예</option></select>
+    <div class="row">
+      <div><label>슈퍼호스트 여부</label>
+        <select id="f-super"><option value="0">아니오</option><option value="1">예</option></select></div>
+      <div><label>상품 등록 경과 <span class="hint">신규 부스트·방치 진단용</span></label>
+        <select id="f-age"><option value="new">2주 이내(신규)</option><option value="mid">2주~3개월</option><option value="old">3개월 이상</option></select></div>
+    </div>
+    <label>상품명·활동 키워드 <span class="hint">콘텐츠 도우미용(선택)</span></label>
+    <input type="text" id="f-name" placeholder="예: 서울 베이킹 원데이 클래스"/>
     <button class="btn" onclick="analyzeFrip()">노출 진단 받기 →</button>
   </div>
 
   <div id="result" class="res">
-    <div class="card">
+    <div class="menubar">
+      <button class="on" data-f="all" onclick="fripMenu('all',this)">전체</button>
+      <button data-f="종합" onclick="fripMenu('종합',this)">종합</button>
+      <button data-f="데이터" onclick="fripMenu('데이터',this)">데이터</button>
+      <button data-f="전략" onclick="fripMenu('전략',this)">전략</button>
+    </div>
+
+    <div class="card" data-grp="종합">
+      <h2>🏆 노출 종합 점수</h2>
+      <div class="gauge-wrap">
+        <div class="gauge" id="f-gauge"><div class="gauge-in"><div class="gauge-sc" id="f-score">0</div><div class="gauge-lb" id="f-grade">—</div></div></div>
+        <div class="mini" id="f-score-mini"></div>
+      </div>
+    </div>
+
+    <div class="card" data-grp="종합">
+      <h2>🤖 AI 종합 진단</h2>
+      <div class="note" id="f-ai" style="line-height:1.8;"></div>
+    </div>
+
+    <div class="card" data-grp="데이터">
       <h2>📊 후기수 노출 컷 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">전수 3,912개 백분위</span></h2>
       <div class="note" id="f-tier-intro"></div>
       <div class="grid3" id="f-tiers"></div>
       <div class="verdict" id="f-gap" style="background:#fff2ec;border:1px solid #ffd4c2;color:#b03a18;"></div>
     </div>
-    <div class="card">
+
+    <div class="card" data-grp="데이터">
       <h2>🏅 호스트 파워 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">누적 실적 = 신규 상품도 끌어올림</span></h2>
       <div class="note" id="f-hp-intro"></div>
       <div class="grid3" id="f-hp-tiers"></div>
       <div class="verdict" id="f-hp-gap" style="background:#fff2ec;border:1px solid #ffd4c2;color:#b03a18;"></div>
     </div>
-    <div class="card">
+
+    <div class="card" data-grp="데이터">
+      <h2>👻 방치·블루오션 진단</h2>
+      <div class="verdict" id="f-ghost"></div>
+    </div>
+
+    <div class="card" data-grp="데이터">
+      <h2>⚡ 신규 부스트 진단</h2>
+      <div class="verdict" id="f-boost" style="background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;"></div>
+    </div>
+
+    <div class="card" data-grp="데이터">
       <h2>🎚️ 노출을 가르는 지렛대 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">실측 상관</span></h2>
       <div id="f-levers"></div>
-      <div class="note" style="margin-top:12px;">💡 프립 노출은 <b>"후기 수"가 거의 결정적</b>이에요(카테고리 내 상관 <b>-0.915</b>). 그 다음이 <b>호스트 누적 후기</b>(-0.53)·<b>호스트 누적 찜</b>(-0.43) — 즉 <b>검증된 호스트의 신규 상품은 출발부터 유리</b>해요. <b>슈퍼호스트</b>도 보조(-0.33). 반면 <b>평점은 노출과 무관</b>(+0.03)이고 <b>가격·할인도 무관</b>(≈0)이라, 별점·가격보다 <b>후기 개수와 호스트 실적 누적</b>이 정답이에요.</div>
+      <div class="note" style="margin-top:12px;">💡 프립 노출은 <b>"후기 수"가 거의 결정적</b>이에요(카테고리 내 상관 <b>-0.909</b>). 그 다음이 <b>호스트 누적 후기</b>(-0.58)·<b>호스트 누적 찜</b>(-0.44) — 즉 <b>검증된 호스트의 신규 상품은 출발부터 유리</b>해요. <b>슈퍼호스트</b>도 보조(-0.22). 반면 <b>평점은 노출과 무관</b>(+0.10)이고 <b>가격·할인도 무관</b>(≈0)이라, 별점·가격보다 <b>후기 개수와 호스트 실적 누적</b>이 정답이에요.</div>
     </div>
-    <div class="card">
+
+    <div class="card" data-grp="전략">
+      <h2>🗺️ 이번 달 실행 로드맵</h2>
+      <div id="f-roadmap"></div>
+    </div>
+
+    <div class="card" data-grp="전략">
       <h2>🚀 상위 노출 액션</h2>
       <div id="f-actions"></div>
     </div>
+
+    <div class="card" data-grp="전략">
+      <h2>✏️ 콘텐츠 도우미 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">제목·후기 요청 문구</span></h2>
+      <div id="f-content"></div>
+    </div>
+
+    <div class="card" data-grp="전략">
+      <h2>📌 프립 노출 알고리즘 가이드 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">고정</span></h2>
+      <div class="note" style="line-height:1.85;">
+        🎯 <b>노출 순위를 만드는 것</b> (전국 3,912개 전수 실측)<br>
+        1️⃣ <b>상품 후기 수</b> — 압도적 1순위(상관 -0.909). 과반(52%)이 후기 0개라, <b>초반 몇 개가 판을 가름</b>.<br>
+        2️⃣ <b>호스트 누적 실적</b> — 호스트의 누적 후기(-0.58)·찜(-0.44)이 신규 상품까지 끌어올림. 검증된 호스트가 유리.<br>
+        3️⃣ <b>슈퍼호스트</b> — 보조 신호(-0.22).<br>
+        🚫 <b>노출과 무관</b> — 평점(+0.10)·가격·할인(≈0)·호스트 상품수(0). 별점·가격 경쟁은 노출엔 도움 안 됨.<br>
+        🌊 <b>블루오션 구조</b> — 대부분 카테고리는 후기 <b>2~7개</b>만 넘겨도 상위 25%(모임·뷰티는 예외로 경쟁 치열).
+      </div>
+    </div>
+
+    <div class="card" data-grp="전략">
+      <h2>📌 내 기록 추적 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">이 브라우저에 저장</span></h2>
+      <div id="f-history"></div>
+    </div>
   </div>
 
-  <div class="foot">※ 2026.11 프립 16개 카테고리 314개 실측 기반 · 카테고리별 노출순위 상·중·하 중앙값<br>By Longchiri</div>
+  <div class="foot">※ 2026.11 프립 16개 카테고리 전국 3,912개 전수 실측 기반 · 후기수 백분위 컷<br>By Longchiri</div>
   <div style="text-align:center;margin-top:14px;">
     <a href="https://t.me/hong_bottest" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:#ff5a2c;color:#fff;text-decoration:none;font-size:0.82rem;font-weight:800;padding:9px 18px;border-radius:99px;">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
@@ -116,6 +229,8 @@ function analyzeFrip(){
   const hrv = parseInt(document.getElementById('f-hrv').value) || 0;
   const hwish = parseInt(document.getElementById('f-hwish').value) || 0;
   const sup = document.getElementById('f-super').value === '1';
+  const age = document.getElementById('f-age').value;        // new / mid / old
+  const pname = (document.getElementById('f-name').value || '').trim();
   const T = FRIP_TIERS[cat] || FRIP_TIERS['_default'];
   const catName = cat==='_default' ? '전체' : cat;
 
@@ -209,8 +324,129 @@ function analyzeFrip(){
   acts.push('📅 꾸준한 개설로 "활발한 호스트" 신호를 유지하면 후기 누적 속도가 빨라져요.');
   document.getElementById('f-actions').innerHTML = acts.map(a=>'<div class="note" style="margin-bottom:9px;">'+a+'</div>').join('');
 
+  // ── 종합 점수 (0~100) ──
+  // 후기 노출력(55) + 호스트파워(30) + 슈퍼호스트(10) + 신규/꾸준(5)
+  const revScore = rv>=T.p90 ? 55 : rv>=T.p75 ? 42 : rv>=Math.max(1,Math.round(T.p75/2)) ? 28 : rv>0 ? 16 : 0;
+  const hpScore = hpBest===0 ? 30 : hpBest===1 ? 18 : (hrv>0||hwish>0) ? 9 : 3;
+  const supScore = sup ? 10 : 0;
+  const freshScore = age==='old' ? 2 : 5;
+  const score = Math.min(100, Math.round(revScore + hpScore + supScore + freshScore));
+  const grade = score>=80?'최상위권':score>=60?'상위권':score>=40?'중위권':score>=20?'성장 필요':'출발선';
+  const gColor = score>=60?'#16a34a':score>=40?'#d97706':'#dc2626';
+  const gEl = document.getElementById('f-gauge');
+  gEl.style.background = 'conic-gradient('+gColor+' '+(score*3.6)+'deg, #f3e7df 0deg)';
+  document.getElementById('f-score').textContent = score;
+  document.getElementById('f-score').style.color = gColor;
+  document.getElementById('f-grade').textContent = grade;
+  document.getElementById('f-score-mini').innerHTML =
+    '<div class="mrow"><span>⭐ 후기 노출력</span><b>'+revScore+' / 55</b></div>'+
+    '<div class="mrow"><span>🏅 호스트 파워</span><b>'+hpScore+' / 30</b></div>'+
+    '<div class="mrow"><span>🥇 슈퍼호스트</span><b>'+supScore+' / 10</b></div>'+
+    '<div class="mrow"><span>📅 신규·꾸준함</span><b>'+freshScore+' / 5</b></div>';
+
+  // ── AI 종합 진단 ──
+  let ai = '<b>'+catName+'</b> 카테고리에서 당신의 상품은 종합 <b style="color:'+gColor+';">'+score+'점('+grade+')</b>이에요. ';
+  if(rv>=T.p75) ai += '후기 <b>'+rv.toLocaleString()+'개</b>로 이미 <b>상위 '+(myIdx===0?'10':'25')+'%</b> 노출권이라 출발이 좋아요. ';
+  else if(rv>0) ai += '후기 <b>'+rv.toLocaleString()+'개</b>인데, 이 카테고리는 '+T.zero+'%가 후기 0개라 <b>'+Math.max(1,T.p75-rv)+'개만 더</b> 받으면 상위 25%예요. ';
+  else ai += '아직 후기가 없지만 <b>과반('+T.zero+'%)이 후기 0개</b>라 좌절할 필요 없어요. <b>첫 후기 몇 개</b>가 순위를 확 끌어올려요. ';
+  ai += hpBest===0 ? '게다가 호스트 파워가 <b>상위</b>라 신규 상품도 유리하게 출발해요. ' : '호스트 누적 실적(후기·찜)을 더 쌓으면 신규 상품 노출도 같이 올라가요. ';
+  ai += '별점·가격은 노출과 무관하니 거기 매달리지 말고, <b>후기 개수 확보</b>에 집중하세요.';
+  document.getElementById('f-ai').innerHTML = ai;
+
+  // ── 방치·블루오션 진단 ──
+  let ghost;
+  if(rv===0 && age==='old'){
+    ghost = '⚠️ <b>방치 위험</b> — 등록 3개월+인데 후기가 0개예요. 노출이 바닥에 깔려요. 지인·체험단으로 <b>첫 후기 '+Math.max(1,T.p75)+'개</b>를 빠르게 받아 되살리세요. 안 되면 상세페이지(썸네일·제목)를 갈아엎고 재등록하는 것도 방법이에요.';
+    document.getElementById('f-ghost').style.cssText='background:#fff5f5;border:1px solid #fca5a5;color:#b91c1c;';
+  } else if(rv < T.p75){
+    ghost = '🌊 <b>블루오션 구간</b> — '+catName+'은 '+T.zero+'%가 후기 0개라 경쟁이 약해요. 지금 후기 몇 개만 쌓으면 바로 상위권으로 치고 올라갈 수 있어요. <b>방치만 안 하면</b> 기회가 큰 자리예요.';
+    document.getElementById('f-ghost').style.cssText='background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;';
+  } else {
+    ghost = '✅ <b>활성·경쟁력 있음</b> — 후기가 상위 컷을 넘겨 노출이 살아있어요. 지금 페이스로 후기·일정을 꾸준히 유지하면 자리를 지켜요.';
+    document.getElementById('f-ghost').style.cssText='background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;';
+  }
+  document.getElementById('f-ghost').innerHTML = ghost;
+
+  // ── 신규 부스트 진단 ──
+  let boost;
+  if(age==='new'){
+    boost = '🚀 <b>신규 부스트 구간</b> — 등록 2주 이내 신상품이에요. 이 시기에 <b>초기 후기·찜을 몰아주면</b> 콜드스타트를 넘어 노출이 가속돼요. 오픈 직후 지인·체험단 참여 → 후기 요청을 <b>집중</b>하세요. 첫 2주가 상품 수명의 출발점을 결정해요.';
+  } else if(age==='mid'){
+    boost = '⏳ <b>초기 성장 구간</b> (2주~3개월) — 아직 후기를 빠르게 쌓을 수 있는 시기예요. 매 회차 후기 요청을 루틴화하고, 다음 일정을 꾸준히 열어 "활발한 호스트" 신호를 유지하세요.';
+  } else {
+    boost = '📅 <b>성숙 구간</b> (3개월+) — 신규 부스트는 끝났어요. 이제는 <b>후기 누적량</b>과 <b>호스트 실적</b>이 노출을 좌우해요. 후기가 정체됐다면 재참여 혜택·리마인드로 후기 유입을 다시 틔우세요.';
+  }
+  document.getElementById('f-boost').innerHTML = boost;
+
+  // ── 실행 로드맵 ──
+  const need75 = Math.max(0, T.p75 - rv), need90 = Math.max(0, T.p90 - rv);
+  const steps = [];
+  if(rv < T.p75) steps.push('<b>1주차 · 후기 시드</b> — 지인·체험단 참여로 후기 <b>'+Math.max(1,need75)+'개</b> 확보 → 바로 상위 25% 진입. (첫 후기가 가장 어렵고 가장 값져요)');
+  else steps.push('<b>1주차 · 후기 유지</b> — 이미 상위권. 매 회차 종료 직후 후기 요청을 자동 루틴으로 고정하세요.');
+  steps.push('<b>2주차 · 썸네일·상세페이지</b> — 첫 사진(클릭률 70% 좌우)과 제목 키워드를 점검·개선. 후기가 생겨도 클릭이 없으면 안 쌓여요.');
+  steps.push('<b>3주차 · 슈퍼호스트 관리</b> — 문의 빠른 응답·평점·개설 꾸준함으로 등급 상승(보조 신호 -0.22).');
+  if(need90>0 && rv>=T.p75) steps.push('<b>4주차 · 상위 10% 도전</b> — 후기 <b>+'+need90+'개</b> 더 쌓으면 상위 10%권(≥'+T.p90.toLocaleString()+'개).');
+  steps.push('<b>매주 · 일정 오픈</b> — 같은 요일에 다음 회차를 열어 "활발한 호스트" 신호와 호스트 누적 실적을 동시에 쌓으세요.');
+  document.getElementById('f-roadmap').innerHTML = steps.map((s,i)=>
+    '<div class="step"><div class="step-n">'+(i+1)+'</div><div class="step-b">'+s+'</div></div>').join('');
+
+  // ── 콘텐츠 도우미 (제목·후기 요청 문구) ──
+  const kw = pname || (catName!=='전체'?catName:'원데이 클래스');
+  const titleSamples = [
+    '['+(pname?pname:'지역')+'] '+catName+' 원데이 클래스 | 초보 환영'+(sup?' | 슈퍼호스트':''),
+    kw+' 체험 | 후기 '+(rv>0?rv:'0')+'+ | '+(catName!=='전체'?catName:'취미')+' 입문',
+    '🎒 '+kw+' | 준비물 제공 · 결과물 포장'
+  ];
+  const reviewMsg = (pname?pname:'[상품명]')+' 참여해 주셔서 감사해요 😊\n\n프립은 후기가 쌓일수록 더 많은 분께 노출돼요.\n짧게라도 후기 한 줄 남겨주시면 큰 힘이 됩니다!\n🎁 후기 작성해 주신 분께 다음 참여 할인 드려요.';
+  let ch = '<div style="font-size:0.8rem;font-weight:800;color:#c2410c;margin:2px 0 6px;">📌 잘 되는 제목 패턴</div>';
+  ch += titleSamples.map(t=>'<div class="copybox">'+t.replace(/</g,'&lt;')+'<button class="copybtn" onclick="fripCopy(this)">복사</button></div>').join('');
+  ch += '<div style="font-size:0.8rem;font-weight:800;color:#c2410c;margin:14px 0 6px;">⭐ 후기 요청 메시지</div>';
+  ch += '<div class="copybox">'+reviewMsg+'<button class="copybtn" onclick="fripCopy(this)">복사</button></div>';
+  document.getElementById('f-content').innerHTML = ch;
+
+  // ── 기록 저장 + 렌더 ──
+  fripSaveHistory({t:Date.now(), cat:catName, rv:rv, score:score, grade:grade});
+  fripRenderHistory();
+
   document.getElementById('result').style.display = 'block';
   document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+// 메뉴바 필터
+function fripMenu(f, btn){
+  document.querySelectorAll('.menubar button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#result .card').forEach(c=>{
+    c.style.display = (f==='all' || c.getAttribute('data-grp')===f) ? '' : 'none';
+  });
+}
+// 복사
+function fripCopy(btn){
+  const box = btn.parentElement;
+  const txt = box.childNodes[0].textContent;
+  navigator.clipboard?.writeText(txt);
+  const o = btn.textContent; btn.textContent='복사됨!'; setTimeout(()=>btn.textContent=o, 1200);
+}
+// 기록 추적 (localStorage)
+function fripSaveHistory(rec){
+  try{
+    const k='frip_history';
+    const arr = JSON.parse(localStorage.getItem(k)||'[]');
+    arr.unshift(rec);
+    localStorage.setItem(k, JSON.stringify(arr.slice(0,10)));
+  }catch(e){}
+}
+function fripRenderHistory(){
+  let arr=[];
+  try{ arr = JSON.parse(localStorage.getItem('frip_history')||'[]'); }catch(e){}
+  const el = document.getElementById('f-history');
+  if(!el) return;
+  if(!arr.length){ el.innerHTML = '<div class="note">아직 기록이 없어요. 진단할 때마다 이 브라우저에 종합점수가 저장돼 추이를 볼 수 있어요.</div>'; return; }
+  el.innerHTML = arr.map(r=>{
+    const d = new Date(r.t); const ds = (d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    const c = r.score>=60?'#16a34a':r.score>=40?'#d97706':'#dc2626';
+    return '<div class="mrow" style="padding:7px 0;border-top:1px solid #f3e7df;"><span>'+ds+' · '+r.cat+' · 후기 '+r.rv+'</span><b style="color:'+c+';">'+r.score+'점 '+r.grade+'</b></div>';
+  }).join('');
 }
 </script>
 </body>
