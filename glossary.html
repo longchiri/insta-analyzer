@@ -75,7 +75,7 @@
     .filter-btn[data-cat="insta"].active  { background:linear-gradient(90deg,#833ab4,#fd1d1d); }
     .filter-btn[data-cat="daangn"].active { background:linear-gradient(90deg,#FF6F0F,#FFB347); }
     .filter-btn[data-cat="moim"].active   { background:linear-gradient(90deg,#16A34A,#EA580C); }
-    .filter-btn[data-cat="kakao"].active  { background:linear-gradient(90deg,#c8a800,#FFD700); color:#3C1E1E; }
+    .filter-btn[data-cat="frip"].active   { background:linear-gradient(90deg,#ff5a2c,#ffa07a); }
 
     /* ── 용어 카드 ── */
     .glossary-wrap {
@@ -100,7 +100,7 @@
     .plat-insta  { background:#fd1d1d18; color:#c13584; }
     .plat-daangn { background:#FF6F0F18; color:#d45a00; }
     .plat-moim   { background:#16A34A18; color:#16A34A; }
-    .plat-kakao  { background:#FEE50028; color:#8a7200; }
+    .plat-frip   { background:#ff5a2c20; color:#e04410; }
     .plat-common { background:#6366f118; color:#6366f1; }
 
     .term-name {
@@ -195,13 +195,13 @@
         btn.href = 'daangn-analyzer.html'; btn.textContent = '← 당근 분석기로';
       } else if (ref.includes('moim')) {
         btn.href = 'somoim-analyzer.html'; btn.textContent = '← 소모임 분석기로';
-      } else if (ref.includes('kakao')) {
-        btn.href = 'kakao-analyzer.html'; btn.textContent = '← 카카오 분석기로';
+      } else if (ref.includes('frip')) {
+        btn.href = 'frip-analyzer.html'; btn.textContent = '← 프립 분석기로';
       }
     })();
   </script>
   <h1>📖 SNS 알고리즘 용어백과</h1>
-  <p>인스타·당근·소모임·카카오 분석기에 나오는 핵심 용어 100개+를 한 번에 정리했어요</p>
+  <p>인스타·당근·소모임·문토·프립 분석기에 나오는 핵심 용어 100개+를 한 번에 정리했어요</p>
 </header>
 
 <!-- 검색 -->
@@ -217,7 +217,7 @@
   <button class="filter-btn" data-cat="insta">📸 인스타</button>
   <button class="filter-btn" data-cat="daangn">🥕 당근</button>
   <button class="filter-btn" data-cat="moim">🤝 소모임·문토</button>
-  <button class="filter-btn" data-cat="kakao">💬 오픈채팅</button>
+  <button class="filter-btn" data-cat="frip">🎒 프립</button>
   <button class="filter-btn" data-cat="common">🌐 공통</button>
 </div>
 
@@ -311,7 +311,7 @@ const TERMS = [
   },
   {
     cat:'common', name:'크로스 프로모션', en:'Cross Promotion',
-    desc:`인스타·유튜브·당근·카카오 등 <b>여러 플랫폼에서 서로 채널을 홍보해주는 것</b>이에요. 한 플랫폼 팔로워를 다른 플랫폼으로 유입시키는 전략이에요.`,
+    desc:`인스타·유튜브·당근·프립 등 <b>여러 플랫폼에서 서로 채널을 홍보해주는 것</b>이에요. 한 플랫폼 팔로워를 다른 플랫폼으로 유입시키는 전략이에요.`,
     tip:`크로스 프로모션으로 특정 플랫폼 알고리즘 변화에 따른 리스크를 분산할 수 있어요.`
   },
   {
@@ -331,7 +331,7 @@ const TERMS = [
   },
   {
     cat:'common', name:'DM', en:'Direct Message',
-    desc:`SNS 플랫폼 내에서 <b>1:1 또는 소규모로 주고받는 개인 메시지</b>예요. 인스타에서는 DM 공유가 최고 등급 알고리즘 신호이며, 카카오에서는 오픈채팅 외에 1:1 카톡을 의미해요.`,
+    desc:`SNS 플랫폼 내에서 <b>1:1 또는 소규모로 주고받는 개인 메시지</b>예요. 인스타에서는 DM 공유가 최고 등급 알고리즘 신호이고, 당근에서는 모임·거래 문의가 채팅으로 이어져요.`,
     tip:`DM을 자주 주고받는 계정끼리는 알고리즘이 "친밀한 관계"로 분류해 서로의 피드 상단에 배치해요.`
   },
   {
@@ -656,71 +656,59 @@ const TERMS = [
   },
   {
     cat:'moim', name:'SNS 외부 홍보', en:'External SNS Promotion',
-    desc:`소모임·문토 외에 <b>인스타·카카오채널·당근 등에서 모임을 홍보하는 활동</b>이에요. 외부 유입이 증가하면 플랫폼이 "인기 모임"으로 인식해 내부 노출도 함께 올라가요.`,
+    desc:`소모임·문토 외에 <b>인스타·당근·프립 등에서 모임을 홍보하는 활동</b>이에요. 외부 유입이 증가하면 플랫폼이 "인기 모임"으로 인식해 내부 노출도 함께 올라가요.`,
     tip:`인스타 스토리에서 모임 링크를 공유하고 "관심 있는 분 DM 주세요" CTA를 붙이면 효율이 좋아요.`,
     tipColor:'green'
   },
 
-  /* ───────────── 카카오 오픈채팅 ───────────── */
+  /* ───────────── 프립 ───────────── */
   {
-    cat:'kakao', name:'지금 뜨는 탭', en:'"Trending Now" Tab',
-    desc:`카카오 오픈채팅에서 <b>인기 있는 채팅방을 매일 업데이트해 노출하는 공간</b>이에요. 활성도·멤버 수·대화량·하트 수 등을 기준으로 알고리즘이 자동으로 선정해요.`,
-    tip:`지금 탭에 오르려면 채팅방 활성도(일평균 메시지 수)가 가장 중요해요.`,
-    tipColor:'yellow'
+    cat:'frip', name:'후기 수', en:'Review Count',
+    desc:`프립 액티비티에 쌓인 <b>누적 후기 개수</b>예요. 카테고리 노출순위를 사실상 지배하는 1순위 신호(실측 rho -0.915)로, 후기가 많을수록 상위에 노출돼요.`,
+    tip:`초기엔 지인·체험단 참여로 후기 시드를 빠르게 확보하세요. 후기는 종료 직후 요청할 때 응답률이 가장 높아요.`,
+    tipColor:'orange'
   },
   {
-    cat:'kakao', name:'커뮤니티 피드', en:'Community Feed',
-    desc:`2025년 개편된 기능으로, <b>채팅방에 입장하지 않아도 화제성 있는 대화가 피드 형태로 노출</b>돼요. 댓글을 달면 해당 채팅방으로 유입이 생겨요.`,
-    tip:`채팅방 대화 중 화제성 있는 내용이 커뮤니티 피드에 노출되면 외부 유입이 크게 늘어요.`,
-    tipColor:'yellow'
+    cat:'frip', name:'슈퍼호스트', en:'Superhost',
+    desc:`응답률·평점·개설 꾸준함 등 <b>일정 기준을 충족한 호스트에게 부여되는 등급</b>이에요. 상위 노출 상품의 다수가 슈퍼호스트라, 후기 수 다음가는 보조 신호(rho -0.33)예요.`,
+    tip:`빠른 문의 응답·높은 평점 유지·정기 개설 3박자를 관리하면 등급이 올라가요.`,
+    tipColor:'orange'
   },
   {
-    cat:'kakao', name:'활성도 지표', en:'Activity Index',
-    desc:`오픈채팅 알고리즘이 채팅방의 <b>일평균 메시지 수·하트 수·멤버 활동률 등을 종합한 점수</b>예요. 이 점수가 높을수록 "지금 뜨는" 탭과 키워드 검색에서 상위에 노출돼요.`,
-    tip:`공지·이벤트를 주기적으로 올려 재방문율을 높이면 활성도가 유지돼요.`,
-    tipColor:'yellow'
+    cat:'frip', name:'카테고리 노출순위', en:'Category Ranking',
+    desc:`각 카테고리 페이지에서 액티비티가 <b>노출되는 순서</b>예요. 후기 수·슈퍼호스트 등급이 주로 좌우하고, 가격·할인율은 순위와 거의 무관(rho≈0)해요.`,
+    tip:`상위로 가려면 가격을 낮추기보다 후기와 호스트 등급에 투자하는 게 효율적이에요.`,
+    tipColor:'orange'
   },
   {
-    cat:'kakao', name:'키워드 탭', en:'Keyword Tab',
-    desc:`오픈채팅의 <b>실시간 트렌드 주제를 기반으로 관련 방을 추천하는 탭</b>이에요. 채팅방 이름에 트렌드 키워드가 포함돼 있으면 키워드 탭에 노출될 확률이 높아져요.`,
-    tip:`방 이름을 만들 때 현재 이슈·시즌 키워드를 포함하면 키워드 탭 노출 기회가 생겨요.`,
-    tipColor:'yellow'
+    cat:'frip', name:'찜', en:'Wishlist',
+    desc:`사용자가 관심 액티비티를 <b>저장해두는 기능</b>이에요. 찜이 많으면 수요 신호로 작동해 재노출·추천에 유리하게 반영돼요.`,
+    tip:`상세페이지 상단에 혜택·마감 임박을 명시하면 찜 전환이 늘어요.`,
+    tipColor:'orange'
   },
   {
-    cat:'kakao', name:'하트 기능', en:'Heart (Like)',
-    desc:`오픈채팅방 내 대화나 채팅방 자체에 <b>좋아요를 표시하는 기능</b>이에요. 하트가 많이 쌓일수록 알고리즘이 "인기 있는 방"으로 인식해 탐색 탭 노출 우선순위가 올라가요.`,
-    tip:`정기적으로 좋은 콘텐츠나 이벤트를 올려 하트를 유도하세요. 하트 수는 "지금 뜨는" 탭 선정 기준 중 하나예요.`,
-    tipColor:'yellow'
+    cat:'frip', name:'프립단독', en:'Frip Exclusive',
+    desc:`프립에서만 예약할 수 있는 <b>단독 상품에 붙는 뱃지</b>예요. 신뢰·희소성 신호로 클릭률을 높여줘요.`,
+    tip:`단독 운영이 가능하다면 뱃지를 활용해 "여기서만" 메시지를 상세페이지에 강조하세요.`,
+    tipColor:'orange'
   },
   {
-    cat:'kakao', name:'방 이름 SEO', en:'Room Name SEO',
-    desc:`오픈채팅방 이름에 <b>핵심 키워드를 포함해 검색 상위에 노출되도록 최적화하는 전략</b>이에요. 카카오 오픈채팅 검색은 방 이름·소개 텍스트를 기반으로 작동해요.`,
-    tip:`방 이름에 "2026", "서울", "20대" 같은 구체적 키워드를 포함하면 검색 노출이 늘어요. 너무 긴 이름보다 핵심 키워드 중심의 짧은 이름이 CTR이 높아요.`,
-    tipColor:'yellow'
+    cat:'frip', name:'상세페이지 전환율', en:'Detail Page Conversion',
+    desc:`상세페이지 방문자 중 <b>실제 예약으로 이어진 비율</b>이에요. 썸네일·첫 사진·커리큘럼 구성·후기 노출이 전환율을 좌우해요.`,
+    tip:`첫 사진(썸네일)이 클릭과 전환의 70%를 결정해요. 밝고 활동이 한눈에 보이는 컷을 대표로 쓰세요.`,
+    tipColor:'orange'
   },
   {
-    cat:'kakao', name:'고정 메시지', en:'Pinned Message',
-    desc:`채팅방 상단에 <b>중요 공지나 소개글을 고정하는 기능</b>이에요. 신규 멤버가 입장했을 때 방의 분위기와 규칙을 빠르게 파악할 수 있게 해줘요.`,
-    tip:`고정 메시지는 방 소개 + 규칙 + 자기소개 방법을 포함하면 신규 멤버 활성화율이 올라가요.`,
-    tipColor:'yellow'
+    cat:'frip', name:'호스트 응답률', en:'Host Response Rate',
+    desc:`문의에 <b>얼마나 빠르고 꾸준히 답하는지</b>를 나타내는 지표예요. 슈퍼호스트 등급 산정의 핵심 요소라 노출에도 간접 영향을 줘요.`,
+    tip:`문의 알림을 켜두고 몇 시간 내 응답하는 습관을 들이면 등급 관리가 쉬워져요.`,
+    tipColor:'orange'
   },
   {
-    cat:'kakao', name:'방장 권한 관리', en:'Admin Role Management',
-    desc:`방장(관리자)이 <b>부방장을 임명하거나 규칙을 설정해 채팅방을 운영하는 체계</b>예요. 부방장이 있으면 방장 부재 시에도 활성도가 유지돼요.`,
-    tip:`멤버 수 50명 이상이면 부방장 1~2명을 세워 활성도를 분산 관리하세요. 방장 혼자 모든 대화를 이끌면 번아웃 위험이 있어요.`,
-    tipColor:'yellow'
-  },
-  {
-    cat:'kakao', name:'오픈채팅 이벤트', en:'Openchat Event',
-    desc:`채팅방 내에서 <b>멤버 참여를 유도하는 퀴즈·토론·챌린지 등의 이벤트</b>예요. 이벤트로 메시지 수가 늘어나면 활성도 지표가 상승하고, 커뮤니티 피드 노출 가능성도 높아져요.`,
-    tip:`주 1~2회 가벼운 질문 이벤트("오늘 점심 뭐 먹었어요?")를 올리면 대화량을 꾸준히 유지할 수 있어요.`,
-    tipColor:'yellow'
-  },
-  {
-    cat:'kakao', name:'탈퇴율 관리', en:'Exit Rate Management',
-    desc:`채팅방 멤버가 <b>방을 나가는 비율</b>이에요. 탈퇴율이 높으면 알고리즘이 "품질이 낮은 방"으로 인식해 노출을 줄여요. 도배·광고·무관한 내용이 주요 원인이에요.`,
-    tip:`신규 멤버 입장 후 24시간 내 활동이 없으면 탈퇴 가능성이 높아요. 입장 환영 메시지와 간단한 소개 유도가 탈퇴율을 낮추는 방법이에요.`,
-    tipColor:'yellow'
+    cat:'frip', name:'일정 오픈', en:'Schedule Opening',
+    desc:`다음 회차 일정을 <b>새로 등록·공개하는 활동</b>이에요. 꾸준한 일정 오픈은 "활발한 호스트" 신호로 작동해 노출 안정성에 기여해요.`,
+    tip:`매주 같은 요일에 다음 일정을 올리면 호스트 활성 신호와 재구매를 동시에 잡을 수 있어요.`,
+    tipColor:'orange'
   },
 
   /* ───────────── 추가 인스타그램 ───────────── */
@@ -783,12 +771,12 @@ const TERMS = [
   },
   {
     cat:'common', name:'KPI', en:'Key Performance Indicator',
-    desc:`성과를 측정하는 <b>핵심 지표</b>예요. 인스타에서는 ER·비팔로워 도달·저장율, 당근에서는 채팅 전환율·조회수, 소모임에서는 참여율·리뷰 수, 카카오에서는 활성도·탈퇴율이 대표적인 KPI예요.`,
+    desc:`성과를 측정하는 <b>핵심 지표</b>예요. 인스타에서는 ER·비팔로워 도달·저장율, 당근에서는 채팅 전환율·조회수, 소모임에서는 참여율·리뷰 수, 프립에서는 후기 수·슈퍼호스트 등급이 대표적인 KPI예요.`,
     tip:`KPI는 목표에 따라 달라져요. "팔로워 늘리기"가 목표면 비팔로워 도달이 KPI, "매출"이 목표면 링크 클릭율과 전환율이 KPI예요.`
   },
   {
     cat:'common', name:'유령 멤버', en:'Ghost Member / Inactive Follower',
-    desc:`팔로우는 하고 있지만 <b>전혀 반응하지 않는 비활성 팔로워·멤버</b>예요. 숫자는 채우지만 ER을 떨어뜨려 알고리즘 신뢰도를 낮춰요. 오픈채팅에서는 입장만 하고 아무 말도 안 하는 멤버를 의미해요.`,
+    desc:`팔로우는 하고 있지만 <b>전혀 반응하지 않는 비활성 팔로워·멤버</b>예요. 숫자는 채우지만 ER을 떨어뜨려 알고리즘 신뢰도를 낮춰요. 프립에서는 찜만 해두고 예약·참여로 이어지지 않는 사용자를 의미해요.`,
     tip:`인스타에서 구매한 팔로워나 팔로우 교환으로 얻은 팔로워 대부분이 유령 멤버예요. ER이 갑자기 낮아졌다면 유령 팔로워가 늘었다는 신호예요.`
   },
   {
@@ -836,20 +824,6 @@ const TERMS = [
     tipColor:'green'
   },
 
-  /* ───────────── 추가 카카오 ───────────── */
-  {
-    cat:'kakao', name:'카카오채널 연동', en:'KakaoTalk Channel Integration',
-    desc:`카카오톡 채널(구 플러스친구)과 오픈채팅을 <b>연동해 공식 채널에서 오픈채팅으로 유입을 만드는 전략</b>이에요. 채널 친구들에게 오픈채팅 초대 메시지를 보낼 수 있어요.`,
-    tip:`카카오채널 → 메시지 발송 → 오픈채팅 링크 공유로 신규 멤버를 유도할 수 있어요. 채널 친구 수가 많을수록 효과적이에요.`,
-    tipColor:'yellow'
-  },
-  {
-    cat:'kakao', name:'오픈채팅 랭킹', en:'Openchat Ranking',
-    desc:`오픈채팅 탐색 탭에서 <b>상위에 노출되는 채팅방 순위 시스템</b>이에요. 활성도 지표(메시지 수, 하트 수, 멤버 활동률)가 높을수록 랭킹이 올라가요.`,
-    tip:`랭킹은 매일 업데이트돼요. 특정 시간대(저녁 7~10시)에 이벤트를 열어 메시지 수를 집중적으로 올리면 랭킹 상승 효과가 있어요.`,
-    tipColor:'yellow'
-  },
-
   /* ───────────── 추가 공통 (2차) ───────────── */
   {
     cat:'common', name:'UGC', en:'User Generated Content',
@@ -878,12 +852,12 @@ const TERMS = [
   },
   {
     cat:'common', name:'노출 알고리즘', en:'Exposure Algorithm',
-    desc:`각 플랫폼이 <b>어떤 콘텐츠를 누구에게 보여줄지 결정하는 규칙</b>이에요. 인스타는 저장·공유·체류시간, 당근은 활성도+거래후기, 소모임은 정모 빈도+참여율, 카카오는 메시지수+하트가 핵심 신호예요.`,
+    desc:`각 플랫폼이 <b>어떤 콘텐츠를 누구에게 보여줄지 결정하는 규칙</b>이에요. 인스타는 저장·공유·체류시간, 당근은 활성도+거래후기, 소모임은 정모 빈도+참여율, 프립은 후기 수+슈퍼호스트 등급이 핵심 신호예요.`,
     tip:`플랫폼마다 알고리즘이 다르지만 공통점이 있어요: 활성도(최신 + 자주)와 품질(반응률)이 좋으면 항상 노출이 올라가요.`
   },
   {
     cat:'common', name:'옴니채널', en:'Omni-channel',
-    desc:`인스타·당근·소모임·오픈채팅 등 <b>여러 채널을 동시에 운영해 더 많은 사람에게 닿는 전략</b>이에요. 각 채널의 특성에 맞게 다르게 최적화된 소개글을 올리는 게 포인트예요.`,
+    desc:`인스타·당근·소모임·프립 등 <b>여러 채널을 동시에 운영해 더 많은 사람에게 닿는 전략</b>이에요. 각 채널의 특성에 맞게 다르게 최적화된 소개글을 올리는 게 포인트예요.`,
     tip:`같은 모임을 당근+소모임+인스타 3채널에 올리면 노출이 최대 5배 늘어나요. 채널마다 글 형식을 최적화하는 게 중요해요.`
   },
 
@@ -965,31 +939,6 @@ const TERMS = [
     tipColor:'green'
   },
 
-  /* ───────────── 추가 카카오 (2차) ───────────── */
-  {
-    cat:'kakao', name:'익명 채팅 기능', en:'Anonymous Chat',
-    desc:`카카오 오픈채팅에서 <b>실명 없이 닉네임으로 대화할 수 있는 기능</b>이에요. 새로운 사람 만나기에 대한 심리적 장벽을 낮춰줘 신규 멤버 유입에 유리해요.`,
-    tip:`민감한 주제(재테크·고민 상담) 채팅방은 익명 기능을 활성화하면 대화량이 늘어요. 단, 광고·도배 증가 위험이 있어 관리자 역할이 중요해요.`,
-    tipColor:'yellow'
-  },
-  {
-    cat:'kakao', name:'링크 공유 전략', en:'Link Sharing Strategy',
-    desc:`오픈채팅 초대 링크를 <b>외부 채널(인스타·당근·카카오채널 등)에 공유해 멤버를 유입하는 전략</b>이에요. 링크 하나로 모든 채널에서 동일한 채팅방으로 연결되기 때문에 옴니채널 홍보에 가장 효율적인 도구예요.`,
-    tip:`링크 공유 시 "입장 후 자기소개 한 줄 부탁해요"를 함께 안내하면 신규 멤버 정착률이 올라가요.`,
-    tipColor:'yellow'
-  },
-  {
-    cat:'kakao', name:'채팅방 프로필 최적화', en:'Chat Room Profile Optimization',
-    desc:`오픈채팅방의 <b>대표 이미지·이름·소개를 검색과 클릭률을 최적화하도록 설정하는 전략</b>이에요. 탐색 탭에서 방 이름과 대표 이미지가 처음 보이는 정보예요.`,
-    tip:`대표 이미지: 밝고 눈에 띄는 색상 + 방의 주제를 한눈에 보여주는 이미지. 방 이름: [카테고리] | [지역] | [연령대] 조합이 SEO에 최적이에요.`,
-    tipColor:'yellow'
-  },
-  {
-    cat:'kakao', name:'정기 이벤트 캘린더', en:'Regular Event Calendar',
-    desc:`채팅방 활성도를 유지하기 위해 <b>정해진 요일·시간에 반복하는 이벤트 일정</b>이에요. "매주 월요일 근황 공유", "매주 금요일 주말 계획 나누기" 같은 루틴이 멤버들의 재방문을 유도해요.`,
-    tip:`이벤트 캘린더를 고정 공지에 올려두세요. 멤버들이 "오늘은 OO 공유 날이다!"를 기억하게 되면 자연스럽게 활성도가 유지돼요.`,
-    tipColor:'yellow'
-  },
   /* ── 추가 용어 (2025년 6월) ── */
   {
     cat:'daangn', name:'정원 채움률', en:'Slot Fill Rate',
@@ -1046,12 +995,6 @@ const TERMS = [
     tipColor:'pink'
   },
   {
-    cat:'kakao', name:'채팅 활성화 전략', en:'Chat Activation Strategy',
-    desc:`오픈채팅방 멤버들의 <b>자발적 대화 참여를 유도하는 운영 전략</b>이에요. 질문 던지기, 투표, 주간 루틴 등을 활용해 채팅방이 '읽기 전용'이 아닌 '쌍방향 소통 공간'이 되도록 만드는 방식이에요.`,
-    tip:`"오늘 날씨 어떠세요?" 같은 가벼운 질문으로 시작하세요. 처음 대화를 유도하는 게 가장 어렵고, 한 번 분위기가 만들어지면 자연스럽게 이어져요.`,
-    tipColor:'yellow'
-  },
-  {
     cat:'moim', name:'오프라인 전환', en:'Offline Conversion',
     desc:`온라인에서 모집하거나 소통하던 멤버들이 <b>실제 오프라인 모임으로 연결되는 것</b>을 말해요. 소모임·문토의 핵심 목적이에요. 온라인 활동(채팅·공지)의 최종 성과 지표로 사용되며, 오프라인 전환율이 높은 모임이 장기적으로 멤버 충성도가 높아요.`,
     tip:`첫 오프라인 모임은 진입장벽을 낮추는 게 핵심이에요. 무료·소규모·짧은 시간(1~2시간)으로 설계하면 전환율이 올라가요.`,
@@ -1091,8 +1034,8 @@ function render() {
   empty.style.display = 'none';
 
   wrap.innerHTML = filtered.map((t, i) => {
-    const platClass = {insta:'plat-insta', daangn:'plat-daangn', moim:'plat-moim', kakao:'plat-kakao', common:'plat-common'}[t.cat];
-    const platLabel = {insta:'인스타', daangn:'당근', moim:'소모임·문토', kakao:'오픈채팅', common:'공통'}[t.cat];
+    const platClass = {insta:'plat-insta', daangn:'plat-daangn', moim:'plat-moim', frip:'plat-frip', common:'plat-common'}[t.cat];
+    const platLabel = {insta:'인스타', daangn:'당근', moim:'소모임·문토', frip:'프립', common:'공통'}[t.cat];
     const tipColor = t.tipColor || '';
     return `
     <div class="term-card" id="card-${i}">
