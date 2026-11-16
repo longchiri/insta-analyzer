@@ -29,7 +29,7 @@
     }
 
     /* ─── 뒤로가기 ─── */
-    .back-wrap { max-width:720px; margin:0 auto 12px; }
+    .back-wrap { max-width:720px; margin:16px auto 14px; }
     .back-btn {
       display:inline-flex; align-items:center; gap:6px;
       text-decoration:none; color:#888; font-size:0.82rem;
@@ -1509,7 +1509,7 @@ function showCatNeeds(key, el){
 </div>
 
 <!-- ───────────── 플랫폼별 전략 ───────────── -->
-<div id="platformGuide" class="section-title" style="margin-top:28px;">PLATFORM GUIDE · 플랫폼별 적용 전략</div>
+<div id="platformGuide" class="section-title" style="margin-top:28px; scroll-margin-top:16px;">PLATFORM GUIDE · 플랫폼별 적용 전략</div>
 
 <!-- 인트로 -->
 <div style="max-width:720px; margin:0 auto 18px; background:#fff; border-radius:18px; padding:18px 22px; border:1.5px solid #e0e7ff; box-shadow:0 4px 16px rgba(79,70,229,0.07);">
@@ -2012,15 +2012,15 @@ function showCatNeeds(key, el){
   }
 
   function scrollToPlatform() {
-    const el = document.getElementById('platformGuide');
-    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
-    // 선택된 플랫폼 카드 중 첫 번째 자동 열기
+    // ① 먼저 카드를 열어 레이아웃을 확정한 뒤 ② 스크롤 → 섹션 시작부분에 정확히 멈춤
     const first = [...selectedPlatforms][0];
     if (first) {
       const cardId = PLATFORM_MAP[first];
       const isOpen = document.getElementById(cardId).classList.contains('open');
       if (!isOpen) toggle(cardId);
     }
+    const el = document.getElementById('platformGuide');
+    if (el) requestAnimationFrame(function(){ setTimeout(function(){ el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 40); });
   }
 </script>
 </body>
