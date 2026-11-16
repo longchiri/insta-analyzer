@@ -171,6 +171,16 @@
 
     .card-icon { font-size:2.2rem; line-height:1; }
     .card-title { font-size:1.05rem; font-weight:800; color: var(--black); }
+    .strength {
+      display:inline-block; margin-top:-2px; font-size:0.72rem; font-weight:800;
+      padding:3px 10px; border-radius:99px; letter-spacing:-0.01em;
+      background: var(--steel-bg); color: var(--steel-mid);
+    }
+    .card-insta  .strength { background:#fd1d1d12; color:#c0146a; }
+    .card-daangn .strength { background:rgba(255,70,40,0.1); color: var(--red); }
+    .card-somoim .strength { background:#16a34a15; color:#15803d; }
+    .card-munto  .strength { background:#ff462812; color:#e0431f; }
+    .card-frip   .strength { background:#ff5a2c15; color:#e04410; }
 
     .tags { display:flex; flex-wrap:wrap; gap:5px; }
     .tag {
@@ -435,6 +445,7 @@
   <a class="card card-insta" href="insta-analyzer.html">
     <div class="card-icon">📸</div>
     <div class="card-title">인스타그램 분석기</div>
+    <div class="strength">💪 콘텐츠·개인 브랜드 강점</div>
     <div class="tags">
       <span class="tag">ZIP 자동 파싱</span>
       <span class="tag">게시물 개별 분석</span>
@@ -453,6 +464,7 @@
   <a class="card card-daangn" href="daangn-analyzer.html">
     <div class="card-icon">🥕</div>
     <div class="card-title">당근 모임 분석기</div>
+    <div class="strength">💪 동네 오프라인 모임 강점</div>
     <div class="tags">
       <span class="tag">매너온도 분석</span>
       <span class="tag">AI 추천 최적화</span>
@@ -470,6 +482,7 @@
   <a class="card card-somoim" href="somoim-analyzer.html">
     <div class="card-icon">🌿</div>
     <div class="card-title">소모임 분석기</div>
+    <div class="strength">💪 관심사 정기모임 강점</div>
     <div class="tags">
       <span class="tag">CTR 자동계산</span>
       <span class="tag">멤버 LTV</span>
@@ -487,6 +500,7 @@
   <a class="card card-munto" href="munto-analyzer.html">
     <div class="card-icon">🔥</div>
     <div class="card-title">문토 분석기</div>
+    <div class="strength">💪 2030 소셜·클럽 강점</div>
     <div class="tags">
       <span class="tag">클럽 매력도</span>
       <span class="tag">전환율</span>
@@ -503,15 +517,16 @@
   <a class="card card-frip" href="frip-analyzer.html">
     <div class="card-icon">🎒</div>
     <div class="card-title">프립 노출 분석기</div>
+    <div class="strength">💪 체험·원데이 클래스 강점</div>
     <div class="tags">
       <span class="tag">카테고리 노출</span>
       <span class="tag">후기수 티어</span>
       <span class="tag">슈퍼호스트</span>
       <span class="tag">상위노출 전략</span>
     </div>
-    <div class="card-desc">프립 액티비티의 카테고리별 노출 경쟁력을 진단하고 후기수·호스트 파워(누적 후기·찜)·슈퍼호스트 레버를 기준으로 상위 노출 로드맵을 받아보세요.</div>
+    <div class="card-desc">프립 액티비티의 카테고리별 노출 경쟁력을 진단하고 후기수·호스트 파워(누적 후기·찜)·슈퍼호스트 레버를 기준으로 상위 노출 로드맵을 받아보세요. 전국 3,912개 전수 실측.</div>
     <div class="card-footer">
-      <span class="ver">Ver 2.0.0</span>
+      <span class="ver">Ver 3.0.0</span>
       <span class="go-btn">분석 시작 →</span>
     </div>
   </a>
@@ -528,8 +543,8 @@
 
     <div class="log-item">
       <span class="log-date">11.16</span>
-      <span class="badge b-frip">프립 2.0.0</span>
-      <span class="log-desc">🎒 프립 노출 분석기 — 전국 314개 전수 디테일(상세페이지) 실측 기반. 📊 후기수 티어(상/중/하) 벤치마크 + 🏅 호스트 파워 진단 신규(호스트 누적 후기·찜 티어 — 검증된 호스트의 신규 상품은 출발부터 유리, 상관 -0.53·-0.43) + ⚡ 레버 분석 갱신(상품 후기수 -0.915 압도 / 호스트 누적후기 -0.53 / 누적찜 -0.43 / 슈퍼호스트 -0.33) + ❗ 평점은 노출 무관(+0.03)·가격/할인 무관 명시 → 별점·가격보다 후기 개수·호스트 실적에 집중 진단 + 🎯 티어별 갭·실행 액션.</span>
+      <span class="badge b-frip">프립 3.0.0</span>
+      <span class="log-desc">🎒 프립 노출 분석기 — 전국 <b>3,912개 전수</b> 실측(기존 314개 → 페이지네이션 수정으로 12배 확대). 🌊 블루오션 발견: <b>전체 상품의 52%가 후기 0개</b> → 티어를 "상/중/하 중앙값"에서 <b>백분위 컷(상위10%·25% 진입 후기수)</b>으로 재설계, 카테고리별 "후기 N개만 넘기면 상위 25%" 진단(대부분 2~7개) + 🏅 호스트 파워 진단(누적 후기·찜 티어, 검증된 호스트의 신규 상품은 출발부터 유리 — 상관 -0.58·-0.44) + ⚡ 레버 전수 재측정(상품 후기수 -0.909 압도 / 호스트 누적후기 -0.58 / 누적찜 -0.44 / 슈퍼호스트 -0.22) + ❗ 평점·가격·할인 노출 무관 명시 → 별점·가격보다 후기 개수·호스트 실적에 집중.</span>
     </div>
 
     <div class="log-item">
