@@ -59,6 +59,17 @@
   .copybox{position:relative;background:#fff7f2;border:1px solid #ffe0d2;border-radius:11px;padding:12px 13px;margin:8px 0;font-size:0.86rem;color:#2b2320;line-height:1.6;white-space:pre-wrap;}
   .copybtn{position:absolute;top:8px;right:8px;background:#ff5a2c;color:#fff;border:none;border-radius:8px;font-size:0.72rem;font-weight:800;padding:4px 10px;cursor:pointer;}
   .pill{display:inline-block;background:#ffe3d6;color:#c2410c;font-size:0.74rem;font-weight:800;padding:3px 10px;border-radius:99px;margin:3px 4px 0 0;}
+  /* 툴팁 */
+  .ftip-wrap{position:relative;display:inline-block;}
+  .ftip-ico{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#ffd9c9;color:#c2410c;font-size:0.68rem;font-weight:800;cursor:pointer;margin-left:5px;vertical-align:middle;}
+  .ftip{display:none;position:absolute;z-index:30;top:22px;left:0;width:240px;background:#2b2320;color:#fff;font-size:0.76rem;font-weight:500;line-height:1.55;padding:10px 12px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.2);}
+  /* 인쇄 */
+  @media print {
+    body{background:#fff;padding:0;}
+    .menubar,.no-print,.btn,.ftip-ico{display:none !important;}
+    .card{break-inside:avoid;box-shadow:none;}
+    #result .card{display:block !important;}
+  }
 </style>
 </head>
 <body>
@@ -130,8 +141,16 @@
       <button data-f="전략" onclick="fripMenu('전략',this)">전략</button>
     </div>
 
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;" class="no-print">
+      <span style="font-size:0.88rem;font-weight:800;color:#c2410c;">📄 분석 결과 저장</span>
+      <div style="display:flex;gap:8px;">
+        <button onclick="window.print()" style="padding:8px 18px;border-radius:99px;border:1.5px solid #ff5a2c;background:#fff;color:#e04410;font-size:0.82rem;font-weight:800;cursor:pointer;">🖨️ PDF 저장</button>
+        <button onclick="fripShare()" style="padding:8px 18px;border-radius:99px;border:none;background:linear-gradient(90deg,#ff7a4d,#ff5a2c);color:#fff;font-size:0.82rem;font-weight:800;cursor:pointer;">🔗 링크 공유</button>
+      </div>
+    </div>
+
     <div class="card" data-grp="종합">
-      <h2>🏆 노출 종합 점수</h2>
+      <h2>🏆 노출 종합 점수<span class="ftip-wrap"><span class="ftip-ico" onclick="fripTip(this)">ⓘ</span><span class="ftip">후기 노출력(55)+호스트 파워(30)+슈퍼호스트(10)+신규·꾸준함(5)을 합산한 0~100 점수예요. 실측 상관 가중치로 계산돼요.</span></span></h2>
       <div class="gauge-wrap">
         <div class="gauge" id="f-gauge"><div class="gauge-in"><div class="gauge-sc" id="f-score">0</div><div class="gauge-lb" id="f-grade">—</div></div></div>
         <div class="mini" id="f-score-mini"></div>
@@ -144,14 +163,14 @@
     </div>
 
     <div class="card" data-grp="데이터">
-      <h2>📊 후기수 노출 컷 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">전수 3,912개 백분위</span></h2>
+      <h2>📊 후기수 노출 컷 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">전수 3,912개 백분위</span><span class="ftip-wrap"><span class="ftip-ico" onclick="fripTip(this)">ⓘ</span><span class="ftip">상위 10%·25%에 들려면 필요한 후기 수 컷이에요. 전국 3,912개를 후기수로 줄 세워 백분위로 계산했어요.</span></span></h2>
       <div class="note" id="f-tier-intro"></div>
       <div class="grid3" id="f-tiers"></div>
       <div class="verdict" id="f-gap" style="background:#fff2ec;border:1px solid #ffd4c2;color:#b03a18;"></div>
     </div>
 
     <div class="card" data-grp="데이터">
-      <h2>🏅 호스트 파워 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">누적 실적 = 신규 상품도 끌어올림</span></h2>
+      <h2>🏅 호스트 파워 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">누적 실적 = 신규 상품도 끌어올림</span><span class="ftip-wrap"><span class="ftip-ico" onclick="fripTip(this)">ⓘ</span><span class="ftip">호스트가 누적으로 쌓은 후기·찜이에요. 상관 -0.58·-0.44로, 검증된 호스트의 신규 상품은 노출 출발이 유리해요.</span></span></h2>
       <div class="note" id="f-hp-intro"></div>
       <div class="grid3" id="f-hp-tiers"></div>
       <div class="verdict" id="f-hp-gap" style="background:#fff2ec;border:1px solid #ffd4c2;color:#b03a18;"></div>
@@ -427,6 +446,21 @@ function fripCopy(btn){
   navigator.clipboard?.writeText(txt);
   const o = btn.textContent; btn.textContent='복사됨!'; setTimeout(()=>btn.textContent=o, 1200);
 }
+// 링크 공유
+function fripShare(){
+  const url = location.href;
+  const data = {title:'프립 노출 분석기', text:'프립 노출 진단 받아보세요', url:url};
+  if(navigator.share){ navigator.share(data).catch(()=>{}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(url); alert('링크가 복사됐어요! 붙여넣기로 공유하세요.'); }
+  else { prompt('이 링크를 복사하세요', url); }
+}
+// 툴팁
+function fripTip(el){
+  const tip = el.nextElementSibling;
+  document.querySelectorAll('.ftip').forEach(t=>{ if(t!==tip) t.style.display='none'; });
+  if(tip) tip.style.display = tip.style.display==='block' ? 'none' : 'block';
+}
+document.addEventListener('click', e=>{ if(!e.target.closest('.ftip-wrap')) document.querySelectorAll('.ftip').forEach(t=>t.style.display='none'); });
 // 기록 추적 (localStorage)
 function fripSaveHistory(rec){
   try{
