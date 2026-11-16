@@ -42,8 +42,8 @@
 <body>
 <div class="wrap">
   <div class="hero">
-    <h1>🎒 프립 노출 분석기 <span class="ver">Ver 1.0.0</span></h1>
-    <p>내 액티비티가 카테고리에서 상위 노출될까? 전국 314개 실측 기반 진단</p>
+    <h1>🎒 프립 노출 분석기 <span class="ver">Ver 2.0.0</span></h1>
+    <p>내 액티비티가 카테고리에서 상위 노출될까? 전국 314개 전수 디테일 실측 기반 진단</p>
   </div>
 
   <div class="card">
@@ -57,8 +57,12 @@
       <option>모임</option><option>국내여행</option><option>제주여행</option><option>해외여행</option>
     </select>
     <div class="row">
-      <div><label>후기 수 <span class="hint">★ 노출 1순위</span></label><input type="number" id="f-rv" placeholder="예: 85" min="0"/></div>
+      <div><label>이 상품의 후기 수 <span class="hint">★ 노출 1순위</span></label><input type="number" id="f-rv" placeholder="예: 85" min="0"/></div>
       <div><label>가격 (원) <span class="hint">노출과 무관</span></label><input type="number" id="f-price" placeholder="예: 29000" min="0"/></div>
+    </div>
+    <div class="row">
+      <div><label>호스트 누적 후기 <span class="hint">🆕 강력 2위</span></label><input type="number" id="f-hrv" placeholder="예: 320" min="0"/></div>
+      <div><label>호스트 누적 찜 <span class="hint">🆕 강력 3위</span></label><input type="number" id="f-hwish" placeholder="예: 410" min="0"/></div>
     </div>
     <label>슈퍼호스트 여부</label>
     <select id="f-super"><option value="0">아니오</option><option value="1">예</option></select>
@@ -73,9 +77,15 @@
       <div class="verdict" id="f-gap" style="background:#fff2ec;border:1px solid #ffd4c2;color:#b03a18;"></div>
     </div>
     <div class="card">
+      <h2>🏅 호스트 파워 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">누적 실적 = 신규 상품도 끌어올림</span></h2>
+      <div class="note" id="f-hp-intro"></div>
+      <div class="grid3" id="f-hp-tiers"></div>
+      <div class="verdict" id="f-hp-gap" style="background:#fff2ec;border:1px solid #ffd4c2;color:#b03a18;"></div>
+    </div>
+    <div class="card">
       <h2>🎚️ 노출을 가르는 지렛대 <span style="font-size:0.76rem;font-weight:400;color:#a98a7c;">실측 상관</span></h2>
       <div id="f-levers"></div>
-      <div class="note" style="margin-top:12px;">💡 프립 노출은 <b>"후기 수"가 거의 결정적</b>이에요(카테고리 내 상관 <b>-0.915</b>). <b>슈퍼호스트</b>가 보조(-0.33)이고, <b>가격·할인은 노출과 무관</b>(-0.01)이라 가격 경쟁보다 <b>후기·품질</b>에 집중하는 게 맞아요.</div>
+      <div class="note" style="margin-top:12px;">💡 프립 노출은 <b>"후기 수"가 거의 결정적</b>이에요(카테고리 내 상관 <b>-0.915</b>). 그 다음이 <b>호스트 누적 후기</b>(-0.53)·<b>호스트 누적 찜</b>(-0.43) — 즉 <b>검증된 호스트의 신규 상품은 출발부터 유리</b>해요. <b>슈퍼호스트</b>도 보조(-0.33). 반면 <b>평점은 노출과 무관</b>(+0.03)이고 <b>가격·할인도 무관</b>(≈0)이라, 별점·가격보다 <b>후기 개수와 호스트 실적 누적</b>이 정답이에요.</div>
     </div>
     <div class="card">
       <h2>🚀 상위 노출 액션</h2>
@@ -95,11 +105,15 @@
 <script>
 // 전국 314개 실측 — 카테고리별 [상위,중간,하위] 후기수 중앙값 + 슈퍼호스트율(%)
 const FRIP_TIERS = {"공예DIY":{"rv":[390,125,89],"sh":[0,0,0]},"국내여행":{"rv":[178,36,8],"sh":[83,50,50]},"모임":{"rv":[13207,5144,3196],"sh":[100,100,25]},"문화예술":{"rv":[424,268,172],"sh":[0,33,0]},"베이킹":{"rv":[127,75,37],"sh":[83,0,0]},"뷰티":{"rv":[474,186,120],"sh":[50,33,12]},"수상레포츠":{"rv":[122,49,20],"sh":[17,17,0]},"스포츠":{"rv":[233,123,52],"sh":[17,17,0]},"심리상담":{"rv":[192,94,59],"sh":[33,0,0]},"아웃도어":{"rv":[268,126,55],"sh":[50,33,12]},"요리":{"rv":[43,2,0],"sh":[0,0,0]},"음료":{"rv":[158,45,16],"sh":[17,0,0]},"자기계발":{"rv":[254,158,83],"sh":[50,0,12]},"제주여행":{"rv":[60,29,6],"sh":[17,0,0]},"피트니스":{"rv":[134,62,18],"sh":[33,0,25]},"해외여행":{"rv":[0,0,0],"sh":[0,0,0]},"_default":{"rv":[207,80,44],"sh":[34,16,8]}};
+// 호스트 파워 — 314개 전수 디테일 기준 [상위,중간,하위] 중앙값
+const HOST_TIERS = { hrv:[754,158,34], hwish:[894,237,51] };
 
 function analyzeFrip(){
   const cat = document.getElementById('f-cat').value;
   const rv = parseInt(document.getElementById('f-rv').value) || 0;
   const price = parseInt(document.getElementById('f-price').value) || 0;
+  const hrv = parseInt(document.getElementById('f-hrv').value) || 0;
+  const hwish = parseInt(document.getElementById('f-hwish').value) || 0;
   const sup = document.getElementById('f-super').value === '1';
   const T = FRIP_TIERS[cat] || FRIP_TIERS['_default'];
   const [tTop,tMid,tBot] = T.rv;
@@ -136,12 +150,40 @@ function analyzeFrip(){
   }
   document.getElementById('f-gap').innerHTML = '🎯 '+gap;
 
+  // 호스트 파워 티어 (누적 후기·찜 중 더 높은 티어 채택)
+  const hpIdx = (v,T)=> v>=T[0]?0 : v>=T[1]?1 : 2;
+  const iRv = hpIdx(hrv, HOST_TIERS.hrv);
+  const iWish = hpIdx(hwish, HOST_TIERS.hwish);
+  const hpBest = Math.min(iRv, iWish);
+  let hpCells='';
+  for(let i=0;i<3;i++){
+    hpCells += '<div class="tier" style="background:'+bgs[i]+';border:'+(i===hpBest?'2px solid '+colors[i]:'1px solid #eee')+';">'+
+      (i===hpBest?'<div class="youhere" style="background:'+colors[i]+';">여기 당신</div>':'')+
+      '<div class="tl" style="color:'+colors[i]+';">'+labels[i]+'</div>'+
+      '<div class="tv" style="color:'+colors[i]+';">누적후기 '+HOST_TIERS.hrv[i].toLocaleString()+'</div>'+
+      '<div class="tc">누적찜 '+HOST_TIERS.hwish[i].toLocaleString()+'</div></div>';
+  }
+  document.getElementById('f-hp-tiers').innerHTML = hpCells;
+  document.getElementById('f-hp-intro').innerHTML = '🏅 호스트가 <b>누적으로 쌓은 후기·찜</b>이 신규 상품 노출까지 끌어올려요(상관 -0.53·-0.43). 내 호스트 실적(누적후기 <b>'+hrv.toLocaleString()+'</b>·누적찜 <b>'+hwish.toLocaleString()+'</b>) 기준 위치예요.';
+  let hpGap;
+  if(hpBest===0){ hpGap='✅ 호스트 파워 <b>상위</b>예요! 검증된 호스트라 신규 상품도 출발이 유리해요. 지금처럼 계속 실적을 쌓으세요.'; }
+  else {
+    const tgt = hpBest===2 ? 1 : 0;
+    const tn = hpBest===2 ? '중간' : '상위';
+    const needR = Math.max(0, HOST_TIERS.hrv[tgt]-hrv);
+    const needW = Math.max(0, HOST_TIERS.hwish[tgt]-hwish);
+    hpGap='호스트 파워 <b>'+names[hpBest]+'</b>이에요. <b>'+tn+'</b>으로 가려면 누적후기 <b>+'+needR.toLocaleString()+'</b>·누적찜 <b>+'+needW.toLocaleString()+'</b> 더 쌓으면 돼요. (여러 상품을 꾸준히 운영할수록 빨라져요)';
+  }
+  document.getElementById('f-hp-gap').innerHTML = '🎯 '+hpGap;
+
   // 레버 바
   const levers = [
-    {n:'후기 수',     v:92, c:'#ff5a2c', d:'rho -0.915 · 압도적'},
-    {n:'슈퍼호스트',  v:33, c:'#f59e0b', d:'rho -0.33 · 보조'},
-    {n:'가격',        v:2,  c:'#cbd5e1', d:'rho -0.01 · 무관'},
-    {n:'할인율',      v:2,  c:'#cbd5e1', d:'rho +0.01 · 무관'},
+    {n:'상품 후기 수',  v:92, c:'#ff5a2c', d:'rho -0.915 · 압도적'},
+    {n:'호스트 누적후기',v:53, c:'#fb7a4a', d:'rho -0.53 · 강력'},
+    {n:'호스트 누적찜',  v:43, c:'#f59e0b', d:'rho -0.43 · 강력'},
+    {n:'슈퍼호스트',   v:33, c:'#fbbf24', d:'rho -0.33 · 보조'},
+    {n:'평점',         v:3,  c:'#cbd5e1', d:'rho +0.03 · 무관'},
+    {n:'가격·할인',    v:2,  c:'#cbd5e1', d:'rho ≈0 · 무관'},
   ];
   document.getElementById('f-levers').innerHTML = levers.map(l=>
     '<div class="bar-wrap"><span class="bar-name">'+l.n+'</span>'+
@@ -153,9 +195,10 @@ function analyzeFrip(){
   // 액션
   const acts = [];
   acts.push('⭐ <b>후기 확보가 1순위</b> — 참여자에게 후기 요청(종료 후 알림·소정 혜택), 초기엔 지인 참여로 후기 시드 확보. 후기가 쌓일수록 노출이 선형으로 올라가요.');
-  if(!sup) acts.push('🏅 <b>슈퍼호스트 달성</b> — 상위 티어의 '+T.sh[0]+'%가 슈퍼호스트예요. 응답률·평점·개설 꾸준함을 관리해 등급을 올리세요.');
-  else acts.push('🏅 <b>슈퍼호스트 유지</b> 중 — 좋아요! 평점·응답률을 유지하며 후기 수를 더 쌓는 데 집중하세요.');
-  if(price>0) acts.push('💰 <b>가격은 노출과 무관</b>(rho -0.01) — 상위 노출 위해 가격 낮출 필요 없어요. 후기·품질에 투자하고, 가격은 카테고리 적정선으로.');
+  if(hpBest>0) acts.push('🏅 <b>호스트 실적 쌓기</b> — 누적 후기·찜이 신규 상품 노출까지 끌어올려요(상관 -0.53·-0.43). 여러 상품을 꾸준히 운영하며 호스트 단위 후기·찜을 누적하면 신상품도 출발이 유리해져요.');
+  else acts.push('🏅 <b>호스트 파워 상위</b> — 이미 검증된 호스트예요! 신규 상품을 올려도 출발이 유리하니 라인업을 넓혀보세요.');
+  if(!sup) acts.push('🥇 <b>슈퍼호스트 달성</b> — 상위 티어의 '+T.sh[0]+'%가 슈퍼호스트예요. 응답률·개설 꾸준함을 관리해 등급을 올리세요.');
+  acts.push('⚠️ <b>평점·가격엔 매달리지 마세요</b> — 평점(rho +0.03)·가격·할인(≈0)은 노출과 무관해요. 별점 관리나 가격 경쟁보다 <b>후기 개수와 호스트 실적 누적</b>에 에너지를 쓰는 게 노출엔 훨씬 효율적이에요.');
   acts.push('📅 꾸준한 개설로 "활발한 호스트" 신호를 유지하면 후기 누적 속도가 빨라져요.');
   document.getElementById('f-actions').innerHTML = acts.map(a=>'<div class="note" style="margin-bottom:9px;">'+a+'</div>').join('');
 
