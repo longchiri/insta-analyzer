@@ -74,3 +74,8 @@ somoim/requirements.txt
 somoim/소모임_지역코드.json
 *.csv
 *.xlsx
+
+# ── 재구성된 폴더 (로컬 전용 — GitHub 업로드 금지) ──
+크롤러/
+결과/
+_삭제예정/
