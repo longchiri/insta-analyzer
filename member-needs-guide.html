@@ -67,6 +67,7 @@
       border-radius:16px; overflow:hidden;
       box-shadow:0 4px 18px rgba(79,70,229,0.1);
       border:1.5px solid #e0e7ff;
+      scroll-margin-top:14px;
     }
     .banner-head {
       display:flex; align-items:center; gap:14px;
@@ -1928,11 +1929,15 @@ function showCatNeeds(key, el){
   const CARDS = ['card1','card2','card3','card4','card5','card6','card7','card8','card9','card10','card11'];
 
   function toggle(id) {
-    const isOpen = document.getElementById(id).classList.contains('open');
+    const el = document.getElementById(id);
+    const isOpen = el.classList.contains('open');
     // 전부 닫기
     CARDS.forEach(c => document.getElementById(c).classList.remove('open'));
-    // 이미 열려 있던 카드면 그냥 닫힌 채로 끝, 아니면 열기
-    if (!isOpen) document.getElementById(id).classList.add('open');
+    // 이미 열려 있던 카드면 그냥 닫힌 채로 끝, 아니면 열고 → 그 카드를 화면 위로 스크롤
+    if (!isOpen) {
+      el.classList.add('open');
+      requestAnimationFrame(function(){ setTimeout(function(){ el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 40); });
+    }
   }
 
   function chk(el) {

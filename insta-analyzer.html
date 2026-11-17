@@ -1441,12 +1441,6 @@ function setPartFilter(part, btn) {
     <div id="insta-algo-body"></div>
   </div>
 
-  <!-- Hidden Score -->
-  <div class="result-card" data-part="overview">
-    <h2>🔒 계정 신뢰도 (Hidden Score)</h2>
-    <div id="hiddenScoreSection"></div>
-  </div>
-
   <!-- 콘텐츠 심층 인사이트 -->
   <div class="result-card" id="contentInsightsCard" data-part="overview" style="display:none;">
     <h2>🔬 콘텐츠 심층 인사이트 <span style="font-size:0.79rem;font-weight:400;color:#7d7d7d;">ZIP 데이터 기반</span></h2>
@@ -3664,7 +3658,7 @@ function analyze() {
   if (ffRatio >= 1.5) keeps.push({ icon:'👑', txt: pick([
     `팔로워/팔로잉 비율 <b>${ffRatio.toFixed(1)}x</b> — 팔로워가 팔로잉보다 많아 신뢰도 높은 계정이에요.`,
     `팔로워/팔로잉 비율 <b>${ffRatio.toFixed(1)}x</b> — 팔로워가 팔로잉보다 훨씬 많아요. 알고리즘이 "영향력 있는 계정"으로 분류하는 신호 중 하나예요.`,
-    `팔/팔 비율 <b>${ffRatio.toFixed(1)}x</b> 달성 — 팔로워가 팔로잉의 ${ffRatio.toFixed(1)}배예요. 계정 신뢰도(Hidden Score)에 긍정적으로 반영되고, 브랜드 협업 시 유리한 지표예요.`,
+    `팔/팔 비율 <b>${ffRatio.toFixed(1)}x</b> 달성 — 팔로워가 팔로잉의 ${ffRatio.toFixed(1)}배예요. 노출 알고리즘 신호는 아니지만, 브랜드 협업 제안 시 유리한 지표예요.`,
   ]) });
   if (nfr >= 50) keeps.push({ icon:'🌐', txt: pick([
     `비팔로워 도달 <b>${nfr}%</b> — 팔로워가 아닌 사람들에게도 콘텐츠가 크게 확산되고 있어요.`,
@@ -3731,7 +3725,7 @@ function analyze() {
   ]) });
   if (commentReply >= 70) keeps.push({ icon:'💬', txt: pick([
     `댓글 답변율 <b>${commentReply}%</b> — 매우 높아요. 댓글에 적극 반응하면 계정 참여도 점수가 직접 올라가고, 알고리즘이 이 계정을 "팔로워와 교류하는 활성 계정"으로 분류해요.`,
-    `댓글 답변율 <b>${commentReply}%</b> 유지 중 — Meta가 직접 반영하는 참여도 신호예요. 댓글이 달리는 게시물일수록 더 많은 비팔로워에게 배포되는 구조예요. 이 습관이 계정 신뢰도를 만들어요.`,
+    `댓글 답변율 <b>${commentReply}%</b> 유지 중 — Meta가 직접 반영하는 참여도 신호예요. 댓글이 달리는 게시물일수록 더 많은 비팔로워에게 배포되는 구조예요. 이 습관이 댓글 수를 늘려 노출에 도움이 돼요.`,
     `<b>${commentReply}%</b>의 댓글 답변율은 상위 수준이에요 — 댓글을 많이 받을수록 게시물이 더 오래 노출되고, 여기에 답글까지 달리면 재노출이 트리거돼요. 이 선순환이 계속되고 있어요.`,
   ]) });
   if (commentReply >= 40 && commentReply < 70) keeps.push({ icon:'💬', txt: pick([
@@ -3786,7 +3780,7 @@ function analyze() {
   ]) });
   if (ffRatio >= 0.8 && ffRatio < 1.5) keeps.push({ icon:'👥', txt: pick([
     `팔로워/팔로잉 비율 <b>${ffRatio.toFixed(1)}x</b> — 균형 잡힌 계정이에요. 팔로워가 더 늘어날수록 신뢰도 지표가 올라가요.`,
-    `팔/팔 비율 <b>${ffRatio.toFixed(1)}x</b> — 균형 잡힌 수치예요. 팔로워가 늘어날수록 이 비율이 높아지고 계정 신뢰도와 Hidden Score가 함께 올라가요.`,
+    `팔/팔 비율 <b>${ffRatio.toFixed(1)}x</b> — 균형 잡힌 수치예요. 노출 알고리즘과 직접 관계는 없지만, 계정이 정돈돼 보이는 지표예요.`,
     `팔로워/팔로잉 비율 <b>${ffRatio.toFixed(1)}x</b> — 건강한 계정의 비율이에요. 팔로워를 꾸준히 늘리면서 팔로잉을 정리하면 신뢰도 지표가 올라가요.`,
   ]) });
 
@@ -3942,7 +3936,7 @@ function analyze() {
   ]) });
   if (ffRatio > 0 && ffRatio < 0.8) fixes.push({ icon:'👥', txt: pick([
     `팔로잉(${D.following||0})이 팔로워(${D.followers||0})보다 많아요 — 비활성 계정 팔로잉이 많으면 피드 알고리즘 학습이 흐트러져요. 6개월 이상 활동 없는 계정 팔로잉부터 정리해 보세요.`,
-    `팔로잉(${D.following||0}명)이 팔로워(${D.followers||0}명)보다 많아요 — 이 비율은 계정 신뢰도에 부정적으로 작용해요. 비활성 계정 팔로잉을 정리하면 계정 신뢰도와 Hidden Score가 올라가요.`,
+    `팔로잉(${D.following||0}명)이 팔로워(${D.followers||0}명)보다 많아요 — 노출 알고리즘엔 영향이 없지만, 비활성 계정 팔로잉을 정리하면 계정이 더 정돈돼 보여요.`,
     `팔/팔 비율이 역전돼 있어요(팔로잉 ${D.following||0} > 팔로워 ${D.followers||0}) — 비활성 계정이나 스팸 계정 팔로잉을 정리하고, 팔로워가 자연스럽게 늘어나게 콘텐츠 품질에 집중해보세요.`,
   ]) });
   if (D.hashtagCount > 15) fixes.push({ icon:'#️⃣', txt: pick([
@@ -4121,42 +4115,6 @@ function analyze() {
       </div>
       ${s.n===diffStage?`<div style="font-size:0.78rem;font-weight:700;background:${s.color};color:#fff;padding:3px 8px;border-radius:99px;white-space:nowrap;">현재</div>`:''}
     </div>`).join('')}`;
-
-  // ── Hidden Score (계정 신뢰도) ──
-  const consistencyScore = wp >= 4 ? 25 : wp >= 2 ? 18 : wp >= 1 ? 10 : 3;
-  const engagementTrust  = er >= 5 ? 25 : er >= 3 ? 18 : er >= 1 ? 10 : 3;
-  const growthTrust      = (D.growthRate||0) >= 5 ? 25 : (D.growthRate||0) >= 2 ? 18 : (D.growthRate||0) > 0 ? 12 : (D.nonFollowerReach||0) >= 50 ? 15 : 5;
-  const activityTrust    = (D.dmCount||0) >= 100 ? 25 : (D.dmCount||0) >= 50 ? 18 : (D.dmCount||0) > 0 ? 10 : 8;
-  const hiddenTotal      = consistencyScore + engagementTrust + growthTrust + activityTrust;
-
-  document.getElementById('hiddenScoreSection').innerHTML = `
-    <p style="font-size:0.82rem;color:#7d7d7d;margin-bottom:14px;">인스타가 공개하지 않는 계정 품질 점수예요. 높을수록 같은 콘텐츠도 더 넓게 배포돼요.</p>
-    <div style="background:linear-gradient(135deg,#f9f0ff,#fff0f5);border-radius:14px;padding:16px;text-align:center;margin-bottom:16px;">
-      <div style="font-size:2.5rem;font-weight:900;background:linear-gradient(90deg,#833ab4,#fd1d1d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${hiddenTotal}<span style="font-size:1rem;">/100</span></div>
-      <div style="color:#888;font-size:0.85rem;margin-top:4px;">${hiddenTotal>=80?'🏆 최고 신뢰도 계정':hiddenTotal>=60?'⭐ 신뢰도 우수':hiddenTotal>=40?'📈 보통 수준':'🌱 신뢰도 낮음 — 관리 필요'}</div>
-    </div>
-    ${[
-      { label:'콘텐츠 일관성', score:consistencyScore, max:25, desc:`주 ${wp}회 업로드`, tip:'같은 주제 꾸준히 → 알고리즘이 카테고리 분류 완료' },
-      { label:'인게이지먼트 신뢰', score:engagementTrust, max:25, desc:`${er.toFixed(1)}% 인게이지먼트`, tip:'팔로워 반응이 꾸준하면 신뢰 계수가 올라가요' },
-      { label:'성장 신뢰도', score:growthTrust, max:25, desc:`비팔로워 도달 ${D.nonFollowerReach||'—'}%`, tip:'외부에서 유입될수록 계정 신뢰도 상승' },
-      { label:'활동성', score:activityTrust, max:25, desc:`DM ${D.dmCount||0}개`, tip:'댓글/DM 적극 답장이 활동성 점수에 반영돼요' },
-    ].map(h => {
-      const pct = Math.round((h.score/h.max)*100);
-      const cls = pct>=70?'bar-good':pct>=40?'bar-mid':'bar-bad';
-      return `<div class="stat-row">
-        <div class="stat-name-wrap">
-          <div class="stat-name">${h.label}
-            <span class="tooltip-wrap"><span class="tooltip-icon">?</span><span class="tooltip-box">${h.tip}</span></span>
-          </div>
-          <div class="stat-desc">${h.desc}</div>
-        </div>
-        <div class="bar-wrap"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
-        <div class="stat-val">${h.score}/${h.max}</div>
-      </div>`;
-    }).join('')}
-    <div style="margin-top:12px;padding:10px 14px;background:#fff5f5;border-radius:8px;font-size:0.82rem;color:#742a2a;">
-      🚫 <b>절대 금기</b>: TikTok 워터마크 영상 업로드 시 도달 즉시 중단 / 인위적 좋아요·팔로워 구매 시 계정 지수 회복 불가
-    </div>`;
 
   // ── 30일 로드맵 ──
   document.getElementById('roadmap30Section').innerHTML = `
