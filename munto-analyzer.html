@@ -506,7 +506,7 @@
         <input type="number" id="t-newmembers" placeholder="예: 6" min="0"/>
       </div>
       <div class="form-group">
-        <label>월 액티비티(모임) 수
+        <label>월 액티비티(모임) 수 <span style="color:#e53e3e;font-size:0.72rem;font-weight:800;">* 필수</span>
           <span class="info-wrap">
             <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
             <span class="info-tooltip moim-tt"><span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 액티비티 탭</span></span>
@@ -536,7 +536,7 @@
         <input type="number" id="t-content" placeholder="예: 8" min="0"/>
       </div>
       <div class="form-group">
-        <label>멤버 댓글·반응 수 (월평균)
+        <label>멤버 댓글·반응 수 (월평균) <span style="color:#e53e3e;font-size:0.72rem;font-weight:800;">* 필수</span>
           <span class="info-wrap">
             <button class="info-btn munto-ib" onclick="toggleTip(this)">ⓘ</button>
             <span class="info-tooltip munto-tt"><span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 피드 → 각 게시글 반응 수</span></span>
@@ -1220,9 +1220,12 @@ function showReqPopup(missing, color){
 }
 
 function analyzeMunto() {
-  // 필수 항목 체크
+  // 필수 항목 체크 — 노출 진단 핵심(멤버 + 최근 활동·반응 = 클럽 노출 결정 요인)
+  const _v = id => { const el=document.getElementById(id); return el && el.value.trim(); };
   const _miss=[];
-  if(!document.getElementById('t-members').value.trim()) _miss.push('현재 멤버 수');
+  if(!_v('t-members')) _miss.push('현재 멤버 수');
+  if(!_v('t-activity')) _miss.push('월 액티비티(모임) 수');
+  if(!_v('t-reaction')) _miss.push('멤버 댓글·반응 수(월평균)');
   if(_miss.length){ showReqPopup(_miss,'#9333ea'); return; }
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
   const title    = (document.getElementById('t-title').value || '').trim();

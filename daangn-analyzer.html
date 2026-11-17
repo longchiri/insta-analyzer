@@ -502,7 +502,7 @@
       <input type="number" id="newMembers30" placeholder="예: 8" min="0"/>
     </div>
     <div class="form-group">
-      <label>월 평균 모임 횟수
+      <label>월 평균 모임 횟수 <span style="color:#e53e3e;font-size:0.72rem;font-weight:800;">* 필수</span>
         <span class="info-wrap">
           <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
           <span class="info-tooltip"><span class="tooltip-where">📍 당근앱 → 모임 → 일정 탭에서 확인</span></span>
@@ -535,7 +535,7 @@
       </div>
     </div>
     <div class="form-group">
-      <label>모임 게시글 수 (최근 30일)
+      <label>모임 게시글 수 (최근 30일) <span style="color:#e53e3e;font-size:0.72rem;font-weight:800;">* 필수</span>
         <span class="info-wrap">
           <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
           <span class="info-tooltip"><span class="tooltip-where">📍 당근앱 → 모임 → 게시판 탭 (날짜순 정렬)</span></span>
@@ -1536,9 +1536,12 @@ function showReqPopup(missing, color){
 }
 
 function analyze() {
-  // 필수 항목 체크
+  // 필수 항목 체크 — 노출 진단에 필요한 핵심 지표(멤버 + 활동 빈도·최신성)
+  const _v = id => { const el=document.getElementById(id); return el && el.value.trim(); };
   const _miss=[];
-  if(!document.getElementById('memberCount').value.trim()) _miss.push('현재 멤버 수');
+  if(!_v('memberCount')) _miss.push('현재 멤버 수');
+  if(!_v('meetingFreq')) _miss.push('월 평균 모임 횟수');
+  if(!_v('postCount30')) _miss.push('모임 게시글 수(최근 30일)');
   if(_miss.length){ showReqPopup(_miss,'#ff4628'); return; }
   // ── 유틸 ──
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
