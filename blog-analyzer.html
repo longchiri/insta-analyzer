@@ -93,14 +93,14 @@
     <h2>📝 내 블로그 · 글 정보</h2>
     <div style="font-size:0.8rem;font-weight:800;color:#037c3a;margin:2px 0 8px;">🏛️ 블로그 (C-Rank · 출처 신뢰도)</div>
     <label>블로그 주제 분야 <span class="req">* 필수</span></label>
-    <select id="b-topic">
+    <select id="b-topic" data-req="1">
       <option value="">— 주력 분야를 선택하세요 —</option>
       <option>맛집·요리</option><option>여행</option><option>뷰티·패션</option><option>IT·테크</option>
       <option>육아·교육</option><option>건강·운동</option><option>재테크·경제</option><option>인테리어·리빙</option>
       <option>문화·리뷰</option><option>일상·에세이</option><option value="_default">기타·복합</option>
     </select>
     <div class="row">
-      <div><label>주제 집중도 <span class="req">* 필수</span> <span class="hint">★ C-Rank 핵심</span></label><input type="number" id="b-focus" placeholder="주력 분야 글 비율 % (예: 70)" min="0" max="100"/></div>
+      <div><label>주제 집중도 <span class="req">* 필수</span> <span class="hint">★ C-Rank 핵심</span></label><input type="number" id="b-focus" data-req="1" placeholder="주력 분야 글 비율 % (예: 70)" min="0" max="100"/></div>
       <div><label>블로그 운영 기간 (개월)</label><input type="number" id="b-age" placeholder="예: 18" min="0"/></div>
     </div>
     <div class="row">
@@ -113,11 +113,11 @@
     <label>글 제목 <span class="hint">검색 키워드 포함 여부</span></label>
     <input type="text" id="b-title" placeholder="예: 연남동 파스타 맛집 내돈내산 후기 (주차 정보)"/>
     <div class="row">
-      <div><label>본문 글자 수 <span class="req">* 필수</span> <span class="hint">★ 가독성</span></label><input type="number" id="b-chars" placeholder="예: 1800" min="0"/></div>
+      <div><label>본문 글자 수 <span class="req">* 필수</span> <span class="hint">★ 가독성</span></label><input type="number" id="b-chars" data-req="1" placeholder="예: 1800" min="0"/></div>
       <div><label>이미지 수</label><input type="number" id="b-images" placeholder="예: 8" min="0"/></div>
     </div>
     <label>직접 경험 정보 <span class="req">* 필수</span> <span class="hint">★ DIA+ 최상위</span></label>
-    <select id="b-exp">
+    <select id="b-exp" data-req="1">
       <option value="">— 선택하세요 —</option>
       <option value="2">예 — 직접 촬영·내돈내산·실사용 후기</option>
       <option value="1">일부 — 경험 + 정보 요약 혼합</option>
@@ -232,7 +232,7 @@ function showReqPopup(missing, color){
     o.innerHTML='<div style="background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px 22px;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,0.25);"><div style="font-size:2rem;">📝</div><div style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin:6px 0 8px;">필수 항목을 입력해주세요</div><div id="reqList" style="font-size:0.88rem;color:#555;line-height:1.8;margin-bottom:18px;"></div><button id="reqBtn" style="width:100%;padding:12px;border:none;border-radius:10px;color:#fff;font-size:0.95rem;font-weight:800;cursor:pointer;">확인</button></div>';
     document.body.appendChild(o);
     o.addEventListener('click',e=>{if(e.target===o)o.style.display='none';});
-    document.getElementById('reqBtn').addEventListener('click',()=>o.style.display='none');
+    document.getElementById('reqBtn').addEventListener('click',function(){ o.style.display='none'; var els=document.querySelectorAll('[data-req]'); for(var i=0;i<els.length;i++){ if(!(els[i].value&&(''+els[i].value).trim())){ els[i].scrollIntoView({behavior:'smooth',block:'center'}); (function(el){setTimeout(function(){try{el.focus();}catch(e){}},300);})(els[i]); break; } } });
   }
   document.getElementById('reqList').innerHTML=missing.map(m=>'• '+m).join('<br>');
   document.getElementById('reqBtn').style.background=color||'#333';

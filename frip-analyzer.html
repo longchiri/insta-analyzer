@@ -113,7 +113,7 @@
   <div class="card">
     <h2>📝 내 액티비티 정보</h2>
     <label>카테고리 <span class="req">* 필수</span></label>
-    <select id="f-cat">
+    <select id="f-cat" data-req="1">
       <option value="">— 카테고리를 선택하세요 —</option>
       <option>아웃도어</option><option>피트니스</option><option>스포츠</option><option>수상레포츠</option>
       <option>문화예술</option><option>베이킹</option><option>요리</option><option>음료</option>
@@ -122,7 +122,7 @@
       <option value="_default">전체(기타)</option>
     </select>
     <div class="row">
-      <div><label>이 상품의 후기 수 <span class="req">* 필수</span> <span class="hint">★ 노출 1순위</span></label><input type="number" id="f-rv" placeholder="예: 85" min="0"/></div>
+      <div><label>이 상품의 후기 수 <span class="req">* 필수</span> <span class="hint">★ 노출 1순위</span></label><input type="number" id="f-rv" data-req="1" placeholder="예: 85" min="0"/></div>
       <div><label>가격 (원) <span class="hint">노출과 무관</span></label><input type="number" id="f-price" placeholder="예: 29000" min="0"/></div>
     </div>
     <div class="row">
@@ -256,7 +256,7 @@ function showReqPopup(missing, color){
     o.innerHTML='<div class="req-box"><div style="font-size:2rem;">📝</div><div class="ttl">필수 항목을 입력해주세요</div><div class="lst" id="reqList"></div><button id="reqBtn">확인</button></div>';
     document.body.appendChild(o);
     o.addEventListener('click',e=>{ if(e.target===o) o.style.display='none'; });
-    document.getElementById('reqBtn').addEventListener('click',()=>o.style.display='none');
+    document.getElementById('reqBtn').addEventListener('click',function(){ o.style.display='none'; var els=document.querySelectorAll('[data-req]'); for(var i=0;i<els.length;i++){ if(!(els[i].value&&(''+els[i].value).trim())){ els[i].scrollIntoView({behavior:'smooth',block:'center'}); (function(el){setTimeout(function(){try{el.focus();}catch(e){}},300);})(els[i]); break; } } });
   }
   document.getElementById('reqList').innerHTML = missing.map(m=>'• '+m).join('<br>');
   document.getElementById('reqBtn').style.background = color||'#333';

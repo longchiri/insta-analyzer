@@ -482,7 +482,7 @@
             <span class="info-tooltip munto-tt"><span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 멤버 탭</span></span>
           </span>
         </label>
-        <input type="number" id="t-members" placeholder="예: 28" min="0"/>
+        <input type="number" id="t-members" data-req="1" placeholder="예: 28" min="0"/>
       </div>
       <div class="form-group">
         <label>클럽 개설 경과
@@ -512,7 +512,7 @@
             <span class="info-tooltip moim-tt"><span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 액티비티 탭</span></span>
           </span>
         </label>
-        <input type="number" id="t-activity" placeholder="예: 3" min="0"/>
+        <input type="number" id="t-activity" data-req="1" placeholder="예: 3" min="0"/>
       </div>
       <div class="form-group">
         <label>액티비티 평균 참여율 (%)
@@ -542,7 +542,7 @@
             <span class="info-tooltip munto-tt"><span class="tooltip-where-munto">📍 문토 앱 → 내 클럽 → 피드 → 각 게시글 반응 수</span></span>
           </span>
         </label>
-        <input type="number" id="t-reaction" placeholder="예: 15" min="0"/>
+        <input type="number" id="t-reaction" data-req="1" placeholder="예: 15" min="0"/>
       </div>
       <div class="form-group">
         <label>클럽 후기 수 (누적)
@@ -1212,7 +1212,7 @@ function showReqPopup(missing, color){
     o.innerHTML='<div style="background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px 22px;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,0.25);"><div style="font-size:2rem;">📝</div><div style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin:6px 0 8px;">필수 항목을 입력해주세요</div><div id="reqList" style="font-size:0.88rem;color:#555;line-height:1.8;margin-bottom:18px;"></div><button id="reqBtn" style="width:100%;padding:12px;border:none;border-radius:10px;color:#fff;font-size:0.95rem;font-weight:800;cursor:pointer;">확인</button></div>';
     document.body.appendChild(o);
     o.addEventListener('click',e=>{if(e.target===o)o.style.display='none';});
-    document.getElementById('reqBtn').addEventListener('click',()=>o.style.display='none');
+    document.getElementById('reqBtn').addEventListener('click',function(){ o.style.display='none'; var els=document.querySelectorAll('[data-req]'); for(var i=0;i<els.length;i++){ if(!(els[i].value&&(''+els[i].value).trim())){ els[i].scrollIntoView({behavior:'smooth',block:'center'}); (function(el){setTimeout(function(){try{el.focus();}catch(e){}},300);})(els[i]); break; } } });
   }
   document.getElementById('reqList').innerHTML=missing.map(m=>'• '+m).join('<br>');
   document.getElementById('reqBtn').style.background=color||'#333';

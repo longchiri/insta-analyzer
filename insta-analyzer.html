@@ -757,7 +757,7 @@
             <span class="info-tooltip"><span class="tooltip-where">📍 인스타그램 앱 → 내 프로필 → "팔로워" 숫자</span></span>
           </span>
         </label>
-        <input type="number" id="followers" placeholder="예: 467" />
+        <input type="number" id="followers" data-req="1" placeholder="예: 467" />
       </div>
       <div class="form-group">
         <label>팔로잉 수
@@ -799,7 +799,7 @@
             <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 게시물 → 각 게시물 → 좋아요 (최근 12개 평균)</span></span>
           </span>
         </label>
-        <input type="number" id="avgLikes" placeholder="예: 34" />
+        <input type="number" id="avgLikes" data-req="1" placeholder="예: 34" />
       </div>
       <div class="form-group">
         <label>평균 저장 수 (게시물당)
@@ -826,7 +826,7 @@
             <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 도달한 계정 → 최근 30일</span></span>
           </span>
         </label>
-        <input type="number" id="avgReach" placeholder="예: 402" />
+        <input type="number" id="avgReach" data-req="1" placeholder="예: 402" />
       </div>
       <div class="form-group">
         <label>주 업로드 횟수
@@ -2951,7 +2951,7 @@ function showReqPopup(missing, color){
     o.innerHTML='<div style="background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px 22px;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,0.25);"><div style="font-size:2rem;">📝</div><div style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin:6px 0 8px;">필수 항목을 입력해주세요</div><div id="reqList" style="font-size:0.88rem;color:#555;line-height:1.8;margin-bottom:18px;"></div><button id="reqBtn" style="width:100%;padding:12px;border:none;border-radius:10px;color:#fff;font-size:0.95rem;font-weight:800;cursor:pointer;">확인</button></div>';
     document.body.appendChild(o);
     o.addEventListener('click',e=>{if(e.target===o)o.style.display='none';});
-    document.getElementById('reqBtn').addEventListener('click',()=>o.style.display='none');
+    document.getElementById('reqBtn').addEventListener('click',function(){ o.style.display='none'; var els=document.querySelectorAll('[data-req]'); for(var i=0;i<els.length;i++){ if(!(els[i].value&&(''+els[i].value).trim())){ els[i].scrollIntoView({behavior:'smooth',block:'center'}); (function(el){setTimeout(function(){try{el.focus();}catch(e){}},300);})(els[i]); break; } } });
   }
   document.getElementById('reqList').innerHTML=missing.map(m=>'• '+m).join('<br>');
   document.getElementById('reqBtn').style.background=color||'#333';

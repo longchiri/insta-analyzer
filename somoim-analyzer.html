@@ -451,7 +451,7 @@
       </div>
       <div class="form-group" style="margin-top:12px;">
         <label>마지막 업데이트일 <span style="color:#e53e3e;font-size:0.72rem;font-weight:800;">* 필수</span> <span style="font-size:.78em;color:#16a34a;font-weight:600;">📊 상단노출 핵심</span></label>
-        <input type="date" id="m-last-update" style="border-color:#bbf7d0;"/>
+        <input type="date" id="m-last-update" data-req="1" style="border-color:#bbf7d0;"/>
       </div>
       <div class="form-group">
         <label>모임 사진 퀄리티
@@ -508,7 +508,7 @@
             <span class="info-tooltip moim-tt"><span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 멤버 탭</span></span>
           </span>
         </label>
-        <input type="number" id="m-members" placeholder="예: 38" min="0"/>
+        <input type="number" id="m-members" data-req="1" placeholder="예: 38" min="0"/>
       </div>
       <div class="form-group">
         <label>모임 개설 경과
@@ -538,7 +538,7 @@
             <span class="info-tooltip moim-tt"><span class="tooltip-where-moim">📍 소모임 앱 → 내 모임 → 일정 탭</span></span>
           </span>
         </label>
-        <input type="number" id="m-freq" placeholder="예: 4" min="0" max="30"/>
+        <input type="number" id="m-freq" data-req="1" placeholder="예: 4" min="0" max="30"/>
       </div>
       <div class="form-group">
         <label>평균 출석률 (%)
@@ -1067,7 +1067,7 @@ function showReqPopup(missing, color){
     o.innerHTML='<div style="background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px 22px;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,0.25);"><div style="font-size:2rem;">📝</div><div style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin:6px 0 8px;">필수 항목을 입력해주세요</div><div id="reqList" style="font-size:0.88rem;color:#555;line-height:1.8;margin-bottom:18px;"></div><button id="reqBtn" style="width:100%;padding:12px;border:none;border-radius:10px;color:#fff;font-size:0.95rem;font-weight:800;cursor:pointer;">확인</button></div>';
     document.body.appendChild(o);
     o.addEventListener('click',e=>{if(e.target===o)o.style.display='none';});
-    document.getElementById('reqBtn').addEventListener('click',()=>o.style.display='none');
+    document.getElementById('reqBtn').addEventListener('click',function(){ o.style.display='none'; var els=document.querySelectorAll('[data-req]'); for(var i=0;i<els.length;i++){ if(!(els[i].value&&(''+els[i].value).trim())){ els[i].scrollIntoView({behavior:'smooth',block:'center'}); (function(el){setTimeout(function(){try{el.focus();}catch(e){}},300);})(els[i]); break; } } });
   }
   document.getElementById('reqList').innerHTML=missing.map(m=>'• '+m).join('<br>');
   document.getElementById('reqBtn').style.background=color||'#333';
