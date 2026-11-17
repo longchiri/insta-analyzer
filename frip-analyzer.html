@@ -59,6 +59,12 @@
   .copybox{position:relative;background:#fff7f2;border:1px solid #ffe0d2;border-radius:11px;padding:12px 13px;margin:8px 0;font-size:0.86rem;color:#2b2320;line-height:1.6;white-space:pre-wrap;}
   .copybtn{position:absolute;top:8px;right:8px;background:#ff5a2c;color:#fff;border:none;border-radius:8px;font-size:0.72rem;font-weight:800;padding:4px 10px;cursor:pointer;}
   .pill{display:inline-block;background:#ffe3d6;color:#c2410c;font-size:0.74rem;font-weight:800;padding:3px 10px;border-radius:99px;margin:3px 4px 0 0;}
+  .req{color:#e53e3e;font-size:0.72rem;font-weight:800;}
+  .req-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+  .req-box{background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px 22px;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,0.25);}
+  .req-box .ttl{font-size:1.05rem;font-weight:800;color:#1a1a1a;margin:6px 0 8px;}
+  .req-box .lst{font-size:0.88rem;color:#555;line-height:1.8;margin-bottom:18px;}
+  .req-box button{width:100%;padding:12px;border:none;border-radius:10px;color:#fff;font-size:0.95rem;font-weight:800;cursor:pointer;}
   /* 툴팁 */
   .ftip-wrap{position:relative;display:inline-block;}
   .ftip-ico{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#ffd9c9;color:#c2410c;font-size:0.68rem;font-weight:800;cursor:pointer;margin-left:5px;vertical-align:middle;}
@@ -106,16 +112,17 @@
 
   <div class="card">
     <h2>📝 내 액티비티 정보</h2>
-    <label>카테고리</label>
+    <label>카테고리 <span class="req">* 필수</span></label>
     <select id="f-cat">
-      <option value="_default">전체(기타)</option>
+      <option value="">— 카테고리를 선택하세요 —</option>
       <option>아웃도어</option><option>피트니스</option><option>스포츠</option><option>수상레포츠</option>
       <option>문화예술</option><option>베이킹</option><option>요리</option><option>음료</option>
       <option>공예DIY</option><option>뷰티</option><option>자기계발</option><option>심리상담</option>
       <option>모임</option><option>국내여행</option><option>제주여행</option><option>해외여행</option>
+      <option value="_default">전체(기타)</option>
     </select>
     <div class="row">
-      <div><label>이 상품의 후기 수 <span class="hint">★ 노출 1순위</span></label><input type="number" id="f-rv" placeholder="예: 85" min="0"/></div>
+      <div><label>이 상품의 후기 수 <span class="req">* 필수</span> <span class="hint">★ 노출 1순위</span></label><input type="number" id="f-rv" placeholder="예: 85" min="0"/></div>
       <div><label>가격 (원) <span class="hint">노출과 무관</span></label><input type="number" id="f-price" placeholder="예: 29000" min="0"/></div>
     </div>
     <div class="row">
@@ -241,7 +248,28 @@ const FRIP_TIERS = {"공예DIY":{"p75":3,"p90":18,"zero":52},"문화예술":{"p7
 // 호스트 파워 — 전수 디테일 기준 [상위,중간,하위] 중앙값(누적 후기·찜)
 const HOST_TIERS = { hrv:[247,53,7], hwish:[351,117,19] };
 
+// ── 필수 입력 팝업 ──
+function showReqPopup(missing, color){
+  let o=document.getElementById('reqOverlay');
+  if(!o){
+    o=document.createElement('div'); o.id='reqOverlay'; o.className='req-overlay';
+    o.innerHTML='<div class="req-box"><div style="font-size:2rem;">📝</div><div class="ttl">필수 항목을 입력해주세요</div><div class="lst" id="reqList"></div><button id="reqBtn">확인</button></div>';
+    document.body.appendChild(o);
+    o.addEventListener('click',e=>{ if(e.target===o) o.style.display='none'; });
+    document.getElementById('reqBtn').addEventListener('click',()=>o.style.display='none');
+  }
+  document.getElementById('reqList').innerHTML = missing.map(m=>'• '+m).join('<br>');
+  document.getElementById('reqBtn').style.background = color||'#333';
+  o.style.display='flex';
+}
+
 function analyzeFrip(){
+  // 필수 항목 체크
+  const _miss=[];
+  if(!document.getElementById('f-cat').value) _miss.push('카테고리 선택');
+  if(!document.getElementById('f-rv').value.trim()) _miss.push('이 상품의 후기 수');
+  if(_miss.length){ showReqPopup(_miss, '#ff5a2c'); return; }
+
   const cat = document.getElementById('f-cat').value;
   const rv = parseInt(document.getElementById('f-rv').value) || 0;
   const price = parseInt(document.getElementById('f-price').value) || 0;

@@ -751,7 +751,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label>팔로워 수
+        <label>팔로워 수 <span style="color:#e53e3e;font-size:0.72rem;font-weight:800;">* 필수(수동)</span>
           <span class="info-wrap">
             <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
             <span class="info-tooltip"><span class="tooltip-where">📍 인스타그램 앱 → 내 프로필 → "팔로워" 숫자</span></span>
@@ -793,7 +793,7 @@
     <h2>📸 콘텐츠 정보</h2>
     <div class="form-grid">
       <div class="form-group">
-        <label>평균 좋아요 수 (게시물당)
+        <label>평균 좋아요 수 (게시물당) <span style="color:#e53e3e;font-size:0.72rem;font-weight:800;">* 필수(수동)</span>
           <span class="info-wrap">
             <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
             <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 게시물 → 각 게시물 → 좋아요 (최근 12개 평균)</span></span>
@@ -820,7 +820,7 @@
         <input type="number" id="avgShares" placeholder="예: 28" />
       </div>
       <div class="form-group">
-        <label>평균 노출(Reach) 수
+        <label>평균 노출(Reach) 수 <span style="color:#e53e3e;font-size:0.72rem;font-weight:800;">* 필수(수동)</span>
           <span class="info-wrap">
             <button class="info-btn" onclick="toggleTip(this)">ⓘ</button>
             <span class="info-tooltip"><span class="tooltip-where">📍 인사이트 → 도달한 계정 → 최근 30일</span></span>
@@ -1555,7 +1555,7 @@ function setPartFilter(part, btn) {
 <footer>
   <p>📌 Instagram 데이터 내보내기(ZIP)로 정밀 분석 · 직접 입력도 지원</p>
   <p style="margin-top: 10px; font-size: 1rem;"><b style="color:#ccc; font-weight:700;">by</b> <span style="color:#86efac; font-weight:700; font-size:1.1rem;">longchiri</span></p>
-  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.8.0</p>
+  <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Ver 6.9.0</p>
   <div style="margin-top: 12px;">
     <a class="tg-contact" href="https://t.me/hong_bottest" target="_blank">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -2943,7 +2943,34 @@ function renderAlgoGaugeInsta(total) {
   }
 }
 
+function showReqPopup(missing, color){
+  let o=document.getElementById('reqOverlay');
+  if(!o){
+    o=document.createElement('div'); o.id='reqOverlay';
+    o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;';
+    o.innerHTML='<div style="background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px 22px;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,0.25);"><div style="font-size:2rem;">📝</div><div style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin:6px 0 8px;">필수 항목을 입력해주세요</div><div id="reqList" style="font-size:0.88rem;color:#555;line-height:1.8;margin-bottom:18px;"></div><button id="reqBtn" style="width:100%;padding:12px;border:none;border-radius:10px;color:#fff;font-size:0.95rem;font-weight:800;cursor:pointer;">확인</button></div>';
+    document.body.appendChild(o);
+    o.addEventListener('click',e=>{if(e.target===o)o.style.display='none';});
+    document.getElementById('reqBtn').addEventListener('click',()=>o.style.display='none');
+  }
+  document.getElementById('reqList').innerHTML=missing.map(m=>'• '+m).join('<br>');
+  document.getElementById('reqBtn').style.background=color||'#333';
+  o.style.display='flex';
+}
+
 function analyze() {
+  // 필수 항목 체크 — ZIP 업로드 탭이면 ZIP 필수, 수동 입력 탭이면 핵심 수치 필수
+  const _miss=[];
+  if (currentTab === 'upload') {
+    if (!parsedData) _miss.push('ZIP 파일 업로드 (또는 "수동 입력" 탭 사용)');
+  } else {
+    const _v = id => { const el=document.getElementById(id); return el && el.value.trim(); };
+    if (!_v('followers'))  _miss.push('팔로워 수');
+    if (!_v('avgLikes'))   _miss.push('평균 좋아요 수');
+    if (!_v('avgReach'))   _miss.push('평균 노출(Reach)');
+  }
+  if (_miss.length){ showReqPopup(_miss, '#c0146a'); return; }
+
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
   let D = {};  // working data object
 
