@@ -1457,7 +1457,7 @@ function setPartFilter(part, btn) {
 
   <!-- 릴스 떡상 지수 -->
   <div class="result-card" data-part="reels">
-    <h2>🎬 릴스 떡상 지수 (2026 공식)</h2>
+    <h2>🎬 릴스 떡상 지수 (2026 메타 신호 기반)</h2>
     <div id="reelsScoreSection"></div>
   </div>
 
@@ -2803,9 +2803,9 @@ function renderAIDiagInsta(total, erScore, ssScore, grScore, conScore) {
 
   // 패턴별 핵심 진단 (2026 우선순위)
   if (ssScore < 11 && erScore >= 14) {
-    lines.push('좋아요·반응은 받는데 <b>저장·공유가 약해요</b> — 2026 최상위 신호가 바로 공유(sends)와 저장이에요. "친구에게 DM으로 보내고 싶은" 정보형(팁·체크리스트·공지)을 3개 중 1개 비율로 섞고, 캐러셀 끝에 "저장해두세요" CTA를 넣으세요. 공유 한 번이 좋아요 3~5개 값이에요.');
+    lines.push('좋아요·반응은 받는데 <b>저장·공유가 약해요</b> — 2026 최상위 신호가 바로 공유(sends)와 저장이에요. "친구에게 DM으로 보내고 싶은" 정보형(팁·체크리스트·공지)을 3개 중 1개 비율로 섞고, 캐러셀 끝에 "저장해두세요" CTA를 넣으세요. 공유·저장은 좋아요보다 가중치가 큰 신호예요(메타 공식).');
   } else if (erScore < 11 && grScore >= 12) {
-    lines.push('도달은 나오는데 <b>완주율·반응이 낮아요</b>. 릴스 초반 1~2초 훅으로 이탈을 막고 7~15초로 짧게 — 완주율 70%를 넘기면 2차 확산풀에 들어가요. 좋아요보다 "끝까지 보게 만드는 것"이 지금 핵심이에요.');
+    lines.push('도달은 나오는데 <b>완주율·반응이 낮아요</b>. 릴스 초반 1~2초 훅으로 이탈을 막고 짧게 — 완주율(끝까지 보는 비율)이 높을수록 더 넓게 확산돼요. 좋아요보다 "끝까지 보게 만드는 것"이 지금 핵심이에요.');
   } else if (conScore < 5 && erScore >= 14) {
     lines.push('콘텐츠 퀄리티는 좋은데 업로드 빈도가 낮아요. 주 3회 이상 릴스 위주로 올리면 탐색 탭 배정이 늘어요. 단 <b>퍼온 리포스트는 비중을 낮추세요</b> — 30일에 10개 이상이면 추천에서 제외돼요.');
   } else if (grScore < 8 && erScore >= 14) {
@@ -3191,7 +3191,7 @@ function analyze() {
     { name:'저장율',         val:sr.toFixed(2)+'%', score:ssScore_save,  max:14,
       desc:'노출 대비 저장 비율. "다시 볼 가치" 신호 — 가이드·체크리스트형이 강해요', tip:'저장÷노출×100. 3%이상=우수' },
     { name:'릴스 완주율',    val:(wr?wr+'%':'—'),    score:watchPart,     max:16,
-      desc:'릴스를 끝까지 보는 비율 (Mosseri #1 신호). 70%+ 목표', tip:'완주율 70~80%↑면 2차 확산풀 진입. 7~15초 길이가 유리' },
+      desc:'릴스를 끝까지 보는 비율 (메타 핵심 신호). 높을수록 유리', tip:'완주율이 높을수록 더 넓게 확산돼요. 짧은 길이가 완주에 유리' },
     { name:'비팔로워 도달',  val:(nfr||'—')+(nfr?'%':''), score:grScore_reach, max:16,
       desc:'팔로워 아닌 사람에게 닿는 비율. 2026 성장의 핵심', tip:'높을수록 알고리즘이 콘텐츠를 확산시키는 중' },
     { name:'좋아요 참여율 (비중↓)', val:er.toFixed(2)+'%', score:likePart, max:8,
@@ -4008,7 +4008,7 @@ function analyze() {
     &nbsp;&nbsp;• <b>오리지널 콘텐츠 강제 규정 (2026.04.30)</b> — 리포스트가 대부분인 계정은 Explore·릴스·추천 피드 <b>완전 제외</b>. 사진·캐러셀까지 확대 적용<br/>
     &nbsp;&nbsp;• <b>"Your Algorithm" 토픽 대시보드 신규</b> — 설정 → 콘텐츠 환경설정에서 내 피드 추천 토픽을 직접 추가·삭제 가능. 계정 주제와 맞게 설정하면 노출 정확도 상승`;
 
-  // ── 릴스 떡상 지수 (2026 공식) ──
+  // ── 릴스 떡상 지수 (2026 메타 신호 기반) ──
   // Score = (완독×3) + (재시청×5) + (공유×10) + (저장×7) - (초반 이탈×2)
   const cr  = D.completionRate     || 0;
   const rr  = D.replayRate         || 0;
@@ -4131,7 +4131,7 @@ function analyze() {
           why:'들어온 사람을 저장하게 만들어 팬으로 묶고, 친밀도 점수를 쌓는 기간이에요.' },
         { days:'Day 21~30', title:'공유 트리거 & 바이럴 확산', color:'#833ab4',
           action:'공유를 부르는 공감형 릴스 및 "친구 태그 이벤트" 진행.',
-          why:'전파력이 가장 강한 공유 지수를 폭발시켜 탐색 탭 메인을 점령해요.' },
+          why:'전파력이 가장 강한 공유를 늘려 탐색 탭 노출을 키워요.' },
       ].map(p => `
         <div style="padding:14px 16px;border-radius:12px;border-left:4px solid ${p.color};background:#fafafa;">
           <div style="font-weight:700;color:${p.color};font-size:0.88rem;margin-bottom:4px;">${p.days}: ${p.title}</div>
