@@ -41,6 +41,22 @@
   .menubar{position:sticky;top:0;z-index:20;display:flex;gap:6px;background:#fef6f1ee;backdrop-filter:blur(6px);padding:10px 0;margin-bottom:6px;}
   .menubar button{flex:1;padding:9px 4px;border:1.5px solid #ffd9c9;border-radius:99px;background:#fff;color:#a06a52;font-size:0.8rem;font-weight:800;cursor:pointer;font-family:inherit;}
   .menubar button.on{background:linear-gradient(135deg,#ff7a4d,#ff5a2c);color:#fff;border-color:transparent;}
+  /* 🤖 AI 종합 진단 (로봇 타자기 카드) */
+  .card.ai-diag-card{background:linear-gradient(135deg,#2a1206,#3d1a08,#2a1206);border:1.5px solid rgba(255,138,77,0.45);position:relative;overflow:hidden;}
+  .ai-diag-card::before{content:'';position:absolute;top:0;left:-150%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,138,77,0.12),transparent);animation:ai-shimmer 2.8s infinite;}
+  @keyframes ai-shimmer{to{left:220%;}}
+  .ai-diag-card h2{color:#fff !important;}
+  .ai-grade-row{display:flex;align-items:center;gap:16px;margin:4px 0 16px;background:rgba(255,255,255,0.06);border-radius:14px;padding:16px 18px;border:1px solid rgba(255,138,77,0.22);position:relative;z-index:1;}
+  .ai-grade-emoji{font-size:2.8rem;flex-shrink:0;}
+  .ai-grade-info{flex:1;min-width:0;}
+  .ai-grade-lbl{font-size:0.72rem;color:#c9a68f;font-weight:700;letter-spacing:0.08em;margin-bottom:3px;}
+  .ai-grade-name{font-size:1.25rem;font-weight:900;background:linear-gradient(90deg,#ff9a4d,#ff5a2c,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .ai-grade-score-line{font-size:0.82rem;color:#b89480;margin-top:4px;}
+  .typewriter-box{background:rgba(0,0,0,0.32);border-radius:12px;padding:16px 18px;font-size:0.9rem;line-height:1.9;color:#f0e4da;min-height:68px;border:1px solid rgba(255,138,77,0.2);word-break:keep-all;overflow-wrap:break-word;position:relative;z-index:1;}
+  .tw-cursor{display:inline-block;width:2px;height:1em;background:#ff8a4d;animation:tw-blink 0.8s infinite;vertical-align:text-bottom;margin-left:1px;border-radius:1px;}
+  @keyframes tw-blink{0%,100%{opacity:1}50%{opacity:0}}
+  .ai-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;position:relative;z-index:1;}
+  .ai-tag{background:rgba(255,138,77,0.16);color:#ffb088;font-size:0.78rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,138,77,0.3);}
   /* 종합점수 게이지 */
   .gauge-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;}
   .gauge{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -164,9 +180,18 @@
       </div>
     </div>
 
-    <div class="card" data-grp="종합">
+    <div class="card ai-diag-card" data-grp="종합">
       <h2>🤖 AI 종합 진단</h2>
-      <div class="note" id="f-ai" style="line-height:1.8;"></div>
+      <div class="ai-grade-row">
+        <div class="ai-grade-emoji" id="fAiEmoji">🌱</div>
+        <div class="ai-grade-info">
+          <div class="ai-grade-lbl">프립 노출 등급</div>
+          <div class="ai-grade-name" id="fAiGradeName">분석 중...</div>
+          <div class="ai-grade-score-line" id="fAiScoreLine"></div>
+        </div>
+      </div>
+      <div class="typewriter-box" id="fAiTw"></div>
+      <div class="ai-tags" id="fAiTags"></div>
     </div>
 
     <div class="card" data-grp="데이터">
@@ -391,14 +416,36 @@ function analyzeFrip(){
     '<div class="mrow"><span>🥇 슈퍼호스트</span><b>'+supScore+' / 10</b></div>'+
     '<div class="mrow"><span>📅 신규·꾸준함</span><b>'+freshScore+' / 5</b></div>';
 
-  // ── AI 종합 진단 ──
-  let ai = '<b>'+catName+'</b> 카테고리에서 당신의 상품은 종합 <b style="color:'+gColor+';">'+score+'점('+grade+')</b>이에요. ';
+  // ── AI 종합 진단 (로봇 타자기 카드) ──
+  let fEmoji, fDesc;
+  if(score>=80){ fEmoji='💫'; fDesc='노출 최상위 — 후기·호스트 파워가 탄탄해요'; }
+  else if(score>=60){ fEmoji='🔥'; fDesc='상위권 — 조금만 더 쌓으면 카테고리 상단 고정이에요'; }
+  else if(score>=40){ fEmoji='⭐'; fDesc='중위권 — 후기 개수만 올리면 빠르게 상승해요'; }
+  else if(score>=20){ fEmoji='🌿'; fDesc='성장 단계 — 첫 후기 몇 개가 순위를 확 끌어올려요'; }
+  else { fEmoji='🌱'; fDesc='출발선 — 지금부터 후기·찜을 모으면 달라져요'; }
+  document.getElementById('fAiEmoji').textContent = fEmoji;
+  document.getElementById('fAiGradeName').textContent = grade;
+  document.getElementById('fAiScoreLine').textContent = '종합 '+score+'점 · '+fDesc;
+
+  let ai = '<b>'+catName+'</b> 카테고리에서 당신의 상품은 종합 <b>'+score+'점('+grade+')</b>이에요. ';
   if(rv>=T.p75) ai += '후기 <b>'+rv.toLocaleString()+'개</b>로 이미 <b>상위 '+(myIdx===0?'10':'25')+'%</b> 노출권이라 출발이 좋아요. ';
   else if(rv>0) ai += '후기 <b>'+rv.toLocaleString()+'개</b>인데, 이 카테고리는 '+T.zero+'%가 후기 0개라 <b>'+Math.max(1,T.p75-rv)+'개만 더</b> 받으면 상위 25%예요. ';
   else ai += '아직 후기가 없지만 <b>과반('+T.zero+'%)이 후기 0개</b>라 좌절할 필요 없어요. <b>첫 후기 몇 개</b>가 순위를 확 끌어올려요. ';
   ai += hpBest===0 ? '게다가 호스트 파워가 <b>상위</b>라 신규 상품도 유리하게 출발해요. ' : '호스트 누적 실적(후기·찜)을 더 쌓으면 신규 상품 노출도 같이 올라가요. ';
   ai += '별점·가격은 노출과 무관하니 거기 매달리지 말고, <b>후기 개수 확보</b>에 집중하세요.';
-  document.getElementById('f-ai').innerHTML = ai;
+  typewriterEffect(document.getElementById('fAiTw'), ai, 14);
+
+  const fTags = [];
+  if(rv>=T.p90) fTags.push('✅ 후기 상위 10%');
+  else if(rv>=T.p75) fTags.push('✅ 후기 상위 25%');
+  if(hpBest===0) fTags.push('✅ 호스트 파워 상위');
+  else if(hpBest===1) fTags.push('✅ 호스트 파워 중간');
+  if(age==='new') fTags.push('🚀 신규 부스트 구간');
+  if(rv>0 && rv<T.p75) fTags.push('🌊 블루오션 기회');
+  if(rv===0) fTags.push('⚠️ 첫 후기 확보 필요');
+  if(age==='old' && rv===0) fTags.push('⚠️ 방치 위험');
+  fTags.push('ℹ️ 별점·가격 노출 무관');
+  document.getElementById('fAiTags').innerHTML = fTags.slice(0,7).map(t=>'<span class="ai-tag">'+t+'</span>').join('');
 
   // ── 방치·블루오션 진단 ──
   let ghost;
@@ -460,6 +507,15 @@ function analyzeFrip(){
 }
 
 // 메뉴바 필터
+function typewriterEffect(el, text, speed){
+  if(!el) return;
+  el.innerHTML=''; let i=0;
+  const iv=setInterval(()=>{
+    if(i<=text.length){ el.innerHTML=text.slice(0,i).replace(/\n/g,'<br>')+'<span class="tw-cursor"></span>'; i++; }
+    else { clearInterval(iv); el.innerHTML=text.replace(/\n/g,'<br>'); }
+  }, speed);
+}
+
 function fripMenu(f, btn){
   document.querySelectorAll('.menubar button').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');

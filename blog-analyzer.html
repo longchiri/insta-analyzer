@@ -41,6 +41,22 @@
   .menubar{position:sticky;top:0;z-index:20;display:flex;gap:6px;background:#f2faf5ee;backdrop-filter:blur(6px);padding:10px 0;margin-bottom:6px;}
   .menubar button{flex:1;padding:9px 4px;border:1.5px solid #c7e8d5;border-radius:99px;background:#fff;color:#2f8a57;font-size:0.8rem;font-weight:800;cursor:pointer;font-family:inherit;}
   .menubar button.on{background:linear-gradient(135deg,#05d968,#03c75a);color:#fff;border-color:transparent;}
+  /* 🤖 AI 종합 진단 (로봇 타자기 카드) */
+  .card.ai-diag-card{background:linear-gradient(135deg,#052b18,#073d22,#052b18);border:1.5px solid rgba(5,217,104,0.4);position:relative;overflow:hidden;}
+  .ai-diag-card::before{content:'';position:absolute;top:0;left:-150%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(5,217,104,0.12),transparent);animation:ai-shimmer 2.8s infinite;}
+  @keyframes ai-shimmer{to{left:220%;}}
+  .ai-diag-card h2{color:#fff !important;}
+  .ai-grade-row{display:flex;align-items:center;gap:16px;margin:4px 0 16px;background:rgba(255,255,255,0.06);border-radius:14px;padding:16px 18px;border:1px solid rgba(5,217,104,0.22);position:relative;z-index:1;}
+  .ai-grade-emoji{font-size:2.8rem;flex-shrink:0;}
+  .ai-grade-info{flex:1;min-width:0;}
+  .ai-grade-lbl{font-size:0.72rem;color:#8fc9a8;font-weight:700;letter-spacing:0.08em;margin-bottom:3px;}
+  .ai-grade-name{font-size:1.25rem;font-weight:900;background:linear-gradient(90deg,#05d968,#03c75a,#6ee7a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .ai-grade-score-line{font-size:0.82rem;color:#80b095;margin-top:4px;}
+  .typewriter-box{background:rgba(0,0,0,0.32);border-radius:12px;padding:16px 18px;font-size:0.9rem;line-height:1.9;color:#e4f5ec;min-height:68px;border:1px solid rgba(5,217,104,0.2);word-break:keep-all;overflow-wrap:break-word;position:relative;z-index:1;}
+  .tw-cursor{display:inline-block;width:2px;height:1em;background:#05d968;animation:tw-blink 0.8s infinite;vertical-align:text-bottom;margin-left:1px;border-radius:1px;}
+  @keyframes tw-blink{0%,100%{opacity:1}50%{opacity:0}}
+  .ai-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;position:relative;z-index:1;}
+  .ai-tag{background:rgba(5,217,104,0.16);color:#6ee7a0;font-size:0.78rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid rgba(5,217,104,0.3);}
   .gauge-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;}
   .gauge{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .gauge-in{width:116px;height:116px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;}
@@ -154,9 +170,18 @@
       </div>
     </div>
 
-    <div class="card" data-grp="종합">
+    <div class="card ai-diag-card" data-grp="종합">
       <h2>🤖 AI 종합 진단</h2>
-      <div class="note" id="b-ai" style="line-height:1.8;"></div>
+      <div class="ai-grade-row">
+        <div class="ai-grade-emoji" id="bAiEmoji">🌱</div>
+        <div class="ai-grade-info">
+          <div class="ai-grade-lbl">블로그 노출 등급</div>
+          <div class="ai-grade-name" id="bAiGradeName">분석 중...</div>
+          <div class="ai-grade-score-line" id="bAiScoreLine"></div>
+        </div>
+      </div>
+      <div class="typewriter-box" id="bAiTw"></div>
+      <div class="ai-tags" id="bAiTags"></div>
     </div>
 
     <div class="card" data-grp="데이터">
@@ -294,8 +319,18 @@ function analyzeBlog(){
     '<div class="mrow"><span>💎 DIA+ (문서)</span><b>'+diaTotal+' / 55</b></div>'+
     '<div class="mrow" style="border-top:1px solid #e4f2ea;padding-top:6px;"><span>종합</span><b style="color:'+gColor+';">'+score+' / 100</b></div>';
 
-  // ── AI 진단 ──
-  let ai = '<b>'+topicName+'</b> 블로그의 노출 종합 점수는 <b style="color:'+gColor+';">'+score+'점('+grade+')</b>이에요. ';
+  // ── AI 진단 (로봇 타자기 카드) ──
+  let bEmoji, bDesc;
+  if(score>=80){ bEmoji='💫'; bDesc='노출 최상위 — C-Rank·DIA+가 모두 탄탄해요'; }
+  else if(score>=60){ bEmoji='🔥'; bDesc='상위권 — 직접 경험만 더하면 상단 고정이에요'; }
+  else if(score>=40){ bEmoji='⭐'; bDesc='중위권 — 주제 집중·경험 글로 빠르게 상승해요'; }
+  else if(score>=20){ bEmoji='🌿'; bDesc='성장 단계 — 한 분야를 깊게 파면 달라져요'; }
+  else { bEmoji='🌱'; bDesc='출발선 — 꾸준한 발행으로 출처 신뢰도를 쌓으세요'; }
+  document.getElementById('bAiEmoji').textContent = bEmoji;
+  document.getElementById('bAiGradeName').textContent = grade;
+  document.getElementById('bAiScoreLine').textContent = '종합 '+score+'점 · '+bDesc;
+
+  let ai = '<b>'+topicName+'</b> 블로그의 노출 종합 점수는 <b>'+score+'점('+grade+')</b>이에요. ';
   if(crankTotal>=30) ai+='출처 신뢰도(C-Rank)가 탄탄해요 — 주제 집중도가 높아 그 분야 글이 꾸준히 유리하게 출발해요. ';
   else if(focus<50) ai+='<b>주제 집중도가 낮아요</b>(C-Rank 약점) — 여러 주제를 섞기보다 한 분야를 깊게 파면 블로그 전체 노출이 올라가요. ';
   else ai+='C-Rank는 쌓이는 중 — 꾸준한 발행으로 출처 신뢰도를 더 올리세요. ';
@@ -303,7 +338,17 @@ function analyzeBlog(){
   else ai+='DIA+ 최상위 요소인 <b>직접 경험(직접 촬영·내돈내산)</b>이 부족해요 — 정보 요약보다 "내가 해본 것"을 넣으면 신규 글도 상위 기회를 잡아요. ';
   if(dwell>0 && dwell<45) ai+='체류시간이 짧아요 — 첫 문단 훅·소제목·이미지로 "끝까지 읽게" 만드세요.';
   else ai+='검색 의도를 한 글에 완결시키는 게 핵심이에요.';
-  document.getElementById('b-ai').innerHTML=ai;
+  typewriterEffect(document.getElementById('bAiTw'), ai, 14);
+
+  const bTags = [];
+  if(crankTotal>=30) bTags.push('✅ C-Rank 출처 신뢰 높음');
+  else if(focus<50) bTags.push('⚠️ 주제 집중도 낮음');
+  if(exp===2) bTags.push('✅ 직접 경험 글');
+  else bTags.push('⚠️ 직접 경험 부족');
+  if(diaTotal>=40) bTags.push('✅ DIA+ 문서 품질 우수');
+  if(dwell>0 && dwell<45) bTags.push('⚠️ 체류시간 짧음');
+  bTags.push('ℹ️ 꾸준한 발행이 핵심');
+  document.getElementById('bAiTags').innerHTML = bTags.slice(0,7).map(t=>'<span class="ai-tag">'+t+'</span>').join('');
 
   // ── C-Rank 진단 ──
   document.getElementById('b-crank-intro').innerHTML='🏛️ C-Rank는 <b>"이 블로그가 '+topicName+' 주제의 믿을 만한 출처인가"</b>를 봐요. 주제 집중도 <b>'+focus+'%</b>·운영 <b>'+age+'개월</b>·주 <b>'+freq+'회</b> 발행 기준이에요.';
@@ -395,6 +440,15 @@ function analyzeBlog(){
 
   document.getElementById('result').style.display='block';
   document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+function typewriterEffect(el, text, speed){
+  if(!el) return;
+  el.innerHTML=''; let i=0;
+  const iv=setInterval(()=>{
+    if(i<=text.length){ el.innerHTML=text.slice(0,i).replace(/\n/g,'<br>')+'<span class="tw-cursor"></span>'; i++; }
+    else { clearInterval(iv); el.innerHTML=text.replace(/\n/g,'<br>'); }
+  }, speed);
 }
 
 function blogMenu(f, btn){
