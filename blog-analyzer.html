@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>네이버 블로그 노출 분석기 | By Longchiri</title>
+<!-- AlgoChiri: 2026.11.17 - 네이버 블로그 분석기 신규. 네이버 공식 C-Rank·DIA+ 프레임워크 기반 노출 진단. -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Apple SD Gothic Neo','Segoe UI',sans-serif;background:#f2faf5;color:#1f2a24;padding:26px 15px 70px;word-break:keep-all;line-height:1.6;}
+  .wrap{max-width:720px;margin:0 auto;}
+  .hero{text-align:center;margin-bottom:22px;}
+  .hero h1{font-size:1.5rem;font-weight:900;color:#03c75a;}
+  .hero .ver{display:inline-block;background:#d6f5e3;color:#037c3a;font-size:0.72rem;font-weight:800;padding:3px 10px;border-radius:99px;margin-left:6px;vertical-align:middle;}
+  .hero p{font-size:0.9rem;color:#6a7d72;margin-top:6px;}
+  .card{background:#fff;border:1.5px solid #d6f0e0;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(3,199,90,0.05);}
+  .card h2{font-size:1.08rem;font-weight:800;margin-bottom:14px;color:#1f2a24;display:flex;align-items:center;gap:8px;}
+  label{display:block;font-size:0.84rem;font-weight:700;color:#4b5b52;margin:12px 0 6px;}
+  input,select,textarea{width:100%;padding:12px 13px;border:1.5px solid #cfe8d8;border-radius:11px;font-size:0.95rem;color:#1f2a24;background:#fcfffe;font-family:inherit;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#03c75a;}
+  .row{display:grid;gap:12px;}@media(min-width:560px){.row{grid-template-columns:1fr 1fr;}}
+  .btn{width:100%;margin-top:18px;padding:15px;border:none;border-radius:12px;background:linear-gradient(135deg,#05d968,#03c75a);color:#fff;font-size:1.05rem;font-weight:800;cursor:pointer;}
+  .btn:hover{filter:brightness(1.05);}
+  .hint{font-size:0.78rem;color:#8aa396;font-weight:500;}
+  .req{color:#e53e3e;font-size:0.72rem;font-weight:800;}
+  .res{display:none;}
+  .grid3{display:flex;gap:8px;margin-top:8px;}
+  .tier{flex:1;min-width:0;border-radius:12px;padding:14px 8px;text-align:center;position:relative;}
+  .tier .tl{font-weight:800;font-size:0.88rem;margin-bottom:7px;}
+  .tier .tv{font-size:1.2rem;font-weight:900;line-height:1.15;}
+  .tier .tc{font-size:0.72rem;color:#6a7d72;margin-top:5px;}
+  .youhere{position:absolute;top:-10px;left:50%;transform:translateX(-50%);color:#fff;font-size:0.68rem;font-weight:800;padding:2px 8px;border-radius:8px;white-space:nowrap;}
+  .note{font-size:0.82rem;color:#3e4c45;background:#f1faf4;border:1px solid #d6f0e0;border-radius:11px;padding:12px 13px;line-height:1.7;}
+  .verdict{margin-top:14px;padding:13px 15px;border-radius:11px;font-size:0.86rem;line-height:1.68;}
+  .bar-wrap{display:flex;gap:10px;align-items:center;margin:9px 0;}
+  .bar-name{width:104px;flex:none;font-size:0.82rem;font-weight:700;color:#4b5b52;}
+  .bar-bg{flex:1;height:14px;background:#e4f2ea;border-radius:7px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:7px;}
+  .bar-val{width:66px;text-align:right;font-size:0.82rem;font-weight:800;}
+  .foot{text-align:center;font-size:0.75rem;color:#9bb3a6;margin-top:20px;}
+  .menubar{position:sticky;top:0;z-index:20;display:flex;gap:6px;background:#f2faf5ee;backdrop-filter:blur(6px);padding:10px 0;margin-bottom:6px;}
+  .menubar button{flex:1;padding:9px 4px;border:1.5px solid #c7e8d5;border-radius:99px;background:#fff;color:#2f8a57;font-size:0.8rem;font-weight:800;cursor:pointer;font-family:inherit;}
+  .menubar button.on{background:linear-gradient(135deg,#05d968,#03c75a);color:#fff;border-color:transparent;}
+  .gauge-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;}
+  .gauge{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .gauge-in{width:116px;height:116px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .gauge-sc{font-size:2.3rem;font-weight:900;line-height:1;}
+  .gauge-lb{font-size:0.74rem;color:#6a7d72;margin-top:3px;font-weight:700;}
+  .mini{flex:1;min-width:180px;}
+  .mini .mrow{display:flex;justify-content:space-between;font-size:0.82rem;margin:6px 0;color:#3e4c45;}
+  .mini .mrow b{font-weight:800;}
+  .step{display:flex;gap:12px;margin:0 0 10px;}
+  .step-n{flex:none;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#05d968,#03c75a);color:#fff;font-size:0.8rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .step-b{font-size:0.84rem;color:#3e4c45;line-height:1.6;}
+  .step-b b{color:#1f2a24;}
+  .copybox{position:relative;background:#f1faf4;border:1px solid #d6f0e0;border-radius:11px;padding:12px 13px;margin:8px 0;font-size:0.86rem;color:#1f2a24;line-height:1.6;white-space:pre-wrap;}
+  .copybtn{position:absolute;top:8px;right:8px;background:#03c75a;color:#fff;border:none;border-radius:8px;font-size:0.72rem;font-weight:800;padding:4px 10px;cursor:pointer;}
+  .ftip-wrap{position:relative;display:inline-block;}
+  .ftip-ico{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#c7e8d5;color:#037c3a;font-size:0.68rem;font-weight:800;cursor:pointer;margin-left:5px;vertical-align:middle;}
+  .ftip{display:none;position:absolute;z-index:30;top:22px;left:0;width:240px;background:#1f2a24;color:#fff;font-size:0.76rem;font-weight:500;line-height:1.55;padding:10px 12px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.2);}
+  .back-btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#5a7a68;font-size:0.82rem;font-weight:700;background:#fff;border:1.5px solid #cfe8d8;border-radius:99px;padding:7px 16px;}
+  .req-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+  @media print{ body{background:#fff;padding:0;} .menubar,.no-print,.btn,.ftip-ico{display:none !important;} .card{break-inside:avoid;box-shadow:none;} #result .card{display:block !important;} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+    <a href="index.html" class="back-btn" id="backBtn">← 홈으로 돌아가기</a>
+  </div>
+  <script>(function(){var r=document.referrer,b=document.getElementById('backBtn'),m=[['insta','insta-analyzer.html','← 인스타 분석기로'],['daangn','daangn-analyzer.html','← 당근 분석기로'],['munto','munto-analyzer.html','← 문토 분석기로'],['somoim','somoim-analyzer.html','← 소모임 분석기로'],['frip','frip-analyzer.html','← 프립 분석기로']];for(var i=0;i<m.length;i++){if(r.indexOf(m[i][0])>-1){b.href=m[i][1];b.textContent=m[i][2];break;}}})();</script>
+
+  <div class="hero">
+    <h1>📗 네이버 블로그 노출 분석기 <span class="ver">Ver 1.0.0</span></h1>
+    <p>내 글이 검색 상위에 뜰까? 네이버 공식 C-Rank·DIA+ 기준 진단</p>
+  </div>
+
+  <!-- 용어백과사전 배너 -->
+  <a href="glossary.html" style="display:flex; align-items:center; justify-content:space-between; margin:0 0 18px; background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%); border-radius:16px; padding:16px 22px; text-decoration:none; color:#fff; box-shadow:0 4px 20px rgba(26,26,46,0.18);">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div style="font-size:2rem; line-height:1;">📖</div>
+      <div>
+        <div style="font-size:0.79rem; font-weight:700; color:#a0a0c0; letter-spacing:0.08em; margin-bottom:3px;">SNS 알고리즘 용어백과</div>
+        <div style="font-size:1rem; font-weight:800; color:#fff;">C-Rank·DIA+·체류시간이 뭔지 모르겠다면?</div>
+        <div style="font-size:0.78rem; color:#8080b0; margin-top:2px;">분석기에 나오는 핵심 용어를 한 번에 정리했어요</div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(90deg,#05d968,#03c75a); border-radius:99px; padding:8px 16px; font-size:0.8rem; font-weight:800; color:#fff; flex-shrink:0; white-space:nowrap;">용어 보기 →</div>
+  </a>
+
+  <div class="card">
+    <h2>📝 내 블로그 · 글 정보</h2>
+    <div style="font-size:0.8rem;font-weight:800;color:#037c3a;margin:2px 0 8px;">🏛️ 블로그 (C-Rank · 출처 신뢰도)</div>
+    <label>블로그 주제 분야 <span class="req">* 필수</span></label>
+    <select id="b-topic">
+      <option value="">— 주력 분야를 선택하세요 —</option>
+      <option>맛집·요리</option><option>여행</option><option>뷰티·패션</option><option>IT·테크</option>
+      <option>육아·교육</option><option>건강·운동</option><option>재테크·경제</option><option>인테리어·리빙</option>
+      <option>문화·리뷰</option><option>일상·에세이</option><option value="_default">기타·복합</option>
+    </select>
+    <div class="row">
+      <div><label>주제 집중도 <span class="req">* 필수</span> <span class="hint">★ C-Rank 핵심</span></label><input type="number" id="b-focus" placeholder="주력 분야 글 비율 % (예: 70)" min="0" max="100"/></div>
+      <div><label>블로그 운영 기간 (개월)</label><input type="number" id="b-age" placeholder="예: 18" min="0"/></div>
+    </div>
+    <div class="row">
+      <div><label>총 발행 글 수</label><input type="number" id="b-posts" placeholder="예: 320" min="0"/></div>
+      <div><label>주 평균 발행 수 <span class="hint">꾸준함</span></label><input type="number" id="b-freq" placeholder="예: 3" min="0"/></div>
+    </div>
+    <div><label>일 평균 방문자 수</label><input type="number" id="b-visitors" placeholder="예: 500" min="0"/></div>
+
+    <div style="font-size:0.8rem;font-weight:800;color:#037c3a;margin:18px 0 8px;">💎 이 글 (DIA+ · 문서 품질)</div>
+    <label>글 제목 <span class="hint">검색 키워드 포함 여부</span></label>
+    <input type="text" id="b-title" placeholder="예: 연남동 파스타 맛집 내돈내산 후기 (주차 정보)"/>
+    <div class="row">
+      <div><label>본문 글자 수 <span class="req">* 필수</span> <span class="hint">★ 가독성</span></label><input type="number" id="b-chars" placeholder="예: 1800" min="0"/></div>
+      <div><label>이미지 수</label><input type="number" id="b-images" placeholder="예: 8" min="0"/></div>
+    </div>
+    <label>직접 경험 정보 <span class="req">* 필수</span> <span class="hint">★ DIA+ 최상위</span></label>
+    <select id="b-exp">
+      <option value="">— 선택하세요 —</option>
+      <option value="2">예 — 직접 촬영·내돈내산·실사용 후기</option>
+      <option value="1">일부 — 경험 + 정보 요약 혼합</option>
+      <option value="0">아니오 — 타 정보 요약·정리 위주</option>
+    </select>
+    <div class="row">
+      <div><label>평균 체류시간 (초) <span class="hint">네이버 애널리틱스</span></label><input type="number" id="b-dwell" placeholder="예: 95" min="0"/></div>
+      <div><label>공감+댓글 수 (글당)</label><input type="number" id="b-react" placeholder="예: 12" min="0"/></div>
+    </div>
+    <button class="btn" onclick="analyzeBlog()">노출 진단 받기 →</button>
+  </div>
+
+  <div id="result" class="res">
+    <div class="menubar">
+      <button class="on" data-f="all" onclick="blogMenu('all',this)">전체</button>
+      <button data-f="종합" onclick="blogMenu('종합',this)">종합</button>
+      <button data-f="데이터" onclick="blogMenu('데이터',this)">진단</button>
+      <button data-f="전략" onclick="blogMenu('전략',this)">전략</button>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;" class="no-print">
+      <span style="font-size:0.88rem;font-weight:800;color:#037c3a;">📄 분석 결과 저장</span>
+      <div style="display:flex;gap:8px;">
+        <button onclick="window.print()" style="padding:8px 18px;border-radius:99px;border:1.5px solid #03c75a;background:#fff;color:#037c3a;font-size:0.82rem;font-weight:800;cursor:pointer;">🖨️ PDF 저장</button>
+        <button onclick="blogShare()" style="padding:8px 18px;border-radius:99px;border:none;background:linear-gradient(90deg,#05d968,#03c75a);color:#fff;font-size:0.82rem;font-weight:800;cursor:pointer;">🔗 링크 공유</button>
+      </div>
+    </div>
+
+    <div class="card" data-grp="종합">
+      <h2>🏆 노출 종합 점수<span class="ftip-wrap"><span class="ftip-ico" onclick="blogTip(this)">ⓘ</span><span class="ftip">C-Rank(출처 신뢰도 45)+DIA+(문서 품질 55)를 합산한 0~100 점수예요. 네이버 공식 프레임워크 기반 추정이에요.</span></span></h2>
+      <div class="gauge-wrap">
+        <div class="gauge" id="b-gauge"><div class="gauge-in"><div class="gauge-sc" id="b-score">0</div><div class="gauge-lb" id="b-grade">—</div></div></div>
+        <div class="mini" id="b-score-mini"></div>
+      </div>
+    </div>
+
+    <div class="card" data-grp="종합">
+      <h2>🤖 AI 종합 진단</h2>
+      <div class="note" id="b-ai" style="line-height:1.8;"></div>
+    </div>
+
+    <div class="card" data-grp="데이터">
+      <h2>🏛️ C-Rank 진단 <span style="font-size:0.76rem;font-weight:400;color:#8aa396;">출처 신뢰도·주제 전문성</span></h2>
+      <div class="note" id="b-crank-intro"></div>
+      <div class="verdict" id="b-crank" style="background:#eefaf2;border:1px solid #c7e8d5;color:#1f6b42;"></div>
+    </div>
+
+    <div class="card" data-grp="데이터">
+      <h2>💎 DIA+ 진단 <span style="font-size:0.76rem;font-weight:400;color:#8aa396;">개별 문서 품질</span></h2>
+      <div class="grid3" id="b-dia-tiers"></div>
+      <div class="verdict" id="b-dia" style="background:#eefaf2;border:1px solid #c7e8d5;color:#1f6b42;margin-top:12px;"></div>
+    </div>
+
+    <div class="card" data-grp="데이터">
+      <h2>⚠️ 감점 요인 체크</h2>
+      <div id="b-penalty"></div>
+    </div>
+
+    <div class="card" data-grp="데이터">
+      <h2>🎚️ 노출을 가르는 요인 <span style="font-size:0.76rem;font-weight:400;color:#8aa396;">네이버 공식 기준</span></h2>
+      <div id="b-levers"></div>
+      <div class="note" style="margin-top:12px;">💡 네이버 블로그 노출은 <b>C-Rank(블로그가 그 주제의 믿을 만한 출처인가)</b>와 <b>DIA+(이 글이 검색 의도를 완결하는가)</b> 두 축이에요. DIA+는 <b>①직접 경험 ②검색의도 완결 ③체류시간·반응 ④가독성</b>을 보고, <b>C-Rank 낮아도 DIA+ 높으면</b> 신규 글이 상위에 뜰 수 있어요. ※ 세부 가중치는 네이버 비공개 — 공식 프레임워크 기반 추정이에요.</div>
+    </div>
+
+    <div class="card" data-grp="전략">
+      <h2>🗺️ 상위노출 실행 로드맵</h2>
+      <div id="b-roadmap"></div>
+    </div>
+
+    <div class="card" data-grp="전략">
+      <h2>🚀 상위 노출 액션</h2>
+      <div id="b-actions"></div>
+    </div>
+
+    <div class="card" data-grp="전략">
+      <h2>✏️ 콘텐츠 도우미 <span style="font-size:0.76rem;font-weight:400;color:#8aa396;">제목 패턴</span></h2>
+      <div id="b-content"></div>
+    </div>
+
+    <div class="card" data-grp="전략">
+      <h2>📌 네이버 블로그 알고리즘 가이드 <span style="font-size:0.76rem;font-weight:400;color:#8aa396;">고정</span></h2>
+      <div class="note" style="line-height:1.85;">
+        🎯 <b>노출 2축</b> (네이버 공식 C-Rank · DIA+)<br>
+        🏛️ <b>C-Rank</b> — 블로그=출처 신뢰도. <b>주제 집중도</b>(한 분야 깊이 파기)·누적 발행·꾸준함이 핵심. 잡블로그보다 전문 블로그가 유리.<br>
+        💎 <b>DIA+</b> — 개별 글 품질. ①<b>직접 경험</b>(직접 촬영·내돈내산) ②<b>검색 의도 완결</b>(독자가 다른 글 안 찾고 만족) ③<b>체류시간·공감·댓글</b> ④<b>가독성</b>(소제목·이미지·적정 길이).<br>
+        💡 <b>C-Rank 낮아도</b> DIA+ 높으면 신규 글 상위노출 가능 — 신생 블로그의 기회.<br>
+        🚫 <b>감점</b> — 키워드 어뷰징·AI 자동생성 보일러플레이트·유사문서(복붙)·5초 뒤로가기(체류 짧음).
+      </div>
+    </div>
+
+    <div class="card" data-grp="전략">
+      <h2>📌 내 기록 추적 <span style="font-size:0.76rem;font-weight:400;color:#8aa396;">이 브라우저에 저장</span></h2>
+      <div id="b-history"></div>
+    </div>
+  </div>
+
+  <div class="foot">※ 2026.11 네이버 공식 C-Rank·DIA+ 프레임워크 기반 · 세부 가중치는 네이버 비공개로 추정치 포함<br>By Longchiri</div>
+  <div style="text-align:center;margin-top:14px;">
+    <a href="https://t.me/hong_bottest" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:#03c75a;color:#fff;text-decoration:none;font-size:0.82rem;font-weight:800;padding:9px 18px;border-radius:99px;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      문의 @hong_bottest
+    </a>
+  </div>
+</div>
+
+<script>
+// ── 필수 입력 팝업 ──
+function showReqPopup(missing, color){
+  let o=document.getElementById('reqOverlay');
+  if(!o){
+    o=document.createElement('div'); o.id='reqOverlay'; o.className='req-overlay';
+    o.innerHTML='<div style="background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px 22px;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,0.25);"><div style="font-size:2rem;">📝</div><div style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin:6px 0 8px;">필수 항목을 입력해주세요</div><div id="reqList" style="font-size:0.88rem;color:#555;line-height:1.8;margin-bottom:18px;"></div><button id="reqBtn" style="width:100%;padding:12px;border:none;border-radius:10px;color:#fff;font-size:0.95rem;font-weight:800;cursor:pointer;">확인</button></div>';
+    document.body.appendChild(o);
+    o.addEventListener('click',e=>{if(e.target===o)o.style.display='none';});
+    document.getElementById('reqBtn').addEventListener('click',()=>o.style.display='none');
+  }
+  document.getElementById('reqList').innerHTML=missing.map(m=>'• '+m).join('<br>');
+  document.getElementById('reqBtn').style.background=color||'#333';
+  o.style.display='flex';
+}
+
+function analyzeBlog(){
+  const _v = id => { const el=document.getElementById(id); return el && el.value.trim(); };
+  const _miss=[];
+  if(!_v('b-topic')) _miss.push('블로그 주제 분야');
+  if(!_v('b-focus')) _miss.push('주제 집중도(%)');
+  if(!_v('b-chars')) _miss.push('본문 글자 수');
+  if(!document.getElementById('b-exp').value) _miss.push('직접 경험 정보');
+  if(_miss.length){ showReqPopup(_miss, '#03c75a'); return; }
+
+  const topic = document.getElementById('b-topic').value;
+  const topicName = topic==='_default' ? '기타·복합' : topic;
+  const focus = parseInt(document.getElementById('b-focus').value)||0;
+  const age = parseInt(document.getElementById('b-age').value)||0;
+  const posts = parseInt(document.getElementById('b-posts').value)||0;
+  const freq = parseFloat(document.getElementById('b-freq').value)||0;
+  const visitors = parseInt(document.getElementById('b-visitors').value)||0;
+  const title = (document.getElementById('b-title').value||'').trim();
+  const chars = parseInt(document.getElementById('b-chars').value)||0;
+  const images = parseInt(document.getElementById('b-images').value)||0;
+  const exp = parseInt(document.getElementById('b-exp').value)||0;
+  const dwell = parseInt(document.getElementById('b-dwell').value)||0;
+  const react = parseInt(document.getElementById('b-react').value)||0;
+
+  const colors=['#16a34a','#d97706','#dc2626'];
+  const bgs=['#f0fdf4','#fffbeb','#fef2f2'];
+  const names=['상위','중간','하위'];
+
+  // ── C-Rank 점수 (0~45): 주제 집중도 25 + 꾸준함/누적 12 + 방문 8 ──
+  const focusScore = focus>=70?25 : focus>=50?18 : focus>=30?11 : focus>0?5:0;
+  const consistScore = (freq>=3?7:freq>=1?5:freq>0?2:0) + (posts>=300?5:posts>=100?3:posts>0?1:0);
+  const visitScore = visitors>=1000?8 : visitors>=300?6 : visitors>=50?3 : visitors>0?1:0;
+  const crankTotal = focusScore + consistScore + visitScore; // /45
+
+  // ── DIA+ 점수 (0~55): 직접경험 22 + 검색의도/제목 10 + 체류·반응 13 + 가독성 10 ──
+  const expScore = exp===2?22 : exp===1?12 : 3;
+  const titleHasKw = title.length>=8 && /[가-힣]/.test(title);
+  const intentScore = titleHasKw ? 10 : title.length>0 ? 5 : 2;
+  const dwellScore = (dwell>=90?8:dwell>=45?5:dwell>0?2:0) + (react>=10?5:react>=3?3:react>0?1:0);
+  const readScore = (chars>=1500 && chars<=3000?6 : chars>=800?4 : chars>0?2:0) + (images>=5?4:images>=2?2:images>0?1:0);
+  const diaTotal = expScore + intentScore + dwellScore + readScore; // /55
+
+  const score = Math.min(100, Math.round(crankTotal + diaTotal));
+  const grade = score>=80?'최상위권':score>=60?'상위권':score>=40?'중위권':score>=20?'성장 필요':'출발선';
+  const gColor = score>=60?'#16a34a':score>=40?'#d97706':'#dc2626';
+
+  const gEl=document.getElementById('b-gauge');
+  gEl.style.background='conic-gradient('+gColor+' '+(score*3.6)+'deg, #e4f2ea 0deg)';
+  document.getElementById('b-score').textContent=score;
+  document.getElementById('b-score').style.color=gColor;
+  document.getElementById('b-grade').textContent=grade;
+  document.getElementById('b-score-mini').innerHTML=
+    '<div class="mrow"><span>🏛️ C-Rank (출처)</span><b>'+crankTotal+' / 45</b></div>'+
+    '<div class="mrow"><span>💎 DIA+ (문서)</span><b>'+diaTotal+' / 55</b></div>'+
+    '<div class="mrow" style="border-top:1px solid #e4f2ea;padding-top:6px;"><span>종합</span><b style="color:'+gColor+';">'+score+' / 100</b></div>';
+
+  // ── AI 진단 ──
+  let ai = '<b>'+topicName+'</b> 블로그의 노출 종합 점수는 <b style="color:'+gColor+';">'+score+'점('+grade+')</b>이에요. ';
+  if(crankTotal>=30) ai+='출처 신뢰도(C-Rank)가 탄탄해요 — 주제 집중도가 높아 그 분야 글이 꾸준히 유리하게 출발해요. ';
+  else if(focus<50) ai+='<b>주제 집중도가 낮아요</b>(C-Rank 약점) — 여러 주제를 섞기보다 한 분야를 깊게 파면 블로그 전체 노출이 올라가요. ';
+  else ai+='C-Rank는 쌓이는 중 — 꾸준한 발행으로 출처 신뢰도를 더 올리세요. ';
+  if(exp===2) ai+='이 글은 <b>직접 경험</b> 정보라 DIA+가 강해요(최상위 평가 요소). ';
+  else ai+='DIA+ 최상위 요소인 <b>직접 경험(직접 촬영·내돈내산)</b>이 부족해요 — 정보 요약보다 "내가 해본 것"을 넣으면 신규 글도 상위 기회를 잡아요. ';
+  if(dwell>0 && dwell<45) ai+='체류시간이 짧아요 — 첫 문단 훅·소제목·이미지로 "끝까지 읽게" 만드세요.';
+  else ai+='검색 의도를 한 글에 완결시키는 게 핵심이에요.';
+  document.getElementById('b-ai').innerHTML=ai;
+
+  // ── C-Rank 진단 ──
+  document.getElementById('b-crank-intro').innerHTML='🏛️ C-Rank는 <b>"이 블로그가 '+topicName+' 주제의 믿을 만한 출처인가"</b>를 봐요. 주제 집중도 <b>'+focus+'%</b>·운영 <b>'+age+'개월</b>·주 <b>'+freq+'회</b> 발행 기준이에요.';
+  let crank;
+  if(focus>=70) crank='✅ <b>주제 집중도 상위</b>('+focus+'%) — '+topicName+' 전문 블로그로 인식돼요. C-Rank가 받쳐줘서 새 글도 출발이 유리해요. 지금 집중도를 유지하세요.';
+  else if(focus>=40) crank='👍 집중도 <b>중간</b>('+focus+'%) — 나쁘지 않지만, 주력 분야 비중을 <b>70%+</b>로 올리면 C-Rank가 확실히 올라가요. 곁가지 주제는 줄이세요.';
+  else crank='⚠️ 집중도 <b>낮음</b>('+focus+'%) — 잡블로그로 보여 C-Rank 약점이에요. <b>한 분야를 정해 깊게</b> 파는 게 블로그 전체 노출을 끌어올리는 1순위예요.';
+  document.getElementById('b-crank').innerHTML=crank;
+
+  // ── DIA+ 티어 카드 (경험·의도·체류·가독성) ──
+  const expIdx = exp===2?0:exp===1?1:2;
+  const dwellIdx = dwell>=90?0:dwell>=45?1:2;
+  const readIdx = (chars>=1500&&chars<=3000&&images>=5)?0 : (chars>=800)?1:2;
+  const cards=[
+    {l:'직접 경험',idx:expIdx,v:['직접 경험✓','일부','요약 위주'][expIdx]},
+    {l:'체류·반응',idx:dwellIdx,v:['높음','보통','낮음'][dwellIdx]},
+    {l:'가독성',idx:readIdx,v:['우수','보통','부족'][readIdx]},
+  ];
+  document.getElementById('b-dia-tiers').innerHTML=cards.map(c=>
+    '<div class="tier" style="background:'+bgs[c.idx]+';border:1px solid #eee;">'+
+    '<div class="tl" style="color:'+colors[c.idx]+';">'+c.l+'</div>'+
+    '<div class="tv" style="color:'+colors[c.idx]+';">'+c.v+'</div></div>').join('');
+  let dia;
+  if(diaTotal>=40) dia='💎 이 글의 DIA+ 품질이 <b>높아요</b> — 직접 경험·검색의도·체류·가독성이 고루 좋아서, C-Rank와 무관하게 상위노출 기회가 커요.';
+  else { const w=[]; if(exp<2)w.push('직접 경험(촬영·내돈내산)'); if(dwell<45&&dwell>0)w.push('체류시간'); if(chars<1500||images<5)w.push('가독성(길이·이미지)'); if(!titleHasKw)w.push('제목 키워드');
+    dia='💎 DIA+ 보강 필요 — <b>'+(w.join('·')||'전반')+'</b>을 올리면 신규 글도 상위에 뜰 수 있어요. 특히 <b>직접 경험</b>이 DIA+ 최상위 요소예요.'; }
+  document.getElementById('b-dia').innerHTML=dia;
+
+  // ── 감점 요인 ──
+  const pens=[];
+  if(!titleHasKw && title.length>0) pens.push('제목에 검색 키워드가 약해요 — 사람들이 검색할 말을 제목에 넣으세요.');
+  if(chars>0 && chars<800) pens.push('본문이 너무 짧아요('+chars+'자) — 검색의도 완결엔 1,500~2,500자가 유리해요.');
+  if(images>0 && images<2) pens.push('이미지가 적어요 — 직접 찍은 사진 5~8장이 체류·가독성에 좋아요.');
+  if(exp===0) pens.push('정보 요약 위주 — 복붙·유사문서로 판독되면 감점. "직접 해본 것"을 넣으세요.');
+  if(dwell>0 && dwell<30) pens.push('체류 30초 미만 — 5초 뒤로가기 신호는 감점. 첫 문단 훅을 강하게.');
+  document.getElementById('b-penalty').innerHTML = pens.length
+    ? pens.map(p=>'<div class="note" style="margin-bottom:8px;background:#fff5f5;border-color:#fecaca;color:#991b1b;">🚫 '+p+'</div>').join('')
+    : '<div class="note" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;">✅ 뚜렷한 감점 요인은 없어요. 키워드 어뷰징·AI 자동생성 문구만 피하면 OK.</div>';
+
+  // ── 레버 ──
+  const levers=[
+    {n:'직접 경험',   v:88, c:'#03c75a', d:'DIA+ 최상위 · 직접 촬영·내돈내산'},
+    {n:'검색의도 완결',v:80, c:'#16a34a', d:'한 글에서 답 끝내기'},
+    {n:'주제 집중도',  v:75, c:'#22c55e', d:'C-Rank 핵심 · 한 분야 깊이'},
+    {n:'체류·반응',   v:70, c:'#4ade80', d:'정독 30초~3분 · 공감·댓글'},
+    {n:'가독성',      v:55, c:'#86efac', d:'소제목·이미지·1,500~2,500자'},
+    {n:'꾸준한 발행',  v:45, c:'#bbf7d0', d:'C-Rank 누적'},
+  ];
+  document.getElementById('b-levers').innerHTML=levers.map(l=>
+    '<div class="bar-wrap"><span class="bar-name">'+l.n+'</span>'+
+    '<span class="bar-bg"><span class="bar-fill" style="width:'+l.v+'%;background:'+l.c+';"></span></span>'+
+    '<span class="bar-val" style="color:'+l.c+';">'+l.v+'</span></div>'+
+    '<div style="font-size:0.74rem;color:#8aa396;margin:-4px 0 8px 114px;">'+l.d+'</div>').join('');
+
+  // ── 로드맵 ──
+  const steps=[];
+  if(exp<2) steps.push('<b>1단계 · 직접 경험 넣기</b> — 다음 글은 직접 촬영 사진 + "내가 해보니" 장단점·팁·주의사항을 넣으세요. DIA+ 최상위 요소라 신규 블로그도 상위 진입 가능.');
+  else steps.push('<b>1단계 · 경험 강점 유지</b> — 직접 경험 글을 계속 쓰면서 검색의도 완결도를 높이세요.');
+  if(focus<70) steps.push('<b>2단계 · 주제 좁히기</b> — '+topicName+' 주력 비중을 70%+로. 곁가지 주제는 줄여 C-Rank 집중도를 올리세요.');
+  else steps.push('<b>2단계 · 전문성 심화</b> — 주력 분야 안에서 세부 키워드까지 커버해 출처 권위를 넓히세요.');
+  steps.push('<b>3단계 · 검색의도 완결</b> — 제목 키워드가 궁금한 독자가 "다른 글 안 찾게" 가격·위치·팁·후기를 한 글에 다 담으세요.');
+  steps.push('<b>4단계 · 체류·가독성</b> — 첫 문단 훅 + 소제목 + 직접 찍은 이미지 5~8장 + 1,500~2,500자로 끝까지 읽게.');
+  steps.push('<b>매주 · 꾸준함</b> — 주 '+(freq>=3?freq:'3')+'회 페이스로 같은 주제를 쌓아 C-Rank를 누적하세요.');
+  document.getElementById('b-roadmap').innerHTML=steps.map((s,i)=>'<div class="step"><div class="step-n">'+(i+1)+'</div><div class="step-b">'+s+'</div></div>').join('');
+
+  // ── 액션 ──
+  const acts=[];
+  acts.push('⭐ <b>직접 경험이 1순위</b> — DIA+가 "인터넷 요약"보다 "직접 해본 것"을 가장 높게 평가해요. 사진·영수증·실사용 느낌을 넣으세요.');
+  acts.push('🔍 <b>검색의도 완결</b> — 독자가 내 글 하나로 만족하고 창을 닫으면 최고 평가. 핵심 답(가격·위치·팁·주의사항)을 빠짐없이.');
+  if(focus<70) acts.push('🏛️ <b>주제 집중</b> — 잡블로그는 C-Rank 불리. 한 분야를 정해 깊게 파세요.');
+  acts.push('📖 <b>가독성·체류</b> — 소제목으로 끊고, 직접 찍은 이미지 5~8장, 1,500~2,500자. 첫 문단에서 "이 글에 답이 있다"를 보여주세요.');
+  acts.push('🚫 <b>피하세요</b> — 키워드 부자연스러운 남발(어뷰징), AI 자동생성 뻔한 서론, 복붙·유사문서. 체류 짧으면 역효과.');
+  document.getElementById('b-actions').innerHTML=acts.map(a=>'<div class="note" style="margin-bottom:9px;">'+a+'</div>').join('');
+
+  // ── 콘텐츠 도우미 (제목) ──
+  const kw = title || (topicName+' 키워드');
+  const titleSamples=[
+    '['+topicName+'] OO 내돈내산 후기 (가격·위치·주차 정보)',
+    'OO 직접 가봤더니 — 장단점·꿀팁 총정리',
+    'OO 추천 TOP5 실사용 비교 (2026 최신)'
+  ];
+  let ch='<div style="font-size:0.8rem;font-weight:800;color:#037c3a;margin:2px 0 6px;">📌 검색의도·경험을 담은 제목 패턴</div>';
+  ch+=titleSamples.map(t=>'<div class="copybox">'+t.replace(/</g,'&lt;')+'<button class="copybtn" onclick="blogCopy(this)">복사</button></div>').join('');
+  ch+='<div class="note" style="margin-top:8px;">💡 제목엔 <b>사람들이 실제 검색하는 말</b> + <b>"내돈내산·후기·총정리"</b> 같은 경험·완결 신호를 넣으면 클릭·검색의도 둘 다 잡아요.</div>';
+  document.getElementById('b-content').innerHTML=ch;
+
+  blogSaveHistory({t:Date.now(), topic:topicName, score:score, grade:grade});
+  blogRenderHistory();
+
+  document.getElementById('result').style.display='block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+function blogMenu(f, btn){
+  document.querySelectorAll('.menubar button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#result .card').forEach(c=>{ c.style.display=(f==='all'||c.getAttribute('data-grp')===f)?'':'none'; });
+}
+function blogCopy(btn){ const box=btn.parentElement; const txt=box.childNodes[0].textContent; navigator.clipboard&&navigator.clipboard.writeText(txt); const o=btn.textContent; btn.textContent='복사됨!'; setTimeout(()=>btn.textContent=o,1200); }
+function blogShare(){ const url=location.href; if(navigator.share){navigator.share({title:'네이버 블로그 노출 분석기',url:url}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(url); alert('링크가 복사됐어요!');} else prompt('이 링크를 복사하세요', url); }
+function blogTip(el){ const tip=el.nextElementSibling; document.querySelectorAll('.ftip').forEach(t=>{if(t!==tip)t.style.display='none';}); if(tip)tip.style.display=tip.style.display==='block'?'none':'block'; }
+document.addEventListener('click',e=>{ if(!e.target.closest('.ftip-wrap')) document.querySelectorAll('.ftip').forEach(t=>t.style.display='none'); });
+function blogSaveHistory(rec){ try{ const k='blog_history'; const arr=JSON.parse(localStorage.getItem(k)||'[]'); arr.unshift(rec); localStorage.setItem(k, JSON.stringify(arr.slice(0,10))); }catch(e){} }
+function blogRenderHistory(){ let arr=[]; try{ arr=JSON.parse(localStorage.getItem('blog_history')||'[]'); }catch(e){} const el=document.getElementById('b-history'); if(!el)return;
+  if(!arr.length){ el.innerHTML='<div class="note">아직 기록이 없어요. 진단할 때마다 이 브라우저에 종합점수가 저장돼 추이를 볼 수 있어요.</div>'; return; }
+  el.innerHTML=arr.map(r=>{ const d=new Date(r.t); const ds=(d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); const c=r.score>=60?'#16a34a':r.score>=40?'#d97706':'#dc2626';
+    return '<div class="mrow" style="padding:7px 0;border-top:1px solid #e4f2ea;"><span>'+ds+' · '+r.topic+'</span><b style="color:'+c+';">'+r.score+'점 '+r.grade+'</b></div>'; }).join('');
+}
+</script>
+</body>
+</html>
