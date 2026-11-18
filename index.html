@@ -223,6 +223,14 @@
       letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px;
       text-align:center;
     }
+    .quote-panel { background:linear-gradient(135deg,#fff 0%,#fff7f4 100%); border-color:#ffd9cc; }
+    .quote-box { text-align:center; padding:8px 6px 4px; }
+    .quote-text {
+      font-size:1.08rem; font-weight:700; line-height:1.75; color:#2a2a2a;
+      word-break:keep-all; margin:0 0 10px; letter-spacing:-0.01em;
+    }
+    .quote-author { font-size:0.84rem; font-weight:600; color:#ff5a2c; margin:0; }
+    @media(max-width:600px){ .quote-text{ font-size:0.98rem; } }
     .log-item {
       display:grid; grid-template-columns:36px auto 1fr;
       align-items:center; gap:8px;
@@ -595,28 +603,12 @@
 
   </div>
 
-  <!-- 업데이트 예정 -->
-  <div class="log-panel">
-    <div class="log-label">📋 업데이트 예정</div>
-    <div class="log-row">
-      <span class="log-date">데이터</span>
-      <span class="log-text"><span class="badge b-daangn">당근</span>전국 fresh 크롤 완료 시 카테고리별 티어 재보정</span>
-    </div>
-    <div class="log-row">
-      <span class="log-date">데이터</span>
-      <span class="log-text"><span class="badge b-frip">프립</span>호스트 상세 전수 디테일 쌓이면 호스트 파워 티어 정밀화</span>
-    </div>
-    <div class="log-row">
-      <span class="log-date">데이터</span>
-      <span class="log-text"><span class="badge b-blog">블로그</span>실측 노출 데이터 확보 시 C-Rank·DIA+ 추정치 보정</span>
-    </div>
-    <div class="log-row">
-      <span class="log-date">매일</span>
-      <span class="log-text"><span class="badge b-all">전체</span>주기적 알고리즘 변화 · 신규 이슈 모니터링</span>
-    </div>
-    <div class="log-row">
-      <span class="log-date">매주 월</span>
-      <span class="log-text"><span class="badge b-all">전체</span>매주 월요일 10:00 알고리즘 정기 점검 — AlgoChiri 자동 실행</span>
+  <!-- 오늘의 명언 (매일 1개 자동 교체) -->
+  <div class="log-panel quote-panel">
+    <div class="log-label">💡 오늘의 명언</div>
+    <div class="quote-box">
+      <p class="quote-text" id="quoteText">오늘도 한 걸음.</p>
+      <p class="quote-author" id="quoteAuthor"></p>
     </div>
   </div>
 
@@ -625,7 +617,7 @@
 
 <footer>
   <p>by <b style="color:#202020;">long</b><b style="color:#ff4628;">chiri</b></p>
-  <a class="tg-btn" href="https://t.me/hong_bottest" target="_blank">
+  <a class="tg-btn" href="https://t.me/h_bottest" target="_blank">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
     </svg>
@@ -720,6 +712,27 @@
     if(top.length===0) html+='<div style="padding:16px;color:#888;">선택 조합에 딱 맞는 추천이 약해요. 다시 골라보세요.</div>';
     const r=document.getElementById('finderResult'); r.innerHTML=html; r.scrollIntoView({behavior:'smooth',block:'nearest'});
   };
+})();
+
+/* ── 오늘의 명언: 매일 1개 자동 교체 (quotes.json) ── */
+(function(){
+  function dayOfYear(){
+    var n=new Date();
+    var start=new Date(n.getFullYear(),0,0);
+    return Math.floor((n-start)/86400000);
+  }
+  function show(q){
+    var t=document.getElementById('quoteText'), a=document.getElementById('quoteAuthor');
+    if(t) t.textContent='“'+q.q+'”';
+    if(a) a.textContent=q.a ? '— '+q.a : '';
+  }
+  fetch('quotes.json',{cache:'no-cache'})
+    .then(function(r){ return r.json(); })
+    .then(function(list){
+      if(!Array.isArray(list)||!list.length) throw new Error('empty');
+      show(list[dayOfYear()%list.length]);
+    })
+    .catch(function(){ show({q:'꾸준함이 재능을 이긴다. 오늘 한 걸음이 내일의 노출을 만든다.',a:'Longchiri'}); });
 })();
 </script>
 </body>
