@@ -1740,13 +1740,8 @@ function analyze() {
   if (postVariety === 'diverse') community += 10; else if (postVariety === 'some') community += 6;
   community = Math.min(100, Math.max(0, community));
 
-  // 종합 점수 — 실측 1순위 '최신성(최근 활동)'을 최상위 단독 가중으로 반영(스코프내 상관 0.34, 하위권 80%가 7일+ 미활동)
-  const recHas = lastActivityDays >= 0;
-  let rec = 0;
-  if (recHas) rec = lastActivityDays <= 5 ? 100 : lastActivityDays <= 14 ? 80 : lastActivityDays <= 30 ? 55 : lastActivityDays <= 60 ? 30 : lastActivityDays <= 120 ? 12 : 5;
-  const total = recHas
-    ? Math.round(rec * 0.30 + seo * 0.18 + act * 0.22 + trust * 0.15 + exp * 0.08 + cvr * 0.05 + grow * 0.02)
-    : Math.round(seo * 0.25 + act * 0.25 + trust * 0.20 + exp * 0.15 + cvr * 0.10 + grow * 0.05);
+  // 종합 점수
+  const total = Math.round(seo * 0.25 + act * 0.25 + trust * 0.20 + exp * 0.15 + cvr * 0.10 + grow * 0.05);
 
   // ── 등급 ──
   let grade, label;

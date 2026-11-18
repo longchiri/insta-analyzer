@@ -863,16 +863,16 @@
       <div id="m-boost-body"></div>
     </div>
 
-    <!-- 📊 실데이터 상위노출 가이드 (2026.06 실측 전국 6,498개) -->
+    <!-- 📊 실데이터 상위노출 가이드 (2026.11 실측 전국 1,793개) -->
     <div class="result-card moim-res" data-part="data">
-      <h2>📊 실데이터 상위노출 가이드 <span style="font-size:.72rem;font-weight:400;color:#647488;">2026.06 실측 · 전국 6,498개</span></h2>
+      <h2>📊 실데이터 상위노출 가이드 <span style="font-size:.72rem;font-weight:400;color:#647488;">2026.11 실측 · 전국 1,793개</span></h2>
 
       <div style="background:#f0fdf4;border:1.5px solid #22c55e55;border-radius:14px;padding:16px;margin-bottom:14px;">
         <div style="font-weight:800;color:#16a34a;font-size:.95rem;margin-bottom:8px;">🔑 노출의 관문 = 업데이트 최신성</div>
         <div style="font-size:.84rem;color:#444;line-height:1.75;">
-          실측 결과 소모임 노출은 <strong>"1일 이내 업데이트"가 이진 관문</strong>이에요.
-          <br>· 노출 피드의 모임은 <strong>전원 1일 이내 업데이트</strong> · 미업데이트 모임은 <strong>81%가 피드에서 탈락</strong>(노출 0)
-          <br>👉 <strong>매일 게시글·정모 등으로 업데이트하는 게 노출의 80%.</strong> 안 하면 순위 경쟁 이전에 피드에서 빠져요.
+          실측 결과 소모임 상위 노출은 <strong>대부분 최근 활동 모임</strong>이에요(최근활동일 중앙값 <strong>1일</strong>).
+          <br>· 노출 목록의 <strong>57%가 1일 이내</strong> · <strong>71%가 3일 이내</strong> 업데이트 (7일+ 방치는 18%뿐)
+          <br>👉 <strong>최신성이 노출의 관문</strong> — 매일 게시글·정모로 업데이트해 목록에 살아있게 하세요. (목록 내 순위 상관은 0.228로, 관문 통과 후엔 다른 요인도 작용)
         </div>
       </div>
 
@@ -1204,7 +1204,7 @@ function analyzeMoim() {
     rec = _d <= 1 ? 100 : _d <= 3 ? 72 : _d <= 7 ? 45 : _d <= 14 ? 25 : _d <= 30 ? 12 : 5;
   }
   const total = recHas
-    ? Math.round(rec*0.33 + seo*0.20 + act*0.17 + trust*0.15 + cvr*0.10 + ltvScore*0.05)
+    ? Math.round(rec*0.22 + seo*0.24 + act*0.22 + trust*0.17 + cvr*0.10 + ltvScore*0.05)
     : Math.round(seo*0.25 + act*0.25 + trust*0.20 + cvr*0.15 + ltvScore*0.10 + grow*0.05);
   const { g, l } = grade(total, 'moim');
 
@@ -2238,15 +2238,15 @@ function renderGhostMoim(posts, freq, flash, members, category) {
     action = '지금 활동을 유지하고 번개모임을 늘리면 상단노출 경쟁에서 유리해요.';
   }
 
-  // ── 노출 관문: 최근 업데이트 (실측 6,498개 — 1일 이내 업데이트만 노출 피드, 미업데이트 81% 제외) ──
+  // ── 노출 관문: 최근 업데이트 (실측 1,793개 — 상위 노출의 57% 1일내·71% 3일내, 목록내 상관 0.228) ──
   const luv = (document.getElementById('m-last-update') || {}).value || '';
   let gate = '';
   if (luv) {
     const days = Math.max(0, Math.round((new Date().setHours(0,0,0,0) - new Date(luv).setHours(0,0,0,0)) / 86400000));
     if (days <= 1) {
-      gate = '<div style="margin-top:10px;padding:11px 13px;background:#f0fdf4;border-radius:10px;font-size:0.82rem;color:#166534;line-height:1.72;">✅ <strong>노출 관문 통과</strong> — ' + (days === 0 ? '오늘' : days + '일 전') + ' 업데이트. 소모임은 <strong>1일 이내 업데이트한 모임만 노출 피드</strong>에 떠요. 이 페이스 유지!</div>';
+      gate = '<div style="margin-top:10px;padding:11px 13px;background:#f0fdf4;border-radius:10px;font-size:0.82rem;color:#166534;line-height:1.72;">✅ <strong>노출 관문 통과</strong> — ' + (days === 0 ? '오늘' : days + '일 전') + ' 업데이트. 소모임 상위 노출의 <strong>57%가 1일 이내 업데이트</strong>예요 — 관문 통과! 이 페이스 유지!</div>';
     } else {
-      gate = '<div style="margin-top:10px;padding:11px 13px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;font-size:0.82rem;color:#b91c1c;line-height:1.72;">🚨 <strong>노출 피드 탈락 위험 (' + days + '일째 미업데이트)</strong> — 실측 결과 소모임은 <strong>1일 이내 업데이트한 모임만 노출</strong>되고, 미업데이트 모임 <strong>81%가 노출에서 제외</strong>됐어요. 오늘 게시글·정모를 등록해 업데이트하세요.</div>';
+      gate = '<div style="margin-top:10px;padding:11px 13px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;font-size:0.82rem;color:#b91c1c;line-height:1.72;">⚠️ <strong>노출 경쟁력 저하 (' + days + '일째 미업데이트)</strong> — 실측상 상위 노출의 71%가 3일 이내 업데이트예요. 7일+ 방치 모임은 상위 목록의 18%뿐이라, 오늘 게시글·정모를 등록해 최신성을 회복하세요.</div>';
     }
   }
 
@@ -2323,14 +2323,14 @@ function renderSomoimRankDiag(updateDays, freq, members, posts) {
   const hi=(v,t)=>v>=t[0]?4:v>=t[1]?3:v>=t[2]?2:1;
   const upd=updateDays<0?0:(updateDays===0?4:updateDays===1?3:updateDays<=3?2:1);
   const F=[
-    {n:'활동 최신성 (사진첩·게시판·채팅)',i:'⏱️',w:0.50,skip:updateDays<0,tier:upd,
+    {n:'활동 최신성 (사진첩·게시판·채팅)',i:'⏱️',w:0.34,skip:updateDays<0,tier:upd,
      val:updateDays<0?'-':(updateDays+'일 전'),refs:'오늘 활동=상위 · 3일+ 조용하면 급락 (노출 1순위)',
      act:'매일 사진첩 업로드 · 채팅 · 게시판 글로 활동 신호를 주세요. 소모임 노출은 "활동 최신성"이 전부예요 — 오늘 활동한 모임이 활발한모임·추천·주제별 탭 상위로 올라가요. 참고: 소모임은 전체의 75%가 3일 내 활동하는 붐비는 풀이라, "3일 내 활동"이 노출 참가의 최소조건(관문)이에요. 그 이상 순위는 앱 알고리즘 셔플이라 무리하지 말고 꾸준한 활동 유지가 정답이에요.'},
-    {n:'정모 빈도(월)',i:'📅',w:0.25,tier:hi(freq,[4,2,1]),val:freq+'회',refs:'상위10% 4회 · 상위30% 2회 · 0회 하위',
+    {n:'정모 빈도(월)',i:'📅',w:0.33,tier:hi(freq,[4,2,1]),val:freq+'회',refs:'상위10% 4회 · 상위30% 2회 · 0회 하위',
      act:'정기 정모를 월 2회 이상 여세요. 정모일정 탭 상위노출로 이어져요.'},
-    {n:'게시글·사진 (월)',i:'📝',w:0.20,tier:hi(posts,[8,4,2]),val:posts+'개',refs:'상위10% 8개 · 상위30% 4개 · 중위 2개',
+    {n:'게시글·사진 (월)',i:'📝',w:0.25,tier:hi(posts,[8,4,2]),val:posts+'개',refs:'상위10% 8개 · 상위30% 4개 · 중위 2개',
      act:'사진이 들어간 게시판 글을 주 2회 이상 올리세요. 섭외자가 사진 보고 유입되고, 활동 신호도 함께 올라가요.'},
-    {n:'멤버 수 (노출과 무관)',i:'👥',w:0.05,tier:hi(members,[50,30,15]),val:members+'명',refs:'참고용 — 노출엔 영향 없음',
+    {n:'멤버 수 (노출과 무관)',i:'👥',w:0.08,tier:hi(members,[50,30,15]),val:members+'명',refs:'참고용 — 노출엔 영향 없음',
      act:'멤버수는 노출에 영향 없어요 — 200명이어도 활동 없으면 소수의 활발한 모임에 밀려요. 멤버는 활동의 결과일 뿐, 활동에 집중하세요.'},
   ];
   somoimDiagRender(card, el, F, '내 소모임', '활동 중심 · 운영 실측');
