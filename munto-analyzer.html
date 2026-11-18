@@ -1293,7 +1293,9 @@ function analyzeMunto() {
   if (retention >= 8) ltvScore = 100; else if (retention >= 5) ltvScore = 70; else if (retention >= 3) ltvScore = 45; else if (retention >= 1) ltvScore = 20;
   ltvScore = Math.min(100, ltvScore);
 
-  const total = Math.round(seo*0.20 + act*0.20 + trust*0.20 + cvr*0.15 + charm*0.15 + ltvScore*0.10);
+  // 실측: 문토 노출순위 ↔ '최근 대화·활동(최신성)' 상관 0.97~0.996(거의 결정적) → 최신성 최상위 단독 가중(act 내 중복분 보정해 act 가중 하향)
+  const rec = activity >= 4 ? 100 : activity >= 3 ? 85 : activity >= 2 ? 60 : activity >= 1 ? 30 : 5;
+  const total = Math.round(rec*0.38 + seo*0.14 + act*0.12 + trust*0.13 + cvr*0.11 + charm*0.07 + ltvScore*0.05);
   const { g, l } = grade(total, 'munto');
 
   const tScoreEl = document.getElementById('t-totalScore');

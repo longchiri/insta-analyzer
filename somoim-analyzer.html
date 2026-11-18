@@ -1195,7 +1195,17 @@ function analyzeMoim() {
   if (bothPlatforms) grow = Math.min(100, grow + 5);
   if (hasExtPromo) grow = Math.min(100, grow + 5);
 
-  const total = Math.round(seo*0.25 + act*0.25 + trust*0.20 + cvr*0.15 + ltvScore*0.10 + grow*0.05);
+  // 실측: 소모임은 '1일 이내 업데이트'가 노출 이진 관문(미업데이트 81% 노출 제외) → 최신성 최상위 단독 가중
+  const _luv = (document.getElementById('m-last-update') || {}).value || '';
+  const recHas = !!_luv;
+  let rec = 0;
+  if (recHas) {
+    const _d = Math.max(0, Math.round((new Date().setHours(0,0,0,0) - new Date(_luv).setHours(0,0,0,0)) / 86400000));
+    rec = _d <= 1 ? 100 : _d <= 3 ? 72 : _d <= 7 ? 45 : _d <= 14 ? 25 : _d <= 30 ? 12 : 5;
+  }
+  const total = recHas
+    ? Math.round(rec*0.33 + seo*0.20 + act*0.17 + trust*0.15 + cvr*0.10 + ltvScore*0.05)
+    : Math.round(seo*0.25 + act*0.25 + trust*0.20 + cvr*0.15 + ltvScore*0.10 + grow*0.05);
   const { g, l } = grade(total, 'moim');
 
   const mScoreEl = document.getElementById('m-totalScore');
